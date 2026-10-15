@@ -47,6 +47,35 @@ def run(root: Path):
             expect(page.locator(".metric-value").first).to_have_text("50,000")
             page.screenshot(path=str(output / "overview-desktop.png"), full_page=True)
             checks.append("real overview source counts")
+            page.goto(base + "/?view=market", wait_until="networkidle")
+            expect(page.locator("#page-title")).to_have_text("Market Context & Bond Scenario Lab")
+            expect(page.locator("#content")).to_contain_text("Series coverage & units")
+            market_from = page.get_by_label("Market from date").input_value()
+            market_to = page.get_by_label("Market to date").input_value()
+            with page.expect_download() as captured:
+                page.locator("#export-report").click()
+            market_download = captured.value
+            market_path = output / "market-series-report.json"
+            market_download.save_as(str(market_path))
+            market_report = json.loads(market_path.read_text(encoding="utf-8"))
+            assert market_report["visibility"] == "private"
+            assert market_report["public_release_approved"] is False
+            assert market_report["filters"]["from"] == market_from
+            assert market_report["filters"]["to"] == market_to
+            assert market_report["native_rows"] == len(market_report["rows"])
+            checks.append("market export downloads valid private JSON matching the displayed date filters")
+            select_task(page, "Bond scenarios")
+            with page.expect_download() as captured:
+                page.get_by_role("button", name="Xuất bond scenario riêng tư", exact=True).click()
+            bond_download = captured.value
+            bond_path = output / "market-bond-scenario.json"
+            bond_download.save_as(str(bond_path))
+            bond_report = json.loads(bond_path.read_text(encoding="utf-8"))
+            assert bond_report["visibility"] == "private"
+            assert bond_report["public_release_approved"] is False
+            assert bond_report["source_market_series_used_for_pricing"] is False
+            checks.append("bond scenario export preserves private scope and assumption-only pricing caveat")
+            page.goto(base + "/?run=" + case_id + "&view=overview", wait_until="networkidle")
             for view in ["sources", "portfolio", "vintage", "transitions", "models", "loss", "evidence"]:
                 navigate_workspace(page, view)
                 page.wait_for_timeout(180)
@@ -237,6 +266,26 @@ def run(root: Path):
                 checks.append("390px mobile layout without page overflow: " + view)
             error_page = context.new_page()
             error_page.set_viewport_size({"width": 1280, "height": 900})
+            failed_market_downloads = []
+            error_page.on("download", lambda download: failed_market_downloads.append(download.suggested_filename))
+            error_page.goto(base + "/?view=market", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Series coverage & units")
+            error_page.route("**/api/market-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic market-series export outage"})))
+            error_page.locator("#export-report").click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic market-series export outage")
+            assert failed_market_downloads == []
+            checks.append("HTTP 503 market-series export shows an error without creating a fake download")
+            error_page.unroute("**/api/market-report*")
+            select_task(error_page, "Bond scenarios")
+            error_page.route("**/api/bond-report*", lambda route: route.fulfill(
+                status=502, content_type="text/html", body="<html>bond export unavailable</html>"))
+            error_page.get_by_role("button", name="Xuất bond scenario riêng tư", exact=True).click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Research API HTTP 502 returned a non-JSON error")
+            assert failed_market_downloads == []
+            checks.append("HTTP 502 bond-scenario export exposes failure without a fake download")
+            error_page.unroute("**/api/bond-report*")
             error_page.route("**/api/snapshot*", lambda route: route.fulfill(
                 status=503, content_type="application/json",
                 body=json.dumps({"error": "Frozen evidence or serving code changed; verify artifacts and restart with reviewed code"})))

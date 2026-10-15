@@ -68,8 +68,8 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 57 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash and privacy paths checked. Remaining other-workspace APIs/delivery routes need scoped checks |
-| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone D01 browser acceptance passes 57/57 checks. Qualified multi-vintage fit/calibration/final OOT remains blocked |
+| M01-028 | Partial | 61 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, and Market series/bond JSON export success plus 503/502 failure handling are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone D01 browser acceptance passes 61/61 checks. Qualified multi-vintage fit/calibration/final OOT remains blocked |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
 ## Evidence references
@@ -84,6 +84,7 @@ format/resource profiling and model-use qualification remain unverified.
 - Prior standalone browser acceptance: artifacts/private/browser-qa-c58475aed5fc/receipt.json; 51 checks PASS against the latest acquired aggregate package, including standalone NMDB JSON export/hash verification and export failure behavior (2026-10-15).
 - Prior standalone browser acceptance: artifacts/private/browser-qa-43c63fd3edd5/receipt.json; 55 checks PASS, adding failure coverage for provenance, prepared studies, loss diagnostics, and findings (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-2d25ed161db0/receipt.json; 57 checks PASS, adding finding-history and finding-save failure flows (2026-10-15).
+- Latest standalone browser acceptance: artifacts/private/browser-qa-12b9ce006825/receipt.json; 61 checks PASS. Adds actual Market series and assumption-only bond JSON exports, verifies their private scope/filter content, and confirms 503/502 export failures surface without fake downloads (2026-10-15).
 - Chart/support audit: docs/D01_CHART_SUPPORT_AUDIT_VI.md and artifacts/private/d01-chart-support-a5a39d8e7acc/receipt.json.
 - Reproduction audit: docs/D01_REPRODUCTION_AUDIT_VI.md; foundation receipt at artifacts/private/d01-a24484b21a21/reproduction-pipeline-0415306845cd.json; final descriptive receipt at artifacts/private/d01-final-reproduction-qa42-20261015/receipt.json.
 - Case study: docs/D01_CASE_STUDY_VI.md (descriptive checkpoint; model claims explicitly gated).
@@ -102,7 +103,7 @@ format/resource profiling and model-use qualification remain unverified.
 
 ## Next source-independent implementation
 
-1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 now checks transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, report export, and standalone NMDB source export success/failure.
+1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, market series/bond export, report export, and standalone NMDB source export success/failure.
 2. Keep M01-029 and R2/R3 open for authorized multi-vintage data; the descriptive report, UI, and no-fit gate are now reproduced, but empirical model qualification is data-gated.
 3. Continue source-independent audit and documentation cleanup without changing model claims or completion counts.
 
@@ -144,3 +145,16 @@ all-mortgages trend and separate forbearance chart are now visible in D01's
 Sources page with independent-denominator caveats. This adds source context, not
 loan-level observations or model-training data. See
 `docs/FHFA_NMDB_AGGREGATE_PERFORMANCE_VI.md` and the private acquisition receipt.
+
+## 2026-10-15 Market delivery continuation
+
+M01-028 was extended beyond D01 to the Market workspace. Native-series and
+assumption-only bond reports now pass through the shared JSON response validator
+before download. A fresh browser acceptance downloaded both real reports,
+checked their private-release flags and date-filter integrity, then injected
+HTTP 503 and 502 responses and confirmed the UI showed errors without creating
+files. The 61-check acceptance passed on the verified D01 case; receipt:
+`artifacts/private/browser-qa-12b9ce006825/receipt.json`. The focused Market API
+suite passed 9/9 tests. M01-028 remains Partial because other workspaces still
+need scoped route and export checks; this does not change the 26/50 completion
+count or the model/data gates.

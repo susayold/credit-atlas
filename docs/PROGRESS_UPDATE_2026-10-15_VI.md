@@ -17,15 +17,23 @@ trong field map có thể gán nhầm. 22 questionnaire PDF đã được lấy;
 question-number tự động chỉ là locator vì numbering và PDF hai cột gây nhiễu.
 Review wording, routing, respondent role và scales bằng tay vẫn còn mở.
 
-Focused NSMO regressions: **15/15 PASS**. Full app/vendor suite sau thay đổi:
-**1.633/1.633 PASS** trong 331,96 giây. Chưa định nghĩa target/PD hay chốt risk
+Pilot credit-relevant item locator tìm thấy exact item phrases của `x05f`,
+`x88d/e/f`, `x93b` và `x94a` trong **22/22 questionnaire packages**. SAS formats
+nhất quán: PVERYFM cho credit familiarity/payment hardship/liquidity, PAGREEFM
+cho late-payment/default attitudes. Đây là ứng viên cho mô tả trend sau review
+sample/mode/routing/weights, không phải origination predictor; xem
+`docs/data/nsmo-v70-wave-item-comparability.csv`.
+
+Focused NSMO regressions: **16/16 PASS**. Full app/vendor suite sau thay đổi:
+**1.634/1.634 PASS** trong 339,63 giây. Chưa định nghĩa target/PD hay chốt risk
 set/variance; NSMO tiếp tục là D02 riêng, không ghép Freddie D01. Chi tiết:
 [wave comparability audit](NSMO_WAVE_COMPARABILITY_AUDIT_VI.md).
 Edge browser acceptance cho phần coverage mới đạt **4/4 PASS**, không có lỗi
 JavaScript; xác nhận trường `x20j`, `x14a` và `x14a_1` hiển thị đúng observed /
 not-asked ranges trong dictionary (`artifacts/private/nsmo-wave-coverage-browser-qa-20261015/receipt.json`).
-Public mirror suite: **1.437 passed, 196 skipped** (private-data gates). Raw
-questionnaire PDFs and exact count receipt remain private.
+Public source-only suite with key-item pilot: **1.438 pass, 196 skip**; skips
+require excluded private inputs or machine-local evidence.
+Raw questionnaire PDFs and exact field-wave counts remain private.
 
 ## D02 tiếp tục — domain analytics và field dictionary
 

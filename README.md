@@ -221,8 +221,8 @@ keep the PUF and resulting private audit receipts outside Git. See the
 the state/weighting limitations. The separate
 [wave-comparability audit](docs/NSMO_WAVE_COMPARABILITY_AUDIT_VI.md) documents
 the official questionnaire inventory, SAS-coded wave coverage index, and the
-remaining manual item/scale review. Questionnaire PDFs, raw PUF rows, and exact
-private receipts stay outside this repository.
+six-item cross-wave candidate pilot. Questionnaire PDFs, raw PUF rows, and
+exact private receipts stay outside this repository.
 
 To download authorized annual sample URLs through HTTP:
 

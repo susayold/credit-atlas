@@ -3,29 +3,32 @@
 ## Latest run after NSMO questionnaire and wave-coverage audit
 
 After adding the official 22-package questionnaire inventory, SAS-coded
-response coverage across 319 fields and 46 waves, dictionary/API surfacing, and
-regressions, `scripts/test.ps1` ran the full app and vendored-engine suite.
+response coverage across 319 fields and 46 waves, six-key-item phrase locator,
+sanitized candidate index, dictionary/API surfacing, and regressions,
+`scripts/test.ps1` ran the full app and vendored-engine suite.
 
 | Kết quả | Số lượng |
 |---|---:|
-| Collected/executed | 1,633 |
-| Passed | 1,633 |
+| Collected/executed | 1,634 |
+| Passed | 1,634 |
 | Failures/errors/skips | 0 / 0 / 0 |
-| Elapsed | 331.96 seconds |
-| Focused NSMO tests | 15/15 passed |
+| Elapsed | 339.63 seconds |
+| Focused NSMO tests | 16/16 passed |
 | JS syntax check | PASS: `apps/web/nsmo.js` |
-| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-wave-coverage/receipt.json` |
+| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-key-item-audit/receipt.json` |
 
 The wave audit reconciles all 14,674 field-wave cells to official SAS domains;
-questionnaire PDFs and exact aggregate receipts remain in private storage.
-Automated text extraction is only a locator: wording/scale equivalence and the
-formal target/weighting protocol remain open.
+the key-item pilot found each selected phrase in all 22 questionnaires, while
+questionnaire PDFs and exact aggregate receipts remain private. Automated text
+extraction is only a locator: routing/mode/population equivalence and the formal
+target/weighting protocol remain open.
 
-The isolated public mirror also passed **1,437 tests**, with **196 explicitly
+The isolated public mirror also passed **1,438 tests**, with **196 explicitly
 skipped** for excluded private data or machine-local receipts. The coverage CSV
-was added by its exact path to the public index; no `data/private/` payload was
-staged. Public mirror test receipt (kept locally):
-`artifacts/private/public-mirror-tests-20261015-nsmo-wave-coverage/receipt.json`.
+and the six-item candidate CSV were force-added only by their exact paths to the
+public index; no `data/private/` payload was staged. Public mirror test receipt
+(kept locally):
+`artifacts/private/public-mirror-tests-20261015-nsmo-key-item/receipt.json`.
 
 ## Previous full-suite run after NSMO field dictionary integration
 

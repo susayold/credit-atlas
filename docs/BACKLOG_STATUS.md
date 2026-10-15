@@ -47,7 +47,7 @@ This improves D02-4 descriptive context only. It does not alter the D01 26/50
 completion count, qualify a Freddie vintage, or resolve D02-5/6. HUD PDF and
 Portfolio Snapshot binaries remain unavailable through ordinary HTTP (403).
 
-## 2026-10-15 — Ginnie Mae separate-source preparation
+## 2026-10-16 — Ginnie Mae sample audit and authenticated production gate
 
 Reviewed Ginnie Mae's official bulk catalog, Single-Family Loan-Level Terms of
 Use, quarterly/annual Loan Performance layout, monthly active-loan layout,
@@ -62,10 +62,21 @@ Added `src/credit_atlas/ginnie_performance.py` and
 `scripts/audit_ginnie_loanperf.py`. The offline auditor reads inside the ZIP,
 checks row widths, frequency, dates, duplicate loan-period keys, status codes,
 history encoding and trailer totals, then emits aggregate counts and a source
-member SHA-256 without exposing disclosure IDs. It requires an explicit
-user-accepted-terms flag. Six synthetic parser tests passed and the full suite
-passed 1,587/1,587. The actual payload is still not downloaded; production
-format/resource profiling and model-use qualification remain unverified.
+member SHA-256 without exposing disclosure IDs. The official sample revealed
+one valid trailing empty field from a final pipe delimiter; the parser now
+accepts exactly one such field and still rejects other width mismatches.
+
+The user confirmed acceptance of the current Ginnie Terms. Official LoanPerf
+and liquidation layout/sample files were downloaded into private D: storage.
+Their two aggregate-only audits reconcile 213 LoanPerf rows/104 disclosure keys
+and 100 liquidation rows/100 keys, respectively; sample profiles are not
+production population evidence and were not joined across differing report
+periods. The production quarterly download endpoint returned HTTP 401 without
+an authenticated session. Added `src/credit_atlas/ginnie_liquidation.py`,
+`scripts/audit_ginnie_liquidation.py`, and synthetic tests for the second format.
+The focused Ginnie, NSMO workbook, D02 workbook and NSMO API/view suite passes
+34/34. Production acquisition, production integrity profiling and any model-use
+qualification remain open. Commits `2f7b37e` and `51c69fe` are on `main`.
 
 | ID | Current status | Evidence / remaining requirement |
 |---|---|---|

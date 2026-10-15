@@ -88,8 +88,31 @@ NMDB/sample, suppression, imputation and revision caveats in
 `docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`.
 
 
-## Recheck 15/10/2026 — HMDA scope and CFPB multi-product trend data
+## Recheck 15–16/10/2026 — HMDA scope and CFPB multi-product trend data
 
 The bounded CFPB HMDA API was re-acquired for the existing Maryland home-purchase/site-built 2023–2025 scope. All three CSVs are byte/hash identical to the verified source received 09/10/2026, and yearly counts/amounts match; the recheck receipt is `artifacts/private/hmda-refresh-audit-13597103ed21/receipt.json`. No data revision was available in this scope, so the existing profiled canonical case remains the app source.
 
-A separate CFPB Consumer Credit Trends source review found an official all-products CSV for mortgage, credit-card, auto, and student credit context. CFPB lists the dashboards as updated 17/09/2026 and describes the underlying inputs as a nationally representative sample from one nationwide credit bureau, with direct identifiers removed. The official `all_data.csv` URL returned HTTP 403 to standard Python and curl clients from this environment; no alternate identity or access workaround was used. This is aggregate market context, not individual loan performance, a borrower model-training file, or an independent panel. See `docs/CFPB_CONSUMER_CREDIT_TRENDS_REVIEW_VI.md`.
+A separate CFPB Consumer Credit Trends source review found an official all-products CSV and Excel codebook for mortgage, credit-card, auto, and student credit context. The CFPB page now says the dashboards were updated 15/10/2026 (the prior check showed 17/09/2026); the inputs remain described as a nationally representative sample from one nationwide credit bureau, with direct identifiers removed. On 16/10, both official file URLs still returned HTTP 403 to direct HEAD requests; the linked web fetcher identified the CSV/XLSX types but could not provide the binary payload. No alternate identity or access workaround was used. This is aggregate market context, not individual loan performance, a borrower model-training file, or an independent panel. See `docs/CFPB_CONSUMER_CREDIT_TRENDS_REVIEW_VI.md`.
+
+## Update 16/10/2026 — NSMO, Ginnie and official-download gates
+
+The FHFA v7.0 NSMO PUF is now downloaded and privately audited after the user
+authorized and completed the official Notice/Terms acknowledgement. Its
+separate D02 case remains unpooled from Freddie, and its target/model gates stay
+open; current evidence and remaining work are tracked in
+`docs/NSMO_D02_CASE_BUILD_PLAN_VI.md`.
+
+The user also confirmed privately that Ginnie Mae's Single-Family Loan-Level
+Terms were read and accepted. Official LoanPerf and liquidation layouts/samples
+were acquired and aggregate-audited in private D: storage. The production
+`LoanPerf_202606.zip` request through Ginnie Mae's official download API returned
+HTTP 401 because this environment has no authenticated Ginnie session; no
+production loan rows were downloaded. Two source-specific aggregate-only
+auditors now cover the official sample formats. This remains a separate Ginnie
+MBS case and does not qualify a Freddie vintage. See
+`docs/GINNIE_MAE_CREDIT_PERFORMANCE_DATA_REVIEW_VI.md`.
+
+The CFPB Consumer Credit Trends dashboard refreshed on 15/10/2026, but its
+official all-products CSV and Excel codebook still returned HTTP 403 to direct
+file requests on 16/10. Keep this as a source-access limitation; do not infer
+that a dashboard refresh means the underlying file was acquired.

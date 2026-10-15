@@ -37,9 +37,23 @@ Vào **Mortgage → Chất lượng**, dưới quality monitoring của Freddie 
 
 GET `/api/fannie-samples?family=all|single-family|multifamily`; GET `/api/fannie-samples-report` cùng filter xuất private JSON. Request verify profile, acquisition receipt và cả bảy file hashes. Export không chứa source loan IDs/record-level panel. Outage xóa result/export cũ ở source card; frozen Freddie quality vẫn giữ scope riêng.
 
-## Excel reference cho layout
+## Excel cho dữ liệu mẫu và layout
 
-Workbook tra cứu schema được tạo tại private D:\\:
+Ba file sample CSV cũng đã được chép nguyên giá trị sang workbook để lọc và
+thao tác trong Excel:
+`data/private/mortgage/fannie-public-samples-4d84128d3cb6/reference/CreditAtlas-Fannie-Public-Samples.xlsx`.
+Workbook có sheet **Start here**, **SF sample** (757 × 108), **MF sample**
+(241 × 62) và **MF annual DSCR** (17 × 3). Sample single-family không có
+header; cột được gắn nhãn theo vị trí raw và không được map tự động sang layout
+mới. Ô dữ liệu được lưu kiểu text để giữ nguyên mã có số 0 đầu, blank và token;
+so sánh lại cho thấy toàn bộ giá trị khớp với ba CSV nguồn. Các sheet có filter
+và freeze header.
+
+Đây là publisher setup examples, không phải portfolio đại diện hay cơ sở duy
+nhất để train model. Trên chính các sample này, apparent ID trùng không tự tạo
+ra join contract giữa MF monthly và annual DSCR.
+
+Workbook tra cứu schema được tạo riêng tại private D:\\:
 `data/private/mortgage/fannie-public-samples-4d84128d3cb6/reference/CreditAtlas-Fannie-Layout-Reference.xlsx`.
 Workbook có 5 sheet: **Start here**, **SF performance** (114 field positions),
 **MF performance** (62 positions), **MF annual DSCR** (3 positions trong layout
@@ -50,7 +64,8 @@ có filter, freeze header và cột mô tả/availability/notes theo layout PDF.
 không chứa loan-level sample hay production rows, không mở quyền Data Dynamics,
 không tạo crosswalk chuẩn hóa và không chứng minh compatibility giữa sample cũ
 với layout mới. Luôn giữ Single-Family, Multifamily và annual DSCR tách riêng.
-SHA-256, nguồn PDF và kết quả kiểm tra XLSX nằm trong private receipt
+SHA-256, source CSV/PDF và kết quả kiểm tra XLSX nằm trong private receipts
+`artifacts/private/fannie-public-samples-excel-20261016/receipt.json` và
 `artifacts/private/fannie-excel-reference-20261016/receipt.json`.
 
 ## Evidence

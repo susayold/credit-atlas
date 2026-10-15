@@ -120,7 +120,7 @@ def run():
         expect(page.locator('#retail-explanation-clients tbody tr')).to_have_count(20)
         expect(page.locator('#retail-cohort-client')).to_contain_text('rank 4,499 / 4,499')
         with page.expect_download() as explanation_download:
-            page.get_by_role('link',name='Xuất giải thích hồ sơ',exact=True).click()
+            page.get_by_role('button',name='Xuất giải thích hồ sơ',exact=True).click()
         explanation_download.value.save_as(str(out/'client-explanation.json'))
         exported=json.loads((out/'client-explanation.json').read_text(encoding='utf-8'))
         assert exported['cohort_id']=='retail-cohort-explanations-02487bb9d1a2'

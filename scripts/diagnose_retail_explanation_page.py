@@ -32,7 +32,7 @@ with sync_playwright() as playwright:
         expect(page.locator('#retail-explanation-local')).to_contain_text('validation_case_12')
         print('Local case selected', flush=True)
         with page.expect_download(timeout=30000) as download:
-            page.get_by_role('link', name='Xuất giải thích đang xem', exact=True).click()
+            page.get_by_role('button', name='Xuất giải thích đang xem', exact=True).click()
         download.value.save_as(str(output / 'export.json'))
         print('Private export saved', flush=True)
         result = {'panel': page.locator('#retail-explanations').inner_text(), 'errors': errors}

@@ -17,7 +17,7 @@ def run(root):
     server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service)); thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
     base = 'http://127.0.0.1:' + str(server.server_port)
     study = 'retail-explanations-84b3ac3bab6e'; ledger = root / 'artifacts/private/retail-holdout-access.sqlite'; before = sha256(ledger)
-    errors = []; checks = []; expect.set_options(timeout=240000)
+    errors = []; checks = []; downloads = []; expect.set_options(timeout=240000)
     try:
         # Full source/model replay remains mandatory; cache it before UI navigation.
         service.retail_explanation_views.evidence(study)
@@ -26,7 +26,8 @@ def run(root):
             browser = playwright.chromium.launch(channel='msedge', headless=True)
             page = browser.new_page(viewport={'width':1440,'height':1000}); page.set_default_timeout(240000)
             page.on('pageerror', lambda error: errors.append(str(error)))
-            page.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
+            page.on('console', lambda m: errors.append(m.text) if m.type == 'error' and '503' not in m.text else None)
+            page.on('download', lambda d: downloads.append(d.suggested_filename))
             page.route('**/api/runs', lambda route: route.fulfill(json={'runs':[]}))
             page.goto(base + '/?view=retail&view_id=suite-view-74e07524f6d0&retail_policy_id=retail-policy-bd4b8623de28&workspace_tab=explanations', wait_until='domcontentloaded', timeout=300000)
             print('Page DOM loaded; waiting for verified model data', flush=True)
@@ -43,7 +44,7 @@ def run(root):
             checks.append('Twelve ranked validation cases; selected case changes all four probability-point contributions')
             print('Local validation case checked', flush=True)
             with page.expect_download(timeout=240000) as download:
-                page.get_by_role('link', name='Xuất giải thích đang xem', exact=True).click()
+                page.get_by_role('button', name='Xuất giải thích đang xem', exact=True).click()
             download.value.save_as(str(output / 'export.json')); report = read_json(output / 'export.json')
             assert report['explanations_id'] == study and report['filters']['case'] == 'validation_case_12'
             assert len(report['local_explanations']) == 1 and len(report['global_permutation']) == 4
@@ -52,9 +53,15 @@ def run(root):
             assert abs(local['reference_probability'] + sum(r['probability_contribution'] for r in local['contributions']) - local['predicted_probability']) < 1e-12
             checks.append('Selected-case private export matches visible scope, reconstructs prediction and excludes original IDs/reference records')
             print('Private selected-case export checked', flush=True)
+            page.route('**/api/retail-explanation-report*', lambda route: route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic Retail local explanation export outage"}'))
+            page.get_by_role('button', name='Xuất giải thích đang xem', exact=True).click()
+            expect(page.locator('#notice.error')).to_contain_text('Synthetic Retail local explanation export outage')
+            assert len(downloads)==1,downloads
+            page.unroute('**/api/retail-explanation-report*')
+            checks.append('Retail local explanation HTTP 503 is visible and creates no fake download')
             panel.screenshot(path=str(output / 'desktop.png'))
             page.set_viewport_size({'width':390,'height':844}); assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-            link = page.get_by_role('link', name='Xuất giải thích đang xem', exact=True)
+            link = page.get_by_role('button', name='Xuất giải thích đang xem', exact=True)
             layout = link.evaluate("node=>{const style=getComputedStyle(node),rect=node.getBoundingClientRect();return {display:style.display,white_space:style.whiteSpace,left:rect.left,right:rect.right,width:rect.width,viewport:innerWidth};}")
             # A direct flex child blockifies inline-flex to computed display:flex.
             assert layout['display'] in ('flex','inline-flex') and layout['white_space']=='nowrap' and layout['left']>=0 and layout['right']<=layout['viewport'], layout

@@ -30,19 +30,19 @@ with ExitStack() as stack:
         assert r['source_contract']['support']==snap['support'] and r['governance']['review_owner'] is None and not any(r['governance'][k] for k in r['governance'] if k!='review_owner')
         assert str(ROOT) not in json.dumps(r) and 'model.json' not in json.dumps(r['evidence_hashes'])
         page.goto(BASE+'/?view=retail&workspace_tab=evidence&view_id='+VIEW)
-        box=page.locator('#retail-governance-dossier');download=box.get_by_role('link',name='Xuất Retail model dossier JSON',exact=True);expect(download).to_be_visible()
+        box=page.locator('#retail-governance-dossier');download=box.get_by_role('button',name='Xuất Retail model dossier JSON',exact=True);expect(download).to_be_visible()
         expected=[[s['stage'],s['artifact_id'],s['recorded_at']] for s in r['audit_trail']]
         assert [row.locator('td').all_text_contents() for row in box.locator('tbody tr').all()]==expected
         for text in ['Chưa cung cấp','Authenticated sign-off','Chưa có','Production intended-use approval','Chưa đạt','Taiwan','not independently authenticated']:expect(box).to_contain_text(text)
         with page.expect_download() as d:download.click()
         file=out/'dossier.json';d.value.save_as(file);assert json.loads(file.read_text())==r
-        box.screenshot(path=str(out/'desktop.png'));page.reload();expect(page.locator('#retail-governance-dossier').get_by_role('link',name='Xuất Retail model dossier JSON',exact=True)).to_be_visible()
+        box.screenshot(path=str(out/'desktop.png'));page.reload();expect(page.locator('#retail-governance-dossier').get_by_role('button',name='Xuất Retail model dossier JSON',exact=True)).to_be_visible()
         page.set_viewport_size({'width':390,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1');page.locator('#retail-governance-dossier').screenshot(path=str(out/'mobile.png'))
         assert page.request.get(BASE+'/api/retail-dossier?view_id='+VIEW+'&rescore=true').status==400
         assert page.request.get(BASE+'/api/retail-dossier?view_id='+VIEW,headers={'Origin':'https://example.com'}).status==403
         page.route('**/api/retail-dossier?*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"QA dossier unavailable"}'))
         page.reload();expect(page.locator('#retail-panel-evidence')).to_contain_text('QA dossier unavailable');assert page.locator('#retail-governance-dossier a').count()==0
-        page.unroute('**/api/retail-dossier?*');page.get_by_role('button',name='Thử lại',exact=True).click();expect(page.locator('#retail-governance-dossier').get_by_role('link',name='Xuất Retail model dossier JSON',exact=True)).to_be_visible()
+        page.unroute('**/api/retail-dossier?*');page.get_by_role('button',name='Thử lại',exact=True).click();expect(page.locator('#retail-governance-dossier').get_by_role('button',name='Xuất Retail model dossier JSON',exact=True)).to_be_visible()
         browser.close()
     finally:server.shutdown();server.server_close();thread.join(timeout=5)
 assert not calls and not errors and sha256(ledger)==before

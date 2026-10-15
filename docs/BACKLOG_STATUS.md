@@ -68,7 +68,7 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 94 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON, SEC rules/schedule/maturity/coverage/trend GET attachments with outage handling, HMDA/FDIC Bank GET export failures with no fake downloads are checked. Separate current UI acceptance covers 13 SEC and 10 ABS tasks plus 503 handling for Retail dossier, SBA report, ABS report, World Bank and sovereign reports; remaining task-specific Retail/export routes still need scoped checks |
+| M01-028 | Partial | 94 real-data D01 browser checks pass on a fresh verified case; five key views fit 390px. Failure coverage includes D01, Market, HMDA, FDIC, independent mortgage sources, public profiles and POST/GET exports. Retail task acceptance now covers dossier, data contract, subgroup, local explanation and cohort-client attachments: success/parity plus HTTP 503 with visible error and no fake download; dedicated receipts: `artifacts/private/remaining-domains-qa-63f3f8db24cb/`, `retail-explanations-browser-qa-04f376717b60/`, `retail-cohort-browser-qa-317b104b2738/`, `retail-data-contract-browser-0b38fb3b5ab2/`, `retail-dossier-browser-134ef4cff73f/`, `retail-subgroups-browser-qa-8c00e3f64756/`. ABS main and five specialized source/benchmark attachments also have success/failure acceptance. M01-028 remains Partial pending a complete route inventory and remaining workspace-specific delivery checks; D01 multi-vintage qualification is unchanged.
 | M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 94/94 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
@@ -108,7 +108,7 @@ format/resource profiling and model-use qualification remain unverified.
 
 ## Next source-independent implementation
 
-1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market, HMDA, FDIC Bank and independent mortgage-source pages now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, scoped report exports, and their failure handling. Business, ABS and country main-report failures are covered; continue with remaining Retail sub-workspace exports, ABS source/benchmark attachments and other route-specific cases.
+1. Continue M01-028 with a route-to-test inventory for remaining workspace deliveries, starting with P4 Portfolio import/Excel/review attachments and other source-specific report routes; keep each route checked for valid payload, scoped contents, HTTP failure and no fake downloads.
 2. Keep M01-029 and R2/R3 open for authorized multi-vintage data; the descriptive report, UI, and no-fit gate are now reproduced, but empirical model qualification is data-gated.
 3. Continue source-independent audit and documentation cleanup without changing model claims or completion counts.
 
@@ -327,3 +327,26 @@ and browser execution are clean. This closes these five attachment routes only:
 Retail sub-workspace exports and remaining API deliveries still need scoped
 acceptance. D01 remains 26/50, M01-028 remains Partial, and no data/model gate
 changed.
+
+## 2026-10-15 Retail attachment failure continuation
+
+Replaced direct anchor downloads in five Retail report flows (model dossier,
+data contract, subgroup study, local explanation and cohort-client explanation)
+with the shared JSON response handler. A failed response now surfaces in the UI
+and cannot become a downloaded error file; state-bound export buttons are enabled
+only after their evidence is loaded. Browser acceptance confirms successful
+private export parity and HTTP 503/no-fake-download behavior. The combined
+workspace acceptance passes 18 grouped checks at
+`artifacts/private/remaining-domains-qa-63f3f8db24cb/`; Retail data contract
+(133 source-category rows), governance dossier (six-stage lineage), and subgroup
+exports pass their dedicated browser suites. Local explanation acceptance passes
+6 checks and cohort explanation passes 9 checks, including all 4,499 validation
+clients, token/page behavior, export scope, 390px layout, no holdout-ledger change,
+and 503 handling. Receipts are listed in the M01-028 row above.
+
+This closes the Retail and ABS attachment routes called out in the previous
+checkpoint, but not the full M01-028 route inventory. D01 remains 26/50; no
+additional Freddie/Fannie/NSMO/Ginnie loan-performance vintage was acquired, and
+no model fit or qualification gate changed. The next engineering pass starts
+with Portfolio workbook/import/review deliveries and continues across other
+workspace-specific routes.

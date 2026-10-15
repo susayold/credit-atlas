@@ -28,7 +28,7 @@ def run(root):
             expect(panel).to_contain_text('INSUFFICIENT_RECORDS');expect(panel).to_contain_text('Unavailable')
             assert sum(int(t.replace(',','')) for t in page.locator('#retail-subgroup-results tbody tr td:nth-child(2)').all_text_contents())==4499
             checks.append('Seven education source categories retained; small-group metrics unavailable and records reconcile')
-            with page.expect_download(timeout=240000) as download:page.get_by_role('link',name='Xuất subgroup đã kiểm tra',exact=True).click()
+            with page.expect_download(timeout=240000) as download:page.get_by_role('button',name='Xuất subgroup đã kiểm tra',exact=True).click()
             download.value.save_as(str(output/'export.json'));report=read_json(output/'export.json')
             assert report['filters']['dimension']=='education' and report['assumptions']['policy_id']==policy and report['subgroups_id']==study
             assert len(report['groups'])==7 and not any(report['qualification'].values()) and 'source_client_id' not in str(report)

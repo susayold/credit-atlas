@@ -1,12 +1,26 @@
 # Cập nhật tiến độ Credit Atlas — 15/10/2026
 
-## D02 tiếp tục — field dictionary, state audit và weighted benchmark
+## D02 tiếp tục — domain analytics và field dictionary
 
 Đã hoàn thành crosswalk chính thức **587/587** cột PUF ↔ Appendix C/SAS labels,
 **59 SAS formats với 377 value labels**, và đưa tra cứu 587 trường
 vào trang `/nsmo` (search theo tên cột, nhãn, family, question/use gate; xem wave,
 timing, codebook page và nhãn giá trị). Thêm API `/api/nsmo-dictionary`, chỉ trả
 metadata đã làm sạch; không có PUF rows hay IDs.
+
+Tiếp tục đọc full PUF qua một audit streaming mới: **30 origination mortgage/
+borrower attributes, 5 VantageScore-at-origination fields, 51 quarterly
+respondent-score fields và 23 quarterly forbearance fields** — tổng 109 trường,
+0 giá trị sai SAS domain. Thêm `/api/nsmo-domains` và UI cho borrower/mortgage
+mix, score bins/coverage, forbearance, termination, và ma trận chuyển trạng thái
+unweighted hoặc Analysis_Weight descriptive. Edge QA chạy với PUF local thật,
+không có lỗi trình duyệt; xác nhận 46 survey waves và các denominator/selector.
+
+Kết quả minh họa: `score_orig_r` có score category ở **61.897/62.359 mortgage
+(99,26%)**. Q3/2025 forbearance có **110/26.222 câu trả lời mã 1/2 = 0,4195%**;
+weighted descriptive share là 0,4987%, không có design-based variance. Đây không
+phải tỷ lệ default. FHFA page hiện vẫn ghi bản mới nhất v7.0 cập nhật 27/05/2026;
+không có PUF mới hơn để tải khi kiểm tra lại.
 
 Audit trọng số Appendix D Table 1 độc lập với raw PUF đạt **462/462 ô khớp**
 phần trăm đã công bố sau làm tròn (7 X05 fields × 11 cohort years × purchase/
@@ -25,11 +39,11 @@ xuất hiện, và 678 khoản không có quý quan sát C/1–9. Codebook có c
 status tham chiếu tên `close_status_1224` cũ; v7.0 PUF thực tế dùng
 `Close_Status_0925` và sample chỉ có mã 1/2 (dù SAS format có cả 3/4). Không
 được suy diễn risk set/PD từ các kết quả mô tả này. D02-2 mapping/benchmark đã
-xong, review variants còn mở; D02-3 state profile xong nhưng risk-set protocol
-còn mở; D02-4 dictionary đã tích hợp và Edge browser smoke QA đạt trên synthetic
-fixture, đồng thời xác nhận dictionary vẫn hoạt động khi không có PUF; domain
-metric coverage còn tiếp tục. Regression toàn repository: **1.623/1.623 PASS**
-(339,06 giây), focused NSMO **20/20 PASS**. D01 không đổi **26/50 = 52%**.
+xong, review variants còn mở; D02-3 state/transition profile xong nhưng formal
+risk-set protocol còn mở; D02-4 domain views đã mở rộng, còn variance/target
+design và remaining domain review. Regression toàn repository sau domain build:
+**1.628/1.628 PASS** (361,97 giây), focused NSMO **38/38 PASS**, Edge browser QA
+PASS. D01 không đổi **26/50 = 52%**.
 
 Nguồn chi tiết và giới hạn tại [D02 build plan](NSMO_D02_CASE_BUILD_PLAN_VI.md)
 và [NSMO source review](D01_NSMO_SOURCE_REVIEW_VI.md); PDF FHFA đã được tải và

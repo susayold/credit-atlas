@@ -11,6 +11,8 @@ from .workspace import contained, read_json, sha256
 
 _ROOT = "data/private/mortgage/nsmo-2026-05-27"
 _RECEIPTS = "artifacts/private/nsmo-puf-20261015"
+_STATE_AUDIT = "artifacts/private/nsmo-performance-state-audit-20261015/receipt.json"
+_DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.json"
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -185,3 +187,77 @@ class NsmoViews:
         }
         self._cached = (identity, report)
         return report
+
+    def domains(self) -> dict:
+        """Serve hash-bound private domain aggregates without any loan rows or IDs."""
+        profile = self.report()
+        source_sha = profile["source"]["source_sha256"]
+        state = read_json(contained(self.root, _STATE_AUDIT))
+        domains = read_json(contained(self.root, _DOMAIN_AUDIT))
+        rows = int(profile["sample"]["mortgages"])
+        for receipt, schema_name in ((state, "schema"), (domains, "schema")):
+            if (receipt.get("status") != "PASS"
+                    or receipt.get("sources", {}).get("puf_csv", {}).get("sha256") != source_sha
+                    or int(receipt.get(schema_name, {}).get("rows", receipt.get(schema_name, {}).get("row_count", -1))) != rows):
+                raise ValueError("NSMO domain audit is stale or does not match the verified PUF")
+        if domains.get("sources", {}).get("field_dictionary_sha256") != sha256(
+                contained(self.root, "docs/data/nsmo-v70-field-dictionary.csv")):
+            raise ValueError("NSMO domain audit does not match the public field dictionary")
+        source_docs = "data/private/mortgage/nsmo-2026-05-27/source_docs"
+        if (domains.get("sources", {}).get("sas_labels_sha256") != sha256(
+                    contained(self.root, f"{source_docs}/nsmo_v70_labels.sas"))
+                or domains.get("sources", {}).get("sas_formats_sha256") != sha256(
+                    contained(self.root, f"{source_docs}/nsmo_v70_formats.sas"))):
+            raise ValueError("NSMO domain audit does not match official SAS labels/formats")
+
+        state_rows = state.get("quarterly_state_matrix", [])
+        scores = domains.get("quarterly_respondent_scores", [])
+        forbearance = domains.get("quarterly_forbearance", [])
+        if (len(state_rows) != 51 or len(scores) != 51 or len(forbearance) != 23
+                or len(domains.get("origination_attributes", [])) != 30
+                or len(domains.get("origination_scores", [])) != 5):
+            raise ValueError("NSMO domain series have unexpected v7.0 quarter coverage")
+        transitions = []
+        for quarter in state_rows[:-1]:
+            paired = quarter.get("paired_transition_to_next_quarter")
+            if not paired:
+                raise ValueError("NSMO transition matrix is incomplete")
+            pairs = paired.get("observed_state_transitions", [])
+            total = sum(int(item["n"]) for item in pairs)
+            from_totals: dict[str, int] = {}
+            for item in pairs:
+                from_totals[item["from"]] = from_totals.get(item["from"], 0) + int(item["n"])
+            transitions.append({
+                "from_quarter_end": quarter["quarter_end"],
+                "to_quarter_end": paired["next_quarter_end"],
+                "all_pair_observation_classes": {
+                    key: int(value) for key, value in paired.get("observation_classes", {}).items()
+                },
+                "observed_to_observed_n": total,
+                "transitions": [
+                    {"from": item["from"], "to": item["to"], "n": int(item["n"]),
+                     "share_of_observed_from_state": int(item["n"]) / from_totals[item["from"]],
+                     "weight_sum_descriptive_only": float(item["weight_sum_descriptive_only"])}
+                    for item in pairs
+                ],
+            })
+
+        return {
+            "schema_version": "nsmo-domain-profile-v1",
+            "status": "AVAILABLE",
+            "source_sha256": source_sha,
+            "termination": {
+                "mortgages": rows,
+                "status_labels": state["termination"]["code_labels_from_official_sas_formats"],
+                "status_counts": state["termination"]["close_status_counts"],
+                "date_consistency": state["termination"]["close_date_consistency"],
+                "final_quarter_performance_by_termination": state["termination"]["final_2025q3_performance_by_close_status"],
+                "codebook_note_issue": state["termination"]["codebook_note_issue"],
+            },
+            "origination_scores": domains["origination_scores"],
+            "origination_attributes": domains["origination_attributes"],
+            "quarterly_respondent_scores": scores,
+            "quarterly_forbearance": forbearance,
+            "observed_state_transitions": transitions,
+            "limitations": domains["limitations"] + state["limitations"],
+        }

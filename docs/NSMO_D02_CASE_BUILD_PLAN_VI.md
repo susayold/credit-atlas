@@ -31,6 +31,16 @@ D01 panel.
   Across the panel, every A (history no longer reported) belongs to a terminated
   mortgage, B does not occur, and 678 mortgages have no observed C/1–9 status.
   These findings inform eligibility design but do not yet define an at-risk set.
+- A second domain audit scans and emits aggregates only for 30 origination
+  mortgage/borrower fields (including the cash-out flag), five origination
+  VantageScore fields, 51 quarterly respondent-score fields, and 23 quarterly
+  forbearance fields. All 109 selected fields reconcile to official SAS format
+  domains. Scores are bucketed as published; exact score values and loan rows
+  are never returned by the API.
+- Edge browser QA against the local hash-verified PUF passes for the 30-field
+  selector, 46 survey waves, origination score coverage, quarterly score trend,
+  23-quarter forbearance table, termination breakdown, and selectable
+  unweighted/weighted observed transition matrices. No record IDs are rendered.
 
 ## Build stages
 
@@ -39,20 +49,22 @@ D01 panel.
 | D02-0 — access and storage | Review FHFA gate/terms, download official v7.0, preserve source hashes, keep PUF private | Official URL, release, ZIP/CSV hashes, user authorization record, no secrets | Complete |
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
 | D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587/587 header match, 587 SAS labels, 59 formats / 377 value labels, timing gates and Appendix D 462/462 selected weighted-cell check | Core mapping and benchmark complete; questionnaire-variant interpretation and predictor allowlist still need review |
-| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete; risk-set/target protocol remains open |
-| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard and searchable 587-field dictionary integrated; Edge smoke QA passes on synthetic aggregate fixture and with dictionary-only checkout; remaining domain metrics pending |
+| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete, including all 50 adjacent-quarter observed transition matrices; formal risk-set/target protocol remains open |
+| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary; Edge QA passes against verified local PUF. Some analytical domain extensions remain open |
 | D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started; do not report PD/rates until frozen |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started |
 
 ## Intended metrics and guardrails
 
-The initial app should be descriptive, not decisioning. It can show mortgage
-origination mix and field coverage; unweighted counts alongside design-adjusted
-weighted totals; quarterly status composition; observed 30+/60+/90+ state counts;
-forbearance; termination; and transitions only where the previous and current
-states are eligible observations. Every view must separate actual delinquency
-codes from non-observation/administrative states. The weight sum itself is not a
-loan count or a PD; weighted cell totals are not incidence estimates.
+The initial app is descriptive, not decisioning. Current views show origination
+year/wave; categorical mortgage/borrower attributes; VantageScore bins and
+availability by role/quarter; unweighted counts alongside explicitly named
+descriptive weight sums; quarterly status composition; forbearance with the
+answered-code denominator; termination status/date consistency; and adjacent-
+quarter transitions conditioned on both snapshots being observed codes C/1–9.
+Every view separates delinquency codes from non-observation/administrative
+states. Weight sums are not loan counts or PD; weighted shares have no
+design-based variance estimate and are not incidence estimates.
 
 Do not use retrospective survey answers, future-quarter VantageScore, future
 forbearance, or mark-to-market LTV as origination predictors. Do not infer that a
@@ -71,6 +83,33 @@ is not attested to by FHFA. Do not use FHFA/NMDB marks to imply endorsement. If
 the data are cited, include the exact FHFA-required disclaimer in the report:
 
 > The opinions and analyses contained herein are solely of the users/authors of any data analyses or papers, and the FHFA cannot and does not attest to nor vouch for the quality, accuracy, or timeliness of the data, or analyses derived from these data after the data has been retrieved from FHFA.gov.
+
+## Reproduce the local audits
+
+The commands below require the current FHFA v7.0 PUF and matching SAS label/
+format downloads in a private local folder. They scan local files and write only
+aggregate receipts; never commit those receipts or the source payload.
+
+```powershell
+$puf = 'data\private\mortgage\nsmo-2026-05-27\puf\nsmo_v70_1324_puf.csv'
+$docs = 'data\private\mortgage\nsmo-2026-05-27\source_docs'
+python scripts\audit_nsmo_performance_states.py `
+  --puf-csv $puf --sas-labels "$docs\nsmo_v70_labels.sas" `
+  --sas-formats "$docs\nsmo_v70_formats.sas" `
+  --output artifacts\private\nsmo-performance-state-audit\receipt.json
+python scripts\audit_nsmo_domain_aggregates.py `
+  --puf-csv $puf --sas-labels "$docs\nsmo_v70_labels.sas" `
+  --sas-formats "$docs\nsmo_v70_formats.sas" `
+  --field-dictionary docs\data\nsmo-v70-field-dictionary.csv `
+  --output artifacts\private\nsmo-domain-aggregate-audit\receipt.json
+python scripts\audit_nsmo_weighted_tabulations.py `
+  --puf-csv $puf --weighted-pdf "$docs\nsmo-appendix-d-v70.pdf" `
+  --output artifacts\private\nsmo-weighted-tabulations\receipt.json
+```
+
+The live app verifies that the private aggregate receipts match the local PUF
+SHA-256, the public dictionary SHA-256, and the downloaded SAS source hashes
+before returning `/api/nsmo-domains`.
 
 ## Source
 

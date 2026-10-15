@@ -105,6 +105,57 @@ def _write_public_dictionary(root: Path) -> None:
         "format_name,format_value,format_label\nFMT,1,One\n", encoding="utf-8")
 
 
+def _write_domain_receipts(root: Path, source_sha: str) -> None:
+    from credit_atlas.workspace import sha256
+
+    dictionary = root / "docs/data/nsmo-v70-field-dictionary.csv"
+    source_docs = root / "data/private/mortgage/nsmo-2026-05-27/source_docs"
+    source_docs.mkdir(parents=True, exist_ok=True)
+    labels_path = source_docs / "nsmo_v70_labels.sas"
+    formats_path = source_docs / "nsmo_v70_formats.sas"
+    labels_path.write_text("labels", encoding="utf-8")
+    formats_path.write_text("formats", encoding="utf-8")
+    state_path = root / "artifacts/private/nsmo-performance-state-audit-20261015/receipt.json"
+    domain_path = root / "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.json"
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    domain_path.parent.mkdir(parents=True, exist_ok=True)
+    state = {
+        "status": "PASS", "sources": {"puf_csv": {"sha256": source_sha}},
+        "schema": {"rows": 2}, "termination": {
+            "code_labels_from_official_sas_formats": {"1": "Open", "2": "Terminated"},
+            "close_status_counts": {"1": 1, "2": 1},
+            "close_date_consistency": {"valid": 2},
+            "final_2025q3_performance_by_close_status": [],
+            "codebook_note_issue": "stale field reference",
+        },
+        "quarterly_state_matrix": [
+            {"quarter_end": f"Q{i}", "paired_transition_to_next_quarter": (
+                None if i == 50 else {
+                    "next_quarter_end": f"Q{i+1}",
+                    "observation_classes": {"observed_to_observed": 1, "observed_to_nonobservation": 1},
+                    "observed_state_transitions": [{"from": "C", "to": "1", "n": 1,
+                                                     "weight_sum_descriptive_only": 10.0}],
+                })}
+            for i in range(51)
+        ],
+        "limitations": ["No target."],
+    }
+    domain = {
+        "status": "PASS", "sources": {"puf_csv": {"sha256": source_sha},
+                                             "field_dictionary_sha256": sha256(dictionary),
+                                             "sas_labels_sha256": sha256(labels_path),
+                                             "sas_formats_sha256": sha256(formats_path)},
+        "schema": {"row_count": 2},
+        "origination_attributes": [{"field": f"attribute_{i}"} for i in range(30)],
+        "origination_scores": [{"field": f"score_{i}"} for i in range(5)],
+        "quarterly_respondent_scores": [{"quarter": f"Q{i}"} for i in range(51)],
+        "quarterly_forbearance": [{"quarter": f"Q{i}"} for i in range(23)],
+        "limitations": ["Weighted values descriptive only."],
+    }
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+    domain_path.write_text(json.dumps(domain), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -127,9 +178,35 @@ def test_nsmo_dictionary_rejects_incomplete_crosswalk(tmp_path):
         NsmoViews(tmp_path).dictionary()
 
 
+def test_nsmo_domain_profile_is_hash_bound_and_aggregates_only(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_public_dictionary(tmp_path)
+    _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+
+    result = NsmoViews(tmp_path).domains()
+
+    assert result["schema_version"] == "nsmo-domain-profile-v1"
+    assert result["termination"]["status_counts"] == {"1": 1, "2": 1}
+    assert len(result["quarterly_respondent_scores"]) == 51
+    assert len(result["quarterly_forbearance"]) == 23
+    assert result["observed_state_transitions"][0]["transitions"][0]["share_of_observed_from_state"] == 1.0
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_domain_profile_rejects_audit_for_another_source(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_public_dictionary(tmp_path)
+    _write_domain_receipts(tmp_path, "0" * 64)
+
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).domains()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
+    csv = tmp_path / "data/private/mortgage/nsmo-2026-05-27/puf/nsmo_v70_1324_puf.csv"
+    _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     source_web = Path(__file__).parents[1] / "apps" / "web"
     target_web = tmp_path / "apps" / "web"
     target_web.mkdir(parents=True)
@@ -155,6 +232,10 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert dictionary["field_count"] == 587
             assert dictionary["value_label_count"] == 1
+        with urlopen(base + "/api/nsmo-domains", timeout=5) as response:
+            domains = json.loads(response.read())
+            assert response.status == 200
+            assert len(domains["observed_state_transitions"]) == 50
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400

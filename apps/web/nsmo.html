@@ -36,9 +36,29 @@
         <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định; đây không phải share trong risk set, incidence hay PD. Analysis-weight total là tổng trọng số của các dòng theo trạng thái, không phải loan count hoặc event rate.</p>
       </section>
       <section class="panel two-col">
-        <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination mix</h2><div id="vintages" class="table-wrap"></div></div>
+        <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination year & survey wave</h2><div id="vintages" class="table-wrap"></div><div id="survey-waves" class="table-wrap"></div></div>
         <div><div class="eyebrow">FIELD QUALITY</div><h2>Analysis weight</h2><div id="weight-summary"></div><p class="footnote">FHFA mô tả Analysis_Weight là sampling weight × non-response adjustment. Việc phân tích dưới đây chưa chọn estimator hay variance treatment.</p></div>
       </section>
+      <section class="panel domain-analysis">
+        <div class="section-head"><div><div class="eyebrow">MORTGAGE LIFECYCLE · AGGREGATE ONLY</div><h2>Termination, credit score và forbearance</h2><p>Các trường ở từng phần có thời điểm, nhóm trả lời và mẫu số khác nhau.</p></div></div>
+        <div id="domain-state" class="domain-state" role="status">Đang tải domain aggregates…</div>
+        <div class="two-col domain-top">
+          <div><h3>Termination status</h3><div id="termination-summary" class="weight-summary"></div><div id="termination-table" class="table-wrap"></div><p class="footnote">Termination là trạng thái kết thúc mortgage trong PUF; không phân loại riêng payoff/prepayment và không tự coi là credit default.</p></div>
+          <div><h3>VantageScore 3.0 lúc origination</h3><label class="compact-control">Borrower role<select id="orig-score-choice"></select></label><div id="orig-score-summary"></div><div id="orig-score-table" class="table-wrap"></div><p class="footnote">Score là bin theo codebook; đơn vị quan sát vẫn là mortgage. Các borrower role không được cộng thành borrower-level denominator.</p></div>
+        </div>
+        <div class="domain-attributes"><h3>Origination mortgage/borrower attributes</h3><p class="footnote">Mỗi trường có category, missingness và mã hóa riêng. Mẫu số dưới đây là toàn bộ mortgage; các bin/nhãn giữ nguyên theo SAS format.</p><label class="compact-control">Field<select id="orig-attribute-choice"></select></label><div id="orig-attribute-summary"></div><div id="orig-attribute-table" class="table-wrap"></div></div>
+        <div class="two-col domain-bottom">
+          <div><h3>Respondent score theo quý</h3><div class="controls"><label>Score bin<select id="quarter-score-band"></select></label></div><figure class="chart-frame"><svg id="score-trend" viewBox="0 0 980 340" role="img" aria-label="VantageScore bin counts by quarter"></svg><figcaption id="score-trend-caption"></figcaption></figure></div>
+          <div><h3>Forbearance theo quý</h3><p class="footnote">Tỷ lệ chính chia số “In forbearance” cho các câu trả lời 1/2; Not applicable, Missing và blank không nằm trong mẫu số.</p><div id="forbearance-table" class="table-wrap"></div></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="section-head"><div><div class="eyebrow">QUARTER-TO-QUARTER · DESCRIPTIVE</div><h2>Ma trận chuyển trạng thái quan sát</h2><p>Mỗi ô là số chuyển tiếp loan-quarter giữa hai snapshot kề nhau, chỉ trong cặp có cả trạng thái nguồn và đích thuộc C/1–9.</p></div></div>
+        <div class="controls"><label>Cặp quý<select id="transition-pair-choice"></select></label><label>Measure<select id="transition-basis"><option value="count">Mortgage transitions</option><option value="weight">Analysis-weight total</option></select></label></div>
+        <div id="transition-meta" class="transition-meta"></div><div id="transition-matrix" class="table-wrap matrix-wrap"></div>
+        <p class="footnote">Phần trăm theo hàng chia cho các observed→observed transitions cùng trạng thái nguồn, theo measure đã chọn. Weighted sums chỉ mô tả, không phải incidence hay PD. Ma trận không bao gồm chuyển sang mã hành chính/gap.</p>
+      </section>
+      <section class="warning"><strong>Không đọc các phần này thành forecast hoặc PD.</strong><p>VantageScore theo quý, forbearance và tình trạng mortgage là biến sau origination; chỉ được xem tại hoặc trước index quarter trong một thiết kế động. Weighted shares ở đây chỉ mô tả composition và chưa có variance estimator. Quarterly snapshots không cung cấp ngày chính xác của delinquency/termination.</p></section>
       <section class="warning"><strong>Không đọc đây là tỷ lệ vỡ nợ.</strong><p>Quý quan sát chứa các khoản chưa mở, mới mở, history-ended, gap và suppressed. Dashboard giữ các mã này riêng, dùng số đếm theo toàn bộ sample và không dựng mẫu số at-risk. Quan sát theo quý không cho biết chính xác ngày bắt đầu sự kiện, có thể bỏ sót diễn biến giữa hai mốc, và không tự tạo target 12 tháng.</p></section>
       <section class="panel limitations"><div class="eyebrow">SCOPE & LIMITATIONS</div><ul id="limits"></ul><p class="disclaimer" id="disclaimer"></p></section>
     </div>

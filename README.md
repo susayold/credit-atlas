@@ -1,7 +1,5 @@
 # CreditAtlas
 
-**Public source release:** this repository contains software, tests, templates, and documentation. It excludes all source datasets, private research artifacts, local databases, credentials, and generated outputs. Read [PUBLIC_RELEASE_SCOPE.md](PUBLIC_RELEASE_SCOPE.md) before acquiring or registering data. Sample sizes and verification notes below describe local research runs and may not be reproducible without the separately acquired inputs.
-
 SEC issuer workspaces now include a **Corporate memo** tab with structured
 analyst sections, immutable server-derived filing/trend evidence and private
 revision/history export. See the [financial memo guide](docs/CORPORATE_FINANCIAL_MEMO_VI.md).
@@ -176,9 +174,8 @@ One research application, five domain workspaces. The first implementation is
 The implementation follows chapter 47 of the consolidated credit-risk research
 plan. The mortgage analytics engine is selectively vendored from the existing
 `susayold/credit-risk-strategy-lab` repository, with a pinned upstream commit and
-per-file digests. Raw data, row-level derived artifacts, review records and run receipts are not
-included in this public repository. Acquire authorized inputs directly from each
-publisher and keep them in local ignored directories.
+per-file digests. Raw data, row-level derived artifacts, review records and run
+receipts stay in ignored private directories on `D:`.
 
 ## Initial implementation
 
@@ -194,42 +191,34 @@ The current status and execution evidence are in `docs/IMPLEMENTATION_STATUS.md`
 The application is for local/private research. It does not make credit approvals,
 claim production/regulatory validation or present D3 event risk as accounting ECL.
 
-FHFA/CFPB NSMO is documented as a separate quarterly mortgage-performance case
-in [`docs/NSMO_D02_CASE_BUILD_PLAN_VI.md`](docs/NSMO_D02_CASE_BUILD_PLAN_VI.md).
-Its public-use file is not included. Obtain the current PUF directly from FHFA
-and accept FHFA's current notice and terms yourself; then run the aggregate-only
-profile, for example:
-
-    python scripts/audit_nsmo_puf.py <private-nsmo.csv> --output <private-audit.json>
-
-The script checks schema/IDs/status codes/weights and writes aggregate counts;
-it does not expose rows, identify individuals, define a PD target, or fit a
-model. Keep both input and output in private storage. See the source review for
-the FHFA-required analysis disclaimer.
-
 ## Run locally
 
-From the cloned repository directory in PowerShell:
+From D:\data\Codex\credit-atlas in PowerShell:
 
     .\scripts\run.ps1
 
 Open http://127.0.0.1:8770/. The server binds only to loopback. Python dependencies
 must be installed in the local .venv, including editable installs of this project
-and vendor/credit_risk_strategy_lab. This public release contains no data snapshot. Data-dependent workspaces remain
-unavailable until you acquire and register eligible data locally.
+and vendor/credit_risk_strategy_lab. The bundled existing private source snapshot
+is local-only and excluded from Git.
 
-For a new environment, run `scripts/setup.ps1` after reviewing the setup script and
-source-specific terms. It installs the observed dependency lock and editable
-packages; data acquisition is separate.
+For a new environment, run scripts/setup.ps1. It installs the observed dependency
+lock and both editable packages, with caches/temp files on D:.
 
-To run the public source-only regression suite after installing the development
-dependencies:
+To run engine and application checks:
 
-    python -m pytest -c pyproject.toml tests vendor/credit_risk_strategy_lab/tests -q
+    .\scripts\test.ps1
 
 To check official source access directly:
 
     .\.venv\Scripts\python.exe -m credit_atlas.cli source-access
+
+For the separate NSMO D02 codebook and weighted-table audits, install the PDF
+parsers with `python -m pip install -e ".[research]"`. Obtain the current FHFA
+PUF and review/accept its Notice of Monitoring and Terms directly with FHFA;
+keep the PUF and resulting private audit receipts outside Git. See the
+[NSMO D02 plan](docs/NSMO_D02_CASE_BUILD_PLAN_VI.md) for commands, scope, and
+the state/weighting limitations.
 
 To download authorized annual sample URLs through HTTP:
 
@@ -258,11 +247,9 @@ Engineering acceptance commands:
     .\.venv\Scripts\python.exe -X utf8 scripts/audit_private_package.py
     .\.venv\Scripts\python.exe -X utf8 scripts/benchmark_api.py
 
-Data-dependent acceptance scripts require the corresponding authorized local data
-and may report unavailable when it is absent. The public source-only test scope
-and private-input skips are documented in `PUBLIC_RELEASE_SCOPE.md` and
-`tests/public_private_data_skiplist.json`. Browser QA uses Chrome with Playwright
-and writes local receipts; do not publish source data or findings.
+They use actual verified case data, create separate QA review databases and
+write private receipts. Browser QA uses preinstalled Google Chrome with
+Playwright; no source data or findings are published.
 
 Excel intake, editable scenario workbooks and native-currency review exports:
 [EXCEL_WORKFLOW.md](docs/EXCEL_WORKFLOW.md). The input template is packaged

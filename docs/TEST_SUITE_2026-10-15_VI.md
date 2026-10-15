@@ -7,21 +7,20 @@ searchable 587-field dictionary, SAS value-label browser, and metadata-only API.
 
 | Kết quả | Số lượng |
 |---|---:|
-| Collected/executed | 1,623 |
-| Passed | 1,623 |
+| Collected/executed | 1,628 |
+| Passed | 1,628 |
 | Failures/errors/skips | 0 / 0 / 0 |
-| Elapsed | 339.06 seconds |
-| Focused NSMO tests | 20/20 PASS |
-| Edge browser smoke | PASS: dashboard fixture, search/detail/value labels, dictionary-only without PUF |
-| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-dictionary/receipt.json` |
+| Elapsed | 361.97 seconds |
+| Focused NSMO tests | 38/38 PASS |
+| Edge browser QA | PASS: verified PUF, 30 origination attributes, score trends, forbearance, termination, transition matrix |
+| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-domain-analytics/receipt.json` |
 
 The run includes dictionary API schema and full field-count checks, SAS label
 metadata, fail-closed handling for incomplete mappings, and privacy checks for
-the aggregate profile. The Edge browser smoke verified the dictionary/search
-and confirmed it loads without a private PUF. After syncing the whitelisted
-files to the public mirror, its full source suite passed **1,427** tests and
-skipped **196** tests explicitly listed as requiring omitted private inputs;
-receipt `artifacts/private/public-mirror-tests-20261015-nsmo-dictionary/receipt.json`.
+the aggregate profile and domain views. Edge browser QA verified distinct
+applicable/not-applicable/missing denominators, domain selectors, and
+weighted/unweighted transition views. The public mirror's new regression is
+run after this source update.
 
 ## Latest run after NSMO D02 aggregate workspace
 

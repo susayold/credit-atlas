@@ -2,6 +2,8 @@
 
 Date checked: 2026-10-15. FHFA's May 27, 2026 NSMO v7.0 PUF has been downloaded after the user explicitly authorized the two-step monitoring/terms acknowledgement. The file has passed structural and code-domain checks; no credit-risk target or model has been created.
 
+FHFA's current NSMO page was rechecked during the expanded D02 build and still lists the May 27, 2026 v7.0 release as latest. The current PUF is 62,359 mortgages originated 2013–2024 with quarterly performance through 2025Q3; no newer NSMO PUF vintage was available at this check. See [official FHFA NSMO page](https://www.fhfa.gov/data/nsmo).
+
 ## Why this source matters
 
 FHFA says the current NSMO public-use file (May 27, 2026) contains 62,359 sample mortgages originated from 2013 through 2024 and quarterly mortgage-performance information through 2025 Q3. The sample is drawn from newly originated mortgages in the NMDB/Experian frame, about 6,000 loans per quarter. It is a public-use, de-identified sample, not the Freddie Mac Single-Family Loan-Level Dataset and not a Freddie annual vintage. It could support a separate external-cohort or robustness study after the raw file, survey response process, weights, censoring, and target definition are audited.
@@ -33,6 +35,38 @@ The unweighted status totals across all loan-quarter cells are: current (`C`) 97
 
 The 51-quarter close/state cross-check finds 26,357 `Close_Status=1` (open) and 36,002 `Close_Status=2` (terminated); open loans have `Close_Year/Month=-2`, terminated loans have observed dates. No `Close_Status=B` is present. The SAS format file includes codes 3/4 for “likely/possibly terminated,” but they are absent from the actual v7.0 PUF. Appendix C p. C-148 documents only 1/2 and has a note referring to `close_status_1224`, while the v7.0 field is `Close_Status_0925`; treat that note as a stale field reference and do not infer B from it.
 
+## Expanded aggregate domain profile
+
+A second full-file streaming audit checks 30 origination mortgage/borrower
+attributes (including the cash-out refinance flag), five origination score
+roles, 51 quarterly respondent-score fields, and 23 forbearance fields. All
+109 selected fields reconcile to the official v7.0 SAS domains; the API serves
+only publisher-binned counts, shares, and explicitly descriptive weight sums.
+No exact score values, rows, or identifiers are returned.
+
+`score_orig_r` has a score category for 61,897/62,359 mortgages (99.26%); spouse
+score coverage is 31,500 (50.51%), and other-borrower roles are progressively
+sparser. These are mortgage-row coverage counts, not unique borrowers. The
+respondent quarterly score is present for 25,945 mortgages in 2025Q3 (41.61% of
+the full fixed sample); a quarter-specific snapshot count is not a stable
+borrower cohort or an attrition-adjusted series.
+
+For 2025Q3, 110 of 26,222 valid forbearance responses (codes 1 or 2) are code 1,
+or 0.4195%; the corresponding Analysis_Weight share among those answered codes
+is 0.4987%. Codes -2 (not applicable), -4 (missing), and blank remain outside
+the response denominator. This is a snapshot response composition, not a
+forbearance incidence measure or default rate.
+
+The app now presents termination counts/date consistency, origination attribute
+bins, score availability by origination role and respondent score bin trends,
+23-quarter forbearance, and selected adjacent-quarter performance transition
+matrices. A transition cell is a loan-quarter pair with both statuses in the
+observed set C/1–9; row shares divide by transitions from that observed source
+state. The matrix omits transitions involving administrative/non-observation
+codes and is not a default-transition probability. Weighted matrices are
+descriptive only. Edge browser QA against the local verified PUF passed with no
+browser errors.
+
 The selected Appendix D check is bounded to seven X05 fields, 11 origination years, two purpose groups and three responses; it supports a weighted descriptive cross-check only. FHFA notes that published percentages are rounded, can fail to sum to 100, and may be unavailable when a question was not asked for a cohort. Purchase/refinance grouping follows X33 (purchase=1; refinance=2–5). The page also presents composition rather than loan-performance validation.
 
 ## Recommended placement in Credit Atlas
@@ -60,7 +94,7 @@ Next work sequence for the separate NSMO case:
 2. Review the completed 51-quarter count/transition and close-status audit, then establish defensible rules for when a loan enters/leaves an observed risk set. The aggregate state audit is complete; the risk-set decision is not.
 3. Freeze a target protocol separately from Freddie. Define the quarterly horizon, event definition, competing termination outcomes, eligibility, censoring, missing/suppressed states and weighting/variance treatment before any PD estimation.
 4. Finish the point-in-time feature allowlist; quarantine retrospective survey answers, post-origination scores and other future information.
-5. The separate D02/NSMO page/API now serves aggregate-only evidence, the required FHFA caveat, and a searchable field/value-label dictionary. Expand/accept domain metrics only after observation-state rules are reconciled. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
+5. The separate D02/NSMO page/API now serves aggregate-only evidence, the required FHFA caveat, searchable field/value labels, 30 origination attribute profiles, score availability/trends, termination, forbearance and adjacent-quarter matrices. Remaining work is question/wave comparability, weight/variance design, formal risk-set/target protocol, and any additional validated domain views. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
 
 ## Official documentation acquired locally
 

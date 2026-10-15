@@ -524,6 +524,13 @@ def handler_for(service: ResearchService):
                     if url.path.endswith("-report"):
                         self.send(200, result, filename="FHFA-Enterprise-PUDB-2025-private-acquisition-profile.json", head=head)
                         return
+                elif url.path in {"/api/hud-fha-iif-profile", "/api/hud-fha-iif-profile-report"}:
+                    if query:
+                        raise ValueError("HUD FHA tract profile accepts no filters")
+                    result = service.hud_fha_iif_profile()
+                    if url.path.endswith("-report"):
+                        self.send(200, result, filename="HUD-FHA-private-insurance-in-force-tract-profile.json", head=head)
+                        return
                 elif url.path == "/api/studies":
                     result = service.studies(run)
                 elif url.path == "/api/episode-followup":

@@ -116,6 +116,22 @@ def run(root: Path):
                     assert pudb_export["unique_record_keys"] == pudb_export["rows"]
                     assert "record_num_sf_ctf" not in pudb_export
                     checks.append("FHFA PUDB export contains verified aggregates and no record-level keys")
+                    hud = page.locator("#hud-fha-iif-tract")
+                    expect(hud).to_contain_text("85,154", timeout=15000)
+                    expect(hud).to_contain_text("timing as unresolved")
+                    expect(hud).to_contain_text("−4 value is excluded")
+                    checks.append("HUD FHA tract exposure profile renders with its vintage and special-code caveats")
+                    with page.expect_download() as captured:
+                        page.get_by_role("button", name="Xuất HUD FHA aggregate profile", exact=True).click()
+                    download = captured.value
+                    hud_path = output / "hud-fha-iif-aggregate-profile.json"
+                    download.save_as(str(hud_path))
+                    hud_export = json.loads(hud_path.read_text(encoding="utf-8"))
+                    assert hud_export["status"] == "AVAILABLE" and hud_export["visibility"] == "private"
+                    assert hud_export["unique_tracts"] == 85_154 and hud_export["states_or_territories"] == 52
+                    assert "GEOID" not in hud_export and "GEOID" not in json.dumps(hud_export)
+                    assert hud_export["uninterpreted_source_codes"]["unpaid_balance_usd"] == {"-4": 9_598}
+                    checks.append("HUD FHA export keeps tract keys private and quarantines the undocumented -4 value")
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")
@@ -466,6 +482,16 @@ def run(root: Path):
             assert context_downloads == []
             checks.append("FHFA PUDB export failure is visible and does not create a fake file")
             error_page.unroute("**/api/fhfa-pudb-profile-report*")
+
+            error_page.route("**/api/hud-fha-iif-profile-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic HUD FHA export outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            error_page.get_by_role("button", name="Xuất HUD FHA aggregate profile", exact=True).click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic HUD FHA export outage")
+            assert context_downloads == []
+            checks.append("HUD FHA source export failure is surfaced and does not produce a file")
+            error_page.unroute("**/api/hud-fha-iif-profile-report*")
 
             error_page.route("**/api/mortgage-provenance*", lambda route: route.fulfill(
                 status=503, content_type="application/json",

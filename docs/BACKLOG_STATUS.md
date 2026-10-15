@@ -68,7 +68,7 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 66 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, and shared direct-attachment download success/error are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-028 | Partial | 69 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, and shared direct-attachment download success/error are checked. Other workspace API/delivery routes still need scoped checks |
 | M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone D01 browser acceptance passes 64/64 checks. Qualified multi-vintage fit/calibration/final OOT remains blocked |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
@@ -87,6 +87,7 @@ format/resource profiling and model-use qualification remain unverified.
 - Latest standalone browser acceptance: artifacts/private/browser-qa-12b9ce006825/receipt.json; 61 checks PASS. Adds actual Market series and assumption-only bond JSON exports, verifies their private scope/filter content, and confirms 503/502 export failures surface without fake downloads (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-ce65ee3cf106/receipt.json; 64 checks PASS. Adds FHFA 2025 PUDB acquisition profile visibility, aggregate-only private JSON integrity, source-population caveats and export-failure handling (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-6477b486711c/receipt.json; 66 checks PASS. Adds the shared attachment path: a real Excel template preserves its server filename, while a simulated HTTP 503 report failure shows an error without creating a fake file (2026-10-15).
+- Latest standalone browser acceptance: artifacts/private/browser-qa-7a73963387de/receipt.json; 69 checks PASS. Adds HUD FHA tract exposure visibility, key-free private aggregate export with source-code/vintage caveats, and simulated export failure handling (2026-10-15).
 - Chart/support audit: docs/D01_CHART_SUPPORT_AUDIT_VI.md and artifacts/private/d01-chart-support-a5a39d8e7acc/receipt.json.
 - Reproduction audit: docs/D01_REPRODUCTION_AUDIT_VI.md; foundation receipt at artifacts/private/d01-a24484b21a21/reproduction-pipeline-0415306845cd.json; final descriptive receipt at artifacts/private/d01-final-reproduction-qa42-20261015/receipt.json.
 - Case study: docs/D01_CASE_STUDY_VI.md (descriptive checkpoint; model claims explicitly gated).
@@ -173,6 +174,22 @@ files. The 61-check acceptance passed on the verified D01 case; receipt:
 suite passed 9/9 tests. M01-028 remains Partial because other workspaces still
 need scoped route and export checks; this does not change the 26/50 completion
 count or the model/data gates.
+
+## 2026-10-15 HUD FHA geographic exposure source
+
+Acquired the official HUD ArcGIS CSV to private storage after confirming the
+HUD-hosted portfolio XLSX itself was blocked with HTTP 403. The tract table
+contains 85,154 unique 2010 Census GEOIDs and 20 columns. Profiled nonblank
+active-loan and exposure aggregates with no tract-level export. An undocumented
+`-4` appears 9,598 times each in unpaid-balance and original-amount measures;
+the reader quarantines this code rather than summing it or treating it as zero.
+HUD catalog metadata says coverage 2025-03, while the FeatureServer layer text
+still says 09/2021, so effective timing remains unresolved. Added a receipt-
+verified API and aggregate-only Sources panel. Four parser contract tests pass;
+the latest real-data browser acceptance is 69/69 PASS with a key-free profile
+export and injected HTTP 503 failure check. Source note: `docs/HUD_FHA_IIF_TRACT_REVIEW_VI.md`.
+This is separate FHA exposure context and does not change D01's 26/50 status or
+qualify model data.
 
 ## 2026-10-15 FHFA PUDB source continuation
 

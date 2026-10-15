@@ -140,6 +140,7 @@ async function sources(container,generation){
   await fannieSamplePane(container,generation);
   await fhfaNmdbPerformancePane(container,generation);
   await fhfaPudbPane(container,generation);
+  await hudFhaIifPane(container,generation);
 }
 async function fhfaNmdbPerformancePane(container,generation){
  const box=card('FHFA NMDB · U.S. mortgage performance context','Quarterly national aggregate · comparison context only; independent source population');box.id='fhfa-nmdb-performance';container.append(box);
@@ -184,6 +185,23 @@ async function fhfaPudbPane(container,generation){
   r.limitations.forEach(x=>box.append(note(x)));
   const source=el('a','button secondary','Mở FHFA Enterprise PUDB source page');source.href='https://www.fhfa.gov/data/pudb';source.target='_blank';source.rel='noopener noreferrer';box.append(source);
   box.append(button('Xuất FHFA PUDB aggregate profile',()=>downloadJSON('/api/fhfa-pudb-profile-report','FHFA-Enterprise-PUDB-2025-private-acquisition-profile.json')));
+ }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
+}
+async function hudFhaIifPane(container,generation){
+ const box=card('HUD FHA · Insurance in Force by Census tract','Static geography-level exposure context · source aggregates only; no delinquency/default outcome');box.id='hud-fha-iif-tract';container.append(box);
+ try{
+  const r=await api('/api/hud-fha-iif-profile');if(generation!==renderGeneration)return;
+  if(r.status!=='AVAILABLE'){box.append(empty(r.reason||'HUD FHA tract profile unavailable.'));return;}
+  const total=r.national_totals_nonblank_tracts||{};
+  box.append(supportList([['Source records · 2010 Census tracts',number(r.unique_tracts)],['States/territories represented',number(r.states_or_territories)],['Active insured loans · nonblank source cells',number(total.active_insured_loans)],['Unpaid balance · nonnegative coded cells',usd(total.unpaid_balance_usd)],['Original insured mortgage amount · nonnegative coded cells',usd(total.original_mortgage_amount_usd)],['Source CSV SHA-256',r.source_sha256]]));
+  const rows=Object.entries(r.state_aggregates||{}).map(([state,v])=>({state,...v})).sort((a,b)=>b.unpaid_balance_usd-a.unpaid_balance_usd).slice(0,10);
+  box.append(table(['State','Tract rows','Tracts with balance','Active FHA loans',{label:'Unpaid balance',number:true}],rows.map(v=>[v.state,number(v.tract_rows),number(v.tracts_with_balance),number(v.active_insured_loans),usd(v.unpaid_balance_usd)])));
+  const codes=Object.entries(r.uninterpreted_source_codes||{}).flatMap(([field,values])=>Object.entries(values).map(([code,count])=>[field,code,number(count)]));
+  if(codes.length)box.append(table(['Field','Uninterpreted source code','Tract occurrences'],codes));
+  box.append(callout('This is aggregate FHA insured exposure, not a loan-level panel or default-risk sample. Tract IDs are not exported; blank fields stay missing and the undocumented −4 value is excluded from sums. HUD catalog metadata says coverage 2025-03, but the FeatureServer layer description says 09/2021; treat timing as unresolved and do not infer trends/current exposure.',true));
+  r.limitations.forEach(x=>box.append(note(x)));
+  const source=el('a','button secondary','Mở HUD FHA tract source metadata');source.href=r.source_page;source.target='_blank';source.rel='noopener noreferrer';box.append(source);
+  box.append(button('Xuất HUD FHA aggregate profile',()=>downloadJSON('/api/hud-fha-iif-profile-report','HUD-FHA-private-insurance-in-force-tract-profile.json')));
  }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
 }
 async function fannieSamplePane(container,generation){

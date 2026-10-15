@@ -426,6 +426,10 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     for name in ("nmdb-performance-national-quarterly-2026q2.csv",
                  "nmdb-performance-national-quarterly-2026q2-receipt.json"):
         shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
+    shutil.copyfile(Path(__file__).parents[1] / "docs/data/nsmo-v70-survey-returns.csv",
+                    target_data / "nsmo-v70-survey-returns.csv")
+    shutil.copyfile(Path(__file__).parents[1] / "docs/data/nsmo-v70-usable-responses.csv",
+                    target_data / "nsmo-v70-usable-responses.csv")
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=tmp_path)))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
@@ -438,6 +442,8 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
             assert "Chuyển trạng thái kề quý vào 90+" in html
+            assert "Kênh phản hồi thay đổi theo wave" in html
+            assert "usable-responses-table" in html
             assert "/downloads/nsmo-reference.xlsx" in html
             assert "/downloads/hud-fha-performance.xlsx" in html
             assert "/downloads/nmdb-performance.xlsx" in html
@@ -492,6 +498,21 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert dictionary["field_count"] == 587
             assert dictionary["value_label_count"] == 1
+        with urlopen(base + "/api/nsmo-survey-returns", timeout=5) as response:
+            returns = json.loads(response.read())
+            assert response.status == 200
+            assert len(returns["waves"]) == 48
+            assert returns["puf_v70"]["surveys_completed_total"] == 74193
+            assert returns["puf_v70"]["online_share_pct_of_completed"] == 45.55
+            assert returns["usability"]["usable_responses_table4"] == 63151
+            assert returns["usability"]["puf_v70_rows_and_tables5_6_2013_2024"] == 62359
+            assert returns["usability"]["usable_table4_minus_puf_scope"] == 792
+            assert returns["usability"]["wave_7_remote_rural_scope_gap"] == 295
+            assert returns["usability"]["wave_45_46_origination_scope_gap"] == 497
+            assert returns["mode_shift"]["change_percentage_points"] == 41.06
+            assert returns["waves"][45]["included_in_nsmo_v70_puf"] is True
+            assert returns["waves"][46]["included_in_nsmo_v70_puf"] is False
+            assert "no respondent-level response-mode field" in " ".join(returns["limitations"])
         with urlopen(base + "/api/nsmo-domains", timeout=5) as response:
             domains = json.loads(response.read())
             assert response.status == 200
@@ -526,6 +547,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-first-observed-transition-support?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-survey-returns?run=unexpected", timeout=5)
         assert error.value.code == 400
     finally:
         server.shutdown()

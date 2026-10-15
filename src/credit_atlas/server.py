@@ -165,6 +165,11 @@ def handler_for(service: ResearchService):
                         raise ValueError("NSMO dictionary accepts no filters")
                     self.send(200, nsmo_views.dictionary(), head=head)
                     return
+                if url.path == "/api/nsmo-survey-returns":
+                    if query:
+                        raise ValueError("NSMO survey-return table accepts no filters")
+                    self.send(200, nsmo_views.survey_returns(), head=head)
+                    return
                 if url.path == "/api/nsmo-domains":
                     if query:
                         raise ValueError("NSMO domain profile accepts no filters")

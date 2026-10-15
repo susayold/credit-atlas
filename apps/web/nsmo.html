@@ -70,6 +70,17 @@
         <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination year & survey wave</h2><div id="vintages" class="table-wrap"></div><div id="survey-waves" class="table-wrap"></div></div>
         <div><div class="eyebrow">FIELD QUALITY</div><h2>Analysis weight</h2><div id="weight-summary"></div><p class="footnote">FHFA mô tả Analysis_Weight là sampling weight × non-response adjustment. Việc phân tích dưới đây chưa chọn estimator hay variance treatment.</p></div>
       </section>
+      <section class="panel response-mode-panel">
+        <div class="section-head"><div><div class="eyebrow">SURVEY DESIGN · AGGREGATE RESPONSE COUNTS</div><h2>Kênh phản hồi thay đổi theo wave</h2><p>Đếm khảo sát hoàn tất theo thư, online tiếng Anh và online tiếng Tây Ban Nha trong FHFA Technical Report Table 3.</p></div></div>
+        <div id="survey-returns-state" class="domain-state" role="status">Đang kiểm tra bảng response theo wave…</div>
+        <div id="survey-returns-metrics" class="metric-grid" aria-label="NSMO survey response mode metrics"></div>
+        <div id="survey-returns-table" class="table-wrap"></div>
+        <h3>From returned surveys to PUF v7.0</h3>
+        <div id="usable-responses-metrics" class="metric-grid" aria-label="NSMO usable response reconciliation"></div>
+        <div id="usable-responses-table" class="table-wrap"></div>
+        <p class="footnote">Tổng hợp PUF giới hạn wave 1–46; report có thêm wave 47–48. PUF không có trường response-mode ở cấp mortgage, nên thay đổi tỷ lệ online qua wave không cho biết khác biệt đầu ra tín dụng theo mode, cũng không phải điều chỉnh non-response. FHFA cho biết online questionnaire có skip logic khác với bản giấy ở một số wave; thiếu biến mode khiến chưa thể tách hiệu ứng này khỏi khác biệt wave/population.</p>
+        <p class="footnote">Table 4 phân loại usability sau khi nhận survey: 63.151 usable trên 74.193 returns. Tables 5–6 chỉ trình bày origination 2013–2024 và loại special remote-rural sample; tổng 62.359 khớp kích thước PUF. Chênh lệch 792 là scope reconciliation cấp aggregate (295 ở wave 7; 497 ở wave 45–46), không phải hồ sơ bị mất có thể nối ID hoặc kết luận rủi ro.</p>
+      </section>
       <section class="panel domain-analysis">
         <div class="section-head"><div><div class="eyebrow">MORTGAGE LIFECYCLE · AGGREGATE ONLY</div><h2>Termination, credit score và forbearance</h2><p>Các trường ở từng phần có thời điểm, nhóm trả lời và mẫu số khác nhau.</p></div></div>
         <div id="domain-state" class="domain-state" role="status">Đang tải domain aggregates…</div>

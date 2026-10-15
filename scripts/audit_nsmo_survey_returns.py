@@ -29,6 +29,22 @@ FIELDS = [
     "online_english_share_pct_of_completed", "online_spanish_share_pct_of_completed",
     "included_in_nsmo_v70_puf", "source_note",
 ]
+USABILITY_FIELDS = [
+    "survey_wave", "surveys_completed_total", "duplicate_or_ineligible", "answered_no_to_q1",
+    "did_not_finish_survey", "wrong_loan", "usable_responses_table4",
+    "usable_responses_origination_2013_2024_tables5_6", "gap_to_usable_table4",
+    "source_pdf_page_table4", "source_pdf_pages_tables5_6", "source_note",
+]
+EXPECTED_USABILITY_TOTALS = {
+    "surveys_completed_total": 74193,
+    "duplicate_or_ineligible": 2009,
+    "answered_no_to_q1": 4102,
+    "did_not_finish_survey": 2592,
+    "wrong_loan": 2339,
+    "usable_responses_table4": 63151,
+    "usable_responses_origination_2013_2024_tables5_6": 62359,
+    "gap_to_usable_table4": 792,
+}
 
 
 def _integer(value: str) -> int:
@@ -98,6 +114,107 @@ def parse_row_line(line: str) -> dict | None:
     }
 
 
+def parse_usable_row_line(line: str) -> dict | None:
+    """Parse one Table 4 usable-response disposition row."""
+    cells = line.split()
+    if len(cells) != 7 or not cells[0].isdigit():
+        return None
+    wave = int(cells[0])
+    if wave not in range(1, 47):
+        return None
+    returned, duplicate, no_q1, breakoff, wrong_loan, usable = (_integer(value) for value in cells[1:])
+    if returned != duplicate + no_q1 + breakoff + wrong_loan + usable:
+        raise ValueError(f"Wave {wave}: Table 4 usable dispositions do not reconcile to returned surveys")
+    return {
+        "survey_wave": wave,
+        "surveys_completed_total": returned,
+        "duplicate_or_ineligible": duplicate,
+        "answered_no_to_q1": no_q1,
+        "did_not_finish_survey": breakoff,
+        "wrong_loan": wrong_loan,
+        "usable_responses_table4": usable,
+    }
+
+
+def parse_origin_usable_line(line: str) -> tuple[int, int] | None:
+    """Return wave and published total for one Table 5 or Table 6 row."""
+    cells = line.split()
+    if len(cells) not in {7, 9} or not cells[0].isdigit():
+        return None
+    wave = int(cells[0])
+    if wave not in range(1, 47):
+        return None
+    reported_total = _integer(cells[1])
+    year_counts = [_integer(value) for value in cells[2:]]
+    if reported_total != sum(year_counts):
+        raise ValueError(f"Wave {wave}: Tables 5/6 origination-year counts do not reconcile")
+    return wave, reported_total
+
+
+def extract_usable_responses(pdf_path: Path) -> tuple[list[dict], dict]:
+    """Reconcile returned → usable → published-originations counts in Tables 4–6."""
+    try:
+        import pdfplumber
+    except ImportError as error:
+        raise RuntimeError("Install the research optional dependencies: pip install -e .[research]") from error
+    table4: dict[int, dict] = {}
+    tables56: dict[int, int] = {}
+    pages56: dict[int, list[int]] = {}
+    with pdfplumber.open(pdf_path) as pdf:
+        for page_number, page in enumerate(pdf.pages, start=1):
+            text = page.extract_text() or ""
+            if "Usable Survey Responses" not in text:
+                continue
+            is_table4 = "Table 4. Usable Survey Responses" in text
+            is_tables56 = ("Table 5. Usable Survey Responses" in text
+                           or "Table 6. Usable Survey Responses" in text)
+            for line in text.splitlines():
+                usable_row = parse_usable_row_line(line) if is_table4 else None
+                if usable_row:
+                    wave = usable_row["survey_wave"]
+                    if wave in table4:
+                        raise ValueError(f"Duplicate Table 4 wave {wave}")
+                    usable_row["source_pdf_page_table4"] = page_number
+                    table4[wave] = usable_row
+                origin_row = parse_origin_usable_line(line) if is_tables56 else None
+                if origin_row:
+                    wave, amount = origin_row
+                    tables56[wave] = tables56.get(wave, 0) + amount
+                    pages56.setdefault(wave, []).append(page_number)
+    if set(table4) != set(range(1, 47)):
+        raise ValueError(f"Expected Table 4 waves 1–46, got {len(table4)}")
+    if set(tables56) != set(range(1, 47)):
+        raise ValueError(f"Expected Tables 5/6 origination summary for waves 1–46, got {len(tables56)}")
+    rows = []
+    for wave in range(1, 47):
+        row = table4[wave]
+        published = tables56[wave]
+        gap = row["usable_responses_table4"] - published
+        note = ""
+        if wave == 7:
+            note = "Table 5 footnote excludes the special remote-rural sample; usable count is 295 above the published 2013–2024 origination table."
+        elif wave in {45, 46}:
+            note = "Table 4 includes usable returns beyond the 2013–2024 origination scope of Tables 5/6 and the v7.0 PUF."
+        if gap < 0:
+            raise ValueError(f"Wave {wave}: Tables 5/6 usable count exceeds Table 4")
+        rows.append({
+            **row,
+            "usable_responses_origination_2013_2024_tables5_6": published,
+            "gap_to_usable_table4": gap,
+            "source_pdf_pages_tables5_6": ";".join(str(page) for page in sorted(set(pages56[wave]))),
+            "source_note": note,
+        })
+    totals = {field: sum(row[field] for row in rows) for field in EXPECTED_USABILITY_TOTALS}
+    if totals != EXPECTED_USABILITY_TOTALS:
+        raise ValueError(f"Tables 4–6 usable-response totals do not reconcile to FHFA printed totals: {totals}")
+    audit = {
+        "waves": 46,
+        "reconciliation": {"matches_printed_totals": True, "aggregate_totals": totals},
+        "limitation": "Difference between Table 4 and Tables 5/6 is aggregate scope reconciliation; no survey respondent is linked to a PUF record by this extraction.",
+    }
+    return rows, audit
+
+
 def extract(pdf_path: Path) -> tuple[list[dict], dict]:
     try:
         import pdfplumber
@@ -155,23 +272,39 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-pdf", type=Path, required=True)
     parser.add_argument("--output-csv", type=Path, required=True)
+    parser.add_argument("--usable-output-csv", type=Path)
     parser.add_argument("--receipt", type=Path, required=True)
     args = parser.parse_args()
     rows, audit = extract(args.source_pdf)
+    usable_rows, usability_audit = extract_usable_responses(args.source_pdf)
+    usable_output = args.usable_output_csv or args.output_csv.with_name("nsmo-v70-usable-responses.csv")
     args.output_csv.parent.mkdir(parents=True, exist_ok=True)
     with args.output_csv.open("w", encoding="utf-8-sig", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=FIELDS + ["source_pdf_page"])
         writer.writeheader()
         writer.writerows(rows)
+    usable_output.parent.mkdir(parents=True, exist_ok=True)
+    with usable_output.open("w", encoding="utf-8-sig", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=USABILITY_FIELDS)
+        writer.writeheader()
+        writer.writerows(usable_rows)
     audit["derived_table"] = {
         "filename": args.output_csv.name,
         "rows": len(rows),
         "sha256": hashlib.sha256(args.output_csv.read_bytes()).hexdigest(),
     }
     audit["built_at"] = datetime.now(timezone.utc).isoformat()
+    audit["usable_responses"] = usability_audit
+    audit["related_table"] = {
+        "filename": usable_output.name,
+        "rows": len(usable_rows),
+        "sha256": hashlib.sha256(usable_output.read_bytes()).hexdigest(),
+    }
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
     args.receipt.write_text(json.dumps(audit, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({"status": audit["status"], "waves": audit["waves"], "puf_v70_waves": audit["puf_v70_waves"],
+                      "usable_waves": len(usable_rows), "usable_total": usability_audit["reconciliation"]["aggregate_totals"]["usable_responses_table4"],
+                      "puf_scope_total": usability_audit["reconciliation"]["aggregate_totals"]["usable_responses_origination_2013_2024_tables5_6"],
                       "receipt": str(args.receipt)}))
 
 

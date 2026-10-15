@@ -53,6 +53,7 @@ function render(profile){
   loadFirstObservedTransitionSupport();
   loadHudFhaBenchmark();
   loadNmdbContext();
+  loadSurveyReturns();
 }
 async function loadHudFhaBenchmark(){
   const state=$('hud-fha-state');
@@ -138,6 +139,43 @@ function drawNmdbTrend(svg,observations,seriesId,markets){
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}
   catch(error){$('domain-state').className='domain-state error';$('domain-state').textContent=`Domain metrics unavailable: ${error.message}`;}
+}
+async function loadSurveyReturns(){
+  const state=$('survey-returns-state');
+  try{
+    const response=await fetch('/api/nsmo-survey-returns',{cache:'no-store',headers:{Accept:'application/json'}});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+    const p=data.puf_v70,shift=data.mode_shift;
+    $('survey-returns-metrics').replaceChildren(
+      metric('Completed surveys · waves 1–46',n(p.surveys_completed_total),`${n(p.waves)} waves in v7.0 PUF`),
+      metric('Completed / mailed',`${dec(p.completion_pct_of_mailed)}%`,`${n(p.surveys_mailed)} mailed surveys`),
+      metric('Online share of completes',`${dec(p.online_share_pct_of_completed)}%`,`${n(p.online_english)} English · ${n(p.online_spanish)} Spanish`),
+      metric('Online share · wave 1 → 46',`${dec(shift.wave_1_online_share_pct)}% → ${dec(shift.wave_46_online_share_pct)}%`,`+${dec(shift.change_percentage_points)} percentage points`)
+    );
+    const rows=data.waves.map(row=>[
+      row.survey_wave,n(row.surveys_mailed),n(row.surveys_delivered),n(row.surveys_completed_total),
+      n(row.completed_by_mail),n(row.online_english),n(row.online_spanish),
+      `${dec(row.completion_pct_of_mailed)}%`,`${dec(row.online_share_pct_of_completed)}%`,
+      row.included_in_nsmo_v70_puf?'PUF v7.0':'Outside PUF'
+    ]);
+    const view=table(['Wave','Mailed','Delivered','Completed','Mail','Online EN','Online ES','Complete / mailed','Online / completed','Release'],rows,[1,2,3,4,5,6,7,8]);
+    view.classList.add('survey-returns-table');$('survey-returns-table').replaceChildren(view);
+    const usable=data.usability,excluded=Object.values(usable.exclusions_by_disposition).reduce((a,b)=>a+b,0);
+    $('usable-responses-metrics').replaceChildren(
+      metric('Usable returns · Table 4',n(usable.usable_responses_table4),`${dec(usable.usable_share_of_returned_pct)}% of completed returns`),
+      metric('Rows in PUF v7.0',n(usable.puf_v70_rows_and_tables5_6_2013_2024),'Tables 5–6 · origination 2013–2024'),
+      metric('Returned but unusable',n(excluded),'Duplicate/ineligible, Q1 no, breakoff, wrong loan'),
+      metric('Usable outside PUF scope',n(usable.usable_table4_minus_puf_scope),`${n(usable.wave_7_remote_rural_scope_gap)} wave 7 · ${n(usable.wave_45_46_origination_scope_gap)} waves 45–46`)
+    );
+    const usabilityRows=usable.waves.map(row=>[
+      row.survey_wave,n(row.surveys_completed_total),n(row.duplicate_or_ineligible),n(row.answered_no_to_q1),
+      n(row.did_not_finish_survey),n(row.wrong_loan),n(row.usable_responses_table4),
+      n(row.usable_responses_origination_2013_2024_tables5_6),n(row.gap_to_usable_table4)
+    ]);
+    const usabilityTable=table(['Wave','Returned','Duplicate / ineligible','No to Q1','Did not finish','Wrong loan','Usable · Table 4','Usable · Tables 5/6','Scope gap'],usabilityRows,[1,2,3,4,5,6,7,8]);
+    usabilityTable.classList.add('usable-responses-table');$('usable-responses-table').replaceChildren(usabilityTable);
+    state.className='domain-state ok';state.textContent='48 waves reconciled to FHFA Table 3 totals · aggregate-only · no respondent or mortgage linkage.';
+  }catch(error){state.className='domain-state error';state.textContent=`Survey response-mode table unavailable: ${error.message}`;}
 }
 function renderDomains(data){
   const term=data.termination,total=term.mortgages,termRows=Object.entries(term.status_counts).map(([code,count])=>[code,term.status_labels[code]||code,n(count),pct(count/total)]);

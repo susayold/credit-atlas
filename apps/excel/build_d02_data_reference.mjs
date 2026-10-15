@@ -41,6 +41,16 @@ const sources = [
     online_english_share_pct_of_completed: "Online English share (%)", online_spanish_share_pct_of_completed: "Online Spanish share (%)",
     included_in_nsmo_v70_puf: "Included in v7.0 PUF", source_note: "FHFA table note", source_pdf_page: "Report page",
   }, numeric: new Set(["survey_wave", "average_sampling_weight", "surveys_mailed", "postal_nondelivery", "surveys_delivered", "surveys_completed_total", "completed_by_mail", "online_english", "online_spanish", "opt_out", "completion_pct_of_mailed", "completion_pct_of_delivered", "mail_share_pct_of_completed", "online_share_pct_of_completed", "online_english_share_pct_of_completed", "online_spanish_share_pct_of_completed", "source_pdf_page"]), bool: new Set(["included_in_nsmo_v70_puf"]) },
+  { sheet: "NSMO usability", file: "nsmo-v70-usable-responses.csv", table: "NsmoUsability", headers: {
+    survey_wave: "Survey wave", surveys_completed_total: "Completed returns · Table 4",
+    duplicate_or_ineligible: "Duplicate / ineligible", answered_no_to_q1: "Answered no to Q1",
+    did_not_finish_survey: "Did not finish", wrong_loan: "Wrong loan",
+    usable_responses_table4: "Usable returns · Table 4",
+    usable_responses_origination_2013_2024_tables5_6: "Usable · 2013–2024 origination tables",
+    gap_to_usable_table4: "Outside Table 5/6 scope",
+    source_pdf_page_table4: "Table 4 PDF page", source_pdf_pages_tables5_6: "Tables 5/6 PDF pages",
+    source_note: "Publisher scope note",
+  }, numeric: new Set(["survey_wave", "surveys_completed_total", "duplicate_or_ineligible", "answered_no_to_q1", "did_not_finish_survey", "wrong_loan", "usable_responses_table4", "usable_responses_origination_2013_2024_tables5_6", "gap_to_usable_table4", "source_pdf_page_table4"]) },
   { sheet: "NMDB quarterly", file: "nmdb-performance-national-quarterly-2026q2.csv", table: "NmdbQuarterly", headers: {
     source: "Source", frequency: "Frequency", geo_level: "Geography level", geo_id: "Geography ID", geo_name: "Geography name",
     market: "Mortgage market", period: "Quarter", year: "Year", quarter: "Quarter number", month: "Quarter-end month",
@@ -67,8 +77,8 @@ guide.showGridLines = false;
 const guideRows = [
   ["CreditAtlas · D02 data reference workbook", ""],
   ["Purpose", "Excel copy of the D02 reference tables and public aggregate datasets, arranged by source for filtering and review."],
-  ["NSMO", "Field dictionary, category labels, wave coverage, item wording and response-mode counts by survey wave. Values -2 and -3 remain distinct source codes."],
-  ["Response mode", "Official Table 3 reports returned surveys by mail, online English and online Spanish for 48 waves. The v7.0 PUF contains waves 1–46."],
+  ["NSMO", "Field dictionary, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
+  ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],
   ["Use", "Each data sheet has an Excel Table with filters. The top row and first identifier column remain fixed while scrolling."],

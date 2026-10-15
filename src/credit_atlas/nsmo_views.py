@@ -16,6 +16,10 @@ _DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.
 _TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
 _ORIGINATION_FEASIBILITY_AUDIT = "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
 _FIRST_OBSERVED_TRANSITION_AUDIT = "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
+_SURVEY_RETURNS_CSV = "docs/data/nsmo-v70-survey-returns.csv"
+_SURVEY_RETURNS_SHA256 = "d34d6c14ec0febb0a5c1d60c46c9dadc49e58e2121e0ed3b65140bb7c0da0811"
+_USABLE_RESPONSES_CSV = "docs/data/nsmo-v70-usable-responses.csv"
+_USABLE_RESPONSES_SHA256 = "a3c96a3db82e8ff24d90a6fea365d6c2933012b2ff23bc23c0c5c19cdb17ef23"
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -102,6 +106,158 @@ class NsmoViews:
                   "value_labels": value_labels}
         self._dictionary_cache = (identity, report)
         return report
+
+    def survey_returns(self) -> dict:
+        """Return FHFA's public, wave-level survey return counts, never loan rows."""
+        path = contained(self.root, _SURVEY_RETURNS_CSV)
+        if not path.is_file() or sha256(path) != _SURVEY_RETURNS_SHA256:
+            raise ValueError("NSMO survey-return table does not match the reviewed FHFA v7.0 extraction")
+        with path.open(encoding="utf-8-sig", newline="") as stream:
+            source_rows = list(csv.DictReader(stream))
+        required = {
+            "survey_wave", "average_sampling_weight", "surveys_mailed", "postal_nondelivery",
+            "surveys_delivered", "surveys_completed_total", "completed_by_mail", "online_english",
+            "online_spanish", "opt_out", "completion_pct_of_mailed", "completion_pct_of_delivered",
+            "mail_share_pct_of_completed", "online_share_pct_of_completed",
+            "included_in_nsmo_v70_puf", "source_note", "source_pdf_page",
+        }
+        if len(source_rows) != 48 or not required.issubset(source_rows[0] if source_rows else set()):
+            raise ValueError("NSMO survey-return table failed its 48-wave schema check")
+        count_fields = (
+            "surveys_mailed", "postal_nondelivery", "surveys_delivered", "surveys_completed_total",
+            "completed_by_mail", "online_english", "online_spanish", "opt_out",
+        )
+        rows = []
+        for expected_wave, source in enumerate(source_rows, start=1):
+            if int(source["survey_wave"]) != expected_wave:
+                raise ValueError("NSMO survey-return waves are missing, duplicated, or out of order")
+            row = {
+                "survey_wave": expected_wave,
+                "average_sampling_weight": float(source["average_sampling_weight"]),
+                **{field: int(source[field]) for field in count_fields},
+                "completion_pct_of_mailed": float(source["completion_pct_of_mailed"]),
+                "completion_pct_of_delivered": float(source["completion_pct_of_delivered"]),
+                "mail_share_pct_of_completed": float(source["mail_share_pct_of_completed"]),
+                "online_share_pct_of_completed": float(source["online_share_pct_of_completed"]),
+                "online_english_share_pct_of_completed": float(source["online_english_share_pct_of_completed"]),
+                "online_spanish_share_pct_of_completed": float(source["online_spanish_share_pct_of_completed"]),
+                "included_in_nsmo_v70_puf": source["included_in_nsmo_v70_puf"].casefold() == "true",
+                "source_note": source["source_note"],
+                "source_pdf_page": int(source["source_pdf_page"]),
+            }
+            if row["included_in_nsmo_v70_puf"] != (expected_wave <= 46):
+                raise ValueError("NSMO PUF wave coverage does not match the v7.0 release")
+            if (row["surveys_mailed"] != row["postal_nondelivery"] + row["surveys_delivered"]
+                    or row["surveys_completed_total"] != row["completed_by_mail"] + row["online_english"] + row["online_spanish"]
+                    or row["surveys_completed_total"] > row["surveys_delivered"]):
+                raise ValueError(f"NSMO survey-return counts do not reconcile for wave {expected_wave}")
+            rows.append(row)
+
+        def aggregate(selected: list[dict]) -> dict:
+            totals = {field: sum(row[field] for row in selected) for field in count_fields}
+            complete = totals["surveys_completed_total"]
+            mailed = totals["surveys_mailed"]
+            delivered = totals["surveys_delivered"]
+            return {
+                **totals,
+                "waves": len(selected),
+                "completion_pct_of_mailed": round(100 * complete / mailed, 2),
+                "completion_pct_of_delivered": round(100 * complete / delivered, 2),
+                "mail_share_pct_of_completed": round(100 * totals["completed_by_mail"] / complete, 2),
+                "online_share_pct_of_completed": round(100 * (totals["online_english"] + totals["online_spanish"]) / complete, 2),
+            }
+
+        report_totals = aggregate(rows)
+        expected_totals = {
+            "surveys_mailed": 281942, "postal_nondelivery": 9494, "surveys_delivered": 272448,
+            "surveys_completed_total": 76405, "completed_by_mail": 41254,
+            "online_english": 34529, "online_spanish": 622, "opt_out": 1259,
+        }
+        if any(report_totals[field] != value for field, value in expected_totals.items()):
+            raise ValueError("NSMO survey-return counts do not match FHFA Table 3 totals")
+        puf_returns = aggregate(rows[:46])
+        usability_path = contained(self.root, _USABLE_RESPONSES_CSV)
+        if not usability_path.is_file() or sha256(usability_path) != _USABLE_RESPONSES_SHA256:
+            raise ValueError("NSMO usable-response table does not match the reviewed FHFA v7.0 extraction")
+        with usability_path.open(encoding="utf-8-sig", newline="") as stream:
+            usability_source = list(csv.DictReader(stream))
+        usability_fields = (
+            "surveys_completed_total", "duplicate_or_ineligible", "answered_no_to_q1",
+            "did_not_finish_survey", "wrong_loan", "usable_responses_table4",
+            "usable_responses_origination_2013_2024_tables5_6", "gap_to_usable_table4",
+        )
+        if len(usability_source) != 46:
+            raise ValueError("NSMO usable-response table must contain waves 1–46")
+        usability_rows = []
+        for expected_wave, source in enumerate(usability_source, start=1):
+            row = {"survey_wave": expected_wave, **{field: int(source[field]) for field in usability_fields},
+                   "source_pdf_page_table4": int(source["source_pdf_page_table4"]),
+                   "source_pdf_pages_tables5_6": source["source_pdf_pages_tables5_6"],
+                   "source_note": source["source_note"]}
+            if int(source["survey_wave"]) != expected_wave:
+                raise ValueError("NSMO usable-response waves are missing, duplicated, or out of order")
+            if row["surveys_completed_total"] != rows[expected_wave - 1]["surveys_completed_total"]:
+                raise ValueError(f"Table 3 and Table 4 returned counts disagree in wave {expected_wave}")
+            if row["surveys_completed_total"] != (
+                    row["duplicate_or_ineligible"] + row["answered_no_to_q1"]
+                    + row["did_not_finish_survey"] + row["wrong_loan"] + row["usable_responses_table4"]):
+                raise ValueError(f"Table 4 dispositions do not reconcile in wave {expected_wave}")
+            if row["gap_to_usable_table4"] != (
+                    row["usable_responses_table4"] - row["usable_responses_origination_2013_2024_tables5_6"]):
+                raise ValueError(f"Table 4 to Tables 5/6 scope gap does not reconcile in wave {expected_wave}")
+            usability_rows.append(row)
+        usability_totals = {field: sum(row[field] for row in usability_rows) for field in usability_fields}
+        expected_usability_totals = {
+            "surveys_completed_total": 74193, "duplicate_or_ineligible": 2009,
+            "answered_no_to_q1": 4102, "did_not_finish_survey": 2592,
+            "wrong_loan": 2339, "usable_responses_table4": 63151,
+            "usable_responses_origination_2013_2024_tables5_6": 62359, "gap_to_usable_table4": 792,
+        }
+        if usability_totals != expected_usability_totals:
+            raise ValueError("NSMO usable-response totals do not match FHFA Tables 4–6")
+        gap_wave7 = usability_rows[6]["gap_to_usable_table4"]
+        gap_waves45_46 = sum(row["gap_to_usable_table4"] for row in usability_rows[44:46])
+        if (gap_wave7, gap_waves45_46, sum(row["gap_to_usable_table4"] for row in usability_rows)) != (295, 497, 792):
+            raise ValueError("NSMO release-scope gap does not match the reviewed wave-7 and wave-45/46 breakdown")
+        usability = {
+            "completed_returns": usability_totals["surveys_completed_total"],
+            "usable_responses_table4": usability_totals["usable_responses_table4"],
+            "usable_share_of_returned_pct": round(100 * 63151 / 74193, 2),
+            "usable_share_of_mailed_pct": 23.33,
+            "puf_v70_rows_and_tables5_6_2013_2024": usability_totals["usable_responses_origination_2013_2024_tables5_6"],
+            "usable_table4_minus_puf_scope": usability_totals["gap_to_usable_table4"],
+            "wave_7_remote_rural_scope_gap": gap_wave7,
+            "wave_45_46_origination_scope_gap": gap_waves45_46,
+            "exclusions_by_disposition": {
+                "duplicate_or_ineligible": usability_totals["duplicate_or_ineligible"],
+                "answered_no_to_q1": usability_totals["answered_no_to_q1"],
+                "did_not_finish_survey": usability_totals["did_not_finish_survey"],
+                "wrong_loan": usability_totals["wrong_loan"],
+            },
+            "waves": usability_rows,
+            "limitation": "Table 4–6 scope reconciliation is aggregate-only; no respondent-level reason, response mode, or row linkage is exposed.",
+        }
+        return {
+            "status": "AVAILABLE",
+            "source": "https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf",
+            "source_table": "Table 3 · printed pages 10–11",
+            "table_sha256": _SURVEY_RETURNS_SHA256,
+            "puf_v70": puf_returns,
+            "usability": usability,
+            "all_reported_waves": report_totals,
+            "mode_shift": {
+                "wave_1_online_share_pct": rows[0]["online_share_pct_of_completed"],
+                "wave_46_online_share_pct": rows[45]["online_share_pct_of_completed"],
+                "change_percentage_points": round(rows[45]["online_share_pct_of_completed"] - rows[0]["online_share_pct_of_completed"], 2),
+            },
+            "waves": rows,
+            "limitations": [
+                "FHFA publishes mail/online return counts by wave only; the v7.0 PUF has no respondent-level response-mode field.",
+                "Wave-level response-mode mix cannot be linked to a mortgage row or its performance outcome.",
+                "These are completed-survey composition and response counts, not mode-adjusted estimates or credit-risk rates.",
+                "Waves 47–48 appear in the report but are outside the v7.0 PUF, which covers waves 1–46.",
+            ],
+        }
 
     def report(self) -> dict:
         audit_path = contained(self.root, f"{_RECEIPTS}/data-audit.json")

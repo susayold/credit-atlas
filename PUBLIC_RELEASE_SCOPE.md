@@ -55,8 +55,9 @@ It contains no FHA loan-level records, is not merged with NSMO/Freddie, and
 documents that the report PDF binary was not saved after direct retrieval
 returned HTTP 403.
 
-The D02 Excel reference workbook also includes an aggregate-only extraction of
-FHFA NSMO Technical Report v7.0 Table 3 response counts by wave (mail, online
-English, online Spanish). The 48 survey-wave rows are reconciled to the report's
-printed totals; this table contains no respondent/loan records or mode-to-loan
-linkage. Waves 47–48 are identified as outside the v7.0 PUF.
+The D02 Excel reference workbook also includes aggregate-only extractions of
+FHFA NSMO Technical Report v7.0 Tables 3–6: response counts by mail/online mode,
+usable-response dispositions, and origination-year scope totals. They reconcile
+to printed report totals and contain no respondent/loan records, response-mode
+linkage, or disposition-to-loan linkage. Waves 47–48 are identified as outside
+the v7.0 PUF.

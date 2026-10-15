@@ -11,7 +11,7 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
         "Start here", "NSMO fields", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
-        "NSMO returns", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
+        "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
@@ -19,6 +19,7 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         "NSMO wave coverage": "nsmo-v70-wave-coverage.csv",
         "NSMO item wording": "nsmo-v70-wave-item-comparability.csv",
         "NSMO returns": "nsmo-v70-survey-returns.csv",
+        "NSMO usability": "nsmo-v70-usable-responses.csv",
         "NMDB quarterly": "nmdb-performance-national-quarterly-2026q2.csv",
         "HUD monthly": "hud-fha-performance-2026-08.csv",
         "HUD subgroups": "hud-fha-performance-2026-08-subgroups.csv",
@@ -40,4 +41,10 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert returns.cell(47, 17).value is True
     assert returns.cell(48, 17).value is False
     assert returns.cell(49, 17).value is False
+    usability = workbook["NSMO usability"]
+    assert usability.max_row == 47
+    assert usability.cell(2, 7).value == 4618
+    assert usability.cell(8, 9).value == 295
+    assert usability.cell(46, 9).value == 3
+    assert usability.cell(47, 9).value == 494
     assert workbook["Start here"]["B2"].value.startswith("Excel copy of the D02")

@@ -6,7 +6,7 @@ Người dùng app có thể tải [CreditAtlas-NSMO-Reference.xlsx](../apps/exc
 
 Workbook có năm sheet: **Bắt đầu** giải thích phạm vi; **Từ điển 587 trường** giữ đầy đủ field name, tên trong codebook, câu hỏi, wave, SAS label/format, thời điểm và predictor gate; **Nhãn và category** nối mã category với label SAS; **Coverage theo wave** ghi wave có phản hồi, not-asked và not-applicable; **So sánh wording item** ghi nhận kiểm tra questionnaire và giới hạn khi so trend. Mã gốc, gồm `-2`/`-3`, được giữ nguyên để người dùng lọc và đối chiếu.
 
-Workbook D02 tổng hợp có 10 sheet: hướng dẫn; NSMO fields, categories, wave coverage, item wording và returns; NMDB quarterly và definitions; HUD monthly và subgroups. Sheet **NSMO returns** có 48 dòng tổng hợp theo wave từ FHFA Table 3; wave 47–48 được đánh dấu không thuộc PUF v7.0. Đây là thống kê phản hồi cấp wave, không phải response mode gắn với từng khoản vay.
+Workbook D02 tổng hợp có 11 sheet: hướng dẫn; NSMO fields, categories, wave coverage, item wording, returns và usability; NMDB quarterly và definitions; HUD monthly và subgroups. Sheet **NSMO returns** có 48 dòng tổng hợp Table 3; sheet **NSMO usability** nối Table 4 với Tables 5–6 cho 46 wave, giữ riêng returned, usable, disposition và scope gap. Wave 47–48 được đánh dấu ngoài PUF v7.0. Đây là thống kê cấp wave, không chứa response-mode hay disposition gắn với từng mortgage.
 
 Workbook chỉ chứa metadata/codebook đã làm sạch, không có bản ghi khoản vay. Các CSV tại `docs/data/` vẫn là nguồn chuẩn cho API, schema validation và tái tạo workbook; chúng không bị đổi thành file nhị phân hoặc xóa. Khi cập nhật các bảng CSV, chạy:
 

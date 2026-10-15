@@ -1,0 +1,36 @@
+import csv
+from pathlib import Path
+
+from openpyxl import load_workbook
+
+
+def test_d02_reference_workbook_includes_every_public_data_csv():
+    root = Path(__file__).parents[1]
+    path = root / "apps/excel/templates/CreditAtlas-D02-Data-Reference.xlsx"
+    assert path.is_file()
+    workbook = load_workbook(path, read_only=False, data_only=True)
+    assert workbook.sheetnames == [
+        "Start here", "NSMO fields", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
+        "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
+    ]
+    expected = {
+        "NSMO fields": "nsmo-v70-field-dictionary.csv",
+        "NSMO categories": "nsmo-v70-value-labels.csv",
+        "NSMO wave coverage": "nsmo-v70-wave-coverage.csv",
+        "NSMO item wording": "nsmo-v70-wave-item-comparability.csv",
+        "NMDB quarterly": "nmdb-performance-national-quarterly-2026q2.csv",
+        "HUD monthly": "hud-fha-performance-2026-08.csv",
+        "HUD subgroups": "hud-fha-performance-2026-08-subgroups.csv",
+    }
+    for sheet_name, csv_name in expected.items():
+        with (root / "docs/data" / csv_name).open(encoding="utf-8-sig", newline="") as stream:
+            row_count = sum(1 for _ in csv.DictReader(stream))
+        sheet = workbook[sheet_name]
+        assert sheet.max_row == row_count + 1
+        assert sheet.freeze_panes == "B2"
+        assert len(sheet.tables) == 1
+        table = next(iter(sheet.tables.values()))
+        assert table.autoFilter is not None
+    assert workbook["NSMO categories"].cell(2, 2).value in {"1", "'1'"}
+    assert workbook["NMDB quarterly"].max_row == 1569
+    assert workbook["Start here"]["B2"].value.startswith("Excel copy of the D02")

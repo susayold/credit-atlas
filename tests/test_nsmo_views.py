@@ -397,6 +397,8 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     shutil.copyfile(source_hud_workbook, target_workbook.parent / source_hud_workbook.name)
     source_nmdb_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-NMDB-Performance.xlsx"
     shutil.copyfile(source_nmdb_workbook, target_workbook.parent / source_nmdb_workbook.name)
+    source_d02_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-D02-Data-Reference.xlsx"
+    shutil.copyfile(source_d02_workbook, target_workbook.parent / source_d02_workbook.name)
     target_data = tmp_path / "docs/data"
     target_data.mkdir(parents=True, exist_ok=True)
     for name in ("hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv"):
@@ -419,6 +421,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "/downloads/nsmo-reference.xlsx" in html
             assert "/downloads/hud-fha-performance.xlsx" in html
             assert "/downloads/nmdb-performance.xlsx" in html
+            assert "/downloads/d02-data-reference.xlsx" in html
             assert "FHA portfolio performance context" in html
             assert "Residential mortgage performance, 2002Q1–2026Q2" in html
         with urlopen(base + "/downloads/nsmo-reference.xlsx", timeout=5) as response:
@@ -426,6 +429,12 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             assert "CreditAtlas-NSMO-Reference.xlsx" in response.headers["Content-Disposition"]
+            assert workbook_bytes[:2] == b"PK"
+        with urlopen(base + "/downloads/d02-data-reference.xlsx", timeout=5) as response:
+            workbook_bytes = response.read()
+            assert response.status == 200
+            assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            assert "CreditAtlas-D02-Data-Reference.xlsx" in response.headers["Content-Disposition"]
             assert workbook_bytes[:2] == b"PK"
         with urlopen(base + "/downloads/hud-fha-performance.xlsx", timeout=5) as response:
             workbook_bytes = response.read()

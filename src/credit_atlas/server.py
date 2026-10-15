@@ -110,6 +110,17 @@ def handler_for(service: ResearchService):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-NSMO-Reference.xlsx", head=head)
                     return
+                if url.path == "/downloads/d02-data-reference.xlsx":
+                    if query:
+                        raise ValueError("D02 Excel reference accepts no filters")
+                    workbook = service.root / "apps/excel/templates/CreditAtlas-D02-Data-Reference.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "D02 Excel reference is not built"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-D02-Data-Reference.xlsx", head=head)
+                    return
                 if url.path == "/downloads/hud-fha-performance.xlsx":
                     if query:
                         raise ValueError("HUD FHA Excel reference accepts no filters")

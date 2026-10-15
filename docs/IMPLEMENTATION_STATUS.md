@@ -207,3 +207,16 @@ HMDA aggregate/labeled reports, SEC issuer report, Market report and daily
 series, including query forwarding and attachment headers. Focused suite passes
 21/21. M01-028 remains Partial pending real-source report QA, remaining report
 families, failure-path coverage, and full UI download acceptance.
+
+## 2026-10-16 continuation — NSMO cross-wave item version review
+
+Reviewed the six-item descriptive-trend pilot against all 22 hash-verified
+questionnaire packages and SAS response formats. A visual comparison of the
+official wave 1-2 and 11-12 questionnaire PDFs confirms an X94A answer-option
+wording change from “borrow enough money” to “borrow a significant amount”; the
+checked `Very / Somewhat / Not at all` scale remains the same. The candidate
+matrix now flags X94A as a wording-version break, and the D02 plan requires
+wave-version sensitivity before long-run trend interpretation. This narrows
+descriptive comparability only; routing, response mode/population equivalence,
+survey variance and predictor eligibility remain open. No target/model/PD was
+created.

@@ -54,6 +54,7 @@ function render(profile){
   loadFirstEntryRiskSetFeasibility();
   loadHudFhaBenchmark();
   loadNmdbContext();
+  loadNmdbStateContext();
   loadSurveyReturns();
 }
 async function loadHudFhaBenchmark(){
@@ -194,6 +195,32 @@ function drawNmdbTrend(svg,observations,seriesId,markets){
   });
   const every=Math.ceil(periods.length/10);periods.forEach((period,index)=>{if(index%every!==0&&index!==periods.length-1)return;const x=left+index*plotW/(periods.length-1),label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x',x);label.setAttribute('y',h-14);label.setAttribute('text-anchor','middle');label.setAttribute('class','axis-label');label.textContent=period;svg.append(label);});
   svg.setAttribute('aria-label',`${seriesId} rates by mortgage market from ${periods[0]} to ${periods.at(-1)}.`);
+}
+async function loadNmdbStateContext(){
+  const status=$('nmdb-state-panel-status'),stateChoice=$('nmdb-state-choice'),seriesChoice=$('nmdb-state-series'),marketChoice=$('nmdb-state-market');
+  try{
+    let data;
+    const load=async(code)=>{
+      const response=await fetch(`/api/nmdb-state-performance?state=${encodeURIComponent(code)}`,{cache:'no-store',headers:{Accept:'application/json'}});
+      const payload=await response.json();if(!response.ok)throw new Error(payload.error||`HTTP ${response.status}`);data=payload;
+    };
+    await load('CA');
+    stateChoice.replaceChildren(...data.states.map(item=>{const option=node('option','',`${item.geo_name} (${item.geo_id})`);option.value=item.geo_id;return option;}));stateChoice.value='CA';
+    marketChoice.replaceChildren(...data.markets.map(item=>{const option=node('option','',item.name);option.value=item.name;return option;}));
+    const render=()=>{
+      const code=stateChoice.value,seriesId=seriesChoice.value,market=marketChoice.value,stateName=data.states.find(item=>item.geo_id===code)?.geo_name||code;
+      const latest=data.latest.filter(row=>row.series_id===seriesId);
+      $('nmdb-state-latest').replaceChildren(...latest.map(row=>metric(row.market,row.value_pct==null?'—':dec(row.value_pct)+'%',`${data.series[seriesId].label} · ${row.period}${row.suppressed?' · suppressed':''}`)));
+      drawNmdbTrend($('nmdb-state-trend'),data.observations,seriesId,data.markets);
+      $('nmdb-state-caption').textContent=`${stateName} · ${data.series[seriesId].label} · ${data.periods[0]} to ${data.periods.at(-1)}. ${data.series[seriesId].description}`;
+      const legend=$('nmdb-state-legend');legend.replaceChildren(...data.markets.map((item,index)=>{const mark=node('span','nmdb-legend-item');const swatch=node('i','nmdb-swatch');swatch.style.backgroundColor=nmdbColors[index];mark.append(swatch,node('strong','',item.name));return mark;}));
+      const rows=data.periods.map(period=>{const values=new Map(data.observations.filter(row=>row.market===market&&row.period===period).map(row=>[row.series_id,row]));return [period,...Object.keys(data.series).map(key=>values.get(key)?.value_pct==null?'—':dec(values.get(key).value_pct)+'%'),...Object.keys(data.series).map(key=>values.get(key)?.suppressed?'Yes':'No')];});
+      $('nmdb-state-quarterly').replaceChildren(table(['Quarter','30–60 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–60 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
+      status.className='domain-state ok';status.textContent=`FHFA state aggregate verified · ${stateName} · ${data.observations.length.toLocaleString('en-US')} market-series-quarter rows · ${data.periods[0]}–${data.periods.at(-1)} · release ${data.source.release_date}.`;
+    };
+    stateChoice.addEventListener('change',async()=>{try{await load(stateChoice.value);render();}catch(error){status.className='domain-state error';status.textContent=`NMDB state data unavailable: ${error.message}`;}});
+    seriesChoice.addEventListener('change',render);marketChoice.addEventListener('change',render);render();
+  }catch(error){status.className='domain-state error';status.textContent=`NMDB state benchmark unavailable: ${error.message}`;}
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}

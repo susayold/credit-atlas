@@ -11,7 +11,11 @@ data/
 !docs/data/hud-fha-performance-2026-08-subgroups.csv
 !docs/data/nmdb-performance-national-quarterly-2026q2.csv
 !docs/data/nmdb-performance-national-quarterly-2026q2-receipt.json
+!docs/data/nmdb-performance-state-quarterly-2026q2.csv
+!docs/data/nmdb-performance-state-quarterly-2026q2-receipt.json
 !docs/data/nsmo-v70-survey-returns.csv
+!docs/data/fhfa-state-all-transactions-hpi-quarterly-2026q2.csv
+!docs/data/fhfa-state-all-transactions-hpi-quarterly-2026q2-receipt.json
 .cache/
 .tmp/
 tmp/

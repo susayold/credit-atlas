@@ -79,6 +79,10 @@ const sources = [
     market: "Mortgage market", period: "Quarter", year: "Year", quarter: "Quarter number", month: "Quarter-end month",
     suppressed: "Suppressed", series_id: "Series ID", value_pct: "Rate (%)",
   }, numeric: new Set(["year", "quarter", "value_pct"]), bool: new Set(["suppressed"]) },
+  { sheet: "FHFA HPI state", file: "fhfa-state-all-transactions-hpi-quarterly-2026q2.csv", table: "FhfaStateHpi", headers: {
+    state_code: "State / DC", year: "Year", quarter: "Quarter",
+    index_nsa: "All-transactions HPI (NSA; 1980Q1=100)",
+  }, numeric: new Set(["year", "quarter", "index_nsa"]) },
   { sheet: "HUD monthly", file: "hud-fha-performance-2026-08.csv", table: "HudMonthly", headers: {
     month: "Month", adjustment: "Seasonal adjustment", active_iif_count: "Active FHA-insured loans",
     delinquency_30d_pct: "30-day delinquency (%)", delinquency_60d_pct: "60-day delinquency (%)",
@@ -135,6 +139,7 @@ const guideRows = [
   ["Question references", "The reconciliation sheet preserves original references beside the questionnaire number and evidence; it does not claim full wave/mode routing is resolved."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
+  ["FHFA HPI", "Quarterly state/DC All-Transactions HPI through 2026Q2. Index, not dollar value; current history is retrospective and not point-in-time."],
   ["HUD FHA", "Monthly trend, subgroups, new-90+ reason shares, foreclosure pipeline, REO recovery by geography and REO loss components through August 2026. These are not NSMO loan records."],
   ["HUD interpretation", "New-90+ reason shares sum to 100% and describe reported reasons, not predictive drivers. Foreclosure starts/claims/rates are separate measures. REO recovery percentages may exceed 100%; negative changes are percentage-point changes. Loss components are not exhaustive or additive."],
   ["Use", "Each data sheet has an Excel Table with filters. The top row and first identifier column remain fixed while scrolling."],
@@ -189,6 +194,10 @@ for (const source of sources) {
   if (source.sheet.startsWith("NMDB")) {
     const rateColumn = header.indexOf("Rate (%)");
     sheet.getRange(`${columnName(rateColumn + 1)}2:${columnName(rateColumn + 1)}${values.length + 1}`).format.numberFormat = '0.0"%"';
+  }
+  if (source.sheet === "FHFA HPI state") {
+    const indexColumn = header.indexOf("All-transactions HPI (NSA; 1980Q1=100)");
+    sheet.getRange(`${columnName(indexColumn + 1)}2:${columnName(indexColumn + 1)}${values.length + 1}`).format.numberFormat = "0.00";
   }
   if (source.sheet === "NSMO returns") {
     for (const name of header.filter((item) => item.includes("(%)"))) {
@@ -260,6 +269,31 @@ hudDefinitions.getRange("B:B").format.columnWidth = 90;
 hudDefinitions.getRange("C:C").format.columnWidth = 98;
 hudDefinitions.getRange(`A2:C${hudRows.length}`).format = { verticalAlignment: "top", wrapText: true };
 
+const hpiDefinitions = wb.worksheets.add("FHFA HPI definitions");
+hpiDefinitions.showGridLines = false;
+const hpiRows = [
+  ["Topic", "Definition / use", "Source note"],
+  ["Index", "FHFA All-Transactions House Price Index for states and DC; repeat-sales index using sales prices and appraisal data.", "This is an index, not a median dollar house price or property-level valuation."],
+  ["Frequency", "Quarterly; latest row in this snapshot is 2026Q2.", "Current two-quarter file is a downloaded snapshot and may be revised in future releases."],
+  ["Seasonal adjustment", "Not seasonally adjusted (NSA).", "Compare consistent quarters or calculate year-over-year changes to reduce seasonal effects."],
+  ["Base", "1980Q1=100.", "Index points are relative to the base period; do not read as dollars or percent change."],
+  ["Coverage", "50 states plus District of Columbia, 1975Q1–2026Q2.", "One row per state/DC and quarter; no loan, borrower or property identifiers."],
+  ["Credit-risk use", "Aggregate housing-market context for portfolio or cohort review when geography and denominator align.", "Do not treat as an individual collateral value, LTV, borrower predictor or observed loan outcome."],
+  ["Point-in-time boundary", "Current historical series does not preserve prior publication vintages.", "Do not use as-of model feature until release availability, revisions and observation lag are handled."],
+  ["Source data", "https://www.fhfa.gov/hpi/download/quarterly_datasets/hpi_at_state.csv", "FHFA HPI datasets, dictionary and downloadable-file specification."],
+];
+hpiDefinitions.getRangeByIndexes(0, 0, hpiRows.length, 3).values = hpiRows;
+hpiDefinitions.freezePanes.freezeRows(1);
+hpiDefinitions.freezePanes.freezeColumns(1);
+const hpiTable = hpiDefinitions.tables.add(`A1:C${hpiRows.length}`, true, "FhfaHpiDefinitions");
+hpiTable.style = "TableStyleMedium2";
+hpiDefinitions.getRange("A1:C1").format = { fill: "#243B53", font: { bold: true, color: "#FFFFFF" }, wrapText: true, rowHeight: 34 };
+hpiDefinitions.getRange("A:A").format.columnWidth = 25;
+hpiDefinitions.getRange("B:B").format.columnWidth = 88;
+hpiDefinitions.getRange("C:C").format.columnWidth = 94;
+hpiDefinitions.getRange(`A2:C${hpiRows.length}`).format = { verticalAlignment: "top", wrapText: true };
+
+wb.recalculate();
 const inspection = await wb.inspect({ kind: "workbook,sheet,table", maxChars: 6000, tableMaxRows: 2, tableMaxCols: 5 });
 console.log(inspection.ndjson);
 if (previewPath) {
@@ -270,7 +304,7 @@ if (previewPath) {
 await fs.mkdir(path.dirname(output), { recursive: true });
 const xlsx = await SpreadsheetFile.exportXlsx(wb);
 await xlsx.save(output);
-console.log(JSON.stringify({ status: "exported", output, workbookSheets: sources.length + 3 }));
+console.log(JSON.stringify({ status: "exported", output, workbookSheets: sources.length + 4 }));
 
 function columnName(index) {
   let result = "";

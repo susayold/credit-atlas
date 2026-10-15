@@ -149,6 +149,13 @@ def handler_for(service: ResearchService):
                     from .nmdb_performance import nmdb_performance_report
                     self.send(200, nmdb_performance_report(service.root), head=head)
                     return
+                if url.path == "/api/nmdb-state-performance":
+                    if set(query) - {"state"}:
+                        raise ValueError("NMDB state aggregate accepts only a state filter")
+                    from .nmdb_state_performance import nmdb_state_performance_report
+                    state_code = query.get("state", "CA").upper()
+                    self.send(200, nmdb_state_performance_report(service.root, state_code), head=head)
+                    return
                 if url.path == "/api/hud-fha-performance":
                     if query:
                         raise ValueError("HUD FHA aggregate accepts no filters")

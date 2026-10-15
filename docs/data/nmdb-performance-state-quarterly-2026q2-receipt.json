@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "ACQUIRED_AND_CURATED",
+  "acquired_at_utc": "2026-10-15T22:04:01.299756+00:00",
+  "publisher": "Federal Housing Finance Agency",
+  "release_date": "2026-09-30",
+  "source_url": "https://www.fhfa.gov/document/d/nmdb/nmdb-mortgage-performance-statistics-states-quarterly.zip",
+  "source_archive": "nmdb-mortgage-performance-statistics-states-quarterly.zip",
+  "source_archive_sha256": "da3fc284b29c5c25712c748205f81f8658492176b2e89af9fbff58cbea0806e6",
+  "source_member": "nmdb-mortgage-performance-statistics-states-quarterly.csv",
+  "source_member_sha256": "b56ce038286a545823c69ba876b020b7f7d106a43e782d0dc206096cd57a4c6d",
+  "curated_file": "docs/data/nmdb-performance-state-quarterly-2026q2.csv",
+  "curated_file_sha256": "c04e07b5ea4ac5c08a37d461b77201c367ecb2aada85fd917092dc379c3961b3",
+  "geography": "States and District of Columbia only",
+  "states": 51,
+  "quarter_range": [
+    "2002Q1",
+    "2026Q2"
+  ],
+  "markets": [
+    "All Mortgages",
+    "Enterprise Acquisitions",
+    "Government / Non-Conventional",
+    "Other Conventional Market"
+  ],
+  "series_ids": [
+    "P3089DL",
+    "P90DL",
+    "PFORECL",
+    "PFORB"
+  ],
+  "rows": 79968,
+  "suppressed_rows": 68,
+  "blank_rows": 14535,
+  "pre_2019q4_forbearance_blank_rows": 14484,
+  "grain": "one state \u00d7 mortgage market \u00d7 performance series \u00d7 quarter aggregate",
+  "caveat": "Latest two quarters are preliminary; PFORB starts 2019Q4; publisher suppresses small cells; no loan-level rows.",
+  "raw_archive_retained_in_public_repository": false
+}

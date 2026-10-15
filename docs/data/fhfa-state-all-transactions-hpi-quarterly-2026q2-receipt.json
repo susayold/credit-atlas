@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "dataset": "FHFA HPI quarterly state All-Transactions NSA",
+  "source_page": "https://www.fhfa.gov/house-price-index",
+  "source_file": "hpi_at_state.csv",
+  "source_url": "https://www.fhfa.gov/hpi/download/quarterly_datasets/hpi_at_state.csv",
+  "dictionary_url": "https://www.fhfa.gov/document/d/hpi/hpi_dictionary.xlsx",
+  "specification_url": "https://www.fhfa.gov/document/d/hpi/hpi_specifications.xlsx",
+  "retrieved_at_utc": "2026-10-15T21:54:54.405431+00:00",
+  "normalized_at_utc": "2026-10-15T22:00:46.061390+00:00",
+  "source_sha256": "b6bf3687c230c2ad008657fdb0c2b7489b5f99b6d1193f72c46c68d88df83d90",
+  "download_receipt_sha256": "b6bf3687c230c2ad008657fdb0c2b7489b5f99b6d1193f72c46c68d88df83d90",
+  "reference_assets": [
+    {
+      "name": "hpi_dictionary.xlsx",
+      "url": "https://www.fhfa.gov/document/d/hpi/hpi_dictionary.xlsx",
+      "sha256": "388ac3dbc639f7d2dab5a44bb05d7ec2b1a894e6612e2aa036bc915108970084"
+    },
+    {
+      "name": "hpi_specifications.xlsx",
+      "url": "https://www.fhfa.gov/document/d/hpi/hpi_specifications.xlsx",
+      "sha256": "ba61d2a56f72b32fa54cc13202aa0b45c20055b0ee3eb7194316ccbb2c6be0db"
+    }
+  ],
+  "normalized_sha256": "4b42e997f0bc53bfb237c3ec0bfd3040d7275c5531bfa8ac9d55fefe80c29bb5",
+  "observations": 10506,
+  "geographies": 51,
+  "first_period": "1975Q1",
+  "latest_period": "2026Q2",
+  "duplicate_keys": 0,
+  "missing_values": 0,
+  "index_type": "All-Transactions",
+  "frequency": "quarterly",
+  "seasonal_adjustment": "not seasonally adjusted",
+  "index_base": "1980Q1=100",
+  "interpretation_limits": [
+    "Geographic index, not a property-level valuation or borrower attribute.",
+    "Current downloaded history is retrospective and does not preserve historical release vintages.",
+    "Use as aggregate collateral-market context; do not treat as a point-in-time loan feature without an availability/revision protocol."
+  ]
+}

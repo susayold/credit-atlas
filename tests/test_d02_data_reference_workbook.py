@@ -11,8 +11,8 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
         "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO question refs", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
-        "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "HUD 90+ reasons",
-        "HUD foreclosure", "HUD REO recovery", "HUD REO loss", "NMDB definitions", "HUD definitions",
+        "NSMO returns", "NSMO usability", "NMDB quarterly", "NMDB states", "FHFA HPI state", "HUD monthly", "HUD subgroups", "HUD 90+ reasons",
+        "HUD foreclosure", "HUD REO recovery", "HUD REO loss", "NMDB definitions", "HUD definitions", "NMDB state definitions", "FHFA HPI definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
@@ -25,6 +25,8 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         "NSMO returns": "nsmo-v70-survey-returns.csv",
         "NSMO usability": "nsmo-v70-usable-responses.csv",
         "NMDB quarterly": "nmdb-performance-national-quarterly-2026q2.csv",
+        "NMDB states": "nmdb-performance-state-quarterly-2026q2.csv",
+        "FHFA HPI state": "fhfa-state-all-transactions-hpi-quarterly-2026q2.csv",
         "HUD monthly": "hud-fha-performance-2026-08.csv",
         "HUD subgroups": "hud-fha-performance-2026-08-subgroups.csv",
         "HUD 90+ reasons": "hud-fha-new-90plus-reasons-2026-08.csv",
@@ -44,6 +46,22 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         assert table.autoFilter is not None
     assert workbook["NSMO categories"].cell(2, 2).value in {"1", "'1'"}
     assert workbook["NMDB quarterly"].max_row == 1569
+    assert workbook["NMDB states"].max_row == 79969
+    assert workbook["NMDB states"].cell(2, 12).value == "P3089DL"
+    assert workbook["NMDB states"].cell(2, 13).value == 1.5
+    assert workbook["NMDB state definitions"].max_row == 11
+    assert workbook["FHFA HPI state"].max_row == 10507
+    hpi = workbook["FHFA HPI state"]
+    assert hpi.cell(1, 4).value == "All-transactions HPI (NSA; 1980Q1=100)"
+    assert hpi.cell(2, 1).value == "AK"
+    assert hpi.cell(2, 2).value == 1975
+    assert hpi.cell(2, 4).value == 69.15
+    assert hpi.cell(10507, 1).value == "WY"
+    assert hpi.cell(10507, 2).value == 2026
+    assert hpi.cell(10507, 3).value == 2
+    assert hpi.cell(10507, 4).value == 526.96
+    assert workbook["FHFA HPI definitions"].max_row == 9
+    assert "1980Q1=100" in workbook["FHFA HPI definitions"].cell(5, 2).value
     returns = workbook["NSMO returns"]
     assert returns.max_row == 49
     assert returns.cell(2, 1).value == 1

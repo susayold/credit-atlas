@@ -11,7 +11,11 @@ The 62,359-row, 587-column file passed structural, identifier, weight and
 performance-code-domain checks. It is held privately and remains a distinct
 source, not a new Freddie vintage; D02 target/state/censoring and field-level
 codebook audits remain. Three public macro series and retrospective context were
-acquired separately; they do not qualify the loan-level study. The Release 47
+acquired separately; they do not qualify the loan-level study. The FHFA state
+All-Transactions HPI pilot is now also acquired: 10,506 quarterly geography rows
+for 50 states/DC from 1975Q1 through 2026Q2, with its official dictionary and
+download specification. It is aggregate retrospective context only, not a
+point-in-time predictor or property-level valuation. The Release 47
 public example/layout audit confirms field widths but finds disjoint loan IDs;
 no new Freddie annual vintage was added. A Ginnie Mae loan-performance quarterly/
 annual release is now documented as a separate candidate MBS case; its Terms of
@@ -114,6 +118,35 @@ per-pool/file totals, accepts single-member ZIPs, and emits aggregates only.
 Focused Ginnie suite passes 25/25; `py_compile` and `git diff --check` pass. Production ZIP remains gated
 on the user's signed-in session; do not combine this panel with LoanPerf or
 other sources until key, report period, grain, and coverage are validated.
+
+### FHFA state HPI context source — 2026-10-16
+
+Downloaded the official state All-Transactions HPI CSV and FHFA dictionary / file
+specification to private D: storage. Validated the headerless 4-column file:
+10,506 observations across all 50 states and DC, balanced for 206 quarters from
+1975Q1 through 2026Q2, with no duplicate geography-period keys, gaps, blanks or
+non-positive values. The series is quarterly NSA with 1980Q1=100; it is an index,
+not a house price in dollars. Added a reproducible normalizer, public normalized
+CSV and hash/source receipt, source review, and a filterable `FHFA HPI state`
+sheet plus definitions in the Excel data-reference workbook. The public table is
+context only: current revised history lacks historical release vintages, and
+does not qualify a loan-level as-of feature. Focused tests and workbook checks
+pass; no Freddie vintage, D01 outcome or model feature was added.
+
+### FHFA NMDB state performance — 2026-10-16
+
+Downloaded the official state-quarterly NMDB release to private D: storage and
+curated a public 79,968-row panel (51 states/DC × 98 quarters × four markets ×
+four performance series). The acquisition receipt records archive/member/CSV
+hashes, 68 publisher-suppressed cells, and 14,484 pre-2019Q4 forbearance blanks.
+The D02 workbook now includes a filterable state table and definition sheet; the
+local NSMO context page can browse state, performance measure, market and full
+quarterly history. Each state API response is limited to one state's 1,568 rows.
+The new source review keeps quarter-end active-loan rates separate from
+fixed-horizon PD and states the preliminary/latest-quarter and 2006–2012
+history caveats. Focused source, API, page-contract and workbook checks pass.
+This adds descriptive geography context only; no rows are joined to the Freddie
+or NSMO loan samples and no D01 feature/label is qualified.
 
 ### D02 continuation — horizon sensitivity in API, app and Excel, 2026-10-16
 

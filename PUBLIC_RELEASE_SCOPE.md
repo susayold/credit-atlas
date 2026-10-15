@@ -75,6 +75,18 @@ to printed report totals and contain no respondent/loan records, response-mode
 linkage, or disposition-to-loan linkage. Waves 47–48 are identified as outside
 the v7.0 PUF.
 
+The same reference workbook includes FHFA's public quarterly state All-Transactions
+HPI from 1975Q1 through 2026Q2 with an attributed source receipt. It is aggregate
+geographic context, not a property-level valuation or model-ready point-in-time
+predictor.
+
+The D02 Excel reference workbook also includes FHFA NMDB quarterly performance
+aggregates by state and mortgage market for 2002Q1–2026Q2 (79,968 curated rows).
+It is a separate aggregate benchmark, not loan-level performance data; small
+cells remain suppressed and pre-2019Q4 forbearance values remain blank. The
+source review documents the active-loan denominator, preliminary latest
+quarters, and limits on model or cross-source use.
+
 Ginnie Mae's public MBS Single-Family Loan Payment History layout review and
 aggregate-only TXT/single-member-ZIP auditor are included. The official layout/sample files and
 sample-derived audit receipt stay in private D: storage; no identifiers or

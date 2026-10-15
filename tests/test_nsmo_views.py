@@ -610,6 +610,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     for name in ("nmdb-performance-national-quarterly-2026q2.csv",
                  "nmdb-performance-national-quarterly-2026q2-receipt.json"):
         shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
+    for name in ("nmdb-performance-state-quarterly-2026q2.csv",
+                 "nmdb-performance-state-quarterly-2026q2-receipt.json"):
+        shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
     shutil.copyfile(Path(__file__).parents[1] / "docs/data/nsmo-v70-survey-returns.csv",
                     target_data / "nsmo-v70-survey-returns.csv")
     shutil.copyfile(Path(__file__).parents[1] / "docs/data/nsmo-v70-usable-responses.csv",
@@ -678,6 +681,15 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             latest = {(row["market"], row["series_id"]): row["value_pct"] for row in nmdb["latest"]}
             assert latest[("All Mortgages", "P90DL")] == 1.0
             assert nmdb["series"]["PFORB"]["first_nonblank_quarter"] == "2019Q4"
+        with urlopen(base + "/api/nmdb-state-performance?state=ca", timeout=10) as response:
+            nmdb_state = json.loads(response.read())
+            assert response.status == 200
+            assert nmdb_state["selected_state"] == "CA"
+            assert len(nmdb_state["observations"]) == 1568
+            assert len(nmdb_state["latest"]) == 16
+        with pytest.raises(HTTPError) as invalid_state:
+            urlopen(base + "/api/nmdb-state-performance?state=ZZ", timeout=10)
+        assert invalid_state.value.code == 400
         with urlopen(base + "/api/nsmo-profile", timeout=5) as response:
             payload = json.loads(response.read())
             assert response.status == 200

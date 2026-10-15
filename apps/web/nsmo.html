@@ -82,6 +82,21 @@
         <div id="nmdb-quarterly" class="table-wrap"></div>
         <p class="footnote">Mẫu số là active mortgages cuối quý, không phải cohort cố định hay xác suất default trong một horizon. FHFA cảnh báo hai quý mới nhất có thể được hiệu chỉnh; dữ liệu 2006–2012 có khả năng thiếu serious-delinquency do credit-history purge. Forbearance trước 2019Q4 là blank theo nguồn, không phải 0. Đây là benchmark tổng hợp, không làm tăng số outcome NSMO hay đủ điều kiện để train PD.</p>
       </section>
+      <section class="panel nmdb-context-panel">
+        <div class="section-head"><div><div class="eyebrow">STATE BENCHMARK · FHFA NMDB</div><h2>Mortgage performance by state, 2002Q1–2026Q2</h2><p>So sánh xu hướng aggregate theo bang và nhóm thị trường. Các tỷ lệ dùng mẫu số mortgage còn active cuối quý; không phải PD cá nhân.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel D02 · bảng bang 79.968 dòng</a><a class="button secondary" href="https://www.fhfa.gov/data/nmdb" target="_blank" rel="noopener noreferrer">FHFA NMDB source ↗</a></div></div>
+        <div id="nmdb-state-panel-status" class="domain-state" role="status">Đang xác minh NMDB theo bang…</div>
+        <div class="controls">
+          <label>Bang / DC<select id="nmdb-state-choice"></select></label>
+          <label>Chỉ số<select id="nmdb-state-series"><option value="P3089DL">30–60 days past due</option><option value="P90DL">90+ days past due</option><option value="PFORECL">Foreclosure / bankruptcy / deed-in-lieu</option><option value="PFORB">In forbearance</option></select></label>
+          <label>Market cho bảng chi tiết<select id="nmdb-state-market"></select></label>
+        </div>
+        <div id="nmdb-state-latest" class="metric-grid" aria-label="NMDB state latest-quarter rates"></div>
+        <figure class="chart-frame"><svg id="nmdb-state-trend" viewBox="0 0 980 340" role="img" aria-label="FHFA NMDB mortgage performance rates by market and selected state"></svg><figcaption id="nmdb-state-caption"></figcaption></figure>
+        <div id="nmdb-state-legend" class="nmdb-legend" aria-label="Mortgage market legend"></div>
+        <h3>Quarterly history · selected market</h3>
+        <div id="nmdb-state-quarterly" class="table-wrap"></div>
+        <p class="footnote">FHFA suppresses small cells with fewer than three loan records; blanks are not zero. PFORB begins in 2019Q4. The two newest quarters are preliminary. This separate 5% NMDB aggregate is descriptive context only; it is not joined to Freddie or NSMO records and is not used to train the D01 risk target.</p>
+      </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTERLY STATUS SNAPSHOT</div><h2>Performance code theo thời gian</h2><p>Đếm trạng thái được báo cáo tại từng quý cuối kỳ.</p></div></div>
         <div class="controls">

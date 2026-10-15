@@ -5,6 +5,7 @@ import copy
 import hashlib
 import json
 import re
+import threading
 from pathlib import Path
 
 import duckdb
@@ -52,6 +53,10 @@ class ResearchService:
             raise ValueError("Review storage must remain in the private workspace")
         self.reviews = Reviews(selected_review_path)
         self.cache = {}
+        self._supplement_locks = {
+            "episode_followup": threading.RLock(),
+            "period_transitions": threading.RLock(),
+        }
         self.method_sources = copy.deepcopy(_SERVING_SOURCES)
         from .suite_snapshot import SuiteViews
         self.suite_views = SuiteViews(self.root)
@@ -200,19 +205,21 @@ class ResearchService:
 
     def episode_followup(self, case_id):
         from .episode_followup import build
-        case = self.case(case_id)
-        if "episode_followup" not in case:
-            case["episode_followup"] = build(self.root, case)
-        return copy.deepcopy(case["episode_followup"])
+        with self._supplement_locks["episode_followup"]:
+            case = self.case(case_id)
+            if "episode_followup" not in case:
+                case["episode_followup"] = build(self.root, case)
+            return copy.deepcopy(case["episode_followup"])
 
     def period_transitions(self, case_id):
         from .period_transitions import build
-        case = self.case(case_id)
-        if "period_transitions" not in case:
-            projection = build(self.root, case)
-            self.case(case_id)
-            case["period_transitions"] = projection
-        return copy.deepcopy(case["period_transitions"])
+        with self._supplement_locks["period_transitions"]:
+            case = self.case(case_id)
+            if "period_transitions" not in case:
+                projection = build(self.root, case)
+                self.case(case_id)
+                case["period_transitions"] = projection
+            return copy.deepcopy(case["period_transitions"])
 
     def report(self, case_id, query):
         case = self.case(case_id)

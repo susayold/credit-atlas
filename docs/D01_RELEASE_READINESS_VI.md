@@ -14,6 +14,7 @@ theo, không phải quyết định phát hành công khai.
 | Private file exclusion | 0 private paths trong 970 Git candidates | Cùng receipt |
 | Served-bundle privacy | 15 static assets, quét byte-level đối với đủ 50.000 source loan IDs; 0 matches; assets đúng explicit allowlist | `artifacts/private/package-audit-4dd8b231c83e/receipt.json` |
 | Foundation resource | Clean descriptive rebuild 192,264 giây, peak working set 812.138.496 bytes (~774,5 MiB) | `artifacts/private/d01-a24484b21a21/foundation-complete.json` |
+| Read-only API concurrency | Loopback HTTP, 4 workers × 3 rounds, 96/96 successful requests. Warm p95: period transitions 0,234 giây; report 0,484 giây. Cold period-transition cache build 3,773 giây. | Private receipt `artifacts/private/d01-api-concurrency-859d4f7e4f05/receipt.json`; bounded runner `scripts/benchmark_d01_concurrent_api.py` |
 
 Lock ứng dụng gồm DuckDB 1.5.5/PyArrow 22.0.0; optional groups pin
 scikit-learn 1.8.0, NumPy 2.5.3, SciPy 1.18.1, Playwright 1.56.0 và xlrd
@@ -37,12 +38,16 @@ threadpoolctl 3.6.0, còn runtime app lock là 3.7.0; cần giữ rõ môi trư�
 - Package scan kiểm tra explicit app bundle và path Git hiện tại; không tự
   duyệt legal rights cho mọi source-derived statement trong tài liệu, và cần
   chạy lại nếu có thay đổi assets hoặc trước khi external deploy.
-- Benchmark là một clean rebuild đơn lẻ; chưa đo concurrent API load, full
-  model training, multi-vintage footprint hoặc worst-case spill.
+- Benchmark rebuild là một clean rebuild đơn lẻ; API check mới chỉ chạy
+  loopback trên một máy và một case. Cold `period-transitions` mất 3,773 giây
+  trước khi cache ấm; chưa đo production network, full model training,
+  multi-vintage footprint hoặc worst-case spill.
 
 Vì vậy M01-004 vẫn **Partial**: storage, dependency pin, notices cho hai
 dependency, engine bytes và static privacy có bằng chứng; engine không có root
-license notice trong repo và expanded resource sign-off chưa đạt.
+license notice trong repo và expanded resource sign-off chưa đạt. Bốn-worker
+API concurrency đã đo trong scope loopback; không coi đó là production load
+sign-off.
 Không đưa raw/source-derived private content lên external release.
 
 ## Acquisition decision theo plan

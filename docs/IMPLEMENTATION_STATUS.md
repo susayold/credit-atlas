@@ -202,6 +202,8 @@ Added a generated inventory of 167 API path literals and their direct references
 in UI, HTTP tests, and browser QA: `M01_028_ROUTE_TEST_INVENTORY_VI.md`. The scan
 is explicitly an inventory aid; a string reference is not acceptance evidence.
 Added fail-closed HTTP contracts for P4 study catalogs, exposure-import catalog,
-HMDA/SEC/Market catalogs, and SEC/Market snapshots. Focused suite passes 16/16.
-M01-028 remains Partial: aggregate/report payloads, Market daily data, SEC/HMDA
-report aliases, and UI download acceptance still need independent validation.
+HMDA/SEC/Market catalogs and SEC/Market snapshots. Report contracts also cover
+HMDA aggregate/labeled reports, SEC issuer report, Market report and daily
+series, including query forwarding and attachment headers. Focused suite passes
+21/21. M01-028 remains Partial pending real-source report QA, remaining report
+families, failure-path coverage, and full UI download acceptance.

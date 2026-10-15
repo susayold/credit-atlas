@@ -89,10 +89,10 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/hmda-cohort-report` | `apps/web/app.js` | `tests/test_hmda_cohort_views.py` | — |
 | `/api/hmda-cohorts` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
 | `/api/hmda-labeled-aggregates` | `apps/web/app.js` | — | — |
-| `/api/hmda-labeled-report` | `apps/web/app.js` | `tests/test_hmda_reference_views.py` | `scripts/browser_qa.py` |
+| `/api/hmda-labeled-report` | `apps/web/app.js` | `tests/test_hmda_reference_views.py`, `tests/test_workspace_catalog_http.py` | `scripts/browser_qa.py` |
 | `/api/hmda-reference` | `apps/web/app.js` | `tests/test_hmda_reference_views.py`, `tests/test_workspace_catalog_http.py` | — |
 | `/api/hmda-references` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
-| `/api/hmda-report` | `apps/web/app.js` | `tests/test_hmda_views.py` | `scripts/browser_qa.py` |
+| `/api/hmda-report` | `apps/web/app.js` | `tests/test_hmda_views.py`, `tests/test_workspace_catalog_http.py` | `scripts/browser_qa.py` |
 | `/api/hmda-view` | `apps/web/app.js` | `tests/test_hmda_views.py`, `tests/test_workspace_catalog_http.py` | — |
 | `/api/hmda-views` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
 | `/api/hud-fha-iif-profile` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
@@ -105,8 +105,8 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/loans` | `apps/web/app.js` | — | `scripts/browser_lifecycle_acceptance.py`, `scripts/browser_qa.py` |
 | `/api/managed-pool` | `apps/web/app.js` | — | `scripts/browser_abs_qa.py`, `scripts/browser_managed_pool_qa.py` |
 | `/api/managed-pool-report` | `apps/web/app.js` | — | `scripts/browser_abs_qa.py` |
-| `/api/market-daily` | — | — | — |
-| `/api/market-report` | `apps/web/app.js` | `tests/test_market_views.py` | `scripts/browser_qa.py` |
+| `/api/market-daily` | — | `tests/test_workspace_catalog_http.py` | — |
+| `/api/market-report` | `apps/web/app.js` | `tests/test_market_views.py`, `tests/test_workspace_catalog_http.py` | `scripts/browser_qa.py` |
 | `/api/market-view` | `apps/web/app.js` | `tests/test_market_views.py`, `tests/test_workspace_catalog_http.py` | — |
 | `/api/market-views` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
 | `/api/monitor-review` | `apps/web/monitor-reviews.js` | `tests/test_monitor_reviews.py` | `scripts/browser_monitor_review_qa.py` |
@@ -165,7 +165,7 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/sec-note-rules-report` | `apps/web/app.js` | `tests/test_note_rules.py` | — |
 | `/api/sec-note-schedule` | `apps/web/app.js` | `tests/test_note_schedules.py` | `scripts/browser_note_schedule_qa.py` |
 | `/api/sec-note-schedule-report` | `apps/web/app.js` | `tests/test_note_schedules.py` | — |
-| `/api/sec-report` | `apps/web/app.js`, `apps/web/monitor.js` | `tests/test_sec_views.py` | `scripts/browser_kpi_analysis_qa.py`, `scripts/browser_sec_normalization_acceptance.py` |
+| `/api/sec-report` | `apps/web/app.js`, `apps/web/monitor.js` | `tests/test_sec_views.py`, `tests/test_workspace_catalog_http.py` | `scripts/browser_kpi_analysis_qa.py`, `scripts/browser_sec_normalization_acceptance.py` |
 | `/api/sec-trend` | `apps/web/app.js` | `tests/test_sec_trends.py` | `scripts/browser_sec_trends_qa.py` |
 | `/api/sec-trend-report` | `apps/web/app.js` | `tests/test_sec_trends.py` | — |
 | `/api/sec-view` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
@@ -195,9 +195,11 @@ filters fail with HTTP 400. Evidence: `tests/test_exposure_views.py` and
 
 Portfolio Excel template/import and source-bound review/report have their
 own HTTP or browser checks. New direct HTTP contracts cover the HMDA, SEC,
-and Market catalogs plus the SEC/Market snapshot query boundary; see
-`tests/test_workspace_catalog_http.py`. Those do not validate real-source
-reports, daily-series payloads, or attachment aliases. M01-028 stays
-Partial until remaining HMDA aggregate/reference reports, SEC report
-aliases, Market daily/report responses and the UI download paths have
-independent payload and failure acceptance evidence.
+and Market catalogs plus SEC/Market snapshots. HTTP tests also exercise
+HMDA aggregate/labeled reports, SEC issuer reports, Market reports and
+daily-series response forwarding, cache headers, and download attachment
+behavior; see `tests/test_workspace_catalog_http.py`. These contracts use
+controlled service responses and do not replace real-source data QA or
+full browser acceptance for every UI download path. M01-028 stays Partial
+until remaining report families, real-source failure paths and UI download
+flows have independent evidence.

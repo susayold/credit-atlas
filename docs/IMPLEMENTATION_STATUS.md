@@ -215,8 +215,11 @@ questionnaire packages and SAS response formats. A visual comparison of the
 official wave 1-2 and 11-12 questionnaire PDFs confirms an X94A answer-option
 wording change from “borrow enough money” to “borrow a significant amount”; the
 checked `Very / Somewhat / Not at all` scale remains the same. The candidate
-matrix now flags X94A as a wording-version break, and the D02 plan requires
-wave-version sensitivity before long-run trend interpretation. This narrows
-descriptive comparability only; routing, response mode/population equivalence,
-survey variance and predictor eligibility remain open. No target/model/PD was
-created.
+matrix now flags X94A as a wording-version break. The aggregate-only dictionary
+API now serves nine item-comparability notes, and the field detail surfaces the
+X94A warning and trend-sensitivity instruction. The D02 plan requires
+wave-version sensitivity before long-run trend interpretation. Focused
+dictionary/questionnaire tests pass 15/15; isolated Edge headless QA passes 5/5
+with no page errors. This narrows descriptive comparability only; routing,
+response mode/population equivalence, survey variance and predictor eligibility
+remain open. No target/model/PD was created.

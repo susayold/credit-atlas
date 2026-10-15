@@ -107,6 +107,9 @@ def _write_public_dictionary(root: Path) -> None:
     (data / "nsmo-v70-wave-coverage.csv").write_text(
         "csv_column,observed_response_waves,entirely_not_asked_waves,partially_not_asked_waves,not_applicable_waves\n"
         "field_0,1-46,,-,\n", encoding="utf-8")
+    (data / "nsmo-v70-wave-item-comparability.csv").write_text(
+        "field,assessment\nfield_0,WORDING_VERSION_BREAK: separate wave groups\n",
+        encoding="utf-8")
 
 
 def _write_domain_receipts(root: Path, source_sha: str) -> None:
@@ -219,6 +222,9 @@ def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     assert result["field_count"] == 587
     assert result["value_label_count"] == 1
     assert result["wave_coverage_count"] == 1
+    assert result["item_comparability_count"] == 1
+    assert result["item_comparability"][0] == {
+        "field": "field_0", "assessment": "WORDING_VERSION_BREAK: separate wave groups"}
     assert result["fields"][0]["csv_column"] == "field_0"
     assert result["value_labels"][0]["format_label"] == "One"
     assert result["wave_coverage"][0]["observed_response_waves"] == "1-46"

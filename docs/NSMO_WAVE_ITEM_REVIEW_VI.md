@@ -48,6 +48,15 @@ response không nên được coi tự động là thang đo đồng nhất qua 
    variance trước suy luận. Text hoặc scale giống nhau không thay thế các gate
    này.
 
+## Đưa vào workspace
+
+`/api/nsmo-dictionary` trả 9 ghi chú item-comparability cùng dictionary đã
+sanitise. Trang `/nsmo` cho phép tìm theo nội dung ghi chú và hiển thị version
+review ngay trong hồ sơ field; không đọc thêm dữ liệu PUF hay ID. Dictionary API
+tests đạt 12/12, bộ questionnaire/item tests đạt 3/3, và Edge headless trên
+server cô lập xác nhận 5/5 kiểm tra coverage cùng cảnh báo X94A, không có lỗi
+JavaScript. Receipt riêng tư: `artifacts/private/nsmo-wave-item-browser-qa-20261016/receipt.json`.
+
 ## Nguồn
 
 - [FHFA NSMO PUF, codebook, SAS formats và questionnaire catalog](https://www.fhfa.gov/data/nsmo)

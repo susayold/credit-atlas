@@ -16,10 +16,12 @@ expect.set_options(timeout=180000)
 
 root=Path.cwd();out=root/'artifacts/private'/('p4-acceptance-qa-'+uuid.uuid4().hex[:12]);out.mkdir()
 service=ResearchService(root,review_path=out/'reviews.sqlite3')
-print('Verifying saved P4 scenario/ECL/tail evidence before browser timing',flush=True)
+print('Verifying saved P4 scenario/ECL plus tail/convergence availability before browser timing',flush=True)
 service.exposure_scenario_views.catalog('exposure-import-57b88e00bedb')
 service.exposure_ecl_views.catalog('exposure-import-57b88e00bedb')
-service.exposure_tail_views.catalog('exposure-import-57b88e00bedb')
+tail_catalog=service.exposure_tail_views.catalog('exposure-import-57b88e00bedb')
+convergence_catalog=service.exposure_convergence_views.catalog('exposure-import-57b88e00bedb')
+print(f"Current import has {len(tail_catalog['tail_studies'])} tail studies and {len(convergence_catalog['studies'])} convergence studies",flush=True)
 print('Saved evidence verified; browser checks starting',flush=True)
 server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service));thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
 server.daemon_threads=True
@@ -81,10 +83,21 @@ try:
         attachment(page,'Xuất declared scenario set','/api/exposure-scenario-report','scenario.json',3,'Scenario report matches API; HTTP 503 shows error and creates no fake attachment')
         select_task(page,'ECL');expect(page.locator('#exposure-ecl table').first).to_be_visible(timeout=180000)
         attachment(page,'Xuất declared ECL study','/api/exposure-ecl-report','ecl.json',4,'ECL report matches API; HTTP 503 shows error and creates no fake attachment')
-        select_task(page,'Tail risk');expect(page.locator('#exposure-tail table').first).to_be_visible(timeout=180000)
-        expect(page.locator('#exposure-convergence table').first).to_be_visible(timeout=180000)
-        attachment(page,'Xuất tail risk study','/api/exposure-tail-report','tail.json',5,'Tail report matches API; HTTP 503 shows error and creates no fake attachment')
-        attachment(page,'Xuất convergence diagnostics','/api/exposure-convergence-report','convergence.json',6,'Convergence report matches API; HTTP 503 shows error and creates no fake attachment')
+        select_task(page,'Tail risk')
+        if tail_catalog['tail_studies']:
+            expect(page.locator('#exposure-tail table').first).to_be_visible(timeout=180000)
+            attachment(page,'Xuất tail risk study','/api/exposure-tail-report','tail.json',5,'Tail report matches API; HTTP 503 shows error and creates no fake attachment')
+        else:
+            expect(page.locator('#exposure-tail')).to_contain_text('Chưa có tail simulation cho snapshot này.',timeout=180000)
+            assert page.get_by_role('link',name='Xuất tail risk study',exact=True).count()==0
+            checks.append('P4 tail-risk screen states no saved simulation for this import and offers no unsupported export')
+        if convergence_catalog['studies']:
+            expect(page.locator('#exposure-convergence table').first).to_be_visible(timeout=180000)
+            attachment(page,'Xuất convergence diagnostics','/api/exposure-convergence-report','convergence.json',6,'Convergence report matches API; HTTP 503 shows error and creates no fake attachment')
+        else:
+            expect(page.locator('#exposure-convergence')).to_contain_text('Chưa có multi-seed diagnostics cho snapshot này.',timeout=180000)
+            assert page.get_by_role('link',name='Xuất convergence diagnostics',exact=True).count()==0
+            checks.append('P4 convergence screen states no saved diagnostics for this import and offers no unsupported export')
         select_task(page,'Excel')
         invalid=out/'unsafe-numeric.xlsx'
         invalid.write_bytes(mutated('G2',lambda c:setattr(c.find('s:v',NS),'text','100000000000000.000000000000001')))

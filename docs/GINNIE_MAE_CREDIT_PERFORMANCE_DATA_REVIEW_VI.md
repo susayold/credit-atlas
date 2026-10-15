@@ -1,8 +1,9 @@
 # Ginnie Mae loan-level performance — khả năng bổ sung dữ liệu
 
 Cập nhật nguồn chính thức: 16/10/2026. Đây là review nguồn cho một case
-mortgage/Ginnie riêng; chưa tải dữ liệu loan-level và chưa xác nhận Terms of Use.
-Không gộp hồ sơ Ginnie với NSMO, Freddie Mac hoặc Fannie Mae.
+mortgage/Ginnie riêng. Tệp production vẫn chưa tải được do endpoint yêu cầu
+phiên đăng nhập xác thực. Không gộp hồ sơ Ginnie với NSMO, Freddie Mac hoặc
+Fannie Mae.
 
 ## Kết luận nguồn
 
@@ -52,24 +53,34 @@ cũng cảnh báo dữ liệu do issuers gửi, có thể thiếu/sai và Ginnie
 tính chính xác/đầy đủ. Mục đích case nghiên cứu Ginnie có vẻ khớp phạm vi sử dụng,
 nhưng người dùng phải tự đọc và chấp nhận Terms trước khi tải dữ liệu.
 
-**Trạng thái:** `TERMS_ACCEPTANCE_REQUIRED — NO LOAN-LEVEL PAYLOAD DOWNLOADED`.
-Catalog/layout và metadata công khai đã được rà soát; chưa tải data sample,
-quarterly ZIP hay các monthly supplement. Việc dữ liệu có thể truy cập HTTP mà
-không đăng nhập không thay thế việc người dùng chấp nhận điều khoản.
+**Trạng thái hiện tại:** người dùng đã xác nhận riêng trong phiên làm việc rằng
+đã đọc và chấp nhận Terms. Xác nhận không lưu credential hay token vào repo.
+Catalog metadata, LoanPerf layout/sample và liquidation layout/sample chính
+thức đã được tải vào vùng private trên D:; sample chỉ dùng kiểm tra schema, không
+đại diện production population. LoanPerf sample có 213 loan-period rows và 104
+khóa khoản vay duy nhất trên 2023Q2; liquidation sample có 100 LR rows và 100
+khóa duy nhất trong 2018-08. Cả hai sample qua kiểm tra header/trailer và mã
+reason; không tạo model, rate/PD hay join giữa các sample khác kỳ.
 
-## Kế hoạch sau khi người dùng xác nhận Terms
+Thử tải `LoanPerf_202606.zip` qua endpoint tải chính thức trả HTTP 401 vì chưa
+có authenticated session trong môi trường. Do đó chưa có production payload;
+không dùng URL thay thế để lách đăng nhập. Receipt, SHA-256 của sample/layout
+và status HTTP được lưu private trong
+`data/private/ginnie-mae/source/loanperf-quarterly-pilot/`.
 
-1. Tải trước một quarterly production package và các layout cần thiết vào vùng
-   private trên `D:`; lưu URL, thời điểm, byte count, SHA-256 và response headers.
-2. Kiểm tra ZIP member/record format, header/trailer, counts và trường period;
-   chưa đưa row-level files vào public Git hoặc Excel.
-3. Xây parser fixed-width theo layout version, preserve raw codes/missing values,
-   kiểm tra duplicate loan-periods, phạm vi delinquency, UPB và chronology.
-4. Chỉ sau khi layout/liquidation concordance qua audit mới tạo aggregate
-   dashboard riêng: current/1–2/3+/6+, vintage, pool characteristics, active
-   exits và forbearance coverage.
-5. Hash-bind receipts và acceptance tests; không xuất loan IDs, nối sang nguồn
-   khác để suy danh tính, hay gọi tỷ lệ mô tả là PD đại diện dân số.
+## Kế hoạch tiếp theo
+
+1. Dùng phiên đăng nhập Ginnie Mae đã xác thực để tải một quarterly production
+   package cùng liquidation file phù hợp; lưu URL, thời điểm, byte count,
+   SHA-256 và response headers trong vùng private trên `D:`.
+2. Chạy parser aggregate-only trên production ZIP; đối chiếu HH/LR-or-LP/TT,
+   record counts, reporting periods, uniqueness, missingness và source codes.
+3. Chỉ đánh giá nối LoanPerf với liquidation khi cả hai production files cùng
+   kỳ, khóa disclosure và semantics đã đối chiếu theo layout chính thức.
+4. Sau đó mới tạo dashboard Ginnie riêng cho current/1–2/3+/6+, vintage,
+   pool characteristics, active exits và forbearance coverage.
+5. Không đưa row-level files/IDs lên public Git hoặc Excel; không nối với nguồn
+   khác để suy danh tính; không gọi tỷ lệ mô tả là PD đại diện dân số.
 
 ## Nguồn chính thức
 

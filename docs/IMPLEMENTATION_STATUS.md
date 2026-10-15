@@ -168,3 +168,30 @@ Latest evidence:
   gate (no fitting), and 42/42 real-data browser checks, including HTTP 500 JSON, 502 HTML, and run-catalog 503 failures. M01-029 remains Partial
   pending qualified multi-vintage model/calibration/final-OOT evidence; see
   D01_REPRODUCTION_AUDIT_VI.md and its private receipt.
+
+## 2026-10-16 continuation — NSMO origination-aligned support
+
+The current FHFA NSMO v7.0 PUF was already present in the private workspace, so
+this checkpoint did not fetch a duplicate. A new aggregate-only audit uses
+`open_year`/`open_month`, excludes the origination quarter coded `Q`, and counts
+only following quarterly snapshots through the month +12 boundary. It found
+65 observed 90+ statuses among 62,359 PUF mortgages; this is sample support,
+not a PD/default rate. The report and receipt distinguish fully observed
+no-90+ snapshots, K/M/S gaps, termination, same-month ambiguity, competing
+adverse states, and administrative truncation. See
+`NSMO_ORIGINATION_FEASIBILITY_VI.md`; the private receipt remains outside Git.
+
+The `/nsmo` workspace now has an origination-aligned feasibility panel and a
+separate `/api/nsmo-origination-feasibility` endpoint. The API validates source
+SHA, row totals, and vintage reconciliation before returning aggregates only.
+Focused API/view and audit tests pass 20/20; Edge headless QA on the real private
+PUF passes 8/8 checks with no page errors. The persistent listener on port 8770
+still returns HTTP 404 for the new route; acceptance used an isolated local test
+server, so the long-running app process needs to reload before the panel is
+available there. No model target or PD was created, and D02-5/D02-6 remain open.
+
+On the FHFA Terms gate, the monitoring notice was acknowledged under the user's
+authorization. The next screen includes an indemnification clause; no second
+“I agree” was submitted while its specific confirmation is pending. Freddie
+Mac annual vintages remain unavailable without Clarity authentication, so no
+new D01 performance vintage was acquired.

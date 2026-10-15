@@ -64,9 +64,23 @@ code `0`/blank chưa được layout định nghĩa được đánh dấu cần 
 validation. Workbook không tự suy ra PD/target. Production ZIP và
 profile/authentication vẫn là bước kế tiếp.
 
+### Excel sample records — 16/10/2026
+
+Ba sample TXT/ZIP công khai đã có workbook riêng tại private D:
+`data/private/ginnie-mae/reference/CreditAtlas-Ginnie-Public-Samples.xlsx`.
+Workbook có 12 sheet, tách từng record type theo field IDs/layout: 213 LoanPerf
+`LP`, 100 liquidation `LR`, 20 payment-history pool `PH`, 53 loan `LL`, 20
+pool trailer `PT`, cùng file/pool header và trailer. Từng ô dữ liệu khớp với
+sample nguồn; mã và ID lưu dạng text để giữ zero đầu và chuỗi 48 ký tự.
+Workbook này **có sample rows và identifiers**, nên được giữ private; đây
+không phải sample đại diện và không được đưa lên GitHub. Companion field
+reference workbook chỉ chứa metadata/category/aggregate QA, không có row
+records. Receipt/hash và kiểm tra XLSX nằm trong
+`artifacts/private/ginnie-samples-excel-20261016/receipt.json`.
+
 Ưu tiên tải `LoanPerf_202606.zip` làm pilot với parser đã có. Sau khi schema/key và phạm vi permission được xác nhận, audit riêng `liqloanqtr` và `llpaymhist` làm nguồn bổ sung; chỉ ghép nếu layout và key chứng minh đúng grain/period. Forbearance không được tự động coi là outcome hay predictor. Không tải annual 2.3 GB trước khi pilot xác nhận dung lượng expanded, parser throughput và cách bảo quản.
 
-User nói có thể tự đăng nhập và lưu cookie trên D:, nhưng chưa gửi đường dẫn file. Chỉ cần cung cấp **đường dẫn** Netscape cookie file; không gửi nội dung cookie/mật khẩu trong chat. Cookie sẽ được đọc tại chỗ cho request production, không được in log hay ghi vào receipt. Nếu phiên Ginnie không dùng cookie Netscape tương thích hoặc cookie hết hạn, dừng và yêu cầu người dùng xuất lại phiên qua giao diện chính thức.
+User nói có thể tự đăng nhập và lưu cookie trên D:, nhưng chưa gửi đường dẫn file. Chỉ cần cung cấp **đường dẫn** Netscape cookie file (đã gợi ý `D:\data\Codex\credit-atlas\data\private\access\ginnie-cookies.txt`); không gửi nội dung cookie/mật khẩu trong chat. Cookie sẽ được đọc tại chỗ cho request production, không được in log hay ghi vào receipt. Nếu phiên Ginnie không dùng cookie Netscape tương thích hoặc cookie hết hạn, dừng và yêu cầu người dùng xuất lại phiên qua giao diện chính thức.
 
 ## Payment-history layout và sample audit — 16/10/2026
 

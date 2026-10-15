@@ -31,6 +31,16 @@ const sources = [
     scale_labels: "Response-scale labels", exact_item_phrase_found_in_packages: "Questionnaire packages with exact phrase",
     assessment: "Comparability assessment",
   } },
+  { sheet: "NSMO returns", file: "nsmo-v70-survey-returns.csv", table: "NsmoSurveyReturns", headers: {
+    survey_wave: "Survey wave", average_sampling_weight: "Average sampling weight", surveys_mailed: "Surveys mailed",
+    postal_nondelivery: "Postal non-delivery", surveys_delivered: "Surveys delivered",
+    surveys_completed_total: "Surveys completed", completed_by_mail: "Completed by mail",
+    online_english: "Online English", online_spanish: "Online Spanish", opt_out: "Opt-outs",
+    completion_pct_of_mailed: "Completion (%) of mailed", completion_pct_of_delivered: "Completion (%) of delivered",
+    mail_share_pct_of_completed: "Mail share (%) of completed", online_share_pct_of_completed: "Online share (%) of completed",
+    online_english_share_pct_of_completed: "Online English share (%)", online_spanish_share_pct_of_completed: "Online Spanish share (%)",
+    included_in_nsmo_v70_puf: "Included in v7.0 PUF", source_note: "FHFA table note", source_pdf_page: "Report page",
+  }, numeric: new Set(["survey_wave", "average_sampling_weight", "surveys_mailed", "postal_nondelivery", "surveys_delivered", "surveys_completed_total", "completed_by_mail", "online_english", "online_spanish", "opt_out", "completion_pct_of_mailed", "completion_pct_of_delivered", "mail_share_pct_of_completed", "online_share_pct_of_completed", "online_english_share_pct_of_completed", "online_spanish_share_pct_of_completed", "source_pdf_page"]), bool: new Set(["included_in_nsmo_v70_puf"]) },
   { sheet: "NMDB quarterly", file: "nmdb-performance-national-quarterly-2026q2.csv", table: "NmdbQuarterly", headers: {
     source: "Source", frequency: "Frequency", geo_level: "Geography level", geo_id: "Geography ID", geo_name: "Geography name",
     market: "Mortgage market", period: "Quarter", year: "Year", quarter: "Quarter number", month: "Quarter-end month",
@@ -57,7 +67,8 @@ guide.showGridLines = false;
 const guideRows = [
   ["CreditAtlas · D02 data reference workbook", ""],
   ["Purpose", "Excel copy of the D02 reference tables and public aggregate datasets, arranged by source for filtering and review."],
-  ["NSMO", "Field dictionary, category labels, wave coverage and item wording. Values -2 and -3 remain distinct source codes."],
+  ["NSMO", "Field dictionary, category labels, wave coverage, item wording and response-mode counts by survey wave. Values -2 and -3 remain distinct source codes."],
+  ["Response mode", "Official Table 3 reports returned surveys by mail, online English and online Spanish for 48 waves. The v7.0 PUF contains waves 1–46."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],
   ["Use", "Each data sheet has an Excel Table with filters. The top row and first identifier column remain fixed while scrolling."],
@@ -68,25 +79,25 @@ const guideRows = [
 guide.getRange(`A1:B${guideRows.length}`).values = guideRows;
 guide.getRange("A1:B1").merge();
 guide.getRange("A1:B1").format = { fill: "#243B53", font: { name: "Aptos Display", size: 16, bold: true, color: "#FFFFFF" }, verticalAlignment: "center", wrapText: true };
-guide.getRange("A2:A9").format = { font: { bold: true, color: "#243B53" }, verticalAlignment: "top", wrapText: true };
-guide.getRange("A1:B9").format.wrapText = true;
+guide.getRange(`A2:A${guideRows.length}`).format = { font: { bold: true, color: "#243B53" }, verticalAlignment: "top", wrapText: true };
+guide.getRange(`A1:B${guideRows.length}`).format.wrapText = true;
 guide.getRange("A:A").format.columnWidth = 22;
 guide.getRange("B:B").format.columnWidth = 112;
 guide.getRange("A1:B1").format.rowHeight = 34;
-guide.getRange("A2:B9").format.rowHeight = 38;
+guide.getRange(`A2:B${guideRows.length}`).format.rowHeight = 38;
 
 for (const source of sources) {
   const csv = await fs.readFile(path.join(root, "docs", "data", source.file), "utf8");
   const imported = await Workbook.fromCSV(csv, { sheetName: "Source" });
   const sourceRows = imported.worksheets.getItem("Source").getUsedRange().values;
-  const rawHeaders = sourceRows[0].map(String);
+  const rawHeaders = sourceRows[0].map((name) => String(name).replace(/^\uFEFF/, ""));
   const header = rawHeaders.map((name) => source.headers[name] ?? name);
   const rows = sourceRows.slice(1).filter((row) => row.some((cell) => cell !== null && cell !== ""));
   const values = rows.map((row) => row.map((cell, index) => {
     if (cell == null || cell === "") return "";
     const name = rawHeaders[index];
     if (source.numeric?.has(name)) return Number(cell);
-    if (source.bool?.has(name)) return String(cell) === "1";
+    if (source.bool?.has(name)) return ["1", "true"].includes(String(cell).toLowerCase());
     return String(cell);
   }));
   const sheet = wb.worksheets.add(source.sheet);
@@ -112,6 +123,12 @@ for (const source of sources) {
   if (source.sheet.startsWith("NMDB")) {
     const rateColumn = header.indexOf("Rate (%)");
     sheet.getRange(`${columnName(rateColumn + 1)}2:${columnName(rateColumn + 1)}${values.length + 1}`).format.numberFormat = '0.0"%"';
+  }
+  if (source.sheet === "NSMO returns") {
+    for (const name of header.filter((item) => item.includes("(%)"))) {
+      const index = header.indexOf(name);
+      sheet.getRange(`${columnName(index + 1)}2:${columnName(index + 1)}${values.length + 1}`).format.numberFormat = '0.00"%"';
+    }
   }
 }
 

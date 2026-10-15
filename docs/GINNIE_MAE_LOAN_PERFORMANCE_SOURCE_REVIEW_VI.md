@@ -53,6 +53,15 @@ Các file production liên quan trong catalog cùng lần kiểm tra:
 | `liqloanqtr_202609.txt` | 218,846 | 13/10/2026 | MBS terminated-loan quarterly; exit/removal context, cần audit schema riêng |
 | `llmonforb_202609.zip` | 1,245,711 | 13/10/2026 | Loan-level forbearance supplemental; cần kiểm tra coverage và join key |
 
+### Excel field-reference workbook — 16/10/2026
+
+Đã tạo workbook Excel analyst-facing từ layout LoanPerf v1.0: đủ 59 trường
+`LP`, 4 `HH`, 3 `TT`, các code values được publisher công bố, và QA summary
+aggregate của sample công khai. Workbook đặt trong private D:; không chứa
+loan-level rows, pool/loan keys hay cookie. Các code `0`/blank chưa được layout
+định nghĩa vẫn được đánh dấu cần production validation; workbook không tự suy
+ra PD/target. Production ZIP và profile/authentication vẫn là bước kế tiếp.
+
 Ưu tiên tải `LoanPerf_202606.zip` làm pilot với parser đã có. Sau khi schema/key và phạm vi permission được xác nhận, audit riêng `liqloanqtr` và `llpaymhist` làm nguồn bổ sung; chỉ ghép nếu layout và key chứng minh đúng grain/period. Forbearance không được tự động coi là outcome hay predictor. Không tải annual 2.3 GB trước khi pilot xác nhận dung lượng expanded, parser throughput và cách bảo quản.
 
 User nói có thể tự đăng nhập và lưu cookie trên D:, nhưng chưa gửi đường dẫn file. Chỉ cần cung cấp **đường dẫn** Netscape cookie file; không gửi nội dung cookie/mật khẩu trong chat. Cookie sẽ được đọc tại chỗ cho request production, không được in log hay ghi vào receipt. Nếu phiên Ginnie không dùng cookie Netscape tương thích hoặc cookie hết hạn, dừng và yêu cầu người dùng xuất lại phiên qua giao diện chính thức.

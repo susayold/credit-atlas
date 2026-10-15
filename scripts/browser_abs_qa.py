@@ -75,6 +75,40 @@ def run(root):
             assert all(value is False for value in exported['qualification'].values())
             assert str(root) not in json.dumps(exported)
             checks.append('Private exact period export equals reverified source projection, no raw filesystem paths')
+            def check_source_download(task, button, filename):
+                select_task(page, task)
+                with page.expect_download() as info:
+                    page.get_by_role('button', name=button, exact=True).click()
+                path = output / filename; info.value.save_as(str(path)); report = read_json(path)
+                assert report['visibility'] == 'private' and report['public_release_approved'] is False
+                assert str(root) not in json.dumps(report)
+                checks.append(task + ' specialized source export is valid private JSON without raw local paths')
+            check_source_download('ABS-EE coverage', 'Xuất ABS-EE coverage JSON', 'absee-profile-export.json')
+            check_source_download('Định nghĩa ABS-EE', 'Xuất ABS-EE dictionary JSON', 'absee-dictionary-export.json')
+            check_source_download('Managed pool', 'Xuất Managed pool JSON', 'managed-pool-export.json')
+            check_source_download('Static pool', 'Xuất static pool JSON', 'static-pool-export.json')
+            check_source_download('SOFR nguồn', 'Xuất SOFR evidence JSON', 'abs-benchmark-export.json')
+            failed_downloads = []; error_page = browser.new_page(viewport={'width': 1440, 'height': 1000})
+            error_page.set_default_timeout(60000); error_page.on('pageerror', lambda error: errors.append(str(error)))
+            error_page.on('download', lambda download: failed_downloads.append(download.suggested_filename))
+            error_exports = [
+                ('absee-profile', 'ABS-EE coverage', 'Xuất ABS-EE coverage JSON', '**/api/absee-profile-report*'),
+                ('absee-dictionary', 'Định nghĩa ABS-EE', 'Xuất ABS-EE dictionary JSON', '**/api/absee-dictionary-report*'),
+                ('managed-pool', 'Managed pool', 'Xuất Managed pool JSON', '**/api/managed-pool-report*'),
+                ('pool-history', 'Static pool', 'Xuất static pool JSON', '**/api/pool-history-report*'),
+                ('benchmark', 'SOFR nguồn', 'Xuất SOFR evidence JSON', '**/api/abs-benchmark-report*'),
+            ]
+            for tab, task, button, pattern in error_exports:
+                error_page.goto(base + '/?view=abs&abs_view_id=' + identifier + '&abs_period=2025-01-31&workspace_tab=' + tab, wait_until='networkidle')
+                expect(error_page.get_by_role('button', name=button, exact=True)).to_be_visible()
+                error_page.route(pattern, lambda route: route.fulfill(status=503, content_type='application/json', body=json.dumps({'error': 'Synthetic ABS source attachment outage'})))
+                error_page.get_by_role('button', name=button, exact=True).click()
+                expect(error_page.locator('#notice.error')).to_contain_text('Synthetic ABS source attachment outage')
+                assert failed_downloads == []
+                error_page.unroute(pattern)
+                checks.append(task + ' HTTP 503 is visible and creates no fake source attachment')
+            error_page.close()
+            select_task(page, 'Tổng quan')
             page.get_by_label('ABS collection period').select_option('2025-12-31')
             expect(page.locator('#abs-period-metrics')).to_contain_text('payment 2026-01-15')
             expect(page.locator('#export-report')).to_be_enabled()

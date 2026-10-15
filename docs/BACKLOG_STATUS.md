@@ -313,3 +313,17 @@ performance through 2025Q3 but requires acknowledgement of its monitoring notice
 and terms before download; Freddie/Fannie loan-level sources remain account or
 registration gated. No unrelated application/aggregate table is promoted to a
 mortgage-performance vintage. D01 stays at 26/50 and M01-028 remains Partial.
+
+## 2026-10-15 ABS specialized attachment acceptance
+
+Fixed five specialized ABS source/benchmark exports to use the shared validated
+JSON download handler. Real browser acceptance now downloads ABS-EE coverage,
+ABS-EE dictionary, managed-pool, static-pool history and SOFR benchmark reports,
+validates their private scope and absence of local filesystem paths, then injects
+HTTP 503 for each route and confirms a visible error with no fake file. The
+focused acceptance passes 22/22 at
+`artifacts/private/abs-browser-qa-52d096bc29bd/receipt.json`; JavaScript syntax
+and browser execution are clean. This closes these five attachment routes only:
+Retail sub-workspace exports and remaining API deliveries still need scoped
+acceptance. D01 remains 26/50, M01-028 remains Partial, and no data/model gate
+changed.

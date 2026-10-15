@@ -96,6 +96,25 @@ quarterly termination file, and a forbearance supplement; they remain separate
 layout/key audits after the quarterly pilot rather than being joined by
 assumption.
 
+### Ginnie Mae payment-history sample audit — 2026-10-16
+
+Reviewed the official monthly MBS Single-Family Loan Payment History v1.0
+layout and public sample. The file is a selected active-pool panel with up to
+24 issuer-reported monthly delinquency codes per loan; latest period is the
+leftmost code, and `XX` means unavailable. The sample has 20 pools, 53 loan
+records, and 95 total records; all declared pool, loan, and record totals
+reconcile. Its 498 status occurrences are sample-parser evidence only, not
+portfolio performance metrics. The sample contains identifiers and remains
+private.
+
+Added `src/credit_atlas/ginnie_payment_history.py`,
+`scripts/audit_ginnie_payment_history.py`, and synthetic tests. The auditor
+validates HH/PH/LL/PT/TT structure, ordering, keys, status encoding, and
+per-pool/file totals, accepts single-member ZIPs, and emits aggregates only.
+Focused Ginnie suite passes 25/25; `py_compile` and `git diff --check` pass. Production ZIP remains gated
+on the user's signed-in session; do not combine this panel with LoanPerf or
+other sources until key, report period, grain, and coverage are validated.
+
 ### D02 continuation — horizon sensitivity in API, app and Excel, 2026-10-16
 
 The aggregate-only NSMO screen now compares C-state full-follow-up support at

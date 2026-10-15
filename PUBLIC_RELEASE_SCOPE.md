@@ -74,3 +74,11 @@ usable-response dispositions, and origination-year scope totals. They reconcile
 to printed report totals and contain no respondent/loan records, response-mode
 linkage, or disposition-to-loan linkage. Waves 47–48 are identified as outside
 the v7.0 PUF.
+
+Ginnie Mae's public MBS Single-Family Loan Payment History layout review and
+aggregate-only TXT/single-member-ZIP auditor are included. The official layout/sample files and
+sample-derived audit receipt stay in private D: storage; no identifiers or
+production payment-history rows are included. The parser accepts the local
+pipe-delimited source format and emits only aggregate status/history counts,
+totals checks, and file hash metadata. Production acquisition remains behind
+the user's authenticated Ginnie session and current Terms of Use.

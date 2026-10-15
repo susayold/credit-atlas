@@ -49,6 +49,7 @@ function render(profile){
   $('dashboard').hidden=false;$('state').hidden=true;
   loadDomainAnalysis();
   loadTargetFeasibility();
+  loadOriginationFeasibility();
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}
@@ -117,6 +118,45 @@ function renderTargetFeasibility(data){
     }
   }
   mode.addEventListener('change',draw);band.addEventListener('change',draw);draw();
+}
+async function loadOriginationFeasibility(){
+  const state=$('origination-feasibility-state');
+  try{const r=await fetch('/api/nsmo-origination-feasibility',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderOriginationFeasibility(body);state.className='domain-state ok';state.textContent='Receipt verified against this PUF SHA-256 · aggregate-only · no target labels produced.';}
+  catch(error){state.className='domain-state error';state.textContent=`Origination feasibility unavailable: ${error.message}`;}
+}
+function renderOriginationFeasibility(data){
+  const band=$('target-vintage-band');
+  const keys=['observed_90plus','all_in_window_snapshots_observed_no_90plus','observed_other_adverse_state_7','observed_other_adverse_state_8','observed_other_adverse_state_9','termination_competing_censor','termination_same_month_ambiguous','observation_censor_K','observation_censor_M','observation_censor_S','administratively_short_followup'];
+  const total=counts=>keys.reduce((sum,key)=>sum+Number(counts?.[key]||0),0);
+  const label=key=>({
+    observed_90plus:'Observed 90+',
+    all_in_window_snapshots_observed_no_90plus:'All snapshots observed · no 90+',
+    observed_other_adverse_state_7:'Code 7 · bankruptcy',
+    observed_other_adverse_state_8:'Code 8 · foreclosure',
+    observed_other_adverse_state_9:'Code 9 · other adverse',
+    termination_competing_censor:'Closed before next snapshot',
+    termination_same_month_ambiguous:'Same-month closure ambiguity',
+    observation_censor_K:'K · not yet reported',
+    observation_censor_M:'M · archive gap',
+    observation_censor_S:'S · suppressed',
+    administratively_short_followup:'Administrative short follow-up'
+  }[key]||key);
+  function draw(){
+    const selected=data.outcomes_by_origination_year.filter(row=>{const value=band.value;if(value==='all')return true;const [first,last]=value.split('-').map(Number);return Number(row.origination_year)>=first&&Number(row.origination_year)<=last;});
+    const counts={};selected.forEach(row=>{for(const [key,value] of Object.entries(row.outcomes_unweighted||{}))counts[key]=(counts[key]||0)+Number(value||0);});
+    const censor=Number(counts.termination_competing_censor||0)+Number(counts.termination_same_month_ambiguous||0)+Number(counts.observation_censor_K||0)+Number(counts.observation_censor_M||0)+Number(counts.observation_censor_S||0)+Number(counts.administratively_short_followup||0);
+    const adverse=Number(counts.observed_other_adverse_state_7||0)+Number(counts.observed_other_adverse_state_8||0)+Number(counts.observed_other_adverse_state_9||0);
+    $('origination-feasibility-metrics').replaceChildren(
+      metric('Mortgages in selected vintage',n(total(counts)),'Unweighted PUF rows; not a population denominator'),
+      metric('Observed 90+ snapshots',n(counts.observed_90plus||0),'First observed 90+ code 3–6 in the window'),
+      metric('All snapshots observed · no 90+',n(counts.all_in_window_snapshots_observed_no_90plus||0),'No 90+ observed; not proof of event-free history'),
+      metric('Censor / ambiguous / short',n(censor),'K/M/S, termination, same-month ambiguity and data-end truncation')
+    );
+    $('origination-feasibility-note').textContent=`Other adverse states 7–9 remain separate (${n(adverse)}). This sizes observable support only; monthly opening date and quarterly snapshots cannot establish event dates, incidence or PD.`;
+    const rows=selected.map(row=>{const c=row.outcomes_unweighted||{};return [row.origination_year,n(total(c)),n(c.observed_90plus||0),n(c.all_in_window_snapshots_observed_no_90plus||0),n(c.observation_censor_K||0),n(c.observation_censor_M||0),n(c.observation_censor_S||0),n(c.termination_competing_censor||0),n(c.termination_same_month_ambiguous||0),n((c.observed_other_adverse_state_7||0)+(c.observed_other_adverse_state_8||0)+(c.observed_other_adverse_state_9||0)),n(c.administratively_short_followup||0)];});
+    $('origination-feasibility-table').replaceChildren(table(['Origination year','Mortgages','Observed 90+','No 90+ · observed','K','M','S','Closed before next','Same-month ambiguous','Other adverse 7–9','Short follow-up'],rows,[1,2,3,4,5,6,7,8,9,10]));
+  }
+  band.addEventListener('change',draw);draw();
 }
 function loadDictionary(){
   fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});

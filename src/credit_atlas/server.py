@@ -119,6 +119,11 @@ def handler_for(service: ResearchService):
                         raise ValueError("NSMO target feasibility accepts no filters")
                     self.send(200, nsmo_views.target_feasibility(), head=head)
                     return
+                if url.path == "/api/nsmo-origination-feasibility":
+                    if query:
+                        raise ValueError("NSMO origination feasibility accepts no filters")
+                    self.send(200, nsmo_views.origination_feasibility(), head=head)
+                    return
                 if url.path in STATIC:
                     file = web / STATIC[url.path]
                     content = file.read_bytes()

@@ -14,6 +14,7 @@ _RECEIPTS = "artifacts/private/nsmo-puf-20261015"
 _STATE_AUDIT = "artifacts/private/nsmo-performance-state-audit-20261015/receipt.json"
 _DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.json"
 _TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
+_ORIGINATION_FEASIBILITY_AUDIT = "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -429,5 +430,81 @@ class NsmoViews:
                 "Code 3–6 means 90+ days past due observed at a quarterly snapshot, not a dated default event.",
                 "Same-month closure ordering is unknown; termination and M/S gaps are retained as distinct outcomes/censoring.",
                 "Analysis weights are not used to compute rates or uncertainty; no survey variance method is specified.",
+            ],
+        }
+
+    def origination_feasibility(self) -> dict:
+        """Serve source-bound origination-window support aggregates only."""
+        profile = self.report()
+        receipt = read_json(contained(self.root, _ORIGINATION_FEASIBILITY_AUDIT))
+        source_sha = profile["source"]["source_sha256"]
+        row_count = int(profile["sample"]["mortgages"])
+        schema = receipt.get("schema", {})
+        reconciliation = receipt.get("reconciliation", {})
+        if (receipt.get("status") != "PASS"
+                or receipt.get("target_created") is not False
+                or receipt.get("source", {}).get("sha256") != source_sha
+                or int(schema.get("rows", -1)) != row_count
+                or int(schema.get("columns", -1)) != 587
+                or int(schema.get("quarterly_status_columns", -1)) != 51
+                or reconciliation.get("reconciles") is not True
+                or int(reconciliation.get("classified_rows", -1)) != row_count
+                or int(reconciliation.get("origination_vintage_rows", -1)) != row_count):
+            raise ValueError("NSMO origination feasibility receipt is stale or does not match the verified PUF")
+
+        allowed_results = {
+            "observed_90plus", "all_in_window_snapshots_observed_no_90plus",
+            "observed_other_adverse_state_7", "observed_other_adverse_state_8",
+            "observed_other_adverse_state_9", "termination_competing_censor",
+            "termination_same_month_ambiguous", "observation_censor_K",
+            "observation_censor_M", "observation_censor_S",
+            "administratively_short_followup",
+        }
+
+        def checked_counts(value: object) -> dict[str, int]:
+            if not isinstance(value, dict) or set(value) - allowed_results:
+                raise ValueError("NSMO origination feasibility result codes are invalid")
+            counts = {str(code): int(count) for code, count in value.items()}
+            if any(count < 0 for count in counts.values()):
+                raise ValueError("NSMO origination feasibility counts cannot be negative")
+            return counts
+
+        overall = checked_counts(receipt.get("outcomes_unweighted"))
+        vintage_source = receipt.get("outcomes_by_origination_year_unweighted")
+        quarter_source = receipt.get("available_snapshot_count_by_origination_year_unweighted")
+        if not isinstance(vintage_source, dict) or not isinstance(quarter_source, dict):
+            raise ValueError("NSMO origination feasibility vintage aggregates are incomplete")
+        if sum(overall.values()) != row_count or set(vintage_source) != set(quarter_source):
+            raise ValueError("NSMO origination feasibility aggregates do not reconcile to the PUF")
+
+        vintage_rows = []
+        vintage_totals: dict[str, int] = {}
+        for year, values in sorted(vintage_source.items()):
+            if not str(year).isdigit() or not isinstance(values, dict):
+                raise ValueError("NSMO origination feasibility vintage key is invalid")
+            counts = checked_counts(values)
+            if sum(counts.values()) != sum(int(v) for v in quarter_source[year].values()):
+                raise ValueError("NSMO origination feasibility vintage snapshot support does not reconcile")
+            for code, count in counts.items():
+                vintage_totals[code] = vintage_totals.get(code, 0) + count
+            vintage_rows.append({"origination_year": str(year), "outcomes_unweighted": counts})
+        if vintage_totals != overall:
+            raise ValueError("NSMO origination feasibility vintage totals do not reconcile")
+
+        return {
+            "schema_version": "nsmo-origination-feasibility-v1",
+            "status": "AVAILABLE",
+            "source_sha256": source_sha,
+            "target_created": False,
+            "candidate_definition": receipt.get("candidate_definition_for_feasibility_only", {}),
+            "outcomes_unweighted": overall,
+            "outcomes_by_origination_year": vintage_rows,
+            "limitations": [
+                "Exploratory support counts only; no target labels, rates, PD, or model matrix are created.",
+                "The opening quarter is excluded because code Q means the mortgage opened during that quarter.",
+                "Origination month has no day; quarterly snapshots can miss events between reports.",
+                "No observed 90+ snapshot is not proof that no delinquency event occurred.",
+                "Termination cause is unknown and same-month snapshot ordering is ambiguous.",
+                "Counts are unweighted; no design-based variance or population rate is available.",
             ],
         }

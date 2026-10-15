@@ -194,6 +194,24 @@ def _write_target_feasibility_receipt(root: Path, source_sha: str) -> None:
     }), encoding="utf-8")
 
 
+def _write_origination_feasibility_receipt(root: Path, source_sha: str) -> None:
+    target = root / "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    outcomes = {"observed_90plus": 1, "all_in_window_snapshots_observed_no_90plus": 1}
+    target.write_text(json.dumps({
+        "status": "PASS", "target_created": False,
+        "source": {"sha256": source_sha},
+        "schema": {"rows": 2, "columns": 587, "quarterly_status_columns": 51},
+        "reconciliation": {"reconciles": True, "classified_rows": 2, "origination_vintage_rows": 2},
+        "candidate_definition_for_feasibility_only": {"anchor": "open_year/open_month"},
+        "outcomes_unweighted": outcomes,
+        "outcomes_by_origination_year_unweighted": {"2013": outcomes},
+        "available_snapshot_count_by_origination_year_unweighted": {
+            "2013": {"source_quarters_within_month_window_3": 2},
+        },
+    }), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -263,12 +281,33 @@ def test_nsmo_target_feasibility_rejects_a_receipt_for_another_puf(tmp_path):
         NsmoViews(tmp_path).target_feasibility()
 
 
+def test_nsmo_origination_feasibility_is_hash_bound_and_aggregates_only(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+
+    result = NsmoViews(tmp_path).origination_feasibility()
+
+    assert result["schema_version"] == "nsmo-origination-feasibility-v1"
+    assert result["outcomes_unweighted"]["observed_90plus"] == 1
+    assert result["outcomes_by_origination_year"][0]["origination_year"] == "2013"
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_origination_feasibility_rejects_a_receipt_for_another_puf(tmp_path):
+    _workspace(tmp_path)
+    _write_origination_feasibility_receipt(tmp_path, "0" * 64)
+
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).origination_feasibility()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
     csv = tmp_path / "data/private/mortgage/nsmo-2026-05-27/puf/nsmo_v70_1324_puf.csv"
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_target_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     source_web = Path(__file__).parents[1] / "apps" / "web"
     target_web = tmp_path / "apps" / "web"
     target_web.mkdir(parents=True)
@@ -304,11 +343,19 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert feasibility["status"] == "AVAILABLE"
             assert "private-a" not in json.dumps(feasibility)
+        with urlopen(base + "/api/nsmo-origination-feasibility", timeout=5) as response:
+            feasibility = json.loads(response.read())
+            assert response.status == 200
+            assert feasibility["outcomes_unweighted"]["observed_90plus"] == 1
+            assert "private-a" not in json.dumps(feasibility)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-target-feasibility?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-origination-feasibility?run=unexpected", timeout=5)
         assert error.value.code == 400
     finally:
         server.shutdown()

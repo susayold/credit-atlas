@@ -42,6 +42,12 @@ Số outcome 90+ phân tán ít trong các vintage: 2013: 4; 2014: 3; 2015: 5;
 diện dân số hay event rate. 65 sự kiện là support quá mỏng để biện minh cho một
 mô hình có nhiều predictor và đánh giá temporal ổn định.
 
+Phần tổng hợp này đã được gắn vào workspace `/nsmo` dưới nhãn
+**Origination-aligned · feasibility only**. Bảng vintage dùng chung bộ lọc
+vintage với panel landmark; API `/api/nsmo-origination-feasibility` chỉ trả số
+đếm đã qua reconciliation và kiểm tra SHA-256 nguồn. Edge headless QA trên PUF
+thật đạt 8/8 checks, không có lỗi JavaScript; API/view tests đạt 19/19.
+
 ## Giới hạn phương pháp
 
 - `open_month` không có ngày mở cụ thể. Cửa sổ +12 tháng chỉ chính xác ở cấp

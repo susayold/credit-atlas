@@ -60,14 +60,37 @@ def main() -> None:
                 raise AssertionError("vintage band filter does not return 2017–2019 rows")
             checks.append("vintage filter narrows repeated-landmark table")
 
+            page.locator("#target-vintage-band").select_option("all")
+
             if page.locator("#target-quarter-table tbody tr").count() != 51:
                 raise AssertionError("quarter support table does not show all 51 performance quarters")
             checks.append("quarter table distinguishes full and short horizons")
+
+            origin_state = page.locator("#origination-feasibility-state")
+            origin_state.get_by_text("Receipt verified", exact=False).wait_for(timeout=15_000)
+            origin_metrics = page.locator("#origination-feasibility-metrics").inner_text()
+            if "65" not in origin_metrics or "53,184" not in origin_metrics:
+                raise AssertionError("origination-aligned feasibility metrics do not match the verified receipt")
+            if page.locator("#origination-feasibility-table tbody tr").count() != 12:
+                raise AssertionError("origination-aligned table does not show all 12 vintages")
+            origin_note = page.locator("#origination-feasibility-note").inner_text()
+            if "cannot establish event dates" not in origin_note or "PD" not in origin_note:
+                raise AssertionError("origination-aligned support caveat is not visible")
+            checks.append("origination-aligned support shows sparse outcomes and no-PD caveat")
+
+            page.locator("#target-vintage-band").select_option("2017-2019")
+            origin_rows = page.locator("#origination-feasibility-table tbody tr").all_inner_texts()
+            if len(origin_rows) != 3 or not all(year in " ".join(origin_rows) for year in ("2017", "2018", "2019")):
+                raise AssertionError("origination vintage filter does not narrow to 2017–2019")
+            checks.append("shared vintage filter applies to origination support table")
+
             page.set_viewport_size({"width": 390, "height": 844})
             page.wait_for_timeout(150)
-            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length})")
+            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth})")
             if dimensions["scrollWidth"] > dimensions["width"] or dimensions["columns"] != 2:
                 raise AssertionError(f"target panel overflows or fails mobile KPI layout: {dimensions}")
+            if dimensions["origColumns"] != 2 or dimensions["origTableScroll"] <= dimensions["origTableWidth"]:
+                raise AssertionError(f"origination panel mobile layout or table scroller is incorrect: {dimensions}")
             checks.append("mobile target panel fits viewport with two KPI columns")
             if errors:
                 raise AssertionError(f"Browser JavaScript errors: {errors}")

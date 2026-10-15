@@ -393,6 +393,86 @@ def run(root: Path):
             checks.append("HTTP 200 HTML masquerading as KPI Excel is rejected without creating a file")
             kpi_page.unroute("**/api/kpi-workbook")
             kpi_page.close()
+
+            sec_page = context.new_page()
+            sec_downloads = []
+            sec_page.on("download", lambda download: sec_downloads.append(download.suggested_filename))
+            sec_page.goto(base + "/?view=sec&workspace_tab=debt", wait_until="networkidle")
+            sec_button = sec_page.get_by_role("button", name="Xuất maturity Excel", exact=True)
+            expect(sec_button).to_be_visible(timeout=60000)
+            with sec_page.expect_download(timeout=120000) as sec_info:
+                sec_button.click()
+            sec_download = sec_info.value
+            sec_path = output / "sec-maturity-workbook.xlsx"
+            sec_download.save_as(str(sec_path))
+            assert sec_download.suggested_filename == "CreditAtlas-Maturities-0000320193.xlsx"
+            with zipfile.ZipFile(sec_path) as workbook:
+                assert workbook.testzip() is None
+                assert "xl/workbook.xml" in workbook.namelist()
+            assert sec_downloads == ["CreditAtlas-Maturities-0000320193.xlsx"]
+            checks.append("real SEC maturity POST export downloads a readable XLSX workbook")
+            sec_page.route("**/api/sec-debt-workbook", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic SEC workbook outage"})) if route.request.method == "POST" else route.continue_())
+            sec_button.click()
+            expect(sec_page.locator("#sec-debt .callout")).to_contain_text("Synthetic SEC workbook outage")
+            assert sec_downloads == ["CreditAtlas-Maturities-0000320193.xlsx"]
+            checks.append("HTTP 503 SEC workbook POST reports the source error without creating a fake file")
+            sec_page.unroute("**/api/sec-debt-workbook")
+            sec_page.locator("#sec-debt .callout").last.evaluate("e=>e.remove()")
+            sec_page.route("**/api/sec-debt-workbook", lambda route: route.fulfill(
+                status=200, content_type="text/html", body="<html>upstream login page</html>")
+                if route.request.method == "POST" else route.continue_())
+            sec_button.click()
+            expect(sec_page.locator("#sec-debt .callout")).to_contain_text(
+                "Research API returned an HTML page instead of a downloadable report")
+            assert sec_downloads == ["CreditAtlas-Maturities-0000320193.xlsx"]
+            checks.append("HTTP 200 HTML masquerading as SEC Excel is rejected without creating a file")
+            sec_page.unroute("**/api/sec-debt-workbook")
+            sec_page.close()
+
+            affordability_page = context.new_page()
+            affordability_downloads = []
+            affordability_page.on("download", lambda download: affordability_downloads.append(download.suggested_filename))
+            affordability_page.goto(base + "/?view=retail&workspace_tab=affordability", wait_until="networkidle")
+            affordability_page.get_by_label("Affordability case reference").fill("qa-post-export")
+            affordability_page.get_by_label("Affordability scope reference").fill("qa-scope")
+            affordability_page.get_by_label("Affordability currency").fill("USD")
+            affordability_page.get_by_role("button", name="Tính affordability", exact=True).click()
+            export_affordability = affordability_page.get_by_role("button", name="Xuất affordability JSON", exact=True)
+            expect(export_affordability).to_be_enabled(timeout=60000)
+            with affordability_page.expect_download(timeout=60000) as affordability_info:
+                export_affordability.click()
+            affordability_download = affordability_info.value
+            affordability_path = output / "affordability-report.json"
+            affordability_download.save_as(str(affordability_path))
+            affordability_report = json.loads(affordability_path.read_text(encoding="utf-8"))
+            assert affordability_download.suggested_filename == "CreditAtlas-private-affordability.json"
+            assert affordability_report["visibility"] == "private"
+            assert affordability_report["credit_decision"] is None
+            assert affordability_downloads == ["CreditAtlas-private-affordability.json"]
+            checks.append("real affordability POST export downloads valid private JSON with no credit decision")
+            affordability_page.route("**/api/affordability-report", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic affordability report outage"}))
+                if route.request.method == "POST" else route.continue_())
+            export_affordability.click()
+            expect(affordability_page.locator("#affordability .callout")).to_contain_text(
+                "Synthetic affordability report outage")
+            assert affordability_downloads == ["CreditAtlas-private-affordability.json"]
+            checks.append("HTTP 503 affordability POST reports the server error without creating a fake JSON file")
+            affordability_page.unroute("**/api/affordability-report")
+            affordability_page.locator("#affordability .callout").last.evaluate("e=>e.remove()")
+            affordability_page.route("**/api/affordability-report", lambda route: route.fulfill(
+                status=200, content_type="text/html", body="<html>upstream login page</html>")
+                if route.request.method == "POST" else route.continue_())
+            export_affordability.click()
+            expect(affordability_page.locator("#affordability .callout")).to_contain_text(
+                "Research API returned an HTML page instead of a downloadable report")
+            assert affordability_downloads == ["CreditAtlas-private-affordability.json"]
+            checks.append("HTTP 200 HTML masquerading as affordability JSON is rejected without creating a file")
+            affordability_page.unroute("**/api/affordability-report")
+            affordability_page.close()
             error_page.route("**/api/snapshot*", lambda route: route.fulfill(
                 status=503, content_type="application/json",
                 body=json.dumps({"error": "Frozen evidence or serving code changed; verify artifacts and restart with reviewed code"})))

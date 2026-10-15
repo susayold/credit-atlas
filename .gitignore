@@ -5,6 +5,10 @@ __pycache__/
 artifacts/
 outputs/
 data/
+# These two public HUD aggregate reference tables are curated and attributed.
+!docs/data/
+!docs/data/hud-fha-performance-2026-08.csv
+!docs/data/hud-fha-performance-2026-08-subgroups.csv
 .cache/
 .tmp/
 workspace.local.json

@@ -246,3 +246,17 @@ companion FHA Portfolio Snapshot has loan-level origination attributes but no
 performance history. Normal direct downloads returned 403 for both current
 files, so no payload was acquired or integrated. Source fit and metric
 definitions are documented in `HUD_FHA_SINGLE_FAMILY_PERFORMANCE_REVIEW_VI.md`.
+
+## 2026-10-16 continuation — HUD FHA portfolio benchmark data
+
+Added HUD August 2026 Table 1 monthly aggregate history (13 months × NSA/SA) and
+all 60 Table 3 rows across eight panels from the official report text. The
+separate API, NSMO-page context panel, and three-sheet Excel workbook retain
+the source table/page, panel-specific share bases and definitions. Test validation confirms the latest NSA
+serious-delinquency rate is 6.42%, SA is 6.63%, and the HUD score-band endpoints
+are 11.28% (<500) and 1.94% (720–850). This is an aggregate-only FHA reference;
+it is not pooled with NSMO/Freddie and does not create loan labels. Direct PDF
+binary acquisition returned 403, so the report documents text transcription and
+does not claim a local PDF hash. The isolated Edge browser check passes 6/6,
+including NSA/SA selection, subgroup rates, Excel download and mobile layout;
+the focused API/workbook/NSMO suite passes 16/16.

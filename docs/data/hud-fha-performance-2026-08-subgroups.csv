@@ -1,0 +1,61 @@
+dimension,parent_category,category,iif_count,iif_share_pct,share_denominator,all_past_due_pct,delinquency_30d_pct,delinquency_60d_pct,delinquency_90plus_pct,foreclosure_pct,bankruptcy_pct,serious_delinquency_pct,source_table,source_page
+loan_purpose,,All active loans,8416639,100.00,All active IIF,13.64,5.46,1.76,5.24,0.63,0.55,6.42,3,4
+loan_purpose,,Purchase,,72.97,All active IIF,15.10,5.94,1.96,5.92,0.71,0.57,7.20,3,4
+loan_purpose,,Refinance,2275026,27.03,All active IIF,9.69,4.15,1.21,3.43,0.40,0.50,4.32,3,4
+refinance,,Refinance loans,2275026,100.00,Refinance loans,9.69,4.15,1.21,3.43,0.40,0.50,4.32,3,4
+refinance,,Conventional,,31.94,Refinance loans,10.65,4.43,1.32,3.81,0.54,0.55,4.90,3,4
+refinance,Conventional,No cash-out,,14.27,Refinance loans,9.52,4.10,1.21,3.23,0.49,0.49,4.22,3,4
+refinance,Conventional,Cash-out,,17.67,Refinance loans,11.56,4.69,1.41,4.28,0.58,0.60,5.46,3,4
+refinance,,FHA,,22.53,Refinance loans,11.31,4.73,1.38,4.17,0.36,0.66,5.20,3,4
+refinance,FHA,No cash-out,,8.90,Refinance loans,9.55,4.14,1.17,3.36,0.32,0.55,4.23,3,4
+refinance,FHA,Cash-out,,13.64,Refinance loans,12.46,5.11,1.51,4.71,0.39,0.73,5.83,3,4
+refinance,,Streamline,,45.53,Refinance loans,8.21,3.68,1.05,2.78,0.31,0.39,3.48,3,4
+credit_score,,Loans with credit scores,7278217,,Score-reported active loans,14.23,5.62,1.83,5.55,0.66,0.57,6.79,3,4
+credit_score,,< 500,,0.06,Fully-underwritten loans,23.97,9.37,3.32,8.59,1.28,1.40,11.28,3,4
+credit_score,,500-579,,1.64,Fully-underwritten loans,23.25,8.92,2.95,9.40,0.92,1.04,11.37,3,4
+credit_score,,580-619,,9.05,Fully-underwritten loans,23.95,8.96,3.12,9.85,1.12,0.91,11.87,3,4
+credit_score,,620-659,,32.16,Fully-underwritten loans,19.91,7.79,2.57,7.86,0.90,0.80,9.56,3,4
+credit_score,,660-719,,38.95,Fully-underwritten loans,11.51,4.67,1.46,4.36,0.54,0.47,5.37,3,4
+credit_score,,720-850,,18.15,Fully-underwritten loans,4.32,1.84,0.54,1.54,0.25,0.14,1.94,3,4
+fiscal_year_cohort,,All cohorts,8416639,100.00,All active IIF,13.64,5.46,1.76,5.24,0.63,0.55,6.42,3,4
+fiscal_year_cohort,,Pre-2011,,10.94,All active IIF,13.66,6.20,1.84,4.39,0.63,0.59,5.61,3,4
+fiscal_year_cohort,,2011,,2.01,All active IIF,9.59,4.49,1.27,3.13,0.36,0.35,3.84,3,4
+fiscal_year_cohort,,2012,,2.65,All active IIF,7.93,3.74,1.08,2.51,0.29,0.31,3.11,3,4
+fiscal_year_cohort,,2013,,3.84,All active IIF,6.58,3.12,0.87,2.07,0.25,0.26,2.59,3,4
+fiscal_year_cohort,,2014,,1.60,All active IIF,12.23,5.40,1.68,4.08,0.53,0.54,5.15,3,4
+fiscal_year_cohort,,2015,,2.70,All active IIF,12.43,5.42,1.66,4.30,0.52,0.52,5.34,3,4
+fiscal_year_cohort,,2016,,3.82,All active IIF,12.59,5.52,1.66,4.31,0.54,0.56,5.41,3,4
+fiscal_year_cohort,,2017,,4.21,All active IIF,14.09,6.00,1.83,5.05,0.61,0.60,6.26,3,4
+fiscal_year_cohort,,2018,,3.38,All active IIF,18.34,7.28,2.31,7.00,0.89,0.86,8.75,3,4
+fiscal_year_cohort,,2019,,3.41,All active IIF,20.23,7.69,2.54,7.99,1.05,0.95,9.99,3,4
+fiscal_year_cohort,,2020,,6.99,All active IIF,14.54,5.80,1.82,5.58,0.64,0.69,6.92,3,4
+fiscal_year_cohort,,2021,,11.96,All active IIF,14.29,5.78,1.82,5.44,0.56,0.69,6.68,3,4
+fiscal_year_cohort,,2022,,9.50,All active IIF,19.33,7.06,2.36,7.97,1.03,0.91,9.91,3,4
+fiscal_year_cohort,,2023,,6.71,All active IIF,20.22,6.75,2.36,9.07,1.28,0.77,11.11,3,4
+fiscal_year_cohort,,2024,,6.96,All active IIF,16.84,5.79,2.04,7.63,0.90,0.47,9.01,3,4
+fiscal_year_cohort,,2025,,9.21,All active IIF,11.72,4.49,1.63,4.94,0.39,0.26,5.60,3,4
+fiscal_year_cohort,,2026,,10.11,All active IIF,4.00,2.26,0.73,0.94,0.04,0.04,1.02,3,5
+origination_loan_amount,,All loan amounts,8416639,100.00,All active IIF,13.64,5.46,1.76,5.24,0.63,0.55,6.42,3,5
+origination_loan_amount,,< 50,,1.10,All active IIF,13.47,6.02,1.86,4.13,0.88,0.58,5.58,3,5
+origination_loan_amount,,50-99,,12.40,All active IIF,12.57,5.59,1.68,4.03,0.67,0.59,5.30,3,5
+origination_loan_amount,,100-149,,18.10,All active IIF,13.31,5.68,1.74,4.62,0.62,0.64,5.88,3,5
+origination_loan_amount,,150-199,,17.36,All active IIF,14.25,5.85,1.86,5.25,0.65,0.63,6.54,3,5
+origination_loan_amount,,200-249,,14.51,All active IIF,14.23,5.67,1.82,5.54,0.62,0.58,6.74,3,5
+origination_loan_amount,,250-399,,26.36,All active IIF,13.97,5.24,1.77,5.87,0.60,0.49,6.96,3,5
+origination_loan_amount,,400-499,,6.14,All active IIF,13.23,4.65,1.65,6.00,0.56,0.37,6.93,3,5
+origination_loan_amount,,> 499,,4.03,All active IIF,12.16,4.10,1.50,5.73,0.57,0.26,6.56,3,5
+property_type,,All property types,8416639,100.00,All active IIF,13.64,5.46,1.76,5.24,0.63,0.55,6.42,3,5
+property_type,,Detached,,85.26,All active IIF,13.80,5.55,1.78,5.29,0.61,0.56,6.46,3,5
+property_type,,Manufactured housing,,4.09,All active IIF,12.83,5.42,1.64,4.47,0.78,0.53,5.78,3,5
+property_type,,2-4 units,,2.46,All active IIF,10.92,4.10,1.35,4.37,0.86,0.26,5.48,3,5
+property_type,,Condo,,2.20,All active IIF,10.15,3.82,1.26,4.04,0.56,0.47,5.08,3,5
+property_type,,Townhouse,,5.99,All active IIF,14.30,5.34,1.84,5.90,0.70,0.51,7.12,3,5
+purchase_loan_type,,All purchase loans,6141413,100.00,Purchase loans,15.10,5.94,1.96,5.92,0.71,0.57,7.20,3,5
+purchase_loan_type,,Repeat,,14.55,Purchase loans,12.42,5.03,1.56,4.70,0.59,0.54,5.82,3,5
+purchase_loan_type,,First-time,,85.45,Purchase loans,15.56,6.10,2.03,6.13,0.73,0.57,7.43,3,5
+down_payment_assistance,,All sources of funds,8416639,100.00,All active IIF,13.64,5.46,1.76,5.24,0.63,0.55,6.42,3,5
+down_payment_assistance,,Government,,11.18,All active IIF,16.37,6.20,2.09,6.70,0.72,0.66,8.08,3,5
+down_payment_assistance,,Relative,,16.96,All active IIF,17.89,7.02,2.38,7.05,0.84,0.60,8.49,3,5
+down_payment_assistance,,Other,,1.54,All active IIF,17.53,7.00,2.29,6.73,0.80,0.71,8.24,3,5
+down_payment_assistance,,Seller funded,,0.29,All active IIF,20.91,8.76,2.82,7.48,0.77,1.08,9.33,3,5
+down_payment_assistance,,No DPA,,70.03,All active IIF,12.06,4.91,1.54,4.53,0.56,0.51,5.60,3,5

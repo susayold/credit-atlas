@@ -1,10 +1,10 @@
 # Public release scope
 
-This folder is a public-source release of the CreditAtlas software and technical documentation. It preserves the full application code and source-level tests while excluding private research payloads.
+This folder is a public-source release of the CreditAtlas software and technical documentation. It preserves application code, source-level tests, and explicitly attributed public-source metadata or aggregate reference files while excluding private research payloads.
 
 ## Private research artifacts are not included
 
-The following are deliberately absent: all `data/`, `artifacts/`, `outputs/`, local SQLite databases, generated Parquet/CSV/XLSX datasets, screenshots/review records, environment folders, `workspace.local.json`, and source-access cookies or credentials. Several local datasets contain borrower-level or otherwise restricted records; source permissions do not automatically permit republication. Do not add them to Git. The root `.gitignore` blocks these paths.
+The following are deliberately absent: private `data/`, `artifacts/`, and `outputs/`; local SQLite databases; Parquet/CSV/XLSX datasets derived from private borrower-level data; screenshots/review records; environment folders; `workspace.local.json`; and source-access cookies or credentials. Several local datasets contain borrower-level or otherwise restricted records; source permissions do not automatically permit republication. Do not add them to Git. The root `.gitignore` blocks private workspace paths. Small public-source tables under `docs/data/` and their attributed reference workbooks may be included when they contain no private records and their source/use limits are documented.
 
 Internal markdown notes were retained as technical history, but links to omitted local evidence were redirected here. Values and findings in those notes are not a substitute for the source artifacts, and this public repository does not claim that excluded data is available to reproduce them.
 
@@ -48,3 +48,9 @@ release.
 ## Host-provided Excel builder dependency
 
 Blank input workbooks are included. Some workbook-generation scripts call the host-provided `@oai/artifact-tool` package; the package itself is not part of this public release. See `apps/excel/README.md`.
+
+The HUD August 2026 FHA monthly-performance snapshot is a separately attributed
+public aggregate transcription from the official report's Table 1 and Table 3.
+It contains no FHA loan-level records, is not merged with NSMO/Freddie, and
+documents that the report PDF binary was not saved after direct retrieval
+returned HTTP 403.

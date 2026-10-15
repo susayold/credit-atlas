@@ -335,6 +335,12 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     target_workbook = tmp_path / "apps/excel/templates/CreditAtlas-NSMO-Reference.xlsx"
     target_workbook.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(source_workbook, target_workbook)
+    source_hud_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-HUD-FHA-Performance.xlsx"
+    shutil.copyfile(source_hud_workbook, target_workbook.parent / source_hud_workbook.name)
+    target_data = tmp_path / "docs/data"
+    target_data.mkdir(parents=True, exist_ok=True)
+    for name in ("hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv"):
+        shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=tmp_path)))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
@@ -347,12 +353,27 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
             assert "/downloads/nsmo-reference.xlsx" in html
+            assert "/downloads/hud-fha-performance.xlsx" in html
+            assert "FHA portfolio performance context" in html
         with urlopen(base + "/downloads/nsmo-reference.xlsx", timeout=5) as response:
             workbook_bytes = response.read()
             assert response.status == 200
             assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             assert "CreditAtlas-NSMO-Reference.xlsx" in response.headers["Content-Disposition"]
             assert workbook_bytes[:2] == b"PK"
+        with urlopen(base + "/downloads/hud-fha-performance.xlsx", timeout=5) as response:
+            workbook_bytes = response.read()
+            assert response.status == 200
+            assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            assert "CreditAtlas-HUD-FHA-Performance.xlsx" in response.headers["Content-Disposition"]
+            assert workbook_bytes[:2] == b"PK"
+        with urlopen(base + "/api/hud-fha-performance", timeout=5) as response:
+            hud = json.loads(response.read())
+            assert response.status == 200
+            assert len(hud["monthly"]) == 26
+            assert len(hud["subgroups"]) == 60
+            assert hud["latest"]["NSA"]["serious_delinquency_pct"] == 6.42
+            assert hud["latest"]["SA"]["serious_delinquency_pct"] == 6.63
         with urlopen(base + "/api/nsmo-profile", timeout=5) as response:
             payload = json.loads(response.read())
             assert response.status == 200
@@ -379,6 +400,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "private-a" not in json.dumps(feasibility)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/hud-fha-performance?run=unexpected", timeout=5)
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-target-feasibility?run=unexpected", timeout=5)

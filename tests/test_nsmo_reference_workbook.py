@@ -22,7 +22,8 @@ def test_nsmo_reference_workbook_contains_all_reviewed_metadata():
             row_count = sum(1 for _ in csv.DictReader(stream))
         sheet = workbook[sheet_name]
         assert sheet.max_row == row_count + 1
-        assert sheet.freeze_panes == "A2"
+        # The workbook freezes both the header row and the identifier column.
+        assert sheet.freeze_panes == "B2"
         assert len(sheet.tables) == 1
         table = next(iter(sheet.tables.values()))
         assert table.ref.startswith("A1:")

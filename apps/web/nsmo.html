@@ -25,6 +25,23 @@
         <div><div class="eyebrow">OFFICIAL SOURCE · v7.0</div><h2>National Survey of Mortgage Originations</h2><p>FHFA / CFPB · released 27 May 2026 · sample mortgages originated 2013–2024</p></div>
         <a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a>
       </section>
+      <section class="panel hud-context-panel">
+        <div class="section-head"><div><div class="eyebrow">SEPARATE PROGRAM BENCHMARK · FHA · HUD</div><h2>FHA portfolio performance context</h2><p>Benchmark aggregate từ HUD, độc lập với NSMO; không gộp sample, không dùng làm target hay nhãn train.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/hud-fha-performance.xlsx">Tải bảng HUD FHA Excel</a><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD report · Aug 2026 ↗</a></div></div>
+        <div id="hud-fha-state" class="domain-state" role="status">Đang tải HUD aggregate…</div>
+        <div class="controls"><label>Điều chỉnh theo mùa<select id="hud-adjustment"><option value="NSA">Non-seasonally adjusted</option><option value="SA">Seasonally adjusted</option></select></label></div>
+        <div id="hud-fha-metrics" class="metric-grid" aria-label="HUD FHA latest portfolio metrics"></div>
+        <div id="hud-fha-monthly" class="table-wrap"></div>
+        <h3>Phân khúc danh mục FHA</h3>
+        <div class="controls"><label>Nhóm phân tích<select id="hud-subgroup-dimension">
+          <option value="credit_score">Origination credit score</option><option value="loan_purpose">Loan purpose</option>
+          <option value="refinance">Refinance detail</option><option value="fiscal_year_cohort">Fiscal-year cohort</option>
+          <option value="origination_loan_amount">Loan amount at origination</option><option value="property_type">Property type</option>
+          <option value="purchase_loan_type">Repeat / first-time buyer</option><option value="down_payment_assistance">Down payment assistance</option>
+          <option value="all">All Table 3 rows</option>
+        </select></label></div>
+        <div id="hud-fha-subgroups" class="table-wrap"></div>
+        <p class="footnote">Table 1: 90-day category excludes loans in foreclosure/bankruptcy processing; serious delinquency = 90+ + foreclosure + bankruptcy. Table 3 uses active-loan denominators. HUD warns reporting methods may not reconcile across FHA reporting areas. Subgroup rates are descriptive and unadjusted.</p>
+      </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTERLY STATUS SNAPSHOT</div><h2>Performance code theo thời gian</h2><p>Đếm trạng thái được báo cáo tại từng quý cuối kỳ.</p></div></div>
         <div class="controls">

@@ -87,13 +87,14 @@ to HUD's portfolio snapshot or FHFA NMDB.
 
 The August 2026 PDF and monthly snapshot are linked from public HUD pages, but
 ordinary direct `HEAD` requests from this workspace returned HTTP 403 for both
-the XLSX snapshot and PDF report. The report was reviewed through the available
-public web document view; no binary payload was acquired or access restriction
-bypassed. Therefore there is no local source hash, parser receipt, or app
-integration yet. Revisit only through a normal, authorized download path and
-retain the exact report PDF, publication date, source URL, file hash, extraction
-method and source-page references. The acquisition status is **researched;
-download pending**.
+the XLSX snapshot and PDF report. The report text was reviewed through the
+available public web document view; no binary payload was acquired or access
+restriction bypassed. Table 1 and all 60 Table 3 rows were transcribed into a
+separate curated aggregate reference with source table/page, denominator
+definitions, an Excel workbook and an NSMO-page context panel; see
+`HUD_FHA_PERFORMANCE_BENCHMARK_VI.md`. There is still no local PDF hash or
+binary parser receipt. The aggregate capture is **integrated from public report
+text; raw PDF and portfolio snapshot download remain pending**.
 
 ## Official references
 

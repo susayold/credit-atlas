@@ -50,6 +50,44 @@ function render(profile){
   loadDomainAnalysis();
   loadTargetFeasibility();
   loadOriginationFeasibility();
+  loadHudFhaBenchmark();
+}
+async function loadHudFhaBenchmark(){
+  const state=$('hud-fha-state');
+  try{
+    const response=await fetch('/api/hud-fha-performance',{cache:'no-store',headers:{Accept:'application/json'}});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+    const adjustment=$('hud-adjustment');
+    const dimension=$('hud-subgroup-dimension');
+    const dimensionNames={loan_purpose:'Loan purpose',refinance:'Refinance',credit_score:'Origination credit score',fiscal_year_cohort:'Fiscal-year cohort',origination_loan_amount:'Loan amount at origination',property_type:'Property type',purchase_loan_type:'Purchase loan type',down_payment_assistance:'Down payment assistance'};
+    const render=()=>{
+      const latest=data.latest[adjustment.value];
+      $('hud-fha-metrics').replaceChildren(
+        metric('Active FHA loans · EOM',n(latest.active_iif_count),'Insurance in Force · Aug 2026'),
+        metric('Serious delinquency',dec(latest.serious_delinquency_pct)+'%','90+ days + foreclosure + bankruptcy'),
+        metric('90-day delinquency',dec(latest.delinquency_90d_pct)+'%','Excludes foreclosure/bankruptcy processing'),
+        metric('In foreclosure',dec(latest.foreclosure_pct)+'%','Portfolio snapshot rate')
+      );
+      const rows=data.monthly.filter(row=>row.adjustment===adjustment.value).map(row=>[
+        row.month,n(row.active_iif_count),dec(row.delinquency_30d_pct)+'%',dec(row.delinquency_60d_pct)+'%',
+        dec(row.delinquency_90d_pct)+'%',dec(row.foreclosure_pct)+'%',dec(row.bankruptcy_pct)+'%',
+        dec(row.serious_delinquency_pct)+'%'
+      ]);
+      $('hud-fha-monthly').replaceChildren(table(['Month','Active IIF','30 day','60 day','90 day','Foreclosure','Bankruptcy','Serious delinquency'],rows,[1,2,3,4,5,6,7]));
+      const subgroups=data.subgroups.filter(row=>dimension.value==='all'||row.dimension===dimension.value).map(row=>[
+        dimensionNames[row.dimension]||row.dimension,row.parent_category||'—',row.category,
+        row.iif_count==null?'—':n(row.iif_count),
+        row.iif_share_pct==null?'—':dec(row.iif_share_pct)+'%',row.share_denominator||'—',
+        row.all_past_due_pct==null?'—':dec(row.all_past_due_pct)+'%',
+        dec(row.delinquency_30d_pct)+'%',dec(row.delinquency_60d_pct)+'%',dec(row.delinquency_90plus_pct)+'%',
+        dec(row.foreclosure_pct)+'%',dec(row.bankruptcy_pct)+'%',dec(row.serious_delinquency_pct)+'%',
+        'p. '+row.source_page
+      ]);
+      $('hud-fha-subgroups').replaceChildren(table(['Dimension','Parent','Category','IIF count','IIF share','Share basis','All past due','30 day','60 day','90+','Foreclosure','Bankruptcy','Serious delinquency','Source'],subgroups,[3,4,6,7,8,9,10,11,12]));
+    };
+    adjustment.addEventListener('change',render);dimension.addEventListener('change',render);render();
+    state.className='domain-state ok';state.textContent='HUD August 2026 report transcription loaded · 13 monthly observations × NSA/SA · 60 Table 3 rows across eight panels · aggregate only.';
+  }catch(error){state.className='domain-state error';state.textContent=`HUD FHA benchmark unavailable: ${error.message}`;}
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}

@@ -337,9 +337,14 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     shutil.copyfile(source_workbook, target_workbook)
     source_hud_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-HUD-FHA-Performance.xlsx"
     shutil.copyfile(source_hud_workbook, target_workbook.parent / source_hud_workbook.name)
+    source_nmdb_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-NMDB-Performance.xlsx"
+    shutil.copyfile(source_nmdb_workbook, target_workbook.parent / source_nmdb_workbook.name)
     target_data = tmp_path / "docs/data"
     target_data.mkdir(parents=True, exist_ok=True)
     for name in ("hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv"):
+        shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
+    for name in ("nmdb-performance-national-quarterly-2026q2.csv",
+                 "nmdb-performance-national-quarterly-2026q2-receipt.json"):
         shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=tmp_path)))
     server.daemon_threads = True
@@ -354,7 +359,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "Endpoint support, landmark và censoring" in html
             assert "/downloads/nsmo-reference.xlsx" in html
             assert "/downloads/hud-fha-performance.xlsx" in html
+            assert "/downloads/nmdb-performance.xlsx" in html
             assert "FHA portfolio performance context" in html
+            assert "Residential mortgage performance, 2002Q1–2026Q2" in html
         with urlopen(base + "/downloads/nsmo-reference.xlsx", timeout=5) as response:
             workbook_bytes = response.read()
             assert response.status == 200
@@ -374,6 +381,19 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert len(hud["subgroups"]) == 60
             assert hud["latest"]["NSA"]["serious_delinquency_pct"] == 6.42
             assert hud["latest"]["SA"]["serious_delinquency_pct"] == 6.63
+        with urlopen(base + "/downloads/nmdb-performance.xlsx", timeout=5) as response:
+            workbook_bytes = response.read()
+            assert response.status == 200
+            assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            assert "CreditAtlas-NMDB-Performance.xlsx" in response.headers["Content-Disposition"]
+            assert workbook_bytes[:2] == b"PK"
+        with urlopen(base + "/api/nmdb-performance", timeout=5) as response:
+            nmdb = json.loads(response.read())
+            assert response.status == 200
+            assert len(nmdb["observations"]) == 1568
+            latest = {(row["market"], row["series_id"]): row["value_pct"] for row in nmdb["latest"]}
+            assert latest[("All Mortgages", "P90DL")] == 1.0
+            assert nmdb["series"]["PFORB"]["first_nonblank_quarter"] == "2019Q4"
         with urlopen(base + "/api/nsmo-profile", timeout=5) as response:
             payload = json.loads(response.read())
             assert response.status == 200

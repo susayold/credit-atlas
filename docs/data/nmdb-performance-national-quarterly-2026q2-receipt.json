@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "ACQUIRED_AND_CURATED",
+  "acquired_at_utc": "2026-10-15T19:03:24.051340+00:00",
+  "publisher": "Federal Housing Finance Agency",
+  "source_url": "https://www.fhfa.gov/document/d/nmdb/nmdb-mortgage-performance-statistics-national-census-areas-quarterly.zip",
+  "source_archive": "fhfa-nmdb-performance-national-census-areas-quarterly.zip",
+  "source_archive_sha256": "2083c4e1b5273fd2f471d2e58057b17b82b86ef3ac7ed13c58925b4453ec4e89",
+  "source_member": "nmdb-mortgage-performance-statistics-national-census-areas-quarterly.csv",
+  "source_member_sha256": "f50bcea47221135d4fc0ef75b3c5f4265ab0c97fb46a5d65b9a8cbc2bfa605bd",
+  "curated_file": "docs/data/nmdb-performance-national-quarterly-2026q2.csv",
+  "curated_file_sha256": "20c6a39b323a23ec16a114cf7c61e2258e04bf3ab80daffad5c91350d826732c",
+  "geography": "National / USA only",
+  "quarter_range": [
+    "2002Q1",
+    "2026Q2"
+  ],
+  "markets": [
+    "All Mortgages",
+    "Enterprise Acquisitions",
+    "Government / Non-Conventional",
+    "Other Conventional Market"
+  ],
+  "series_ids": [
+    "P3089DL",
+    "P90DL",
+    "PFORB",
+    "PFORECL"
+  ],
+  "rows": 1568,
+  "suppressed_rows": 0,
+  "grain": "one national market \u00d7 performance series \u00d7 quarter aggregate",
+  "source_caveat": "latest two quarters are preliminary and may be revised per FHFA documentation",
+  "raw_archive_retained_in_public_repository": false
+}

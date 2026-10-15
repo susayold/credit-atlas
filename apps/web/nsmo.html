@@ -42,6 +42,20 @@
         <div id="hud-fha-subgroups" class="table-wrap"></div>
         <p class="footnote">Table 1: 90-day category excludes loans in foreclosure/bankruptcy processing; serious delinquency = 90+ + foreclosure + bankruptcy. Table 3 uses active-loan denominators. HUD warns reporting methods may not reconcile across FHA reporting areas. Subgroup rates are descriptive and unadjusted.</p>
       </section>
+      <section class="panel nmdb-context-panel">
+        <div class="section-head"><div><div class="eyebrow">SEPARATE NATIONAL BENCHMARK · FHFA NMDB</div><h2>Residential mortgage performance, 2002Q1–2026Q2</h2><p>Chuỗi aggregate cấp quốc gia theo quý, lấy từ mẫu NMDB 5%; dùng để đọc bối cảnh chu kỳ và khác biệt market, không ghép vào NSMO loan rows.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/nmdb-performance.xlsx">Tải workbook Excel · 1.568 dòng</a><a class="button secondary" href="https://www.fhfa.gov/data/nmdb" target="_blank" rel="noopener noreferrer">FHFA NMDB source ↗</a></div></div>
+        <div id="nmdb-state" class="domain-state" role="status">Đang xác minh aggregate NMDB…</div>
+        <div class="controls">
+          <label>Chỉ số<select id="nmdb-series"><option value="P3089DL">30–60 days past due</option><option value="P90DL">90+ days past due</option><option value="PFORECL">Foreclosure / bankruptcy / deed-in-lieu</option><option value="PFORB">In forbearance</option></select></label>
+          <label>Market cho bảng chi tiết<select id="nmdb-market"></select></label>
+        </div>
+        <div id="nmdb-latest" class="metric-grid" aria-label="NMDB latest quarter KPIs"></div>
+        <figure class="chart-frame"><svg id="nmdb-trend" viewBox="0 0 980 340" role="img" aria-label="FHFA NMDB mortgage performance rates by market"></svg><figcaption id="nmdb-caption"></figcaption></figure>
+        <div id="nmdb-legend" class="nmdb-legend" aria-label="Mortgage market legend"></div>
+        <h3>Quarterly history · selected market</h3>
+        <div id="nmdb-quarterly" class="table-wrap"></div>
+        <p class="footnote">Mẫu số là active mortgages cuối quý, không phải cohort cố định hay xác suất default trong một horizon. FHFA cảnh báo hai quý mới nhất có thể được hiệu chỉnh; dữ liệu 2006–2012 có khả năng thiếu serious-delinquency do credit-history purge. Forbearance trước 2019Q4 là blank theo nguồn, không phải 0. Đây là benchmark tổng hợp, không làm tăng số outcome NSMO hay đủ điều kiện để train PD.</p>
+      </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTERLY STATUS SNAPSHOT</div><h2>Performance code theo thời gian</h2><p>Đếm trạng thái được báo cáo tại từng quý cuối kỳ.</p></div></div>
         <div class="controls">

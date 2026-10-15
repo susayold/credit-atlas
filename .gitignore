@@ -9,6 +9,8 @@ data/
 !docs/data/
 !docs/data/hud-fha-performance-2026-08.csv
 !docs/data/hud-fha-performance-2026-08-subgroups.csv
+!docs/data/nmdb-performance-national-quarterly-2026q2.csv
+!docs/data/nmdb-performance-national-quarterly-2026q2-receipt.json
 .cache/
 .tmp/
 workspace.local.json

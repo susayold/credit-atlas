@@ -260,3 +260,21 @@ binary acquisition returned 403, so the report documents text transcription and
 does not claim a local PDF hash. The isolated Edge browser check passes 6/6,
 including NSA/SA selection, subgroup rates, Excel download and mobile layout;
 the focused API/workbook/NSMO suite passes 16/16.
+
+## 2026-10-16 continuation — FHFA NMDB national performance context
+
+Downloaded the official FHFA NMDB quarterly performance ZIP released
+2026-09-30 (2002Q1–2026Q2). The ZIP is 128,638 bytes, SHA-256
+`2083c4e1b5273fd2f471d2e58057b17b82b86ef3ac7ed13c58925b4453ec4e89`.
+Curated only National / USA rows into a 1,568-row attributed CSV covering four
+markets × four series × 98 quarters; preserved blank pre-2019Q4 forbearance
+cells and source suppression flags. The data receipt checksums the downloaded
+archive, source CSV member and curated file. Added a validating aggregate API,
+a separate quarterly trend/market context panel, and a four-sheet Excel workbook
+with full filterable history and latest-quarter KPIs. Unit checks confirm the
+2026Q2 all-mortgage values (30–60 DPD 1.7%, 90+ DPD 1.0%, foreclosure/etc. 0.2%,
+forbearance 0.5%). Focused source/workbook and NSMO integration tests pass
+15/15. Isolated Edge browser acceptance passes 5/5 with no page errors, including
+the selector, 98-quarter table, 4-market chart, workbook download and mobile
+layout. The aggregate is not a loan-level label source and does not resolve D02
+target/model gates.

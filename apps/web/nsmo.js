@@ -51,6 +51,7 @@ function render(profile){
   loadTargetFeasibility();
   loadOriginationFeasibility();
   loadHudFhaBenchmark();
+  loadNmdbContext();
 }
 async function loadHudFhaBenchmark(){
   const state=$('hud-fha-state');
@@ -88,6 +89,50 @@ async function loadHudFhaBenchmark(){
     adjustment.addEventListener('change',render);dimension.addEventListener('change',render);render();
     state.className='domain-state ok';state.textContent='HUD August 2026 report transcription loaded · 13 monthly observations × NSA/SA · 60 Table 3 rows across eight panels · aggregate only.';
   }catch(error){state.className='domain-state error';state.textContent=`HUD FHA benchmark unavailable: ${error.message}`;}
+}
+async function loadNmdbContext(){
+  const state=$('nmdb-state');
+  try{
+    const response=await fetch('/api/nmdb-performance',{cache:'no-store',headers:{Accept:'application/json'}});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+    const seriesChoice=$('nmdb-series'),marketChoice=$('nmdb-market');
+    marketChoice.replaceChildren(...data.markets.map(item=>{const option=node('option','',item.name);option.value=item.name;return option;}));
+    const seriesLabels={};for(const [key,value] of Object.entries(data.series)){seriesLabels[key]=value.label;}
+    const fmtRate=value=>value==null?'—':dec(value)+'%';
+    const render=()=>{
+      const seriesId=seriesChoice.value,selectedMarket=marketChoice.value,latest=data.latest.filter(row=>row.series_id===seriesId);
+      $('nmdb-latest').replaceChildren(...latest.map(row=>metric(row.market,fmtRate(row.value_pct),`${seriesLabels[seriesId]} · ${row.period}${row.suppressed?' · suppressed':''}`)));
+      drawNmdbTrend($('nmdb-trend'),data.observations,seriesId,data.markets);
+      $('nmdb-caption').textContent=`${seriesLabels[seriesId]} · quarterly national aggregate · ${data.periods[0]} to ${data.periods.at(-1)}. ${data.series[seriesId].description}`;
+      const legend=$('nmdb-legend');legend.replaceChildren(...data.markets.map((market,index)=>{const item=node('span','nmdb-legend-item');const swatch=node('i','nmdb-swatch');swatch.style.backgroundColor=nmdbColors[index];item.append(swatch,node('strong','',market.name));return item;}));
+      const rows=data.periods.map(period=>{
+        const values=new Map(data.observations.filter(row=>row.market===selectedMarket&&row.period===period).map(row=>[row.series_id,row]));
+        return [period,...Object.keys(data.series).map(key=>fmtRate(values.get(key)?.value_pct)),...Object.keys(data.series).map(key=>values.get(key)?.suppressed?'Yes':'No')];
+      });
+      $('nmdb-quarterly').replaceChildren(table(['Quarter','30–60 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–60 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
+    };
+    seriesChoice.addEventListener('change',render);marketChoice.addEventListener('change',render);render();
+    state.className='domain-state ok';state.textContent=`FHFA NMDB aggregate verified · ${data.observations.length.toLocaleString('en-US')} national market-series-quarter rows · ${data.periods[0]}–${data.periods.at(-1)} · source ${data.source.release_date}.`;
+  }catch(error){state.className='domain-state error';state.textContent=`NMDB national benchmark unavailable: ${error.message}`;}
+}
+const nmdbColors=['#118579','#426a85','#7b61a8','#d28a3b'];
+function drawNmdbTrend(svg,observations,seriesId,markets){
+  svg.replaceChildren();const w=980,h=340,left=64,right=18,top=22,bottom=46,plotW=w-left-right,plotH=h-top-bottom;
+  const values=observations.filter(row=>row.series_id===seriesId&&row.value_pct!==null).map(row=>row.value_pct);
+  const maximum=Math.max(1,...values),step=maximum<=2?.25:maximum<=5?.5:maximum<=10?1:2,limit=Math.ceil(maximum/step)*step;
+  for(let i=0;i<=4;i++){
+    const value=limit-i*limit/4,y=top+i*plotH/4;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',left);line.setAttribute('x2',w-right);line.setAttribute('y1',y);line.setAttribute('y2',y);line.setAttribute('class','grid-line');svg.append(line);
+    const label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x',left-9);label.setAttribute('y',y+4);label.setAttribute('text-anchor','end');label.setAttribute('class','axis-label');label.textContent=dec(value)+'%';svg.append(label);
+  }
+  const periods=[...new Set(observations.map(row=>row.period))].sort((a,b)=>Number(a.slice(0,4))-Number(b.slice(0,4))||Number(a.slice(5))-Number(b.slice(5)));
+  markets.forEach((market,marketIndex)=>{
+    const byPeriod=new Map(observations.filter(row=>row.market===market.name&&row.series_id===seriesId).map(row=>[row.period,row.value_pct]));
+    let points=[];for(const period of periods){const value=byPeriod.get(period);if(value==null)continue;const i=periods.indexOf(period);points.push(`${left+i*plotW/(periods.length-1)},${top+plotH-(value/limit)*plotH}`);}
+    const path=document.createElementNS('http://www.w3.org/2000/svg','polyline');path.setAttribute('points',points.join(' '));path.setAttribute('class','nmdb-line');path.setAttribute('stroke',nmdbColors[marketIndex]);svg.append(path);
+  });
+  const every=Math.ceil(periods.length/10);periods.forEach((period,index)=>{if(index%every!==0&&index!==periods.length-1)return;const x=left+index*plotW/(periods.length-1),label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x',x);label.setAttribute('y',h-14);label.setAttribute('text-anchor','middle');label.setAttribute('class','axis-label');label.textContent=period;svg.append(label);});
+  svg.setAttribute('aria-label',`${seriesId} rates by mortgage market from ${periods[0]} to ${periods.at(-1)}.`);
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}

@@ -218,7 +218,11 @@ parsers with `python -m pip install -e ".[research]"`. Obtain the current FHFA
 PUF and review/accept its Notice of Monitoring and Terms directly with FHFA;
 keep the PUF and resulting private audit receipts outside Git. See the
 [NSMO D02 plan](docs/NSMO_D02_CASE_BUILD_PLAN_VI.md) for commands, scope, and
-the state/weighting limitations. The separate
+the state/weighting limitations. The D02 page also exposes separate HUD FHA
+and FHFA NMDB aggregate benchmarks with filterable Excel workbooks; they provide
+portfolio context and are not pooled into NSMO or used as loan-level labels.
+See the [NMDB quarterly performance source review](docs/NMDB_PERFORMANCE_CONTEXT_VI.md)
+for its 2002Q1–2026Q2 coverage, source hashes and metric limitations. The separate
 [wave-comparability audit](docs/NSMO_WAVE_COMPARABILITY_AUDIT_VI.md) documents
 the official questionnaire inventory, SAS-coded wave coverage index, and the
 six-item cross-wave candidate pilot. Questionnaire PDFs, raw PUF rows, and

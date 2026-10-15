@@ -121,6 +121,23 @@ def handler_for(service: ResearchService):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-HUD-FHA-Performance.xlsx", head=head)
                     return
+                if url.path == "/downloads/nmdb-performance.xlsx":
+                    if query:
+                        raise ValueError("NMDB performance Excel reference accepts no filters")
+                    workbook = service.root / "apps/excel/templates/CreditAtlas-NMDB-Performance.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "NMDB performance Excel reference is not built"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-NMDB-Performance.xlsx", head=head)
+                    return
+                if url.path == "/api/nmdb-performance":
+                    if query:
+                        raise ValueError("NMDB performance aggregate accepts no filters")
+                    from .nmdb_performance import nmdb_performance_report
+                    self.send(200, nmdb_performance_report(service.root), head=head)
+                    return
                 if url.path == "/api/hud-fha-performance":
                     if query:
                         raise ValueError("HUD FHA aggregate accepts no filters")

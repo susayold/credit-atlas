@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from http.server import ThreadingHTTPServer
 from urllib.request import urlopen
-from urllib.parse import urlencode
+from urllib.parse import parse_qs,urlencode,urlsplit
 from playwright.sync_api import sync_playwright,expect
 from credit_atlas.service import ResearchService
 from credit_atlas.server import handler_for
@@ -28,6 +28,17 @@ errors=[];checks=[];downloads=[];ledger=root/'artifacts/private/retail-holdout-a
 def api(path,q):
     with urlopen(base+path+'?'+urlencode(q)) as r:
         assert r.headers['Cache-Control']=='no-store';return json.load(r)
+def attachment(page,label,path,filename,expected_downloads,message):
+    link=page.get_by_role('link',name=label,exact=True);href=link.get_attribute('href');parsed=urlsplit(href)
+    query={key:values[-1] for key,values in parse_qs(parsed.query).items()}
+    with page.expect_download() as dl:link.click()
+    dl.value.save_as(out/filename)
+    assert json.loads((out/filename).read_text(encoding='utf-8'))==api(path,query)
+    assert len(downloads)==expected_downloads,downloads
+    page.route('**'+path+'*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic P4 research report outage"}'))
+    link.click();expect(page.locator('#notice.error')).to_contain_text('Synthetic P4 research report outage')
+    assert len(downloads)==expected_downloads,downloads
+    page.unroute('**'+path+'*');checks.append(message)
 try:
     with sync_playwright() as p:
         browser=p.chromium.launch(channel='msedge',headless=True)
@@ -66,6 +77,14 @@ try:
         page.route('**/api/exposure-movement-report*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic P4 movement export outage"}'))
         page.get_by_role('link',name='Xuất movement bridge',exact=True).click();expect(page.locator('#notice.error')).to_contain_text('Synthetic P4 movement export outage');assert len(downloads)==2,downloads
         page.unroute('**/api/exposure-movement-report*');assert len(downloads)==2,downloads;checks.append('P4 movement export HTTP 503 is visible and creates no fake download')
+        select_task(page,'Scenarios');expect(page.locator('#exposure-scenarios table').first).to_be_visible(timeout=180000)
+        attachment(page,'Xuất declared scenario set','/api/exposure-scenario-report','scenario.json',3,'Scenario report matches API; HTTP 503 shows error and creates no fake attachment')
+        select_task(page,'ECL');expect(page.locator('#exposure-ecl table').first).to_be_visible(timeout=180000)
+        attachment(page,'Xuất declared ECL study','/api/exposure-ecl-report','ecl.json',4,'ECL report matches API; HTTP 503 shows error and creates no fake attachment')
+        select_task(page,'Tail risk');expect(page.locator('#exposure-tail table').first).to_be_visible(timeout=180000)
+        expect(page.locator('#exposure-convergence table').first).to_be_visible(timeout=180000)
+        attachment(page,'Xuất tail risk study','/api/exposure-tail-report','tail.json',5,'Tail report matches API; HTTP 503 shows error and creates no fake attachment')
+        attachment(page,'Xuất convergence diagnostics','/api/exposure-convergence-report','convergence.json',6,'Convergence report matches API; HTTP 503 shows error and creates no fake attachment')
         select_task(page,'Excel')
         invalid=out/'unsafe-numeric.xlsx'
         invalid.write_bytes(mutated('G2',lambda c:setattr(c.find('s:v',NS),'text','100000000000000.000000000000001')))

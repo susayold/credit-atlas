@@ -153,6 +153,17 @@ async function sources(container,generation){
   await cfpbMortgageTrendsPane(container,generation);
   await fhfaPudbPane(container,generation);
   await hudFhaIifPane(container,generation);
+  mortgageExcelLibraryPane(container);
+}
+function mortgageExcelLibraryPane(container){
+ const box=card('Excel sample & codebook library','Workbook tải từ private local D:; lọc bằng Excel, không đưa sample IDs lên GitHub.'),items=[
+  ['/downloads/freddie-release47-samples.xlsx','Freddie Release 47 · 2 parser examples','1.000 origination × 31 fields và 1.011 performance × 35 fields; không phải annual vintage.','CreditAtlas-Freddie-Release47-Public-Samples.xlsx'],
+  ['/downloads/fannie-public-samples.xlsx','Fannie Mae · sample rows','SF, MF và annual DSCR setup samples; ví dụ nguồn, không phải portfolio đại diện.','CreditAtlas-Fannie-Public-Samples.xlsx'],
+  ['/downloads/fannie-layout-reference.xlsx','Fannie Mae · layout & categories','114 SF positions, 62 MF positions, annual DSCR layout và source enumeration blocks.','CreditAtlas-Fannie-Layout-Reference.xlsx'],
+  ['/downloads/ginnie-public-samples.xlsx','Ginnie Mae · sample records','LoanPerf, liquidation và payment-history records; giữ identifiers theo source, dùng trong case Ginnie riêng.','CreditAtlas-Ginnie-Public-Samples.xlsx'],
+  ['/downloads/ginnie-layout-reference.xlsx','Ginnie Mae · layout, codes & QA','Field definitions, categories và aggregate-only sample QA; không có row records.','CreditAtlas-Ginnie-LoanPerf-Reference.xlsx'],
+ ];
+ const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Các workbook chỉ giúp xem/lọc sample và codebook. Freddie Release 47 examples không làm tăng annual vintages; Fannie, Ginnie, NSMO, HMDA và Freddie giữ source/population riêng.',true));container.append(box);
 }
 async function cfpbMortgageTrendsPane(container,generation){
  const box=card('CFPB · Monthly mortgage delinquency by geography','County/state context · 2008–2025 · same NMDB sample family; not loan-level or independent validation');box.id='cfpb-mortgage-trends';container.append(box);

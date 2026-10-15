@@ -4,6 +4,15 @@ Excel intake and review export are implemented first in P4 Exposure. The five
 workspaces remain separate domains in the common application; this checkpoint
 does not mean every domain accepts arbitrary company spreadsheets.
 
+The Mortgage **Sources** view also exposes five fixed Excel downloads for
+Freddie Release 47 parser examples, Fannie sample rows/layout, and Ginnie sample
+records/layout. The routes read bounded workbooks from the local private `D:`
+data tree; they accept no query filters and return 404 when the local workbook
+is absent. Workbooks containing source sample rows/identifiers are excluded
+from the public GitHub repository. Freddie Release 47 examples are not annual
+vintages; the Fannie, Ginnie, NSMO, HMDA and Freddie source populations remain
+separate.
+
 ## Analyst workflow
 
 1. Open Exposure and choose **Tải mẫu Excel nhập danh mục**.

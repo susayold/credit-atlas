@@ -187,4 +187,6 @@ body[data-active-view="monitor"] .workspace-symbol{flex:0 0 42px;width:42px;font
 
 /* Wide evidence tables must scroll inside their frame, never widen the page. */
 .table-wrap{max-width:100%;overflow-x:auto;}
+.excel-download-library{display:grid;gap:12px;margin-top:10px}.excel-download-item{display:grid;grid-template-columns:minmax(230px,auto) minmax(220px,1fr);gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.excel-download-item p{margin:0;color:var(--muted);font-size:12px}.excel-download-item a{white-space:normal;text-align:left;max-width:100%}
 @media(max-width:820px){html,body{overflow-x:hidden;}}
+@media(max-width:700px){.excel-download-item{grid-template-columns:1fr;gap:6px}.excel-download-item a{width:100%}}

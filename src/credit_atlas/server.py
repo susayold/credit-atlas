@@ -24,6 +24,29 @@ STATIC = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js",
           **{f"/assets/credit-{name}-banner-v2.png": f"assets/credit-{name}-banner-v2.png"
              for name in ("retail", "mortgage", "business", "portfolio", "structured")}}
 
+MORTGAGE_SAMPLE_WORKBOOKS = {
+    "/downloads/freddie-release47-samples.xlsx": (
+        "data/private/mortgage/freddie-public-reference-f317b6c98c28/CreditAtlas-Freddie-Release47-Public-Samples.xlsx",
+        "CreditAtlas-Freddie-Release47-Public-Samples.xlsx",
+    ),
+    "/downloads/fannie-public-samples.xlsx": (
+        "data/private/mortgage/fannie-public-samples-4d84128d3cb6/reference/CreditAtlas-Fannie-Public-Samples.xlsx",
+        "CreditAtlas-Fannie-Public-Samples.xlsx",
+    ),
+    "/downloads/fannie-layout-reference.xlsx": (
+        "data/private/mortgage/fannie-public-samples-4d84128d3cb6/reference/CreditAtlas-Fannie-Layout-Reference.xlsx",
+        "CreditAtlas-Fannie-Layout-Reference.xlsx",
+    ),
+    "/downloads/ginnie-public-samples.xlsx": (
+        "data/private/ginnie-mae/reference/CreditAtlas-Ginnie-Public-Samples.xlsx",
+        "CreditAtlas-Ginnie-Public-Samples.xlsx",
+    ),
+    "/downloads/ginnie-layout-reference.xlsx": (
+        "data/private/ginnie-mae/reference/CreditAtlas-Ginnie-LoanPerf-Reference.xlsx",
+        "CreditAtlas-Ginnie-LoanPerf-Reference.xlsx",
+    ),
+}
+
 
 def handler_for(service: ResearchService):
     from .sec_read_cache import VerifiedSecReadCache
@@ -142,6 +165,24 @@ def handler_for(service: ResearchService):
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-NMDB-Performance.xlsx", head=head)
+                    return
+                if url.path in MORTGAGE_SAMPLE_WORKBOOKS:
+                    if query:
+                        raise ValueError("Mortgage sample Excel references accept no filters")
+                    relative, filename = MORTGAGE_SAMPLE_WORKBOOKS[url.path]
+                    private_root = (service.root / "data/private").resolve()
+                    workbook = (service.root / relative).resolve()
+                    if not workbook.is_relative_to(private_root):
+                        raise ValueError("Mortgage sample workbook escaped the private data root")
+                    if not workbook.is_file():
+                        self.send(404, {"error": "Mortgage sample Excel reference is not available"}, head=head)
+                        return
+                    if workbook.stat().st_size > 20 * 1024 * 1024:
+                        self.send(413, {"error": "Mortgage sample Excel reference exceeds its download bound"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename=filename, head=head)
                     return
                 if url.path == "/api/nmdb-performance":
                     if query:

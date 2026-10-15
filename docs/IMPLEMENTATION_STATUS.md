@@ -235,3 +235,14 @@ sanitized CSV tables remain the canonical API inputs. Workbook/API tests pass
 on port 8770 still runs the prior server code and returns 404 for the new
 download route; reload that service to activate it. The workbook is committed
 and published in the public repository.
+
+## 2026-10-16 continuation — FHA government-loan benchmark research
+
+Reviewed HUD's August 2026 FHA Single-Family Loan Performance Trends report as
+a separate aggregate benchmark. It provides monthly delinquency, foreclosure,
+credit-score/cohort segmentation, REO recovery and loss KPIs, but no loan-level
+rows; it therefore cannot increase NSMO event support or train a model. The
+companion FHA Portfolio Snapshot has loan-level origination attributes but no
+performance history. Normal direct downloads returned 403 for both current
+files, so no payload was acquired or integrated. Source fit and metric
+definitions are documented in `HUD_FHA_SINGLE_FAMILY_PERFORMANCE_REVIEW_VI.md`.

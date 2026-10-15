@@ -1,6 +1,6 @@
 # D01 — Requirement audit and remaining work
 
-Checkpoint: 2026-10-15. Specification: PLAN_MODULE_01.md, section 47.18.
+Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
@@ -19,6 +19,16 @@ Use require affirmative agreement, so the payload remains undownloaded. See
 `docs/GINNIE_MAE_LOAN_PERFORMANCE_SOURCE_REVIEW_VI.md`. A terms-gated, streaming
 ZIP structure auditor was added from the official 59-field layout; its synthetic
 contract tests pass 6/6, but no production file has been checked yet.
+
+On 2026-10-16, reviewed HUD's monthly FHA Single-Family Loan Performance Trends
+reports as a possible government-backed performance benchmark. The August 2026
+report supplies monthly delinquency/foreclosure, credit-score and cohort
+segments, and REO recovery/loss KPIs, but only as aggregate tables, not a
+loan-level target. Its companion Portfolio Snapshot contains different
+loan-level origination attributes and no performance history. Direct HTTP
+download probes for the current HUD PDF/XLSX returned 403, so neither payload
+was acquired and neither is counted as integrated data. See
+`docs/HUD_FHA_SINGLE_FAMILY_PERFORMANCE_REVIEW_VI.md`.
 
 ## 2026-10-15 — Ginnie Mae separate-source preparation
 

@@ -11,7 +11,8 @@ from pathlib import Path
 FIELDS = [
     "codebook_order", "csv_column", "codebook_name", "survey_question_refs", "resolved_question_refs",
     "question_reference_status", "reference_evidence", "questionnaire_wave_coverage", "label_phrase_check",
-    "survey_wave_ranges", "codebook_condition", "wave_variant_flags", "route_review_status", "predictor_use",
+    "survey_wave_ranges", "codebook_condition", "routing_gate_fields", "routing_gate_questions",
+    "routing_gate_resolution", "wave_variant_flags", "route_review_status", "predictor_use",
     "routing_review_required",
 ]
 
@@ -59,6 +60,7 @@ def build(source: Path, output: Path, reconciliation_path: Path | None = None) -
                     or evidence["label_phrase_check"] not in {"MATCHED_IN_QUESTIONNAIRE_TEXT", "WAVE_VARIANT_REVIEW"}):
                 raise ValueError(f"Question-reference reconciliation failed identifier/wave/evidence checks: {name}")
     rows = []
+    dictionary_names = {row["csv_column"] for row in fields}
     for row in survey:
         status, review = classify(row)
         reconciliation = reconciliations.get(row["csv_column"], {})
@@ -76,10 +78,30 @@ def build(source: Path, output: Path, reconciliation_path: Path | None = None) -
             review += " Review the documented historical wording/scale variant before combining responses."
         if reference_status == "UNRESOLVED":
             review = "Question reference is missing. " + review
+        gate_fields = sorted({
+            "x" + match.group(1).casefold()
+            for match in re.finditer(r"\bX(\d+(?:_\d+)?)\b", row["codebook_condition"], re.IGNORECASE)
+        })
+        if not row["codebook_condition"].strip():
+            gate_resolution = "NO_CONDITION_LISTED"
+        elif "retired gateway" in row["codebook_condition"].casefold():
+            gate_resolution = "RETIRED_GATEWAY_UNSPECIFIED"
+        elif gate_fields and set(gate_fields).issubset(dictionary_names):
+            gate_resolution = "EXPLICIT_GATE_FIELDS_PRESENT"
+        else:
+            gate_resolution = "GATE_FIELDS_NOT_RECONCILED"
+        gate_questions = []
+        for name in gate_fields:
+            gate_match = re.match(r"x(\d+)", name)
+            if gate_match:
+                gate_questions.append(f"Q{int(gate_match.group(1))}")
         rows.append({**row, "resolved_question_refs": resolved_refs,
                      "question_reference_status": reference_status, "reference_evidence": evidence,
                      "questionnaire_wave_coverage": reconciliation.get("questionnaire_wave_coverage", ""),
                      "label_phrase_check": reconciliation.get("label_phrase_check", "NOT_APPLICABLE"),
+                     "routing_gate_fields": ";".join(gate_fields),
+                     "routing_gate_questions": ";".join(sorted(set(gate_questions))),
+                     "routing_gate_resolution": gate_resolution,
                      "route_review_status": status,
                      "routing_review_required": review})
     output.parent.mkdir(parents=True, exist_ok=True)

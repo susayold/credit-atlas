@@ -58,7 +58,7 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert workbook["Start here"]["B4"].value.startswith("The feature-gates sheet")
     routing = workbook["NSMO routing"]
     assert routing.max_row == 320
-    statuses = [routing.cell(row, 13).value for row in range(2, routing.max_row + 1)]
+    statuses = [routing.cell(row, 16).value for row in range(2, routing.max_row + 1)]
     ref_statuses = [routing.cell(row, 6).value for row in range(2, routing.max_row + 1)]
     assert statuses.count("CONDITIONAL_ROUTING_DOCUMENTED") == 58
     assert statuses.count("LEGACY_GATEWAY_MAPPING_REQUIRED") == 12

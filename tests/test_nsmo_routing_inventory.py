@@ -37,6 +37,10 @@ def test_routing_inventory_covers_survey_fields_and_reconciles_seven_missing_ref
     assert "historical wording/scale variant" in by_field["x17g_1"]["routing_review_required"]
     assert by_field["x17g_1"]["label_phrase_check"] == "WAVE_VARIANT_REVIEW"
     assert "not proof" in by_field["x05a"]["routing_review_required"]
+    assert by_field["x34a"]["routing_gate_fields"] == "x33"
+    assert by_field["x34a"]["routing_gate_questions"] == "Q33"
+    assert by_field["x34a"]["routing_gate_resolution"] == "EXPLICIT_GATE_FIELDS_PRESENT"
+    assert by_field["x53a_1"]["routing_gate_resolution"] == "RETIRED_GATEWAY_UNSPECIFIED"
 
 
 def test_question_reference_reconciliation_requires_full_wave_coverage(tmp_path):

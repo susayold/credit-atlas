@@ -17,3 +17,14 @@ Tải thêm bộ [Release 47 Sample Files](https://www.freddiemac.com/fmac-resou
 So sánh bằng audit có thể tái tạo: layout mô tả 31 field origination và 35 field monthly performance; mọi dòng trong hai example text files lần lượt có đúng 31 và 35 cột. Origination example có 1.000 dòng/1.000 Loan Identifier; performance example có 1.011 dòng/12 Loan Identifier và 320 tháng, từ 199902 đến 202509. **Giao nhau giữa hai tập Loan Identifier là 0**, vì vậy không ghép hai file thành panel. Những file này chỉ giúp kiểm tra parser/cột ở mức mẫu minh họa, không phải 50.000-loan annual sample, không chứng minh release identity của ZIP 2012 đã dùng, và không đủ để rà lại schema availability của toàn bộ sample.
 
 Receipt: [Release 47 reference audit](../artifacts/private/freddie-release47-reference-audit-c3ce87022b8b/audit.json). Tạo lại bằng `scripts/acquire_freddie_public_reference.py` rồi `scripts/audit_freddie_release47_reference_samples.py`. Các annual loan-level samples vẫn yêu cầu đăng ký/đăng nhập Clarity; lượt tải này không bypass authentication, không nhận terms thay người dùng và không chạy model.
+
+### Excel copies for sample inspection — 16/10/2026
+
+Hai public example TXT đã được chép nguyên giá trị sang workbook local private
+D: `data/private/mortgage/freddie-public-reference-f317b6c98c28/CreditAtlas-Freddie-Release47-Public-Samples.xlsx`.
+Workbook có sheet **Origination sample** (1.000 × 31) và **Monthly
+performance** (1.011 × 35), header theo field layout tháng 07/2026, có filter và
+freeze header. So sánh từng ô khớp với ZIP; IDs được xác nhận lưu text trong
+XLSX. Đây là tiện ích cho việc xem/lọc sample, không phải annual vintage và
+không thay đổi trạng thái R2/R3. Workbook chứa sample rows/IDs nên không đưa
+lên GitHub. Receipt: `artifacts/private/freddie-samples-excel-20261016/receipt.json`.

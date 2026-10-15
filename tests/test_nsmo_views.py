@@ -281,6 +281,35 @@ def _write_first_entry_risk_set_receipt(root: Path, source_sha: str) -> None:
     }), encoding="utf-8")
 
 
+def _write_horizon_sensitivity_receipt(root: Path, source_sha: str) -> None:
+    target = root / "artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    results = []
+    for quarters in (2, 4, 8):
+        results.append({
+            "horizon_quarters": quarters, "approx_months": quarters * 3,
+            "c_baseline_snapshots_with_full_horizon_unweighted": 2,
+            "unique_mortgages_with_at_least_one_c_baseline": 2,
+            "snapshot_outcomes_unweighted": {
+                "observed_90plus_event": 1,
+                f"observed_no_90plus_within_{quarters}_quarters": 1,
+            },
+            "unique_mortgages_by_outcome_nonexclusive": {
+                "observed_90plus_event": 1,
+                f"observed_no_90plus_within_{quarters}_quarters": 1,
+            },
+        })
+    target.write_text(json.dumps({
+        "status": "PASS", "target_created": False,
+        "source": {"sha256": source_sha},
+        "schema": {"rows": 2, "columns": 587, "quarterly_status_columns": 51},
+        "integrity": {"width_errors": 0, "missing_ids": 0, "duplicate_ids": 0},
+        "candidate_definition_for_feasibility_only": {"baseline_state": "C"},
+        "horizon_results": results,
+        "limitations": ["Aggregate-only; no target."],
+    }), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -471,11 +500,37 @@ def test_nsmo_first_entry_risk_set_rejects_nonreconciling_population_vintage(tmp
         NsmoViews(tmp_path).first_entry_risk_set_feasibility()
 
 
+def test_nsmo_horizon_sensitivity_is_hash_bound_and_aggregate_only(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_horizon_sensitivity_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    result = NsmoViews(tmp_path).horizon_sensitivity()
+    assert result["schema_version"] == "nsmo-horizon-sensitivity-v1"
+    assert [row["approx_months"] for row in result["horizon_results"]] == [6, 12, 24]
+    assert result["horizon_results"][1]["snapshot_outcomes_unweighted"]["observed_90plus_event"] == 1
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_horizon_sensitivity_rejects_stale_and_nonreconciling_receipts(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_horizon_sensitivity_receipt(tmp_path, "0" * 64)
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).horizon_sensitivity()
+
+    _write_horizon_sensitivity_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    target = tmp_path / "artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json"
+    receipt = json.loads(target.read_text(encoding="utf-8"))
+    receipt["horizon_results"][1]["snapshot_outcomes_unweighted"]["observed_90plus_event"] = 2
+    target.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ValueError, match="outcomes do not reconcile"):
+        NsmoViews(tmp_path).horizon_sensitivity()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     csv = _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
     _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    _write_horizon_sensitivity_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_target_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
@@ -520,6 +575,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
+            assert "Độ dài cửa sổ và support quan sát được" in html
             assert "Chuyển trạng thái kề quý vào 90+" in html
             assert "Kênh phản hồi thay đổi theo wave" in html
             assert "usable-responses-table" in html
@@ -622,6 +678,11 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert risk_set["risk_set_entry_by_state_unweighted"] == {"C": 2}
             assert risk_set["population_and_entry_by_origination_vintage_unweighted"][0]["entered_risk_set"] == 2
             assert "private-a" not in json.dumps(risk_set)
+        with urlopen(base + "/api/nsmo-horizon-sensitivity", timeout=5) as response:
+            sensitivity = json.loads(response.read())
+            assert response.status == 200
+            assert [row["approx_months"] for row in sensitivity["horizon_results"]] == [6, 12, 24]
+            assert "private-a" not in json.dumps(sensitivity)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400
@@ -639,6 +700,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-first-entry-risk-set-feasibility?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-horizon-sensitivity?run=unexpected", timeout=5)
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-survey-returns?run=unexpected", timeout=5)

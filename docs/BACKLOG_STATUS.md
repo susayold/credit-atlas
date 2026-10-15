@@ -78,6 +78,17 @@ The focused Ginnie, NSMO workbook, D02 workbook and NSMO API/view suite passes
 34/34. Production acquisition, production integrity profiling and any model-use
 qualification remain open. Commits `2f7b37e` and `51c69fe` are on `main`.
 
+### D02 continuation — horizon sensitivity in API, app and Excel, 2026-10-16
+
+The aggregate-only NSMO screen now compares C-state full-follow-up support at
+2/4/8 quarterly snapshots (about 6/12/24 months). A new source-hash-bound API
+and `/nsmo` panel expose the comparison; the NSMO reference workbook contains a
+filterable `Do nhay horizon` table with numeric snapshot and unique-mortgage
+counts. Public code/data include only the aggregate comparison; row-level PUF
+and the matching private receipt remain on D:. Focused API, app contract and
+workbook tests pass. This remains D02-5 feasibility evidence only; no target,
+rate, PD or model is created, and the estimand/censoring protocol remains open.
+
 | ID | Current status | Evidence / remaining requirement |
 |---|---|---|
 | M01-001 | Partial | Pinned 164-file engine and actual local source found; complete capability-gap audit still needed |

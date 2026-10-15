@@ -1,0 +1,28 @@
+horizon_quarters,horizon_months,c_baseline_snapshots_with_full_horizon,unique_mortgages_with_c_baseline,outcome_class,outcome_interpretation,snapshot_count,unique_mortgage_count_nonexclusive
+2,6,926331,61645,CENSOR_M,Censor quan sát: gap lịch sử (M),661,394
+2,6,926331,61645,CENSOR_S,Censor quan sát: servicer suppression (S),2776,1332
+2,6,926331,61645,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),964,623
+2,6,926331,61645,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,854164,58387
+2,6,926331,61645,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),89,48
+2,6,926331,61645,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),17,13
+2,6,926331,61645,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),116,62
+2,6,926331,61645,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,44695,22920
+2,6,926331,61645,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,22849,11769
+4,12,872888,59703,CENSOR_M,Censor quan sát: gap lịch sử (M),1067,387
+4,12,872888,59703,CENSOR_S,Censor quan sát: servicer suppression (S),5129,1360
+4,12,872888,59703,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2174,753
+4,12,872888,59703,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,738773,52110
+4,12,872888,59703,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),172,50
+4,12,872888,59703,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),33,15
+4,12,872888,59703,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),212,63
+4,12,872888,59703,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,83092,22843
+4,12,872888,59703,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,42236,11749
+8,24,770257,55701,CENSOR_M,Censor quan sát: gap lịch sử (M),1476,360
+8,24,770257,55701,CENSOR_S,Censor quan sát: servicer suppression (S),8461,1331
+8,24,770257,55701,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),3683,735
+8,24,770257,55701,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,544419,41635
+8,24,770257,55701,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),284,50
+8,24,770257,55701,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),62,16
+8,24,770257,55701,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),363,62
+8,24,770257,55701,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,140280,22324
+8,24,770257,55701,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,71229,11514

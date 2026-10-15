@@ -18,6 +18,7 @@ _TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-202610
 _ORIGINATION_FEASIBILITY_AUDIT = "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
 _FIRST_OBSERVED_TRANSITION_AUDIT = "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
 _FIRST_ENTRY_RISK_SET_AUDIT = "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
+_HORIZON_SENSITIVITY_AUDIT = "artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json"
 _SURVEY_RETURNS_CSV = "docs/data/nsmo-v70-survey-returns.csv"
 _SURVEY_RETURNS_SHA256 = "d34d6c14ec0febb0a5c1d60c46c9dadc49e58e2121e0ed3b65140bb7c0da0811"
 _USABLE_RESPONSES_CSV = "docs/data/nsmo-v70-usable-responses.csv"
@@ -950,5 +951,86 @@ class NsmoViews:
             "at_risk_quarter_intervals_by_start_state_unweighted": interval_totals,
             "population_and_entry_by_origination_vintage_unweighted": population_rows,
             "by_origination_vintage_and_entry_state_unweighted": clean_rows,
+            "limitations": receipt.get("limitations", []),
+        }
+
+    def horizon_sensitivity(self) -> dict:
+        """Serve aggregate-only C-state support across verified follow-up horizons."""
+        profile = self.report()
+        receipt = read_json(contained(self.root, _HORIZON_SENSITIVITY_AUDIT))
+        source_sha = profile["source"]["source_sha256"]
+        row_count = int(profile["sample"]["mortgages"])
+        schema = receipt.get("schema", {})
+        integrity = receipt.get("integrity", {})
+        definition = receipt.get("candidate_definition_for_feasibility_only", {})
+        if (receipt.get("status") != "PASS" or receipt.get("target_created") is not False
+                or receipt.get("source", {}).get("sha256") != source_sha
+                or int(schema.get("rows", -1)) != row_count
+                or int(schema.get("columns", -1)) != 587
+                or int(schema.get("quarterly_status_columns", -1)) != 51
+                or any(int(integrity.get(key, -1)) != 0 for key in
+                       ("width_errors", "missing_ids", "duplicate_ids"))
+                or definition.get("baseline_state") != "C"):
+            raise ValueError("NSMO horizon-sensitivity receipt is stale or does not match the verified PUF")
+
+        source_rows = receipt.get("horizon_results")
+        if not isinstance(source_rows, list) or [item.get("horizon_quarters") for item in source_rows] != [2, 4, 8]:
+            raise ValueError("NSMO horizon-sensitivity results must contain horizons 2, 4, and 8 quarters")
+        clean_rows = []
+        all_codes = {"observed_90plus_event", "observed_other_adverse_state_7",
+                     "observed_other_adverse_state_8", "observed_other_adverse_state_9",
+                     "termination_competing_censor", "termination_same_month_ambiguous",
+                     "not_open_at_baseline"}
+        for quarters, item in zip((2, 4, 8), source_rows, strict=True):
+            months = int(item.get("approx_months", -1))
+            baseline_count = int(item.get("c_baseline_snapshots_with_full_horizon_unweighted", -1))
+            mortgage_count = int(item.get("unique_mortgages_with_at_least_one_c_baseline", -1))
+            counts_source = item.get("snapshot_outcomes_unweighted", {})
+            unique_source = item.get("unique_mortgages_by_outcome_nonexclusive", {})
+            if (months != quarters * 3 or baseline_count < 0 or mortgage_count < 0
+                    or mortgage_count > row_count or not isinstance(counts_source, dict)
+                    or not isinstance(unique_source, dict)):
+                raise ValueError("NSMO horizon-sensitivity denominator is invalid")
+            counts: dict[str, int] = {}
+            unique_counts: dict[str, int] = {}
+            for code, value in counts_source.items():
+                allowed = code in all_codes or code == f"observed_no_90plus_within_{quarters}_quarters" or code.startswith("observation_censor_")
+                if not allowed:
+                    raise ValueError("NSMO horizon-sensitivity outcome code is invalid")
+                if code.startswith("observation_censor_") and code not in {
+                        "observation_censor_A", "observation_censor_B", "observation_censor_K",
+                        "observation_censor_M", "observation_censor_P", "observation_censor_Q",
+                        "observation_censor_S", "observation_censor_blank"}:
+                    raise ValueError("NSMO horizon-sensitivity censor code is invalid")
+                count = int(value)
+                if count < 0:
+                    raise ValueError("NSMO horizon-sensitivity counts cannot be negative")
+                counts[code] = count
+            for code, value in unique_source.items():
+                if code not in counts:
+                    raise ValueError("NSMO unique-loan outcome lacks a matching snapshot outcome")
+                count = int(value)
+                if count < 0 or count > mortgage_count:
+                    raise ValueError("NSMO horizon-sensitivity unique-loan support is invalid")
+                unique_counts[code] = count
+            if sum(counts.values()) != baseline_count:
+                raise ValueError("NSMO horizon-sensitivity outcomes do not reconcile to baseline support")
+            if set(unique_counts) != set(counts):
+                raise ValueError("NSMO horizon-sensitivity unique support is incomplete")
+            clean_rows.append({
+                "horizon_quarters": quarters,
+                "approx_months": months,
+                "c_baseline_snapshots_with_full_horizon_unweighted": baseline_count,
+                "unique_mortgages_with_at_least_one_c_baseline": mortgage_count,
+                "snapshot_outcomes_unweighted": counts,
+                "unique_mortgages_by_outcome_nonexclusive": unique_counts,
+            })
+        return {
+            "schema_version": "nsmo-horizon-sensitivity-v1",
+            "status": "AVAILABLE",
+            "source_sha256": source_sha,
+            "target_created": False,
+            "candidate_definition_for_feasibility_only": definition,
+            "horizon_results": clean_rows,
             "limitations": receipt.get("limitations", []),
         }

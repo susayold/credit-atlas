@@ -170,6 +170,14 @@
           <div id="first-entry-risk-set-table" class="table-wrap"></div>
           <p class="footnote">Đây là một chẩn đoán dynamic-monitoring có delayed entry, không phải origination PD. Các khoản có event 90+ hoặc missing trước entry bị loại; việc sống tới entry có thể tạo selection. Snapshot 3–6 là trạng thái quan sát, không có ngày event; close cùng tháng vẫn ambiguous. Không có weights, rate, target label hoặc model matrix.</p>
         </div>
+        <div class="origination-feasibility horizon-sensitivity">
+          <div class="section-head"><div><div class="eyebrow">HORIZON SENSITIVITY · SUPPORT ONLY</div><h3>Độ dài cửa sổ và support quan sát được</h3><p>Đối chiếu baseline C có đủ follow-up 6, 12 và 24 tháng; termination, cùng-tháng ambiguous, missing và adverse 7–9 được giữ riêng.</p></div></div>
+          <div id="horizon-sensitivity-state" class="domain-state" role="status">Đang xác minh horizon-sensitivity receipt…</div>
+          <div id="horizon-sensitivity-metrics" class="metric-grid" aria-label="Horizon sensitivity metrics"></div>
+          <div id="horizon-sensitivity-note" class="target-note"></div>
+          <div id="horizon-sensitivity-table" class="table-wrap"></div>
+          <p class="footnote">Cohort baseline của từng horizon không lồng nhau vì cửa sổ dài cần thêm các quý theo dõi ở cuối PUF. Vì vậy số unique có 90+ không phải risk rate và có thể không tăng đơn điệu. Mỗi mortgage có thể xuất hiện ở nhiều baseline quý. Chưa tạo target, PD hoặc model.</p>
+        </div>
       </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTER-TO-QUARTER · DESCRIPTIVE</div><h2>Ma trận chuyển trạng thái quan sát</h2><p>Mỗi ô là số chuyển tiếp loan-quarter giữa hai snapshot kề nhau, chỉ trong cặp có cả trạng thái nguồn và đích thuộc C/1–9.</p></div></div>

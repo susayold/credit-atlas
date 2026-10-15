@@ -214,7 +214,11 @@ Receipt riêng, aggregate-only và source-hash-bound:
 Tái lập bằng `scripts/audit_nsmo_horizon_sensitivity.py`; edge tests nằm trong
 `tests/test_nsmo_horizon_sensitivity.py`. Kết quả sensitivity củng cố quyết định
 hiện tại: D02-5 vẫn mở để chốt estimand/cohort/censoring; chưa tạo target labels
-và chưa bắt đầu D02-6 modeling.
+và chưa bắt đầu D02-6 modeling. Aggregate table đã được công bố riêng tại
+`docs/NSMO_HORIZON_SENSITIVITY_2026-10-16.csv` và thêm vào sheet `Do nhay horizon`
+trong workbook NSMO để người dùng lọc/phân tích counts dạng số. Bảng 6/12/24 tháng được serve riêng qua
+`GET /api/nsmo-horizon-sensitivity`, xác minh receipt với SHA-256 của đúng PUF,
+và hiển thị trong trang `/nsmo` cùng các caveat về cohort không lồng nhau.
 
 ## Đối chiếu chuyển tiếp kề quý và lần đầu quan sát 90+
 

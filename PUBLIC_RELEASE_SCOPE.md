@@ -34,13 +34,21 @@ must obtain the current PUF directly from FHFA and accept its current notice and
 terms themselves. The associated analysis note includes FHFA's required
 disclaimer and does not imply agency endorsement.
 
+An aggregate-only NSMO C-state horizon-sensitivity table (2/4/8 quarterly
+snapshots) is included with the research docs and the filterable NSMO Excel
+reference workbook. It contains only unweighted support/censor counts, not loan
+rows or identifiers. Its source-hash-bound receipt and the underlying PUF remain
+private; this table is feasibility evidence, not event rates, PD or a frozen
+target.
+
 Aggregate-only target feasibility screens for four-quarter (about 12-month)
 performance snapshots are also included, with synthetic tests and a sanitized
 method note. The local NSMO app includes SHA-bound aggregate APIs and UI to
 compare repeated quarterly landmarks with one-landmark sizing and one-time
 dynamic risk-set diagnostics, filter origination vintages and entry states, and
-inspect quarterly censoring. It shows no loan rows or IDs. The private receipts and all exact PUF-derived tables
-stay outside Git. The note documents that the candidate protocol is not frozen
+inspect quarterly censoring and 6/12/24-month horizon sensitivity. It shows no
+loan rows or IDs. Private receipts and PUF-derived loan-level tables stay
+outside Git. The note documents that the candidate protocol is not frozen
 and that no target labels, PD estimates, or model outputs are part of this
 release.
 

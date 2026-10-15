@@ -412,6 +412,27 @@ function renderFirstEntryRiskSetFeasibility(data){
   }
   band.addEventListener('change',draw);entryChoice.addEventListener('change',draw);draw();
 }
+async function loadHorizonSensitivity(){
+  const state=$('horizon-sensitivity-state');
+  try{const response=await fetch('/api/nsmo-horizon-sensitivity',{cache:'no-store',headers:{Accept:'application/json'}});const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);renderHorizonSensitivity(data);state.className='domain-state ok';state.textContent='Receipt verified against this PUF SHA-256 · aggregate-only · no target labels produced.';}
+  catch(error){state.className='domain-state error';state.textContent=`Horizon-sensitivity view unavailable: ${error.message}`;}
+}
+function renderHorizonSensitivity(data){
+  const rows=data.horizon_results||[];
+  $('horizon-sensitivity-metrics').replaceChildren(...rows.map(row=>{
+    const outcomes=row.snapshot_outcomes_unweighted||{},unique=row.unique_mortgages_by_outcome_nonexclusive||{};
+    return metric(`${n(row.approx_months)}-month observed 90+`,n(unique.observed_90plus_event||0),`${n(outcomes.observed_90plus_event||0)} baseline snapshots · ${n(row.unique_mortgages_with_at_least_one_c_baseline)} mortgages with full horizon`);
+  }));
+  $('horizon-sensitivity-note').textContent='The 6/12/24-month cohorts are not nested: longer windows exclude recent baseline quarters and accumulate more censoring. Unique-mortgage counts are support diagnostics, not rates or independent events.';
+  const tableRows=rows.map(row=>{
+    const outcomes=row.snapshot_outcomes_unweighted||{},unique=row.unique_mortgages_by_outcome_nonexclusive||{};
+    const missing=Object.entries(outcomes).filter(([key])=>key.startsWith('observation_censor_')).reduce((sum,[,value])=>sum+Number(value),0);
+    const competing=Number(outcomes.termination_competing_censor||0),ambiguous=Number(outcomes.termination_same_month_ambiguous||0);
+    const adverse=Number(outcomes.observed_other_adverse_state_7||0)+Number(outcomes.observed_other_adverse_state_8||0)+Number(outcomes.observed_other_adverse_state_9||0);
+    return [`${row.approx_months} months`,n(row.c_baseline_snapshots_with_full_horizon_unweighted),n(row.unique_mortgages_with_at_least_one_c_baseline),n(outcomes.observed_90plus_event||0),n(unique.observed_90plus_event||0),n(outcomes[`observed_no_90plus_within_${row.horizon_quarters}_quarters`]||0),n(competing),n(ambiguous),n(missing),n(adverse)];
+  });
+  $('horizon-sensitivity-table').replaceChildren(table(['Horizon','C baseline snapshots','Mortgages · baseline','90+ snapshots','Mortgages · 90+','No 90+ observed','Closed before next','Same-month ambiguous','Observation censor','Other adverse 7–9'],tableRows,[1,2,3,4,5,6,7,8,9]));
+}
 function loadDictionary(){
   fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});
 }
@@ -434,5 +455,5 @@ function renderDictionary(data){
   function update(){const q=search.value.trim().toLowerCase();const matches=data.fields.filter(f=>[f.csv_column,f.codebook_name,f.sas_label,f.field_family,f.survey_question_refs,f.predictor_use,coverage.get(f.csv_column)?.observed_response_waves,itemReview.get(f.csv_column)?.assessment,gatesByField.get(f.csv_column)?.eligibility_bucket,gatesByField.get(f.csv_column)?.required_review].some(x=>(x||'').toLowerCase().includes(q))).slice(0,100);results.replaceChildren();for(const field of matches){const b=node('button','field-option');b.type='button';b.dataset.field=field.csv_column;b.setAttribute('role','option');b.setAttribute('aria-selected',String(selected?.csv_column===field.csv_column));b.append(node('strong','',field.csv_column),node('small','',field.sas_label||field.codebook_name));b.addEventListener('click',()=>show(field));results.append(b);} const reviewStatus=itemReviewReady?`${data.item_comparability_count} ghi chú so sánh item`:'ghi chú version chưa được server nạp';$('dictionary-count').textContent=`${data.field_count} trường · ${data.wave_coverage_count} biến survey có coverage · ${data.predictor_gate_count||0} feature gates · ${data.approved_feature_count||0} feature đã duyệt · ${reviewStatus} · ${matches.length}${q?' kết quả':' trường đầu'}`;if(!selected&&matches.length)show(matches[0]);}
   search.addEventListener('input',update);update();
 }
-async function load(){loadDictionary();try{const r=await fetch('/api/nsmo-profile',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);render(body);}catch(error){$('state').className='state error';$('state').textContent=`D02 NSMO chưa sẵn sàng: ${error.message}. Hoàn tất tải PUF, chạy audit aggregate-only và kiểm tra local receipt; trang không dựng dữ liệu giả.`;}}
+async function load(){loadDictionary();loadHorizonSensitivity();try{const r=await fetch('/api/nsmo-profile',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);render(body);}catch(error){$('state').className='state error';$('state').textContent=`D02 NSMO chưa sẵn sàng: ${error.message}. Hoàn tất tải PUF, chạy audit aggregate-only và kiểm tra local receipt; trang không dựng dữ liệu giả.`;}}
 load();

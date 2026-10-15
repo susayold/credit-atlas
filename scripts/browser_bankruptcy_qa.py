@@ -24,7 +24,7 @@ def run(root):
     worker = threading.Thread(target=server.serve_forever, daemon=True)
     worker.start()
     base = 'http://127.0.0.1:' + str(server.server_port)
-    checks, errors = [], []
+    checks, errors, downloads = [], [], []
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(channel='msedge', headless=True)
@@ -32,6 +32,7 @@ def run(root):
             page.set_default_timeout(30000)
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
+            page.on('download', lambda download: downloads.append(download.suggested_filename))
             page.goto(base + '/?view=bankruptcy&bankruptcy_view_id=' + identifier, wait_until='networkidle')
             expect(page.locator('#context-note')).to_contain_text('43,405')
             expect(page.locator('#content')).to_contain_text('Horizon 1 năm · 5,910 selected statements · 410 source label=1')
@@ -61,6 +62,16 @@ def run(root):
             values = [row['A55'] for row in facts if row['source_subset_code'] == 2 and row['A55'] is not None]
             assert report['selected_feature']['min'] == min(values) and report['selected_feature']['max'] == max(values)
             checks.append('private scoped export matches canonical original-ARFF extrema and 64-feature population')
+            page.route('**/api/bankruptcy-report*', lambda route: route.fulfill(status=503,
+                content_type='application/json', body='{"error":"Synthetic bankruptcy report outage"}'))
+            page.locator('#export-report').click()
+            expect(page.locator('#notice.error')).to_contain_text('Synthetic bankruptcy report outage')
+            assert len(downloads) == 1, downloads
+            expected_503 = 'Failed to load resource: the server responded with a status of 503 (Service Unavailable)'
+            assert expected_503 in errors, errors
+            errors.remove(expected_503)
+            page.unroute('**/api/bankruptcy-report*')
+            checks.append('Bankruptcy report HTTP 503 is visible and creates no fake download')
             page.reload(wait_until='networkidle')
             expect(page.get_by_label('Bankruptcy forecast horizon')).to_have_value('4')
             expect(page.get_by_label('Bankruptcy financial feature')).to_have_value('A55')

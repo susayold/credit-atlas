@@ -1,6 +1,6 @@
 {
   "files": 1001,
-  "bytes": 18601558,
+  "bytes": 18603296,
   "hash_basis": "SHA-256 of Git-normalized LF text; binary files hashed as-is",
   "excluded_private_data": true,
   "sha256": {
@@ -38,7 +38,7 @@
     "docs/AFFORDABILITY_EXCEL_INTAKE_VI.md": "eba78f14648145ac1ee257ac399c70eb22e97d16df29a8ea4aebf56ea6e5ce3a",
     "docs/AFFORDABILITY_INTAKE_VI.md": "e181b71b6affb29647d408865e982e56cf43a3ae527121466739a98122e4b618",
     "docs/APPLE_XBRL_DEBT_DIMENSIONS_VI.md": "1f9cbe64c4559c9a9420ae7137f8b0728a2f70c724f5a509dfa454dc6e7d4f5e",
-    "docs/BACKLOG_STATUS.md": "1486f0fcb7eb3228814a9beaa21b27b9b3173db3c25089a6ab17ddab784764b1",
+    "docs/BACKLOG_STATUS.md": "cbb217a08dc22ae1f87910c566e9b21008fac34e2a50577cc0ebe1ac3e3e4612",
     "docs/BANKRUPTCY_FINAL_MODEL_CARD.md": "9788b7543ff1eb5982477c3d485b212697723bd77c43e7769c47d275942528e7",
     "docs/BANKRUPTCY_FROZEN_PROTOCOL_AND_FEATURES.md": "ae0955fbfa3c92b56ef874b26e16e02e9c2cc026571291ed63314c889721beed",
     "docs/BANKRUPTCY_MODEL_APP_WORKFLOW.md": "196ff899d16386d5700730e6878129b49763cee40e07f3decbeb76786e6997ba",
@@ -338,7 +338,7 @@
     "scripts/browser_annual_debt_bridge_qa.py": "25a8901968f89da181ad6b033e5b0e7171b2230fd193802d38bc6a08a2b4c188",
     "scripts/browser_bank_qa.py": "7a5e6f283d759c322f4afef2e3b34a609cc4166f5c52be9710779fbcbe5dc887",
     "scripts/browser_bankruptcy_model_qa.py": "38870d6aac296c7120de40b5a9f125ba83687ba0e2d6d5893229265229c6343b",
-    "scripts/browser_bankruptcy_qa.py": "6fea60aae60a6d98a5e0ab26e08705d3c0261a646caa1bfe281dbf53299b9b74",
+    "scripts/browser_bankruptcy_qa.py": "93e8f4459904eaa819006c38003717eb026d64a5414a7a4e06bce87b3eb89619",
     "scripts/browser_business_archive_qa.py": "b30849cdb528d4e83b516eb8dfb3cd49054278418ad3b330d13b8c59ecb0f638",
     "scripts/browser_competing_acceptance.py": "4f2feb10732ec54df8bb5f0e59bab5cf2f5eed662f1239c3c6a66f58f2055d8a",
     "scripts/browser_content_detail_qa.py": "677484123f87516faca2c4581fa4cbfea07e680528b8cc0f990d48afe93c367b",

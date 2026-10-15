@@ -126,11 +126,14 @@ D01's canonicalization, labels, portfolio, transitions, episodes, observed
 loss, models, forecast/policy, reporting and CreditAtlas app requirements.
 The map separates code presence from real-data evidence and synthetic tests;
 it confirms that the current 2012 descriptive foundation is reproduced while
-multi-vintage compatibility and every qualified-model gate remain open. It
-also records the current GitHub 404 limitation on inspecting the upstream
-repository, and keeps NSMO, Ginnie and aggregate context in separate populations.
-See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md`. M01-001 remains Partial; no model
-readiness count or data gate was changed.
+multi-vintage compatibility and every qualified-model gate remain open. An
+authenticated GitHub check resolved the earlier anonymous 404: the source repo
+is private, its `master` is identical to the pinned commit, the complete tree
+is available, and Git blob hashes match all 164/164 selected local files. Root
+license-file probes are empty. NSMO, Ginnie and aggregate context remain
+separate populations. See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md`.
+M01-001 is now Verified for the pinned source scope; M01-004 still tracks
+engine distribution terms. No model-readiness count or data gate changed.
 
 ### FHFA state HPI context source — 2026-10-16
 
@@ -206,10 +209,10 @@ identifiers remain private.
 
 | ID | Current status | Evidence / remaining requirement |
 |---|---|---|
-| M01-001 | Partial | Completed code/result/gate map for the pinned 164-file engine copy, current app, data and M01 requirements; latest hash receipt has 0/164 differences. Original upstream GitHub repo currently returns 404, so full upstream/branch reconciliation remains unverified. See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md`; source access is tracked separately under M01-005 |
+| M01-001 | Verified for pinned scope | Completed code/result/gate map for the pinned 164-file engine copy, current app, data and M01 requirements; authenticated upstream Git tree confirms 164/164 Git blob matches and `master` is identical to the pinned commit. License/distribution terms are a separate M01-004 question. See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md` |
 | M01-002 | Verified for 2012 | Fresh eight-stage rebuild; 50,000 loans / 4,510,559 months; resource receipt |
 | M01-003 | Verified for supplied 2012 corpus | Release-47 trace audit covers 17 field sentinels, 20 categorical fields, 6 date fields, HARP flags, percentage-point casts, and 4,510,559 state/terminal mappings; see `docs/D01_CANONICAL_SEMANTIC_AUDIT_VI.md` and `artifacts/private/d01-canonical-semantics-e2fe2cdc8cbf/receipt.json`. Cross-vintage semantic compatibility remains open |
-| M01-004 | Partial | Runtime lock 19/19, 164 pinned engine hashes, D: storage and 0/970 private Git candidates verified; current 15-asset bundle scanned against 50,000 source IDs; latest full suite passes 1,601/1,601 after lowercase NSMO PUF headers/parser regression checks. Added version-pinned Colorama 0.4.6 and DuckDB 1.5.5 notices checked against their upstream tags; the upstream engine repository/commit now returns GitHub 404, so its redistribution rights remain unverified. Concurrent/full-model resource sign-off also remains; see `docs/D01_RELEASE_READINESS_VI.md`, `THIRD_PARTY_NOTICES.md` and `docs/TEST_SUITE_2026-10-15_VI.md` |
+| M01-004 | Partial | Runtime lock 19/19, 164 pinned engine hashes, D: storage and 0/970 private Git candidates verified; current 15-asset bundle scanned against 50,000 source IDs; latest full suite passes 1,601/1,601 after lowercase NSMO PUF headers/parser regression checks. Added version-pinned Colorama 0.4.6 and DuckDB 1.5.5 notices checked against their upstream tags. The engine repo is private and has no root license notice at the pinned commit/current `master`; its distribution notice and concurrent/full-model resource sign-off remain open. See `docs/D01_RELEASE_READINESS_VI.md`, `THIRD_PARTY_NOTICES.md` and `docs/TEST_SUITE_2026-10-15_VI.md` |
 | M01-005 | Authentication blocked; code implemented | HTTP downloader + local import/atomic registration; official check confirms Freddie Clarity and Fannie Data Dynamics account gates; no new annual ZIP downloaded; public macro context completed separately; see `docs/D01_DATA_ACCESS_CHECK_2026-10-15_VI.md` |
 | M01-006 | Unmet | Multi-vintage canonical and layout comparison require additional qualified data |
 | M01-007 | Partial | 2012 segment support visible; multi-vintage qualification memo absent |

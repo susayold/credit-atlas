@@ -11,9 +11,16 @@ The local vendor tree is pinned to commit
 `8d9994cfcb91fe871d66a4238c3f56053d71e920`. `UPSTREAM.json` lists 164 selected
 files; the latest private release-readiness receipt reports zero hash
 differences against that manifest. The copy excludes raw data and old derived
-runs. GitHub returned 404 for the upstream repository and raw files at that
-commit on 2026-10-16, so this review can inspect only the content pinned locally;
-it cannot confirm the current upstream branch or a distribution license.
+runs. Anonymous GitHub requests returned 404 because the source repository is
+private. The authenticated GitHub connector confirms the repo is private, has
+the same `master` head as the pinned commit (0 ahead/behind), and serves the
+pinned `pyproject.toml` and `README.md`. The complete authenticated tree at the
+pinned commit is not truncated (193 blobs); Git blob SHA-1s for all 164 local
+selected files match the corresponding upstream blobs. At both the pinned ref
+and `master`, root probes for `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `LICENCE`,
+`COPYING` and `NOTICE` returned not found. Source/branch/file reconciliation is
+therefore verified; the repository exposes no root license notice, so no
+third-party redistribution license is inferred here.
 
 Evidence labels below mean:
 
@@ -62,13 +69,12 @@ Evidence labels below mean:
 
 ## M01-001 status
 
-The capability-gap map and available-data boundary are now documented for the
-verified pinned source copy, current D01 app and current backlog. M01-001 stays
-**Partial** until the original upstream is inspectable again or the exact
-selected-file manifest is accepted as the full source scope, and any remaining
-website/repository inventory gaps are reconciled. This status does not reduce
-or redefine M01-005/006: additional qualified Freddie vintages are still
-required.
+The repository/commit, upstream selected-file blobs, 2012 source, current D01
+app, available results and remaining capability gaps are reconciled in this
+audit. M01-001 is **Verified for the current pinned source scope**. The source
+is private and its root license-file probes were empty; that separate
+redistribution question remains in M01-004. This status does not reduce or
+redefine M01-005/006: additional qualified Freddie vintages are still required.
 
 Evidence references: `vendor/credit_risk_strategy_lab/UPSTREAM.json`,
 `docs/D01_RELEASE_READINESS_VI.md`, `docs/D01_CANONICAL_SEMANTIC_AUDIT_VI.md`,

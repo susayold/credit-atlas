@@ -46,7 +46,7 @@ Phần tổng hợp này đã được gắn vào workspace `/nsmo` dưới nhã
 **Origination-aligned · feasibility only**. Bảng vintage dùng chung bộ lọc
 vintage với panel landmark; API `/api/nsmo-origination-feasibility` chỉ trả số
 đếm đã qua reconciliation và kiểm tra SHA-256 nguồn. Edge headless QA trên PUF
-thật đạt 8/8 checks, không có lỗi JavaScript; API/view tests đạt 19/19.
+thật đạt 8/8 checks, không có lỗi JavaScript; API/view tests đạt 20/20.
 
 ## Giới hạn phương pháp
 

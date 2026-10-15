@@ -301,6 +301,18 @@ def test_nsmo_origination_feasibility_rejects_a_receipt_for_another_puf(tmp_path
         NsmoViews(tmp_path).origination_feasibility()
 
 
+def test_nsmo_origination_feasibility_rejects_nonreconciling_vintage_totals(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    path = tmp_path / "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["outcomes_by_origination_year_unweighted"]["2013"]["observed_90plus"] = 2
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="vintage snapshot support does not reconcile"):
+        NsmoViews(tmp_path).origination_feasibility()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     _workspace(tmp_path)
     _write_public_dictionary(tmp_path)

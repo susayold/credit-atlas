@@ -195,3 +195,13 @@ authorization. The next screen includes an indemnification clause; no second
 “I agree” was submitted while its specific confirmation is pending. Freddie
 Mac annual vintages remain unavailable without Clarity authentication, so no
 new D01 performance vintage was acquired.
+
+## 2026-10-16 continuation — route contract inventory (M01-028)
+
+Added a generated inventory of 167 API path literals and their direct references
+in UI, HTTP tests, and browser QA: `M01_028_ROUTE_TEST_INVENTORY_VI.md`. The scan
+is explicitly an inventory aid; a string reference is not acceptance evidence.
+Added fail-closed HTTP contracts for P4 study catalogs, exposure-import catalog,
+HMDA/SEC/Market catalogs, and SEC/Market snapshots. Focused suite passes 16/16.
+M01-028 remains Partial: aggregate/report payloads, Market daily data, SEC/HMDA
+report aliases, and UI download acceptance still need independent validation.

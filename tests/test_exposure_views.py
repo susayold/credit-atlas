@@ -69,6 +69,14 @@ def test_http_private_export_and_parameter_origin_guards(imported):
     base = 'http://127.0.0.1:' + str(server.server_port)
     endpoint = '/api/exposure-report?import_id=' + receipt['import_id'] + '&currency=USD&dimension=region'
     try:
+        with urlopen(base + '/api/exposure-imports') as response:
+            assert response.headers['Cache-Control'] == 'no-store'
+            catalog = json.load(response)
+            assert catalog == service.catalog()
+            assert catalog['imports'][0]['import_id'] == receipt['import_id']
+            assert str(root) not in json.dumps(catalog)
+        with pytest.raises(HTTPError) as error: urlopen(base + '/api/exposure-imports?path=other')
+        assert error.value.code == 400
         with urlopen(base + endpoint) as response:
             assert response.headers['Cache-Control'] == 'no-store' and 'attachment' in response.headers['Content-Disposition']
             result = json.load(response)

@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import threading
 import uuid
+import zipfile
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 
@@ -132,6 +133,16 @@ def run(root: Path):
                     assert "GEOID" not in hud_export and "GEOID" not in json.dumps(hud_export)
                     assert hud_export["uninterpreted_source_codes"]["unpaid_balance_usd"] == {"-4": 9_598}
                     checks.append("HUD FHA export keeps tract keys private and quarantines the undocumented -4 value")
+                    with page.expect_download() as captured:
+                        page.get_by_role("link", name="Xuất Fannie sample JSON", exact=True).click()
+                    download = captured.value
+                    fannie_path = output / "fannie-public-samples-report.json"
+                    download.save_as(str(fannie_path))
+                    fannie_export = json.loads(fannie_path.read_text(encoding="utf-8"))
+                    assert fannie_export["visibility"] == "private"
+                    assert fannie_export["public_release_approved"] is False
+                    assert fannie_export["source_id"] == "fannie-public-samples-4d84128d3cb6"
+                    checks.append("shared attachment handler exports the cross-workspace Fannie format audit with its private filename")
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")
@@ -345,6 +356,43 @@ def run(root: Path):
             checks.append("HTTP 503 attachment export reports failure and never creates a fake Excel download")
             download_page.unroute("**/api/exposure-excel-report*")
             download_page.close()
+
+            kpi_page = context.new_page()
+            kpi_downloads = []
+            kpi_page.on("download", lambda download: kpi_downloads.append(download.suggested_filename))
+            kpi_page.goto(base + "/?view=monitor", wait_until="networkidle")
+            kpi_button = kpi_page.get_by_role("button", name="Xuất KPI Excel", exact=True)
+            expect(kpi_button).to_be_enabled(timeout=120000)
+            with kpi_page.expect_download(timeout=240000) as workbook_info:
+                kpi_button.click()
+            workbook_download = workbook_info.value
+            workbook_path = output / "monitor-kpi-workbook.xlsx"
+            workbook_download.save_as(str(workbook_path))
+            assert workbook_download.suggested_filename == "CreditAtlas-KPI-all.xlsx"
+            with zipfile.ZipFile(workbook_path) as workbook:
+                assert workbook.testzip() is None
+                assert "xl/workbook.xml" in workbook.namelist()
+            assert kpi_downloads == ["CreditAtlas-KPI-all.xlsx"]
+            checks.append("real monitor POST export passes XLSX content validation and downloads a readable workbook")
+            kpi_page.route("**/api/kpi-workbook", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic KPI workbook outage"})) if route.request.method == "POST" else route.continue_())
+            kpi_button.click()
+            expect(kpi_page.locator("#credit-monitor .monitor-source-ribbon .callout")).to_contain_text("Synthetic KPI workbook outage")
+            assert kpi_downloads == ["CreditAtlas-KPI-all.xlsx"]
+            checks.append("HTTP 503 KPI workbook POST shows the server error and creates no fake Excel file")
+            kpi_page.unroute("**/api/kpi-workbook")
+            kpi_page.locator("#credit-monitor .monitor-source-ribbon .callout").last.evaluate("e=>e.remove()")
+            kpi_page.route("**/api/kpi-workbook", lambda route: route.fulfill(
+                status=200, content_type="text/html", body="<html>upstream login page</html>")
+                if route.request.method == "POST" else route.continue_())
+            kpi_button.click()
+            expect(kpi_page.locator("#credit-monitor .monitor-source-ribbon .callout")).to_contain_text(
+                "Research API returned an HTML page instead of a downloadable report")
+            assert kpi_downloads == ["CreditAtlas-KPI-all.xlsx"]
+            checks.append("HTTP 200 HTML masquerading as KPI Excel is rejected without creating a file")
+            kpi_page.unroute("**/api/kpi-workbook")
+            kpi_page.close()
             error_page.route("**/api/snapshot*", lambda route: route.fulfill(
                 status=503, content_type="application/json",
                 body=json.dumps({"error": "Frozen evidence or serving code changed; verify artifacts and restart with reviewed code"})))
@@ -492,6 +540,16 @@ def run(root: Path):
             assert context_downloads == []
             checks.append("HUD FHA source export failure is surfaced and does not produce a file")
             error_page.unroute("**/api/hud-fha-iif-profile-report*")
+
+            error_page.route("**/api/fannie-samples-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic Fannie source export outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            error_page.get_by_role("link", name="Xuất Fannie sample JSON", exact=True).click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic Fannie source export outage")
+            assert context_downloads == []
+            checks.append("Fannie cross-workspace source export outage is visible without a fake JSON file")
+            error_page.unroute("**/api/fannie-samples-report*")
 
             error_page.route("**/api/mortgage-provenance*", lambda route: route.fulfill(
                 status=503, content_type="application/json",

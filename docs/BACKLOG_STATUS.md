@@ -68,8 +68,8 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 71 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, and shared attachment delivery through Excel and separate Fannie-source JSON success/failure are checked. Other workspace API/delivery routes still need scoped checks |
-| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 71/71 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
+| M01-028 | Partial | 74 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI workbook success plus 503/HTTP-200-HTML rejection are checked. SEC/affordability POST and other workspace API/delivery routes still need scoped checks |
+| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 74/74 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
 ## Evidence references
@@ -89,6 +89,7 @@ format/resource profiling and model-use qualification remain unverified.
 - Latest standalone browser acceptance: artifacts/private/browser-qa-6477b486711c/receipt.json; 66 checks PASS. Adds the shared attachment path: a real Excel template preserves its server filename, while a simulated HTTP 503 report failure shows an error without creating a fake file (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-7a73963387de/receipt.json; 69 checks PASS. Adds HUD FHA tract exposure visibility, key-free private aggregate export with source-code/vintage caveats, and simulated export failure handling (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-f32396b0c1ff/receipt.json; 71 checks PASS. Adds direct Fannie sample-audit JSON export via the shared attachment handler and HTTP 503 failure behavior without a fake download (2026-10-15).
+- Latest standalone browser acceptance: artifacts/private/browser-qa-9b34beeb05fd/receipt.json; 74 checks PASS. Adds a real monitor KPI XLSX POST download plus HTTP 503 JSON and HTTP 200 HTML masquerade failures, which are rejected without fake files (2026-10-15).
 - Chart/support audit: docs/D01_CHART_SUPPORT_AUDIT_VI.md and artifacts/private/d01-chart-support-a5a39d8e7acc/receipt.json.
 - Reproduction audit: docs/D01_REPRODUCTION_AUDIT_VI.md; foundation receipt at artifacts/private/d01-a24484b21a21/reproduction-pipeline-0415306845cd.json; final descriptive receipt at artifacts/private/d01-final-reproduction-qa42-20261015/receipt.json.
 - Case study: docs/D01_CASE_STUDY_VI.md (descriptive checkpoint; model claims explicitly gated).
@@ -202,6 +203,19 @@ Fannie/HUD parser tests pass 10/10; the complete real-data D01 browser acceptanc
 now passes 71/71 (`artifacts/private/browser-qa-f32396b0c1ff/receipt.json`). This
 improves M01-028 delivery coverage only; other workspace routes remain to audit,
 and no Fannie performance payload or D01 model gate changed.
+
+## 2026-10-15 POST workbook error handling
+
+The direct-attachment handler did not cover three POST-based exports. Consolidated
+response validation for KPI Monitor, SEC and affordability downloads: API errors
+are parsed safely, HTML or unexpected MIME responses are rejected, and empty
+payloads do not create files. On the real-data monitor page, a valid KPI XLSX
+download passed ZIP integrity and contains `xl/workbook.xml`; injected HTTP 503
+JSON and HTTP 200 HTML responses both surface in the UI without fake workbooks.
+The fresh verified-case browser acceptance passes 74/74 at
+`artifacts/private/browser-qa-9b34beeb05fd/receipt.json`. M01-028 remains Partial;
+SEC/affordability POST exports and other workspace APIs still require scoped
+acceptance. D01 data and model gates are unchanged.
 
 ## 2026-10-15 FHFA PUDB source continuation
 

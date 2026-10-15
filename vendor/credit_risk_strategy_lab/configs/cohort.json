@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "status": "development_contract_not_final_research_split",
+  "landmark": "first_observed_month",
+  "horizon_months": 12,
+  "early_entry_min_age": 0,
+  "early_entry_max_age": 1,
+  "require_source_and_contractual_age_agreement": true,
+  "exclude_modified_at_entry": true,
+  "relief_refinance_policy": "retain_with_flag_and_segmented_diagnostics",
+  "endpoint": "numeric_delinquency_03_through_99",
+  "prepayment_estimand": "event_before_prepayment",
+  "same_month_d3_and_exit": "d3_priority_at_monthly_resolution",
+  "unknown_or_gap_before_outcome": "unavailable",
+  "public_release_approved": false
+}

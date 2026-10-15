@@ -1,0 +1,26 @@
+{
+  "train_cutoff": "2014-01-01",
+  "calibration_cutoff": "2016-01-01",
+  "evaluation_cutoff": "2018-01-01",
+  "logistic_C": null,
+  "logistic_tuning": {
+    "C_grid": ["0.01", "0.1", "1", "10"],
+    "minimum_train_class": 200,
+    "minimum_holdout_class": 50,
+    "folds": [
+      {"fit_cutoff": "2009-01-01", "holdout_landmark_end": "2010-01-01", "evaluation_cutoff": "2011-01-01"},
+      {"fit_cutoff": "2011-01-01", "holdout_landmark_end": "2012-01-01", "evaluation_cutoff": "2013-01-01"}
+    ]
+  },
+  "calibration_C": 1.0,
+  "challenger_parameters": {
+    "learning_rate": 0.05,
+    "max_iter": 100,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 50,
+    "l2_regularization": 1.0,
+    "random_state": 17
+  },
+  "minimum_events": 50,
+  "bin_edges": ["0", "0.001", "0.005", "0.01", "0.02", "0.05", "0.1", "0.2", "0.5", "1"]
+}

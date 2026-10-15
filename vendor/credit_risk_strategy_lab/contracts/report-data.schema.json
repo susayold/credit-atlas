@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Credit Risk Strategy Lab aggregate report data",
+  "type": "object",
+  "required": ["schema_version", "visibility", "public_release_approved", "pipeline_run", "metric_registry", "tables", "contract_rules"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "visibility": {"const": "private_aggregate"},
+    "public_release_approved": {"const": false},
+    "pipeline_run": {"type": "string", "minLength": 1},
+    "metric_registry": {"type": "object"},
+    "tables": {"type": "array", "items": {"type": "object", "required": ["table_id", "grain", "source_stage", "pipeline_run", "rows"]}},
+    "contract_rules": {"type": "object", "required": ["null_means", "frontend_recompute", "raw_identifiers_included", "prediction_rows_included"]}
+  }
+}

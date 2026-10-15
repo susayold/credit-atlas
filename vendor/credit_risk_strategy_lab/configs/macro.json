@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "status": "development_not_approved_for_modeling",
+  "provider": "FRED_ALFRED_API_V1",
+  "observation_start": "2000-01-01",
+  "observation_end": "2026-03-31",
+  "realtime_start": "1776-07-04",
+  "realtime_end": "2026-09-09",
+  "cutoff_convention": "start_of_calendar_day_exclude_same_day_release",
+  "transformation": "lin",
+  "public_release_approved": false,
+  "series": {
+    "UNRATE": {
+      "units": "Percent",
+      "frequency": "Monthly",
+      "seasonal_adjustment": "Seasonally Adjusted",
+      "max_reference_age_days": 90,
+      "rationale": "Labor-market context for repayment capacity; association is not a causal treatment effect.",
+      "source_url": "https://fred.stlouisfed.org/series/UNRATE",
+      "rights_note": "BLS source; FRED tags Public Domain: Citation Requested. Public project review remains separate."
+    },
+    "USSTHPI": {
+      "units": "Index 1980:Q1=100",
+      "frequency": "Quarterly",
+      "seasonal_adjustment": "Not Seasonally Adjusted",
+      "max_reference_age_days": 180,
+      "rationale": "National collateral-price context, not a property valuation or borrower equity observation.",
+      "source_url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "rights_note": "FHFA source; FRED tags Public Domain: Citation Requested. Preserve source citation."
+    },
+    "MORTGAGE30US": {
+      "units": "Percent",
+      "frequency": "Weekly, Ending Thursday",
+      "seasonal_adjustment": "Not Seasonally Adjusted",
+      "max_reference_age_days": 28,
+      "rationale": "Market refinancing incentive context; does not change the contractual rate on an existing fixed-rate loan.",
+      "source_url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+      "rights_note": "Freddie Mac copyrighted series. Internal research only; no redistribution approval inferred.",
+      "methodology_break": "2022-11-17"
+    }
+  }
+}

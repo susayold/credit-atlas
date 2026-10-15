@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "credit-risk-strategy-lab"
+version = "0.1.0"
+description = "Versioned mortgage source qualification; no production credit decisions"
+requires-python = ">=3.12"
+dependencies = ["duckdb==1.5.5", "pyarrow==22.0.0"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+models = ["scikit-learn==1.8.0"]
+
+[project.scripts]
+crsl = "crsl.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"

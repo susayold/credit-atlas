@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "name": "origination_baseline_v1",
+  "numeric": ["classic_fico", "original_dti", "original_ltv", "original_cltv", "original_upb", "original_term", "units"],
+  "categorical": ["occupancy", "loan_purpose", "property_type", "first_time_homebuyer"],
+  "excluded_ambiguous": ["seller", "channel", "property_valuation_method", "vantagescore", "borrowers", "original_interest_rate", "is_relief_refinance", "is_harp_subset"],
+  "availability_claim": "origination_features_in_latest_release_not_verified_archival_pit",
+  "future_prohibited": ["delinquency", "delinquency_state", "actual_loss", "modification", "current_upb", "current_rate", "terminal_type", "zero_balance_code", "eltv", "assistance", "servicer", "label_known_month", "target"]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "status": "candidate_not_approved_for_training",
+  "claim": "retrospective_temporal_not_strict_pit",
+  "train_years": [2006, 2007, 2008, 2009, 2010, 2011, 2012],
+  "calibration_years": [2014],
+  "validation_years": [2016],
+  "test_years": [2018],
+  "train_fit_month": "2014-01-01",
+  "calibration_fit_month": "2016-01-01",
+  "selection_freeze_month": "2018-01-01",
+  "minimum_positive_per_partition": 100,
+  "minimum_negative_per_partition": 100,
+  "final_test_access": "locked_until_selection_freeze"
+}

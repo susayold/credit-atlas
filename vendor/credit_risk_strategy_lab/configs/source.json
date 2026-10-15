@@ -1,0 +1,13 @@
+{
+  "source": "Freddie Mac SFLLD Standard",
+  "release": 47,
+  "schema_version": "sfll_47_july2026",
+  "data_kind": "format_example",
+  "research_use_confirmed": false,
+  "public_release_approved": false,
+  "origination_cutoff": "2026-03-31",
+  "performance_cutoff": "2026-03-31",
+  "annual_sample_status": "awaiting_authorized_user_download",
+  "loss_convention": "release47_signed_recoveries_negative"
+}
+

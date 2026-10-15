@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CreditAtlas · Credit Research Workspaces</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/workspace-content.js" defer></script>
+  <script src="/kpi-analysis.js" defer></script>
+  <script src="/monitor-reviews.js" defer></script>
+  <script src="/corporate-memos.js" defer></script>
+  <script src="/monitor.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#content">Đi tới nội dung</a>
+  <aside class="sidebar" aria-label="Điều hướng CreditAtlas">
+    <a class="brand" href="/" aria-label="CreditAtlas home"><span class="brand-mark">CA</span><span>CreditAtlas<small>CREDIT RESEARCH WORKSPACES</small></span></a>
+    <div class="workspace-label">KHÔNG GIAN LÀM VIỆC</div>
+    <div class="workspace active-workspace"><span id="active-module" class="workspace-symbol">P2</span><div><span id="active-workspace-name">Mortgage & Real Estate</span><small id="active-workspace-case">D01 · Residential lifecycle</small></div></div>
+    <nav id="navigation" aria-label="Credit research views"></nav>
+    <div class="sidebar-footer"><span class="private-dot"></span> Local · private research<small>Source-backed. Reproducible. Reviewed.</small></div>
+  </aside>
+  <div class="main-shell">
+    <header class="topbar">
+      <div class="breadcrumb"><button id="menu-toggle" class="icon-button mobile-menu" aria-label="Mở menu workspace" aria-expanded="false" aria-controls="navigation">☰</button>CreditAtlas <span>/</span> <span id="breadcrumb-module">P2</span> <span>/</span> <strong id="breadcrumb-view">Tổng quan</strong></div>
+      <div class="topbar-actions"><button id="command-open" class="button secondary" aria-label="Tìm chức năng" aria-haspopup="dialog">⌕ <span>Tìm chức năng</span><kbd>Ctrl K</kbd></button><span id="source-badge" class="badge muted">USD · Release 47</span><button id="export-report" class="button secondary">Xuất report riêng tư ↓</button></div>
+    </header>
+    <main>
+      <div class="page-heading"><div><div class="eyebrow" id="workspace-eyebrow">RESIDENTIAL MORTGAGE · D01</div><h1 id="page-title">Mortgage Lifecycle & Loss Lab</h1><p id="page-description">Từ nguồn dữ liệu đến vòng đời khoản vay và bằng chứng nghiên cứu.</p></div><div id="readiness-badges"></div></div>
+      <section class="context-bar" aria-label="Snapshot và bộ lọc">
+        <label class="run-control">Frozen run<select id="run-select" aria-label="Chọn frozen run"><option>Đang kiểm tra dữ liệu…</option></select></label>
+        <label>Segment<select id="segment-select"><option value="all">Toàn sample</option><option value="non_relief">Non-Relief</option><option value="relief">Relief Refinance</option><option value="unknown">Unknown Relief</option></select></label>
+        <label>Metric basis<select id="basis-select"><option value="count">Loan count</option><option value="balance">Principal / UPB</option></select></label>
+        <span class="context-note" id="context-note">Kiểm tra evidence…</span>
+      </section>
+      <div id="notice" role="status" aria-live="polite" hidden></div>
+      <div id="content" tabindex="-1"><div class="loading"><span class="loading-dot"></span> Đang xác minh frozen evidence…</div></div>
+      <footer class="main-footer">Historical sample research · Không phải quyết định cho vay hoặc accounting ECL.<span id="footer-run"></span></footer>
+    </main>
+  </div>
+  <dialog id="command-dialog" aria-labelledby="command-title">
+    <div class="dialog-heading"><h2 id="command-title">Bạn muốn làm gì?</h2><button id="command-close" class="icon-button" aria-label="Đóng tìm chức năng">×</button></div>
+    <input id="command-search" aria-label="Tìm workspace hoặc tác vụ" placeholder="Ví dụ: Excel, policy, waterfall, SEC…" autocomplete="off">
+    <div id="command-results" aria-live="polite"></div>
+    <p class="footnote">Enter mở kết quả đầu tiên · Esc đóng · Ctrl/Cmd K mở tìm kiếm</p>
+  </dialog>
+  <dialog id="finding-dialog" aria-labelledby="finding-dialog-title">
+    <form id="finding-form">
+      <div class="dialog-heading"><div><div class="eyebrow">RESEARCH FINDING</div><h2 id="finding-dialog-title">Lưu nhận xét với evidence</h2></div><button type="button" id="close-finding" class="icon-button" aria-label="Đóng">×</button></div>
+      <p class="muted-text" id="finding-context"></p>
+      <label>Tiêu đề<input id="finding-title" required maxlength="200" placeholder="Ví dụ: D3 incidence tập trung trong Relief segment"></label>
+      <label>Nhận xét và giới hạn<textarea id="finding-body" required maxlength="10000" rows="6" placeholder="Ghi kết luận, mẫu số, thời gian và điều chưa đủ bằng chứng…"></textarea></label>
+      <label>Trạng thái review<select id="finding-status"><option value="draft">Draft</option><option value="reviewed">Reviewed</option><option value="archived">Archived</option></select></label>
+      <p class="muted-text">Reviewed là trạng thái nghiên cứu nội bộ; chưa xác thực danh tính/roles và không phải phê duyệt tín dụng của ngân hàng. Memo không sửa source hoặc model gates.</p>
+      <div id="finding-error" class="form-error" role="alert"></div>
+      <div class="dialog-actions"><button type="button" id="cancel-finding" class="button secondary">Hủy</button><button id="save-finding" class="button primary" type="submit">Lưu finding</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

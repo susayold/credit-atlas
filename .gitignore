@@ -1,0 +1,18 @@
+# Never commit source microdata, private evidence, local settings, or credentials
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+artifacts/
+data/
+outputs/
+.cache/
+.tmp/
+workspace.local.json
+.workspace-source.lock
+*.log
+node_modules/
+dist/
+.env
+.env.*
+!.env.example

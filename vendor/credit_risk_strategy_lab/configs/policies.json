@@ -1,0 +1,15 @@
+{
+  "version": "illustrative-v1",
+  "status": "development_not_selected_on_validation",
+  "purpose": "retrospective_funded_loan_screening",
+  "threshold_basis": "synthetic_demonstration_not_lender_risk_appetite",
+  "horizon_months": 12,
+  "risk_estimand": "numeric_d3_before_prepayment",
+  "policies": [
+    {"policy_id": "S0", "kind": "retain_all"},
+    {"policy_id": "S1", "kind": "fico_threshold", "minimum_fico": 680},
+    {"policy_id": "S2", "kind": "pd_threshold", "maximum_pd": "0.02"},
+    {"policy_id": "S3", "kind": "pd_concentration", "maximum_pd": "0.02",
+     "concentration": {"field": "occupancy", "maximum_principal_share": {"I": "0.20", "S": "0.20"}}}
+  ]
+}

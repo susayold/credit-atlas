@@ -1,0 +1,166 @@
+"""Download actual public FRED data and run retrospective mortgage context."""
+from __future__ import annotations
+
+import csv
+import io
+import json
+import math
+import statistics
+import subprocess
+import uuid
+from concurrent.futures import ThreadPoolExecutor
+from datetime import date
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+from credit_atlas.service import ResearchService
+from credit_atlas.workspace import app_root, sha256, timestamp, write_new
+
+SPECS = {
+    "UNRATE": {"source": "U.S. Bureau of Labor Statistics via FRED", "units": "Percent",
+               "frequency": "Monthly", "seasonal_adjustment": "Seasonally Adjusted"},
+    "USSTHPI": {"source": "U.S. Federal Housing Finance Agency via FRED",
+                "units": "Index 1980:Q1=100", "frequency": "Quarterly",
+                "seasonal_adjustment": "Not Seasonally Adjusted"},
+    "MORTGAGE30US": {"source": "Freddie Mac via FRED", "units": "Percent",
+                     "frequency": "Weekly, Ending Thursday", "seasonal_adjustment": "Not Seasonally Adjusted"},
+}
+LIMIT = 2 * 1024**2
+
+
+def parse_csv(raw, series):
+    if series not in SPECS:
+        raise ValueError("Unconfigured public series")
+    reader = csv.DictReader(io.StringIO(raw.decode("utf-8-sig")))
+    if reader.fieldnames != ["observation_date", series]:
+        raise ValueError("Unexpected FRED CSV schema")
+    result, previous = [], None
+    for row in reader:
+        if None in row or any(value is None for value in row.values()):
+            raise ValueError("Malformed FRED record")
+        observed = date.fromisoformat(row["observation_date"])
+        if previous is not None and observed <= previous:
+            raise ValueError("Duplicate or unordered observation dates")
+        previous = observed
+        if series == "UNRATE" and observed.day != 1:
+            raise ValueError("Unexpected monthly reference date")
+        if series == "USSTHPI" and (observed.day != 1 or observed.month not in (1, 4, 7, 10)):
+            raise ValueError("Unexpected quarterly reference date")
+        value = None if row[series] in ("", ".") else float(row[series])
+        if value is not None and (not math.isfinite(value) or value < 0
+                                  or series != "USSTHPI" and value > 100):
+            raise ValueError("Invalid source numeric value")
+        result.append({"series_id": series, "observation_date": observed, "value": value})
+    if not result:
+        raise ValueError("Empty source series")
+    return result
+
+
+def fetch(series, folder):
+    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=" + series
+    for attempt in range(1, 4):
+        try:
+            # Native Windows HTTP transport; fixed official URLs, no redirects,
+            # credentials, shell interpolation or persisted session cookies.
+            response = subprocess.run(
+                ["curl.exe", "--fail", "--silent", "--show-error", "--proto", "=https",
+                 "--max-time", "45", "--max-filesize", str(LIMIT),
+                 "--write-out", "\n%{http_code}", url],
+                capture_output=True, timeout=50, check=False)
+            if response.returncode:
+                if attempt < 3 and response.returncode in (6, 7, 28, 35, 56):
+                    continue
+                raise RuntimeError(f"Public HTTP download failed (curl exit {response.returncode})")
+            raw, status = response.stdout.rsplit(b"\n", 1)
+            if status != b"200":
+                raise ValueError("Unexpected public source HTTP status")
+            if len(raw) > LIMIT:
+                raise ValueError("Public source exceeds download bound")
+            break
+        except subprocess.TimeoutExpired:
+            if attempt == 3:
+                raise
+    records = parse_csv(raw, series)
+    file = folder / (series + ".csv")
+    with file.open("xb") as stream:
+        stream.write(raw)
+    metadata = {**SPECS[series], "series_id": series, "source_url": url,
+                "metadata_url": "https://fred.stlouisfed.org/series/" + series,
+                "retrieved_at": timestamp(), "download_attempts": attempt,
+                "http_transport": "curl.exe_https_no_redirects", "bytes": len(raw), "sha256": sha256(file),
+                "observations": len(records), "missing_values": sum(row["value"] is None for row in records),
+                "first_reference_date": records[0]["observation_date"].isoformat(),
+                "last_reference_date": records[-1]["observation_date"].isoformat(),
+                "information_availability": "latest_revised_snapshot_not_historical_release_vintages",
+                "model_predictor_qualified": False}
+    return records, metadata
+
+
+def monthly_context(months, records):
+    unemployment = {row["observation_date"].isoformat()[:7]: row["value"]
+                    for row in records if row["series_id"] == "UNRATE"}
+    weekly = {}
+    for row in records:
+        if row["series_id"] == "MORTGAGE30US" and row["value"] is not None:
+            weekly.setdefault(row["observation_date"].isoformat()[:7], []).append(row["value"])
+    return [{"reporting_month": month, "unemployment_percent_latest_revised": unemployment.get(month),
+             "mortgage30_percent_monthly_mean": statistics.mean(weekly[month]) if month in weekly else None,
+             "mortgage30_observations_in_month": len(weekly.get(month, []))}
+            for month in months]
+
+
+def run(root, case_id="d01-a24484b21a21"):
+    if root.resolve().drive.upper() != "D:":
+        raise ValueError("Downloaded data must remain on D:")
+    service = ResearchService(root)
+    snapshot = service.snapshot(case_id)
+    folder = root / "data/private/public-context" / ("fred-" + uuid.uuid4().hex[:12])
+    folder.mkdir(parents=True)
+    write_new(folder / "run-start.json", {"started_at": timestamp(), "case_id": case_id,
+              "intent": "download_and_run_retrospective_macro_context", "series_ids": list(SPECS)})
+    try:
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            downloads = list(pool.map(lambda series: fetch(series, folder), SPECS))
+        records = [row for result, _ in downloads for row in result]
+        metadata = [info for _, info in downloads]
+        schema = pa.schema([("series_id", pa.string()), ("observation_date", pa.date32()), ("value", pa.float64())])
+        pq.write_table(pa.Table.from_pylist(records, schema=schema), folder / "native-series.parquet", compression="zstd")
+        months = [row["period"][:7] for row in snapshot["snapshot"]["monthly"]]
+        context = monthly_context(months, records)
+        write_new(folder / "monthly-context.json", {
+            "case_id": case_id, "pipeline_run": snapshot["pipeline_run"], "rows": context,
+            "quarterly_hpi": [{"reference_quarter_start": row["observation_date"].isoformat(),
+                              "index_1980_q1_100": row["value"]}
+                             for row in records if row["series_id"] == "USSTHPI"
+                             and months[0] <= row["observation_date"].isoformat()[:7] <= months[-1]],
+            "use": "retrospective_descriptive_context_only",
+            "limitations": ["Latest revised snapshots do not prove historical publication availability.",
+                           "Quarterly HPI stays quarterly; no monthly interpolation.",
+                           "Monthly mortgage rate is the mean of source weekly observations in that month.",
+                           "PMMS methodology changed on 2022-11-17; do not assume one unchanged measurement regime.",
+                           "No borrower identification, causal economic effect or model prediction is inferred.",
+                           "Macro series do not replace annual mortgage origination/performance samples."]})
+        service.case(case_id)
+        receipt = {"status": "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE", "completed_at": timestamp(),
+                   "case_id": case_id, "pipeline_run": snapshot["pipeline_run"],
+                   "series": metadata, "total_native_observations": len(records),
+                   "monthly_context_rows": len(context),
+                   "unemployment_months_available": sum(row["unemployment_percent_latest_revised"] is not None for row in context),
+                   "mortgage_rate_months_available": sum(row["mortgage30_percent_monthly_mean"] is not None for row in context),
+                   "loan_vintages_added": [], "model_training_performed": False,
+                   "predictive_asof_qualified": False, "visibility": "private", "public_release_approved": False,
+                   "outputs_sha256": {path.name: sha256(path) for path in folder.iterdir() if path.is_file()}}
+        write_new(folder / "run-complete.json", receipt)
+        return {"data_directory": str(folder), **{key: receipt[key] for key in
+                ("status", "total_native_observations", "monthly_context_rows", "model_training_performed")},
+                "series": [{key: info[key] for key in ("series_id", "observations", "last_reference_date")}
+                           for info in metadata]}
+    except Exception as error:
+        write_new(folder / "run-failed.json", {"status": "FAIL", "failed_at": timestamp(),
+                   "exception_type": type(error).__name__, "model_training_performed": False})
+        raise
+
+
+if __name__ == "__main__":
+    print(json.dumps(run(app_root()), indent=2))

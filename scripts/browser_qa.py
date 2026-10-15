@@ -304,6 +304,31 @@ def run(root: Path):
             assert failed_market_downloads == []
             checks.append("HTTP 502 bond-scenario export exposes failure without a fake download")
             error_page.unroute("**/api/bond-report*")
+            download_page = context.new_page()
+            download_page.goto(base + "/?view=overview", wait_until="networkidle")
+            attachment_downloads = []
+            download_page.on("download", lambda download: attachment_downloads.append(download.suggested_filename))
+            download_page.evaluate("""() => { const a=document.createElement('a'); a.id='qa-attachment-download';
+                a.href='/api/exposure-excel-template'; a.setAttribute('download',''); a.textContent='QA attachment';
+                a.style.position='fixed'; a.style.zIndex='99999'; a.style.top='4px'; document.body.append(a); }""")
+            with download_page.expect_download(timeout=15000) as download_info:
+                download_page.locator("#qa-attachment-download").click(force=True)
+            downloaded = download_info.value
+            assert downloaded.suggested_filename == "CreditAtlas-Portfolio-Input.xlsx", downloaded.suggested_filename
+            checks.append("shared attachment download validates and preserves server filename for a real Excel template")
+            download_page.route("**/api/exposure-excel-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic portfolio Excel export outage"})))
+            download_page.evaluate("""() => { const a=document.createElement('a'); a.id='qa-failed-attachment-download';
+                a.href='/api/exposure-excel-report?import_id=qa'; a.setAttribute('download','private.xlsx');
+                a.textContent='QA failed attachment'; a.style.position='fixed'; a.style.zIndex='99999';
+                a.style.top='40px'; document.body.append(a); }""")
+            download_page.locator("#qa-failed-attachment-download").click(force=True)
+            expect(download_page.locator("#notice.error")).to_contain_text("Synthetic portfolio Excel export outage")
+            assert attachment_downloads == ["CreditAtlas-Portfolio-Input.xlsx"], attachment_downloads
+            checks.append("HTTP 503 attachment export reports failure and never creates a fake Excel download")
+            download_page.unroute("**/api/exposure-excel-report*")
+            download_page.close()
             error_page.route("**/api/snapshot*", lambda route: route.fulfill(
                 status=503, content_type="application/json",
                 body=json.dumps({"error": "Frozen evidence or serving code changed; verify artifacts and restart with reviewed code"})))

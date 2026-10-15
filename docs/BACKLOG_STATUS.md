@@ -68,7 +68,7 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 64 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB aggregate profile/export/privacy, and Market series/bond JSON export success plus 503/502 failure handling are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-028 | Partial | 66 real-data browser checks pass on a fresh valid case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, and shared direct-attachment download success/error are checked. Other workspace API/delivery routes still need scoped checks |
 | M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone D01 browser acceptance passes 64/64 checks. Qualified multi-vintage fit/calibration/final OOT remains blocked |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
@@ -86,6 +86,7 @@ format/resource profiling and model-use qualification remain unverified.
 - Latest standalone browser acceptance: artifacts/private/browser-qa-2d25ed161db0/receipt.json; 57 checks PASS, adding finding-history and finding-save failure flows (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-12b9ce006825/receipt.json; 61 checks PASS. Adds actual Market series and assumption-only bond JSON exports, verifies their private scope/filter content, and confirms 503/502 export failures surface without fake downloads (2026-10-15).
 - Latest standalone browser acceptance: artifacts/private/browser-qa-ce65ee3cf106/receipt.json; 64 checks PASS. Adds FHFA 2025 PUDB acquisition profile visibility, aggregate-only private JSON integrity, source-population caveats and export-failure handling (2026-10-15).
+- Latest standalone browser acceptance: artifacts/private/browser-qa-6477b486711c/receipt.json; 66 checks PASS. Adds the shared attachment path: a real Excel template preserves its server filename, while a simulated HTTP 503 report failure shows an error without creating a fake file (2026-10-15).
 - Chart/support audit: docs/D01_CHART_SUPPORT_AUDIT_VI.md and artifacts/private/d01-chart-support-a5a39d8e7acc/receipt.json.
 - Reproduction audit: docs/D01_REPRODUCTION_AUDIT_VI.md; foundation receipt at artifacts/private/d01-a24484b21a21/reproduction-pipeline-0415306845cd.json; final descriptive receipt at artifacts/private/d01-final-reproduction-qa42-20261015/receipt.json.
 - Case study: docs/D01_CASE_STUDY_VI.md (descriptive checkpoint; model claims explicitly gated).
@@ -146,6 +147,19 @@ all-mortgages trend and separate forbearance chart are now visible in D01's
 Sources page with independent-denominator caveats. This adds source context, not
 loan-level observations or model-training data. See
 `docs/FHFA_NMDB_AGGREGATE_PERFORMANCE_VI.md` and the private acquisition receipt.
+
+## 2026-10-15 shared report-download continuation
+
+M01-028 audit found that several workspace report links downloaded directly,
+so an HTTP error could be saved as a fake Excel/JSON file. Added one delegated
+attachment handler for API-backed download links: it checks HTTP status, rejects
+HTML/empty responses, uses the server filename, and surfaces errors in the app.
+Browser acceptance passed 66/66 on the verified D01 case. It downloaded the real
+portfolio Excel template with its expected filename and verified that a synthetic
+503 export error creates no file. Focused Market API tests passed 9/9. Receipt:
+`artifacts/private/browser-qa-6477b486711c/receipt.json`. M01-028 remains Partial
+because remaining workspace-specific API routes still need scoped checks; D01
+data/model qualification and its 26/50 requirement count are unchanged.
 
 ## 2026-10-15 Market delivery continuation
 

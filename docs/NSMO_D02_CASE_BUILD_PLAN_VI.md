@@ -17,6 +17,20 @@ D01 panel.
   `analysis_weight`, and no unknown performance codes.
 - Codebook-grounded streaming parser accepts the lowercase headers in the
   publisher file. Focused tests and a full-file parser pass are complete.
+- All 587 PUF headers now reconcile one-to-one with the official v7.0 Appendix C
+  and SAS label file; the sanitized dictionary records question/wave metadata,
+  PDF location, timing class, and conservative predictor-use gates. The app now
+  has a searchable dictionary and value labels from SAS formats.
+- Appendix D Table 1 weighted tabulations were independently recomputed for
+  seven survey fields × 11 origination years × purchase/refinance × three
+  response categories: 462/462 cells match the published rounded percentages.
+  This is a selected consistency check, not a design-variance validation.
+- The 51-quarter state audit found zero out-of-domain nonblank codes. In the
+  actual PUF, `Close_Status_0925` has only 1=open and 2=terminated; all open
+  records have no close date and all terminated records have a close date.
+  Across the panel, every A (history no longer reported) belongs to a terminated
+  mortgage, B does not occur, and 678 mortgages have no observed C/1–9 status.
+  These findings inform eligibility design but do not yet define an at-risk set.
 
 ## Build stages
 
@@ -24,10 +38,10 @@ D01 panel.
 |---|---|---|---|
 | D02-0 — access and storage | Review FHFA gate/terms, download official v7.0, preserve source hashes, keep PUF private | Official URL, release, ZIP/CSV hashes, user authorization record, no secrets | Complete |
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
-| D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned source dictionary with unavailable, retrospective and non-comparable fields flagged | Next |
-| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Not started |
-| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Initial separate page/API implemented; full metric coverage and acceptance pending |
-| D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started |
+| D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587/587 header match, 587 SAS labels, 59 formats / 377 value labels, timing gates and Appendix D 462/462 selected weighted-cell check | Core mapping and benchmark complete; questionnaire-variant interpretation and predictor allowlist still need review |
+| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete; risk-set/target protocol remains open |
+| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard and searchable 587-field dictionary integrated; Edge smoke QA passes on synthetic aggregate fixture and with dictionary-only checkout; remaining domain metrics pending |
+| D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started; do not report PD/rates until frozen |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started |
 
 ## Intended metrics and guardrails
@@ -64,4 +78,6 @@ the data are cited, include the exact FHFA-required disclaimer in the report:
 - [Official Notice of Monitoring and Terms gate](https://www.fhfa.gov/data/nsmo/puf)
 - [May 2026 codebook and unweighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-c-v70.pdf)
 - [May 2026 technical report](https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf)
+- [May 2026 weighted tabulations, Appendix D](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-d-v70.pdf)
+- [Official SAS labels](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_labels.sas) and [SAS formats](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_formats.sas)
 - Detailed review: `D01_NSMO_SOURCE_REVIEW_VI.md`

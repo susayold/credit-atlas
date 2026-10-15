@@ -26,8 +26,7 @@ included as software/documentation. The production loan-level payload is not
 included; the user must first accept the publisher's current Terms of Use and
 acquire the data privately.
 
-The FHFA/CFPB NSMO v7.0 source review, codebook-grounded status parser, and
-aggregate-only audit script are included. The actual PUF was acquired privately
+The FHFA/CFPB NSMO v7.0 source review, codebook-grounded status parser, aggregate-only audit scripts, FHFA Appendix D weighted-table checks, SAS labels/formats, and sanitized 587-field dictionary/value-label crosswalk are included. The actual PUF was acquired privately
 after the project owner authorized the FHFA Notice of Monitoring and NMDB Terms
 gate; no NSMO ZIP/CSV, identifiers, row-level extracts, cookies, or private
 receipts are part of this public repository. Anyone reproducing the research

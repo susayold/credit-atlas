@@ -1,0 +1,378 @@
+format_name,format_value,format_label
+$pstatfm,'1',1:  30 to  59  days past due date
+$pstatfm,'2',2:  60 to  89  days past due date
+$pstatfm,'3',3:  90 to 119  days past due date
+$pstatfm,'4',4: 120 to 149  days past due date
+$pstatfm,'5',5: 150 to 179  days past due date
+$pstatfm,'6',6: 180 or more days past due date
+$pstatfm,'7',7: Bankruptcy Chapter 13
+$pstatfm,'8',"8: Foreclosure proceeding started, deed in lieu, foreclosure, voluntary surrender, repossession"
+$pstatfm,'9',"9: Bankruptcy Chapter 7, 11, 12, settled, insurance claim, term benefit, government claim, paid by dealer, collection, charge off"
+$pstatfm,'A',A: Performance history no longer being reported (in most cases after loan closed)
+$pstatfm,'B',B: Loan potentially closed around the quarter
+$pstatfm,'C',C: Current
+$pstatfm,'K',"K: Loan opened, performance has not yet been reported by the servicer to the credit bureau"
+$pstatfm,'M',"M: Performance missing for month, gap between archive histories (often occurs when loans are transferred or as a result of bankruptcy)"
+$pstatfm,'P',P: Performance history not yet started (before loan opened)
+$pstatfm,'Q',Q: Loan opened during this quarter
+$pstatfm,'S',S: Performance for month suppressed by the servicer
+pacqfm,1,1: Purchased an existing home
+pacqfm,2,2: Purchased a newly-built home from a builder
+pacqfm,3,3: Had or purchased land and built a house
+pacqfm,4,4: Received as a gift or inheritance
+pacqfm,5,5: Purchase from relative
+pacqfm,6,"6: Bought out co-owner (e.g., ex-spouse)"
+pacqfm,7,7: Rental conversion/Land contract
+pacqfm,8,8: Tax-free trade or exchange
+pacqfm,9,"9: Purchased a foreclosed property from a bank, investor, or government agency"
+pacqfm,10,10: Purchased a 'short sale' property from the previous owner
+pagefm,18-24,18-24: 18-24 years old
+pagefm,25-34,25-34: 25-34 years old
+pagefm,35-44,35-44: 35-44 years old
+pagefm,45-54,45-54: 45-54 years old
+pagefm,55-64,55-64: 55-64 years old
+pagefm,65-74,65-74: 65-74 years old
+pagefm,75-99,75-99: 75-99 years old
+pagefm,-2,-2   : Not applicable
+pagreefm,1,1: Agree
+pagreefm,2,2: Disagree
+pagreefm,-3,-3: Not asked in wave
+pappfm,1,"1: Directly to a lender, such as a bank or credit union"
+pappfm,2,2: Through a mortgage broker who works with multiple lenders to get you a loan
+pappfm,3,3: Through a builder who arranged financing
+pblankfm,1,1: Not answered
+pblankfm,2,2: Answered
+pblankfm,-3,-3: Not asked in wave
+pblankfm,-2,-2: Not applicable
+pborrfm,1,1: 1 borrower
+pborrfm,2,2: 2 borrowers
+pborrfm,3,3: 3 borrowers
+pborrfm,4,4: 4 borrowers
+pcashout,1,1: Cashout refinance
+pcashout,2,2: Not a cashout refinance
+pchangefm,1,1: Significant increase
+pchangefm,2,2: Little/no change
+pchangefm,3,3: Significant decrease
+pchangefm,-3,-3: Not asked in wave
+pconfm,1,1: I (or one of my co-signers) did
+pconfm,2,2: The mortgage lender/broker did
+pconfm,3,3: We were put in contact by a third party (such as a real estate agent or home builder)
+pcounfm,1,1: Less than 3 hours
+pcounfm,2,2: 3-6 hours
+pcounfm,3,3: 7-12 hours
+pcounfm,4,4: More than 12 hours
+pcounfm,-2,-2: Not applicable
+pcstatfm,1,1: Mortgage Open
+pcstatfm,2,2: Mortgage Terminated
+pcstatfm,3,3: Mortgage Likely Terminated
+pcstatfm,4,4: Mortgage Possibly Terminated
+pdesirefm,1,1: Become more desirable
+pdesirefm,2,2: Stay about the same
+pdesirefm,3,3: Become less desirable
+pdtifm,1-19,1-19  : Less than 20 percent
+pdtifm,20-29,20-29 : 20   to   29 percent
+pdtifm,30-39,30-39 : 30   to   39 percent
+pdtifm,40-49,40-49 : 40   to   49 percent
+pdtifm,50-59,50-59 : 50   to   59 percent
+pdtifm,60-100,60-100: 60   to  100 percent
+pdtifm,-2,-2    : Not applicable
+peducfm,1,1: Some schooling
+peducfm,2,2: High school graduate
+peducfm,3,3: Technical school
+peducfm,4,4: Some college
+peducfm,5,5: College graduate
+peducfm,6,6: Postgraduate studies
+peducfm,-2,-2: Not applicable
+pemployfm,1,1: Self-employed full time
+pemployfm,2,2: Self-employed part time
+pemployfm,3,3: Employed full time
+pemployfm,4,4: Employed part time
+pemployfm,5,5: Retired
+pemployfm,6,"6: Unemployed, temporarily laid-off or on leave"
+pemployfm,7,"7: Not working for pay (student, homemaker, disabled)"
+pemployfm,-2,-2: Not applicable
+pforb,1,1: In forbearance
+pforb,2,2: Not in forbearance
+pforb,-2,-2: Not applicable
+pforb,-4,-4: Missing
+pideafm,1,1: Firm idea
+pideafm,2,2: Some idea
+pideafm,3,3: Little idea
+pidfm,700001 - 762359,700001 - 762359: 700001 to 762359
+pimpfm,1,1: Important
+pimpfm,2,2: Not important
+pimpfm,-3,-3: Not asked in wave
+pimpfm,-2,-2: Not applicable
+pincfm,1,"1:    Less than $35,000"
+pincfm,2,"2:  $35,000 to  $49,999"
+pincfm,3,"3:  $50,000 to  $74,999"
+pincfm,4,"4:  $75,000 to  $99,999"
+pincfm,5,"5: $100,000 to $174,999"
+pincfm,6,"6: $175,000 or more"
+pinteract,1,"1: Online (web portal, email)"
+pinteract,2,"2: Phone (voice calls, text messages, fax)"
+pinteract,3,3: Mail
+pinteract,4,4: In person
+pinteract,5,5: No primary way
+pinteract,-3,-3: Not applicable
+pintfm,1,1: Paid higher closing costs to get lower interest rate
+pintfm,2,2: Paid lower closing costs with a higher interest rate
+pintfm,3,3: Got a balance between closing costs and interest rate
+pintfm,-3,-3: Not asked in wave
+plamtfm,1,"1:    Less than $50,000"
+plamtfm,2,"2:  $50,000 to  $99,999"
+plamtfm,3,"3: $100,000 to $149,999"
+plamtfm,4,"4: $150,000 to $199,999"
+plamtfm,5,"5: $200,000 to $249,999"
+plamtfm,6,"6: $250,000 to $299,999"
+plamtfm,7,"7: $300,000 to $349,999"
+plamtfm,8,"8: $350,000 to $399,999"
+plamtfm,9,"9: $400,000 or more"
+plendfm,1,1: 1
+plendfm,2,2: 2
+plendfm,3,3: 3
+plendfm,4,4: 4
+plendfm,5,5: 5 or more
+plotfm,1,1: A lot
+plotfm,2,2: A little
+plotfm,3,3: Not at all
+plotfm,-3,-3: Not asked in wave
+plotfm,-2,-2: Not applicable
+pltvfm,0- 49,0-49   : Less than 50 percent
+pltvfm,50- 59,50-59  :  50  to   59 percent
+pltvfm,60- 69,60-69  :  60  to   69 percent
+pltvfm,70- 74,70-74  :  70  to   74 percent
+pltvfm,75- 79,75-79  :  75  to   79 percent
+pltvfm,80- 84,80-84  :  80  to   84 percent
+pltvfm,85- 89,85-89  :  85  to   89 percent
+pltvfm,90- 94,90-94  :  90  to   94 percent
+pltvfm,95- 96,95-96  :  95  to   96 percent
+pltvfm,97-100,97-100 :  97  to  100 percent
+pltvfm,101-125,101-125: 101  to  125 percent
+pltvfm,-2,-2     : Not applicable
+pltvfm,-4,-4     : Missing
+pltypefm,1,1: Conventional
+pltypefm,2,2: FHA insured
+pltypefm,3,3: VA guaranteed
+pltypefm,4,4: FSA/RHS insured
+pmarryfm,1,1: Married
+pmarryfm,2,2: Separated
+pmarryfm,3,3: Never married
+pmarryfm,4,4: Divorced
+pmarryfm,5,5: Widowed
+pmetlmifm,1,1: Metropolitan CRA non-LMI tract
+pmetlmifm,2,2: Metropolitan CRA LMI tract
+pmetlmifm,3,3: Non-metropolitan tract
+pmofm,1,1: January
+pmofm,2,2: February
+pmofm,3,3: March
+pmofm,4,4: April
+pmofm,5,5: May
+pmofm,6,6: June
+pmofm,7,7: July
+pmofm,8,8: August
+pmofm,9,9: September
+pmofm,10,10: October
+pmofm,11,11: November
+pmofm,12,12: December
+pmofm,-2,-2: Not applicable
+pnormfm,1,1: Higher than normal
+pnormfm,2,2: Normal
+pnormfm,3,3: Lower than normal
+poccfm,1,1: Primary residence (where you spend the majority of your time)
+poccfm,2,2: It will be my primary residence soon
+poccfm,3,3: Seasonal or second home
+poccfm,4,4: Home for other relatives
+poccfm,5,5: Rental or investment property
+ppickfm,1,"1: I picked the loan type first, and then I picked the mortgage lender/broker"
+ppickfm,2,"2: I picked the mortgage lender/broker first, and then I picked the loan type"
+ppmmsfm,0   -2.99,Less than 3.00 percent
+ppmmsfm,3.00-3.49,3.00-3.49: 3.00 to   3.49 percent
+ppmmsfm,3.50-3.99,3.50-3.99: 3.50 to   3.99 percent
+ppmmsfm,4.00-100,4.00 percent or higher
+ppricefm,1,1: Increase a lot
+ppricefm,2,2: Increase a little
+ppricefm,3,3: Remain about the same
+ppricefm,4,4: Decrease a little
+ppricefm,5,5: Decrease a lot
+ppropfm,1,1: Single-family detached house
+ppropfm,2,2: Mobile home or manufactured home
+ppropfm,3,"3: Townhouse, row house, or villa"
+ppropfm,4,"4: 2-unit, 3-unit, or 4-unit dwelling"
+ppropfm,5,"5: Condo, co-op, or apartment in a building with 5 or more units"
+ppropfm,6,6: Unit in a partly commercial structure
+ppropfm,7,7: Land only
+pptifm,0 - 9.99,0-9.99   : Less than 10 percent
+pptifm,10-19.99,10-19.99 : 10   to less than 20 percent
+pptifm,20-29.99,20-29.99 : 20   to less than 30 percent
+pptifm,30-39.99,30-39.99 : 30   to less than 40 percent
+pptifm,40-100,40-100   : 40   to  100 percent
+pptifm,-2,-2       : Not applicable
+pptifm,-4,-4       : Missing
+pptypefm,1,1: Fannie Mae
+pptypefm,2,2: Freddie Mac
+pptypefm,3,3: Federal Home Loan Bank
+pptypefm,-2,-2: Not applicable
+ppurpfm,1,1: To buy a property
+ppurpfm,2,2: To refinance or modify an earlier mortgage
+ppurpfm,3,3: To add/remove co-signer(s)/co-owner(s)
+ppurpfm,4,4: To finance a construction loan
+ppurpfm,5,5: To take out a new loan on a mortgage-free property
+pracefm,1,1: White only
+pracefm,2,2: Black or African American only
+pracefm,3,3: Asian only
+pracefm,4,4: All other races
+pracefm,-2,-2: Not applicable
+preserve,1,1: Less than one month's mortgage payment
+preserve,2,2: 1-2 months' worth of mortgage payments
+preserve,3,3: 3-6 months' worth of mortgage payments
+preserve,4,4: 7 months' worth or more of mortgage payments
+preserve,-3,-3: Not asked in wave
+priskfm,1,1: Take substantial financial risks expecting to earn substantial returns
+priskfm,2,2: Take above-average financial risks expecting to earn above average returns
+priskfm,3,3: Take average financial risks expecting to earn average returns
+priskfm,4,4: Not willing to take any financial risks
+psamefm,1,1: Higher
+psamefm,2,2: Same
+psamefm,3,3: Lower
+psamefm,-3,-3: Not asked in wave
+pscorefm,300-619,300-619: 300 to 619 VantageScore 3.0
+pscorefm,620-639,620-639: 620 to 639 VantageScore 3.0
+pscorefm,640-659,640-659: 640 to 659 VantageScore 3.0
+pscorefm,660-679,660-679: 660 to 679 VantageScore 3.0
+pscorefm,680-699,680-699: 680 to 699 VantageScore 3.0
+pscorefm,700-719,700-719: 700 to 719 VantageScore 3.0
+pscorefm,720-739,720-739: 720 to 739 VantageScore 3.0
+pscorefm,740-850,740-850: 740 to 850 VantageScore 3.0
+pscorefm,-2,-2     : Not applicable
+pscorefm,-4,-4     : Missing
+psexfm,1,1: Male
+psexfm,2,2: Female
+psexfm,-2,-2: Not applicable
+psprfm,-100 --1.51,Less than -1.50 percentage points
+psprfm,-1.50--1.00,-1.50- -1.00: -1.50 to -1.00 percentage points
+psprfm,-0.99--0.50,-0.99- -0.50: -0.99 to -0.50 percentage points
+psprfm,-0.49--0.01,-0.49- -0.01: -0.49 to -0.01 percentage points
+psprfm,0.00,0.00        :           0.00 percentage points
+psprfm,0.01- 0.49,0.01-0.49   :  0.01 to  0.49 percentage points
+psprfm,0.50- 0.99,0.50-0.99   :  0.50 to  0.99 percentage points
+psprfm,1.00- 1.49,1.00-1.50   :  1.00 to  1.49 percentage points
+psprfm,1.50- 100,1.50 percentage points or higher
+ptermfm,0- 4,0-4  :  0 to  4 years
+ptermfm,5,5    :        5 years
+ptermfm,6- 9,6-9  :  6 to  9 years
+ptermfm,10,10   :       10 years
+ptermfm,11-14,11-14: 11 to 14 years
+ptermfm,15,15   :       15 years
+ptermfm,16-19,16-19: 16 to 19 years
+ptermfm,20,20   :       20 years
+ptermfm,21-24,21-24: 21 to 24 years
+ptermfm,25,25   :       25 years
+ptermfm,26-29,26-29: 26 to 29 years
+ptermfm,30,30   :       30 years
+ptermfm,31-40,31-40: 31 to 40 years
+ptifm,1,1: Reissued previous title insurance
+ptifm,2,2: Used title insurance recommended by mortgage lender/broker or settlement agent
+ptifm,3,3: Shopped around
+ptifm,-2,-2: Not applicable
+ptimefm,1,1: Before offer
+ptimefm,2,2: After offer
+ptimefm,3,3: Did not do
+ptimefm,-3,-3: Not asked in wave
+ptimefm,-2,-2: Not applicable
+pusedfm,1,1: Used
+pusedfm,2,2: Not Used
+pusedfm,-2,-2: Not applicable
+pusedfm,-3,-3: Not asked in wave
+pveryfm,1,1: Very
+pveryfm,2,2: Somewhat
+pveryfm,3,3: Not at all
+pveryfm,-3,-3: Not asked in wave
+pveryfm,-2,-2: Not applicable
+pvetfm,1,1: Never served in the military
+pvetfm,2,2: Only on active duty for training in the Reserves or National Guard
+pvetfm,3,3: Now on active duty
+pvetfm,4,"4: On active duty in the past, but not now"
+pvetfm,-3,-3: Not asked in wave
+pvetfm,-2,-2: Not applicable
+pvetxfm,1,"1: No, never served in the U.S. Armed Forces"
+pvetxfm,2,"2: No, never on active duty except for initial/basic training"
+pvetxfm,3,"3: Yes, now on active duty"
+pvetxfm,4,"4: Yes, on active duty in the past, but not now"
+pvetxfm,-3,-3: Not asked in wave
+pvetxfm,-2,-2: Not applicable
+pwgtfm,395.24 -  771.17,395.24 -  771.17:  395.24 -  771.17
+pwgtfm,771.17 - 1116.55,771.17 - 1116.55:  771.17 - 1116.55
+pwgtfm,1116.55 - 1684.01,1116.55 - 1684.01: 1116.55 - 1684.01
+pwgtfm,1684.01 - 7114.61,1684.01 - 7114.61: 1684.01 - 7114.61
+pwilling,1,1: Willing and able to move
+pwilling,2,2: Willing but unable to move
+pwilling,3,3: Unwilling to move
+pwilling,4,4: Unsure/Don't know at this time
+pwilling,-3,-3: Not asked in wave
+pwilling,-2,-2: Not applicable
+pwvfm,1,1 : 2014 Q1
+pwvfm,2,2 : 2014 Q2
+pwvfm,3,3 : 2014 Q3
+pwvfm,4,4 : 2014 Q4
+pwvfm,5,5 : 2015 Q1
+pwvfm,6,6 : 2015 Q2
+pwvfm,7,7 : 2015 Q3
+pwvfm,8,8 : 2015 Q4
+pwvfm,9,9 : 2016 Q1
+pwvfm,10,10: 2016 Q2
+pwvfm,11,11: 2016 Q3
+pwvfm,12,12: 2016 Q4
+pwvfm,13,13: 2017 Q1
+pwvfm,14,14: 2017 Q2
+pwvfm,15,15: 2017 Q3
+pwvfm,16,16: 2017 Q4
+pwvfm,17,17: 2018 Q1
+pwvfm,18,18: 2018 Q2
+pwvfm,19,19: 2018 Q3
+pwvfm,20,20: 2018 Q4
+pwvfm,21,21: 2019 Q1
+pwvfm,22,22: 2019 Q2
+pwvfm,23,23: 2019 Q3
+pwvfm,24,24: 2019 Q4
+pwvfm,25,25: 2020 Q1
+pwvfm,26,26: 2020 Q2
+pwvfm,27,27: 2020 Q3
+pwvfm,28,28: 2020 Q4
+pwvfm,29,29: 2021 Q1
+pwvfm,30,30: 2021 Q2
+pwvfm,31,31: 2021 Q3
+pwvfm,32,32: 2021 Q4
+pwvfm,33,33: 2022 Q1
+pwvfm,34,34: 2022 Q2
+pwvfm,35,35: 2022 Q3
+pwvfm,36,36: 2022 Q4
+pwvfm,37,37: 2023 Q1
+pwvfm,38,38: 2023 Q2
+pwvfm,39,39: 2023 Q3
+pwvfm,40,40: 2023 Q4
+pwvfm,41,41: 2024 Q1
+pwvfm,42,42: 2024 Q2
+pwvfm,43,43: 2024 Q3
+pwvfm,44,44: 2024 Q4
+pwvfm,45,45: 2025 Q1
+pwvfm,46,46: 2025 Q2
+pynfm,1,1: Yes
+pynfm,2,2: No
+pynfm,-1,-1: Don't know
+pynfm,-3,-3: Not asked in wave
+pynfm,-2,-2: Not applicable
+pyrfm,2013,2013: 2013
+pyrfm,2014,2014: 2014
+pyrfm,2015,2015: 2015
+pyrfm,2016,2016: 2016
+pyrfm,2017,2017: 2017
+pyrfm,2018,2018: 2018
+pyrfm,2019,2019: 2019
+pyrfm,2020,2020: 2020
+pyrfm,2021,2021: 2021
+pyrfm,2022,2022: 2022
+pyrfm,2023,2023: 2023
+pyrfm,2024,2024: 2024
+pyrfm,2025,2025: 2025
+pyrfm,-2,-2  : Not applicable

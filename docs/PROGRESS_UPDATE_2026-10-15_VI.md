@@ -1,5 +1,40 @@
 # Cập nhật tiến độ Credit Atlas — 15/10/2026
 
+## D02 tiếp tục — field dictionary, state audit và weighted benchmark
+
+Đã hoàn thành crosswalk chính thức **587/587** cột PUF ↔ Appendix C/SAS labels,
+**59 SAS formats với 377 value labels**, và đưa tra cứu 587 trường
+vào trang `/nsmo` (search theo tên cột, nhãn, family, question/use gate; xem wave,
+timing, codebook page và nhãn giá trị). Thêm API `/api/nsmo-dictionary`, chỉ trả
+metadata đã làm sạch; không có PUF rows hay IDs.
+
+Audit trọng số Appendix D Table 1 độc lập với raw PUF đạt **462/462 ô khớp**
+phần trăm đã công bố sau làm tròn (7 X05 fields × 11 cohort years × purchase/
+refinance × 3 responses; sai khác lớn nhất trước làm tròn 0,4986 điểm phần
+trăm). Đây là consistency check cho một bảng mô tả, không xác nhận variance
+estimator hay target performance.
+
+Public mirror regression (source-only checkout): **1.427 passed, 196 skipped**
+as explicitly listed tests requiring excluded private files. NSMO public subset:
+**33/33 PASS**. The sanitized dictionary/value-label CSVs are included publicly;
+private PUF, rows, and audit receipts remain excluded.
+
+State audit 51 quý: 0 mã ngoài domain; 26.357 khoản đang mở và 36.002 đã chấm
+dứt theo `Close_Status`; mọi mã A trong panel thuộc khoản đã chấm dứt, B không
+xuất hiện, và 678 khoản không có quý quan sát C/1–9. Codebook có chú giải close
+status tham chiếu tên `close_status_1224` cũ; v7.0 PUF thực tế dùng
+`Close_Status_0925` và sample chỉ có mã 1/2 (dù SAS format có cả 3/4). Không
+được suy diễn risk set/PD từ các kết quả mô tả này. D02-2 mapping/benchmark đã
+xong, review variants còn mở; D02-3 state profile xong nhưng risk-set protocol
+còn mở; D02-4 dictionary đã tích hợp và Edge browser smoke QA đạt trên synthetic
+fixture, đồng thời xác nhận dictionary vẫn hoạt động khi không có PUF; domain
+metric coverage còn tiếp tục. Regression toàn repository: **1.623/1.623 PASS**
+(339,06 giây), focused NSMO **20/20 PASS**. D01 không đổi **26/50 = 52%**.
+
+Nguồn chi tiết và giới hạn tại [D02 build plan](NSMO_D02_CASE_BUILD_PLAN_VI.md)
+và [NSMO source review](D01_NSMO_SOURCE_REVIEW_VI.md); PDF FHFA đã được tải và
+đối chiếu từ Appendix C/D, Technical Report, SAS Labels/Formats.
+
 ## NSMO D02 workspace — first descriptive slice
 
 Sau khi người dùng cho phép hoàn tất acknowledgement Notice/Terms của FHFA,

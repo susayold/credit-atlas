@@ -12,11 +12,11 @@ The agreement was reviewed before completing the gate. It prohibits processing i
 
 ## What the official codebook says is available
 
-The May 27, 2026 codebook describes 322 survey variables and 265 supplemental variables, matching the 587 physical CSV columns. It names `nsmoid` as the sequential sample-mortgage identifier and `analysis_weight` as sampling weight × non-response adjustment. The identifier is unique in this file. Exact values for continuous survey answers are not released; for some survey fields, the PUF records only whether a response was provided. Question wording and response definitions changed across waves, and the codebook marks non-comparable legacy variants. A field-by-field reconciliation of all 587 headers to the codebook remains open. Survey answers collected after origination must not be used as origination-time predictors without a documented, timestamp-valid use case.
+The May 27, 2026 codebook describes 322 survey variables and 265 supplemental variables, matching the 587 physical CSV columns. All 587 PUF headers now map one-to-one to Appendix C and the SAS label file; the app's searchable dictionary also joins 377 SAS value labels. It records codebook page, question/wave references, questionnaire conditions, multiple-question/different-scale/not-asked flags, field family, timing, and a conservative predictor-use gate. These flags identify where interpretation is still needed; they do not make changed survey versions comparable. `nsmoid` is a sequential sample-mortgage identifier, and `analysis_weight` is sampling weight × non-response adjustment. Exact values for continuous survey answers are not released; for some survey fields, the PUF records only whether a response was provided. Survey answers collected after origination must not be used as origination-time predictors without a documented, timestamp-valid use case.
 
 The v7.0 CSV structural audit found **62,359 rows**, **587 columns**, **62,359 distinct non-empty `nsmoid` values**, no duplicate IDs, no blank IDs, no malformed row widths, and no duplicate column names (case-insensitive). `open_year` covers 2013–2024; all 12 months are represented. `survey_wave` values and weighted sample composition still need their own codebook-aligned interpretation.
 
-`analysis_weight` is present for every row, numeric and finite, and all values are positive. Its observed range is 395.24–7,114.61; median 1,116.55; total 85,472,423.11. This confirms the raw field profile only; it does not establish that a particular weighted estimator, variance formula, or respondent-level inference is appropriate.
+`analysis_weight` is present for every row, numeric and finite, and all values are positive. Its observed range is 395.24–7,114.61; median 1,116.55; total 85,472,423.11. A reproducible check recomputed Appendix D Table 1 for X05a–X05g by origination year, purchase/refinance, and response: all 462 cells matched the published whole-percent values after rounding (maximum unrounded difference 0.4986 percentage points). This confirms one selected tabulation, not the entire survey design, variance estimates, or respondent-level inference.
 
 Potentially useful mortgage and borrower fields include:
 
@@ -29,7 +29,11 @@ The performance labels are not a drop-in match for Freddie's monthly state histo
 
 A codebook-grounded parser helper now streams case-insensitive `perf_status_MMYY` columns into ordered quarter-end observations and preserves the original status family, including adverse, history-ended, gap, pre-open, and suppressed states. Against the actual PUF it found **51 consecutive quarter-end columns**, 2013-03-31 through 2025-09-30, for **3,180,309 status cells**. Every status code is in the reviewed domain; aggregate counts are in the private audit receipt. The 11 parser tests include lowercase publisher headers and reject case-insensitive duplicate names. Two additional auditor tests verify that aggregate reports exclude IDs and fail closed on unknown status codes. This validates parser/input integrity, not an outcome definition. No PD label is produced.
 
-The unweighted status totals across all loan-quarter cells are: current (`C`) 978,598; 30–59 DPD (`1`) 4,859; 60–89 (`2`) 1,483; 90–119 (`3`) 717; 120–149 (`4`) 371; 150–179 (`5`) 252; 180+ (`6`) 1,189; Chapter 13 (`7`) 424; foreclosure/distressed disposition (`8`) 315; other adverse/charge-off (`9`) 307; history ended (`A`) 776,776; potentially closed (`B`) 0; opened-not-yet-reported (`K`) 4,396; archive gap (`M`) 1,246; pre-open (`P`) 1,343,384; opened during quarter (`Q`) 62,243; servicer-suppressed (`S`) 3,749; blank/unknown 0. These are cell counts, not unique-loan counts, event incidence, or PD. The large `P` and `A` categories mean a simple ever/never flag across the wide panel would be particularly misleading.
+The unweighted status totals across all loan-quarter cells are: current (`C`) 978,598; 30–59 DPD (`1`) 4,859; 60–89 (`2`) 1,483; 90–119 (`3`) 717; 120–149 (`4`) 371; 150–179 (`5`) 252; 180+ (`6`) 1,189; Chapter 13 (`7`) 424; foreclosure/distressed disposition (`8`) 315; other adverse/charge-off (`9`) 307; history ended (`A`) 776,776; potentially closed (`B`) 0; opened-not-yet-reported (`K`) 4,396; archive gap (`M`) 1,246; pre-open (`P`) 1,343,384; opened during quarter (`Q`) 62,243; servicer-suppressed (`S`) 3,749; blank/unknown 0. These are cell counts, not unique-loan counts, event incidence, or PD. The large `P` and `A` categories mean a simple ever/never flag across the wide panel would be particularly misleading. A separate state audit finds all `A` cells belong to mortgages with `Close_Status=2` and no `A` for still-open mortgages; 678 records have no quarter with status `C` or `1`–`9`. These records remain distinct from confirmed performing or defaulted loans.
+
+The 51-quarter close/state cross-check finds 26,357 `Close_Status=1` (open) and 36,002 `Close_Status=2` (terminated); open loans have `Close_Year/Month=-2`, terminated loans have observed dates. No `Close_Status=B` is present. The SAS format file includes codes 3/4 for “likely/possibly terminated,” but they are absent from the actual v7.0 PUF. Appendix C p. C-148 documents only 1/2 and has a note referring to `close_status_1224`, while the v7.0 field is `Close_Status_0925`; treat that note as a stale field reference and do not infer B from it.
+
+The selected Appendix D check is bounded to seven X05 fields, 11 origination years, two purpose groups and three responses; it supports a weighted descriptive cross-check only. FHFA notes that published percentages are rounded, can fail to sum to 100, and may be unavailable when a question was not asked for a cohort. Purchase/refinance grouping follows X33 (purchase=1; refinance=2–5). The page also presents composition rather than loan-performance validation.
 
 ## Recommended placement in Credit Atlas
 
@@ -52,18 +56,20 @@ Therefore NSMO may support a separate quarterly delinquency/default study, or a 
 
 Next work sequence for the separate NSMO case:
 
-1. Reconcile every physical column to the codebook, including the survey-wave range, non-comparable survey variants, quarterly scores, mortgage termination, forbearance and mark-to-market LTV.
-2. Produce quarter-by-quarter status counts and transitions; distinguish states `A`, `B`, `K`, `M`, `P`, `Q`, and `S` from observed delinquency/current and determine codebook-consistent rules for when a loan enters/leaves the observation risk set.
+1. Review questionnaire wording and wave-level variants from the completed field map; resolve the stale close-status codebook reference and establish a point-in-time feature allowlist.
+2. Review the completed 51-quarter count/transition and close-status audit, then establish defensible rules for when a loan enters/leaves an observed risk set. The aggregate state audit is complete; the risk-set decision is not.
 3. Freeze a target protocol separately from Freddie. Define the quarterly horizon, event definition, competing termination outcomes, eligibility, censoring, missing/suppressed states and weighting/variance treatment before any PD estimation.
-4. Build a point-in-time feature allowlist; quarantine retrospective survey answers, post-origination scores and other future information.
-5. A first separate D02/NSMO descriptive page/API now serves aggregate-only evidence and the required FHFA caveat; expand/accept the metric views only after the codebook and observation-state rules are reconciled. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
+4. Finish the point-in-time feature allowlist; quarantine retrospective survey answers, post-origination scores and other future information.
+5. The separate D02/NSMO page/API now serves aggregate-only evidence, the required FHFA caveat, and a searchable field/value-label dictionary. Expand/accept domain metrics only after observation-state rules are reconciled. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
 
 ## Official documentation acquired locally
 
-The official May 27, 2026 technical report and 336-page codebook were reviewed locally; source-document receipts and the private PUF audit receipt remain outside this repository.
+The official May 27, 2026 technical report, Appendix C codebook, Appendix D weighted tabulations, SAS labels, and SAS formats were reviewed locally. The sanitized crosswalk and aggregate findings are documented here; raw PUF and private receipts remain outside this repository.
 
 - [NSMO technical documentation](https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf)
 - [NSMO codebook and unweighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-c-v70.pdf)
+- [NSMO weighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-d-v70.pdf)
+- [FHFA v7.0 SAS labels](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_labels.sas) and [formats](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_formats.sas)
 - [FHFA public-use-file notice and agreement gate](https://www.fhfa.gov/data/nsmo/puf)
 - [ICPSR/DataLumos catalog record](https://www.datalumos.org/datalumos/project/219485/version/V2/view)
 

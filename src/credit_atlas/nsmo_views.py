@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 
 from .nsmo import _PERFORMANCE_CODES
@@ -43,6 +44,33 @@ class NsmoViews:
     def __init__(self, root: Path):
         self.root = root.resolve()
         self._cached: tuple[tuple[int, int, int, int], dict] | None = None
+        self._dictionary_cache: tuple[tuple[int, int, int, int], dict] | None = None
+
+    def dictionary(self) -> dict:
+        """Return only the sanitized, public v7.0 codebook/label crosswalk."""
+        field_path = contained(self.root, "docs/data/nsmo-v70-field-dictionary.csv")
+        labels_path = contained(self.root, "docs/data/nsmo-v70-value-labels.csv")
+        field_stat, labels_stat = field_path.stat(), labels_path.stat()
+        identity = (field_stat.st_mtime_ns, field_stat.st_size,
+                    labels_stat.st_mtime_ns, labels_stat.st_size)
+        if self._dictionary_cache and self._dictionary_cache[0] == identity:
+            return self._dictionary_cache[1]
+        with field_path.open(encoding="utf-8-sig", newline="") as stream:
+            fields = list(csv.DictReader(stream))
+        with labels_path.open(encoding="utf-8-sig", newline="") as stream:
+            value_labels = list(csv.DictReader(stream))
+        required_fields = {"csv_column", "codebook_name", "codebook_part", "field_family",
+                           "timing_class", "predictor_use", "sas_format", "sas_label"}
+        required_labels = {"format_name", "format_value", "format_label"}
+        if (len(fields) != 587 or any(not required_fields.issubset(row) for row in fields)
+                or len({row["csv_column"].casefold() for row in fields}) != 587
+                or any(not required_labels.issubset(row) for row in value_labels)):
+            raise ValueError("NSMO public field dictionary failed its v7.0 schema check")
+        report = {"schema_version": "nsmo-dictionary-v1", "field_count": len(fields),
+                  "value_label_count": len(value_labels), "fields": fields,
+                  "value_labels": value_labels}
+        self._dictionary_cache = (identity, report)
+        return report
 
     def report(self) -> dict:
         audit_path = contained(self.root, f"{_RECEIPTS}/data-audit.json")

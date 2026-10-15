@@ -47,5 +47,20 @@ function render(profile){
   $('disclaimer').textContent=profile.required_fhfa_analysis_disclaimer;
   $('dashboard').hidden=false;$('state').hidden=true;
 }
-async function load(){try{const r=await fetch('/api/nsmo-profile',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);render(body);}catch(error){$('state').className='state error';$('state').textContent=`D02 NSMO chưa sẵn sàng: ${error.message}. Hoàn tất tải PUF, chạy audit aggregate-only và kiểm tra local receipt; trang không dựng dữ liệu giả.`;}}
+function loadDictionary(){
+  fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});
+}
+function renderDictionary(data){
+  const labels=new Map();for(const item of data.value_labels){const key=item.format_name.replace(/^\$/,'').toUpperCase();if(!labels.has(key))labels.set(key,[]);labels.get(key).push(item);}
+  const search=$('field-search'),results=$('field-results'),detail=$('field-detail');let selected=null;
+  function show(field){selected=field;results.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.field===field.csv_column)));detail.replaceChildren();
+    const title=node('h3','',field.csv_column);detail.append(title,node('p','field-label',field.sas_label||field.codebook_name));
+    const rows=[['Codebook',`${field.codebook_part} · ${field.codebook_name}`],['Family / timing',`${field.field_family} · ${field.timing_class}`],['Predictor gate',field.predictor_use],['Survey wave',field.survey_wave_ranges||'N/A — supplemental field'],['Question / condition',[field.survey_question_refs,field.codebook_condition].filter(Boolean).join(' · ')||'No survey question'],['Source location',`${field.printed_page||'—'} (PDF page ${field.pdf_page||'—'})`],['SAS',`${field.sas_format||'No format'} · ${field.sas_length||'—'} · ${field.sas_label||''}`]];
+    const dl=document.createElement('dl');for(const [term,value] of rows){dl.append(node('dt','',term),node('dd','',value));}detail.append(dl);
+    const key=(field.sas_format||'').replace(/^\$/,'').toUpperCase(),items=labels.get(key)||[];if(items.length){detail.append(node('h4','','Giá trị theo SAS format'));const list=document.createElement('ul');list.className='value-labels';for(const item of items)list.append(node('li','',`${item.format_value} → ${item.format_label}`));detail.append(list);}
+  }
+  function update(){const q=search.value.trim().toLowerCase();const matches=data.fields.filter(f=>[f.csv_column,f.codebook_name,f.sas_label,f.field_family,f.survey_question_refs,f.predictor_use].some(x=>(x||'').toLowerCase().includes(q))).slice(0,100);results.replaceChildren();for(const field of matches){const b=node('button','field-option');b.type='button';b.dataset.field=field.csv_column;b.setAttribute('role','option');b.setAttribute('aria-selected',String(selected?.csv_column===field.csv_column));b.append(node('strong','',field.csv_column),node('small','',field.sas_label||field.codebook_name));b.addEventListener('click',()=>show(field));results.append(b);} $('dictionary-count').textContent=`${data.field_count} trường · ${data.value_label_count} nhãn giá trị · ${matches.length}${q?' kết quả':' trường đầu'}`;if(!selected&&matches.length)show(matches[0]);}
+  search.addEventListener('input',update);update();
+}
+async function load(){loadDictionary();try{const r=await fetch('/api/nsmo-profile',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);render(body);}catch(error){$('state').className='state error';$('state').textContent=`D02 NSMO chưa sẵn sàng: ${error.message}. Hoàn tất tải PUF, chạy audit aggregate-only và kiểm tra local receipt; trang không dựng dữ liệu giả.`;}}
 load();

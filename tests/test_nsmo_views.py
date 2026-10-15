@@ -94,8 +94,42 @@ def test_nsmo_profile_rejects_changed_source_even_with_cached_view(tmp_path):
         views.report()
 
 
+def _write_public_dictionary(root: Path) -> None:
+    data = root / "docs/data"
+    data.mkdir(parents=True, exist_ok=True)
+    fields = ["codebook_order,csv_column,codebook_name,codebook_part,survey_wave_ranges,survey_question_refs,codebook_condition,wave_variant_flags,quarter,pdf_page,printed_page,field_family,timing_class,predictor_use,sas_length,sas_format,sas_label"]
+    for index in range(587):
+        fields.append(f"{index+1},field_{index},Field {index},A,,,,,,,,metadata,unknown,REVIEW,8,FMT,Label {index}")
+    (data / "nsmo-v70-field-dictionary.csv").write_text("\n".join(fields) + "\n", encoding="utf-8")
+    (data / "nsmo-v70-value-labels.csv").write_text(
+        "format_name,format_value,format_label\nFMT,1,One\n", encoding="utf-8")
+
+
+def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
+    _write_public_dictionary(tmp_path)
+    result = NsmoViews(tmp_path).dictionary()
+
+    assert result["field_count"] == 587
+    assert result["value_label_count"] == 1
+    assert result["fields"][0]["csv_column"] == "field_0"
+    assert result["value_labels"][0]["format_label"] == "One"
+
+
+def test_nsmo_dictionary_rejects_incomplete_crosswalk(tmp_path):
+    data = tmp_path / "docs/data"
+    data.mkdir(parents=True)
+    (data / "nsmo-v70-field-dictionary.csv").write_text(
+        "csv_column,codebook_name\na,A\n", encoding="utf-8")
+    (data / "nsmo-v70-value-labels.csv").write_text(
+        "format_name,format_value,format_label\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="schema check"):
+        NsmoViews(tmp_path).dictionary()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     _workspace(tmp_path)
+    _write_public_dictionary(tmp_path)
     source_web = Path(__file__).parents[1] / "apps" / "web"
     target_web = tmp_path / "apps" / "web"
     target_web.mkdir(parents=True)
@@ -116,6 +150,11 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert payload["status"] == "AVAILABLE"
             assert "private-a" not in json.dumps(payload)
+        with urlopen(base + "/api/nsmo-dictionary", timeout=5) as response:
+            dictionary = json.loads(response.read())
+            assert response.status == 200
+            assert dictionary["field_count"] == 587
+            assert dictionary["value_label_count"] == 1
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400

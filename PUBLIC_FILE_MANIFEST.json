@@ -1,6 +1,6 @@
 {
   "files": 1001,
-  "bytes": 18560430,
+  "bytes": 18561274,
   "hash_basis": "SHA-256 of Git-normalized LF text; binary files hashed as-is",
   "excluded_private_data": true,
   "sha256": {
@@ -55,7 +55,7 @@
     "docs/D01_CANONICAL_SEMANTIC_AUDIT_VI.md": "398bf3b937e64160ce49f2a634df519989a938a8f975fdee1907b41ffdb2cbba",
     "docs/D01_CASE_STUDY_VI.md": "ab12bce76b93c962dcb7871ce96722d9f9d438a9dfed4ad8453770de67e1437c",
     "docs/D01_CHART_SUPPORT_AUDIT_VI.md": "e7c801ececa15c09dcb4c09a12bb65e97fafcd85116752c334ef711883bdfcd3",
-    "docs/D01_DATA_ACCESS_CHECK_2026-10-15_VI.md": "838c09353aa442a679ecb8ea1f56028a5203876fa9b1d98099e6ee1a68eb716f",
+    "docs/D01_DATA_ACCESS_CHECK_2026-10-15_VI.md": "97f1f2c9a9a2f2df1806c394f4cf49dd48a83a5f42e49e1170ba89970d7d1d3c",
     "docs/D01_DATA_AND_METHOD_CARD.md": "85f97e2fcbc6c04099fabf40cc9bbd014e947773dcc2c0a686ee9c26c62c5e8d",
     "docs/D01_EPISODE_DENOMINATORS_VI.md": "7599ce29d40c6fd87cbcc4c35e77c85705e4fa649a6a1537bdf1434eb63c0e55",
     "docs/D01_EXPORT_CONTRACT_AUDIT_VI.md": "cd143492442786aa7ff64810254a47df5da29eb359f46228f95e276151a2dd9f",

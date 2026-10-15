@@ -73,3 +73,16 @@ monthly performance panel with Freddie-compatible target semantics. The next
 data-dependent step remains an authorized source: Freddie Clarity for the
 target vintage schedule, or a separately authorized NSMO/Ginnie case after its
 specific monitoring/Terms gate is satisfied.
+
+## HUD FHA performance report recheck — 15/10/2026
+
+The official [FHA Single-Family Loan Performance Trends](https://www.hud.gov/hud-partners/single-family-loan-performance)
+index lists monthly reports through August 2026 and describes them as portfolio
+performance reports. The August PDF (`FHALPT_AUG2026.pdf`) returned HTTP 403
+from both the browser content fetcher and direct local HTTP request. No PDF was
+downloaded or parsed. This is a separate FHA aggregate-report access issue; it
+does not alter the prior finding that the FHA Portfolio Snapshot has no monthly
+payment history, and it cannot stand in for Freddie loan-level vintages. The
+unrestricted CFPB monthly delinquency CSVs have been acquired separately, with
+NMDB/sample, suppression, imputation and revision caveats in
+`docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`.

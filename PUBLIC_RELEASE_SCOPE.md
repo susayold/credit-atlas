@@ -21,6 +21,11 @@ Users must obtain source data directly from the publisher, review current terms,
 
 The public test command runs source-level and synthetic integration tests. A small explicit set of tests whose fixture contracts require the omitted local borrower sources or private evidence receipts is skipped when those local inputs are absent; the node IDs and reason are recorded in `tests/public_private_data_skiplist.json`. The public test runner does not download or reconstruct those payloads.
 
+The Ginnie Mae LoanPerf source review and aggregate-only local ZIP auditor are
+included as software/documentation. The production loan-level payload is not
+included; the user must first accept the publisher's current Terms of Use and
+acquire the data privately.
+
 
 ## Host-provided Excel builder dependency
 

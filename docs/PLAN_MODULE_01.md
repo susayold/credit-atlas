@@ -537,6 +537,7 @@ Khi access annual data bổ sung chưa sẵn, tiếp tục R0/R1, source-indepen
 | M01-X04 | Severity/LGD model | Multi-vintage terminal/recovery completion; balance/selection/censoring contract | Model card/evaluation cho đúng resolved population; unresolved bias chưa xử lý thì bridge là output chính |
 | M01-X05 | Fannie external-source validation | Authorized snapshot, separate dictionary, semantic/selection harmonization | Transferability report; incompatible target/features thì làm descriptive parallel case |
 | M01-X06 | D08/D09 mở breadth P2 | HMDA hoặc MF data pilot, source-specific contracts | Origination-market hoặc DSCR/maturity workspace; không nối Freddie borrower identities giả |
+| M01-X07 | Ginnie Mae MBS loan-performance parallel case | User-acknowledged Terms of Use, official file dictionary/layout, quarterly pilot, separate population/target contract | Ginnie-only descriptive/model readiness decision; không tính là Freddie vintage; giữ descriptive-only nếu history/event/selection gates không đạt |
 
 Không dùng các extensions để trì hoãn handoff D01 chính. Sau R4, chọn extension theo câu hỏi cần chứng minh; nếu muốn P2 hoàn thiện cả residential/CRE thì D09 là case tiếp theo, còn nếu muốn suite cover nhiều domain thì chuyển D02/P1 để kiểm chứng shared core.
 

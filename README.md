@@ -47,6 +47,7 @@ Tests that require the excluded local borrower data or private evidence receipts
 - [Five-workspace plan](docs/PLAN_FIVE_WORKSPACES.md)
 - [Detailed workbench plan](docs/PLAN_WORKBENCH_DETAIL.md)
 - [Mortgage module plan](docs/PLAN_MODULE_01.md)
+- [Ginnie Mae separate-source review and access gate](docs/GINNIE_MAE_LOAN_PERFORMANCE_SOURCE_REVIEW_VI.md)
 - [User workflow guide](docs/WORKBENCH_USER_GUIDE_VI.md)
 - [Public release scope and data policy](PUBLIC_RELEASE_SCOPE.md)
 

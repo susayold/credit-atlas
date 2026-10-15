@@ -139,6 +139,17 @@ def audit_ginnie_loanperf_zip(
                     if saw_trailer:
                         raise GinnieLoanPerfError("Unexpected data after TT trailer")
                     kind = row[0]
+                    expected_width = {"HH": 4, "LP": 59, "TT": 3}.get(kind)
+                    # Ginnie sample and production layouts are pipe-delimited and
+                    # may include a final delimiter, which csv.reader represents
+                    # as one extra empty field. Accept exactly that representation
+                    # while still rejecting any other unexpected field width.
+                    if (
+                        expected_width is not None
+                        and len(row) == expected_width + 1
+                        and row[-1] == ""
+                    ):
+                        row.pop()
                     record_types[kind] += 1
 
                     if kind == "HH":

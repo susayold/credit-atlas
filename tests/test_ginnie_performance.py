@@ -30,7 +30,15 @@ def _lp(*, sequence: str, period: str, status: str = "0", reason: str = "", hist
     return row
 
 
-def _zip(path, records, *, report_period="202003", frequency="Q", trailer_count=None):
+def _zip(
+    path,
+    records,
+    *,
+    report_period="202003",
+    frequency="Q",
+    trailer_count=None,
+    trailing_delimiter=False,
+):
     header = ["HH", report_period, frequency, "20200410"]
     trailer = ["TT", report_period, str(len(records) if trailer_count is None else trailer_count)]
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -39,9 +47,10 @@ def _zip(path, records, *, report_period="202003", frequency="Q", trailer_count=
 
             text = io.TextIOWrapper(raw, encoding="utf-8", newline="")
             writer = csv.writer(text, delimiter="|", lineterminator="\n")
-            writer.writerow(header)
-            writer.writerows(records)
-            writer.writerow(trailer)
+            suffix = [""] if trailing_delimiter else []
+            writer.writerow(header + suffix)
+            writer.writerows([row + suffix for row in records])
+            writer.writerow(trailer + suffix)
             text.flush()
 
 
@@ -67,6 +76,21 @@ def test_audit_profiles_only_aggregates_and_keeps_identifiers_out_of_receipt(tmp
     assert audit.delinquency_history_counts == {"2": 2, "3": 1}
     assert "123456789" not in payload
     assert "ABC123" not in payload
+
+
+def test_audit_accepts_official_pipe_files_with_one_trailing_delimiter(tmp_path):
+    path = tmp_path / "sample-with-trailing-delimiters.zip"
+    _zip(
+        path,
+        [_lp(sequence="0000000001", period="202003", status="2", history="00XX")],
+        trailing_delimiter=True,
+    )
+
+    audit = audit_ginnie_loanperf_zip(path, terms_accepted=True)
+
+    assert audit.loan_period_rows == 1
+    assert audit.delinquency_status_counts == {"2": 1}
+    assert audit.delinquency_history_counts == {"2": 1}
 
 
 def test_terms_gate_is_checked_before_opening_file(tmp_path):

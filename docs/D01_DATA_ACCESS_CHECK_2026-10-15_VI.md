@@ -40,3 +40,36 @@ FHFA Enterprise PUDB 2025 đã được tải riêng và kiểm tra đủ 2,093,
 - [Ginnie Mae Disclosure Data Download](https://bulk.ginniemae.gov/)
 - [Ginnie Mae Single-Family Loan-Level Terms of Use](https://tst.ginniemae.gov/investors/disclosures_and_reports/Pages/Single-Family-Loan-Level-Terms-of-Use.aspx)
 - [Ginnie Mae Loan Performance File layouts](https://bulk.ginniemae.gov/LayoutsSamples/471/LoanPerf_layout.pdf), [annual layout](https://bulk.ginniemae.gov/LayoutsSamples/479/LoanPerfAnn_layout.pdf)
+
+## Recheck 15/10/2026 — additional unrestricted loan-performance source
+
+The current official Fannie Mae page confirms the 31/07/2026 release includes
+primary acquisition/performance through Q1 2026, but its primary dataset is a
+selected subset of fully documented conventional fixed-rate mortgages; it
+excludes ARMs, government-insured loans, HARP from the primary file, certain
+high-LTV/nonstandard loans, and other populations. Fannie requires account
+registration, email confirmation, and acceptance of [Terms and Conditions](https://www.fanniemae.com/about-us/legal-disclosure). The
+same page says its general site terms govern the content; those terms prohibit
+automated scraping and use to train/test/benchmark AI applications absent
+written authorization. The direct loan-level dataset itself additionally
+restricts redistribution and external commercial use without written consent.
+The page offers a sample CSV for schema setup, but it is still Fannie-hosted
+content subject to those site terms; no sample or gated performance payload was
+downloaded in this recheck. Do not treat a browser-visible link or a Data.gov
+catalog entry as proof of unrestricted use.
+
+The HUD Single-Family Portfolio Snapshot page describes monthly Excel records
+with endorsement month, property/loan categories, ZIP, originating mortgagee,
+interest rate and sponsorship fields, but no monthly payment-performance
+history. The latest listed August 2026 workbook returned HTTP 403 via both the
+web fetcher and direct HTTP with browser and research-client user agents. A
+different official HUD ArcGIS source, FHA Insurance in Force by Tract, was
+downloaded instead as a static aggregate exposure dataset; its unresolved
+coverage-date and `-4` code caveats are documented in
+`docs/HUD_FHA_IIF_TRACT_REVIEW_VI.md`.
+
+This recheck did not locate a new unauthenticated, unrestricted loan-level
+monthly performance panel with Freddie-compatible target semantics. The next
+data-dependent step remains an authorized source: Freddie Clarity for the
+target vintage schedule, or a separately authorized NSMO/Ginnie case after its
+specific monitoring/Terms gate is satisfied.

@@ -40,18 +40,37 @@ Sau khi chủ tài khoản/người dùng xác nhận điều khoản trực ti�
 
 ## Trạng thái truy cập production — 16/10/2026
 
-Catalog production vẫn liệt kê `LoanPerf_202606.zip` khoảng 783 MB. Recheck giao diện Angular công khai của `https://bulk.ginniemae.gov/` cho thấy luồng download yêu cầu cookie phiên `gm_up_token`, gọi profile endpoint để xác thực token rồi chuyển đến download route của Disclosure WCF. Các URL ZIP trực tiếp và endpoint thử không kèm phiên chỉ trả HTML app shell, không phải payload. Vì thế 401 trước đó là auth gate; không dùng URL đoán, cookie giả hay cách bỏ qua đăng nhập.
+Catalog production kiểm tra trực tiếp qua API công khai `https://www.ginniemae.gov/bulk-content/api/disclosure-data` và hiện liệt kê `LoanPerf_202606.zip`, 782,688,297 bytes, sửa lần cuối 16/07/2026. Cấu hình client chính thức dùng profile endpoint `https://www.ginniemae.gov/user-profiles/api/profile`; giao diện yêu cầu cookie phiên `gm_up_token`, xác thực profile rồi gọi `https://www.ginniemae.gov/disclosure-api/api/download?dlfile=data_bulk%2FLoanPerf_202606.zip`. URL ZIP tự đoán trả HTML app shell. Một request thử trước đây dùng query `file`; đó không phải tham số mà giao diện chính thức dùng. Không dùng cookie giả hay tìm cách bỏ qua đăng nhập.
+
+Các file production liên quan trong catalog cùng lần kiểm tra:
+
+| File | Bytes nén | Cập nhật catalog | Vai trò dự kiến |
+|---|---:|---|---|
+| `LoanPerf_202606.zip` | 782,688,297 | 16/07/2026 | Quarterly performance pilot; hồ sơ hoạt động và lịch sử hiệu suất |
+| `LoanPerfAnn_202512.zip` | 2,302,624,988 | 20/01/2026 | Annual performance; vượt giới hạn pilot 1 GiB, chưa chọn để tải đầu tiên |
+| `llpaymhist_202609.zip` | 67,497,851 | 15/10/2026 | MBS loan payment history; cần review layout/key trước khi xét ghép |
+| `liqloanqtr_202609.txt` | 218,846 | 13/10/2026 | MBS terminated-loan quarterly; exit/removal context, cần audit schema riêng |
+| `llmonforb_202609.zip` | 1,245,711 | 13/10/2026 | Loan-level forbearance supplemental; cần kiểm tra coverage và join key |
+
+Ưu tiên tải `LoanPerf_202606.zip` làm pilot với parser đã có. Sau khi schema/key và phạm vi permission được xác nhận, audit riêng `liqloanqtr` và `llpaymhist` làm nguồn bổ sung; chỉ ghép nếu layout và key chứng minh đúng grain/period. Forbearance không được tự động coi là outcome hay predictor. Không tải annual 2.3 GB trước khi pilot xác nhận dung lượng expanded, parser throughput và cách bảo quản.
 
 User nói có thể tự đăng nhập và lưu cookie trên D:, nhưng chưa gửi đường dẫn file. Chỉ cần cung cấp **đường dẫn** Netscape cookie file; không gửi nội dung cookie/mật khẩu trong chat. Cookie sẽ được đọc tại chỗ cho request production, không được in log hay ghi vào receipt. Nếu phiên Ginnie không dùng cookie Netscape tương thích hoặc cookie hết hạn, dừng và yêu cầu người dùng xuất lại phiên qua giao diện chính thức.
 
 ## Kế hoạch tiếp tục sau khi có phiên đã đăng nhập
 
 1. User đã xác nhận đọc và chấp nhận Terms of Use; chỉ truyền file cookie path, không đưa bí mật vào chat.
-2. Dùng giao diện/route production chính thức `LoanPerf_202606.zip` cho quarterly pilot; giữ ZIP private và ghi hash/size trước khi đọc.
+2. Dùng catalog API để xác thực metadata, rồi route download chính thức với `dlfile=data_bulk/LoanPerf_202606.zip`; giữ ZIP private và ghi hash/size trước khi đọc.
 3. Lấy file layout/dictionary chính thức tương ứng, xác nhận file version, record widths/delimiters, HH/LP/TT totals và period coverage.
 4. Stream parse theo record, chỉ ghi canonical source-specific tables; kiểm tra key/period uniqueness, row totals, date ranges, legal status codes, LTV/DTI/FICO bounds, UPB logic và missingness.
 5. Profile active-survivor bias và exit coverage bằng liquidation/performance records; không gán non-event cho loan biến mất.
 6. Tạo riêng Ginnie source card/case; nếu target hoặc event support không phù hợp, giữ descriptive-only và dừng model work.
+
+Runner đã chuẩn bị: `scripts/download_ginnie_loanperf.py`. Sau khi user cung cấp
+đường dẫn Netscape cookie file trên D:, lệnh sẽ validate profile, chỉ gửi
+`gm_up_token` tới host Ginnie Mae chính thức, lấy size từ catalog API, giới hạn
+ZIP ở 1 GiB, giữ raw ZIP trong private D:, rồi ghi receipt không chứa cookie.
+Profile/auth failure dừng trước khi gọi download. Chạy audit aggregate-only kế
+tiếp bằng `scripts/audit_ginnie_loanperf.py <ZIP> --terms-accepted-by-user`.
 
 ## Nguồn chính thức
 

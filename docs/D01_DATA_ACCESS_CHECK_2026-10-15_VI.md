@@ -114,7 +114,11 @@ MBS case and does not qualify a Freddie vintage. See
 
 Follow-up on 16/10/2026: the live public catalog frontend validates its
 `gm_up_token` session cookie and user profile before using the official download
-route. Direct requests without that session return HTML app shell, not data. The
+route `https://www.ginniemae.gov/disclosure-api/api/download?dlfile=...`.
+The unauthenticated catalog API confirms `LoanPerf_202606.zip` at 782,688,297
+bytes. An earlier download probe used query parameter `file`; the official UI
+uses `dlfile`, so that 401 was not a validation of the correct file request.
+Direct requests without a valid session return HTML app shell, not data. The
 user can sign in and save a Netscape cookie file on D:, but has not provided its
 path; production acquisition remains pending that path. Do not search for
 cookie files or expose token values.

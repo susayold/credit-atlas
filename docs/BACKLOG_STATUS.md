@@ -79,11 +79,22 @@ The focused Ginnie, NSMO workbook, D02 workbook and NSMO API/view suite passes
 qualification remain open. Commits `2f7b37e` and `51c69fe` are on `main`.
 
 Follow-up auth-path review on 16/10/2026 checked the live official catalog
-client: it requires a `gm_up_token` session cookie and validates the user
-profile before invoking its official download route. Requests without the
-session return the app shell rather than the ZIP. The user can sign in and save
+API and client: catalog metadata is public, while download requires a
+`gm_up_token` session cookie and successful profile validation before
+`/disclosure-api/api/download?dlfile=...` is called. An earlier request used the
+wrong query parameter `file`; no production file was obtained. Direct file
+requests without the session return the app shell rather than the ZIP. The user can sign in and save
 a Netscape cookie file on D:, but the exact path has not yet been provided.
 Wait for that path; do not search for cookie files or print token contents.
+Prepared `src/credit_atlas/ginnie_acquisition.py` and
+`scripts/download_ginnie_loanperf.py`: the runner validates the profile before
+download, keeps only an applicable secure `gm_up_token` cookie, reads the ZIP
+size from the official catalog API, bounds the ZIP to 1 GiB, and writes a
+private receipt without auth values. Synthetic auth/cookie/redirect/download
+tests pass. The same catalog lists a smaller monthly payment-history file, a
+quarterly termination file, and a forbearance supplement; they remain separate
+layout/key audits after the quarterly pilot rather than being joined by
+assumption.
 
 ### D02 continuation — horizon sensitivity in API, app and Excel, 2026-10-16
 

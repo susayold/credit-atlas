@@ -119,6 +119,19 @@ Focused Ginnie suite passes 25/25; `py_compile` and `git diff --check` pass. Pro
 on the user's signed-in session; do not combine this panel with LoanPerf or
 other sources until key, report period, grain, and coverage are validated.
 
+### D01 engine capability-gap audit — 2026-10-16
+
+Completed a code/result/gate map for the 164-file pinned engine copy against
+D01's canonicalization, labels, portfolio, transitions, episodes, observed
+loss, models, forecast/policy, reporting and CreditAtlas app requirements.
+The map separates code presence from real-data evidence and synthetic tests;
+it confirms that the current 2012 descriptive foundation is reproduced while
+multi-vintage compatibility and every qualified-model gate remain open. It
+also records the current GitHub 404 limitation on inspecting the upstream
+repository, and keeps NSMO, Ginnie and aggregate context in separate populations.
+See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md`. M01-001 remains Partial; no model
+readiness count or data gate was changed.
+
 ### FHFA state HPI context source — 2026-10-16
 
 Downloaded the official state All-Transactions HPI CSV and FHFA dictionary / file
@@ -193,7 +206,7 @@ identifiers remain private.
 
 | ID | Current status | Evidence / remaining requirement |
 |---|---|---|
-| M01-001 | Partial | Pinned 164-file engine and actual local source found; complete capability-gap audit still needed |
+| M01-001 | Partial | Completed code/result/gate map for the pinned 164-file engine copy, current app, data and M01 requirements; latest hash receipt has 0/164 differences. Original upstream GitHub repo currently returns 404, so full upstream/branch reconciliation remains unverified. See `docs/D01_ENGINE_CAPABILITY_GAP_VI.md`; source access is tracked separately under M01-005 |
 | M01-002 | Verified for 2012 | Fresh eight-stage rebuild; 50,000 loans / 4,510,559 months; resource receipt |
 | M01-003 | Verified for supplied 2012 corpus | Release-47 trace audit covers 17 field sentinels, 20 categorical fields, 6 date fields, HARP flags, percentage-point casts, and 4,510,559 state/terminal mappings; see `docs/D01_CANONICAL_SEMANTIC_AUDIT_VI.md` and `artifacts/private/d01-canonical-semantics-e2fe2cdc8cbf/receipt.json`. Cross-vintage semantic compatibility remains open |
 | M01-004 | Partial | Runtime lock 19/19, 164 pinned engine hashes, D: storage and 0/970 private Git candidates verified; current 15-asset bundle scanned against 50,000 source IDs; latest full suite passes 1,601/1,601 after lowercase NSMO PUF headers/parser regression checks. Added version-pinned Colorama 0.4.6 and DuckDB 1.5.5 notices checked against their upstream tags; the upstream engine repository/commit now returns GitHub 404, so its redistribution rights remain unverified. Concurrent/full-model resource sign-off also remains; see `docs/D01_RELEASE_READINESS_VI.md`, `THIRD_PARTY_NOTICES.md` and `docs/TEST_SUITE_2026-10-15_VI.md` |

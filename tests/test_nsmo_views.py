@@ -331,6 +331,10 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     target_web.mkdir(parents=True)
     for name in ("nsmo.html", "nsmo.css", "nsmo.js"):
         shutil.copyfile(source_web / name, target_web / name)
+    source_workbook = Path(__file__).parents[1] / "apps/excel/templates/CreditAtlas-NSMO-Reference.xlsx"
+    target_workbook = tmp_path / "apps/excel/templates/CreditAtlas-NSMO-Reference.xlsx"
+    target_workbook.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source_workbook, target_workbook)
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=tmp_path)))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
@@ -342,6 +346,13 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
+            assert "/downloads/nsmo-reference.xlsx" in html
+        with urlopen(base + "/downloads/nsmo-reference.xlsx", timeout=5) as response:
+            workbook_bytes = response.read()
+            assert response.status == 200
+            assert response.headers.get_content_type() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            assert "CreditAtlas-NSMO-Reference.xlsx" in response.headers["Content-Disposition"]
+            assert workbook_bytes[:2] == b"PK"
         with urlopen(base + "/api/nsmo-profile", timeout=5) as response:
             payload = json.loads(response.read())
             assert response.status == 200

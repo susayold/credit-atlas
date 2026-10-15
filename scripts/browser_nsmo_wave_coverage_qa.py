@@ -34,6 +34,10 @@ def main() -> None:
             response = page.goto(url, wait_until="networkidle", timeout=30_000)
             if response is None or response.status != 200:
                 raise RuntimeError("NSMO page did not return HTTP 200")
+            download = page.locator("a.excel-download")
+            if download.get_attribute("href") != "/downloads/nsmo-reference.xlsx":
+                raise AssertionError("NSMO Excel reference download is not linked from the dictionary")
+            checks.append("codebook/category Excel workbook is linked from the dictionary")
             page.locator("#dictionary-count").get_by_text("319", exact=False).wait_for(timeout=15_000)
             page.locator("#dictionary-count").get_by_text("9", exact=False).wait_for(timeout=15_000)
             checks.append("dictionary reports 319 survey-variable coverage rows and 9 item notes")
@@ -61,6 +65,22 @@ def main() -> None:
             if "borrow enough money" not in text or "borrow a significant amount" not in text:
                 raise AssertionError("X94A wording-version break is not visible in the field detail")
             checks.append("X94A wording-version break and trend sensitivity render in the dictionary")
+
+            legacy_payload = page.evaluate("async () => await (await fetch('/api/nsmo-dictionary')).json()")
+            legacy_payload.pop("item_comparability", None)
+            legacy_payload.pop("item_comparability_count", None)
+            page.route("**/api/nsmo-dictionary", lambda route: route.fulfill(
+                status=200, content_type="application/json", body=json.dumps(legacy_payload)))
+            page.reload(wait_until="networkidle")
+            page.locator("#field-search").fill("x94a")
+            page.locator('.field-option[data-field="x94a"]').click()
+            detail = page.locator("#field-detail")
+            detail.get_by_text("Cross-wave review unavailable", exact=True).wait_for()
+            if "codebook field details remain available" not in detail.inner_text():
+                raise AssertionError("Legacy dictionary response does not explain its missing item notes")
+            if "ghi chú version chưa được server nạp" not in page.locator("#dictionary-count").inner_text():
+                raise AssertionError("Dictionary header does not show that the legacy server lacks review notes")
+            checks.append("legacy server dictionary stays usable and explains missing review notes")
             if browser_errors:
                 raise AssertionError(f"Browser JavaScript errors: {browser_errors}")
             browser.close()

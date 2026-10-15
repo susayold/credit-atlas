@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = ["duckdb==1.5.5", "pyarrow==22.0.0"]
 
 [project.optional-dependencies]
-dev = ["pytest==9.1.1", "playwright==1.56.0"]
+dev = ["openpyxl==3.1.5", "pytest==9.1.1", "playwright==1.56.0"]
 models = ["scikit-learn==1.8.0"]
 structured = ["xlrd==2.0.2"]
 simulation = ["numpy==2.5.3", "scipy==1.18.1"]

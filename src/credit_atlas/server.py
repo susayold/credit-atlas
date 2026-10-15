@@ -99,6 +99,17 @@ def handler_for(service: ResearchService):
                 if any(len(v) != 1 for v in values.values()):
                     raise ValueError("Duplicate query parameter")
                 query = {k: v[0] for k, v in values.items()}
+                if url.path == "/downloads/nsmo-reference.xlsx":
+                    if query:
+                        raise ValueError("NSMO Excel reference accepts no filters")
+                    workbook = service.root / "apps/excel/templates/CreditAtlas-NSMO-Reference.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "NSMO Excel reference is not built"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-NSMO-Reference.xlsx", head=head)
+                    return
                 if url.path == "/api/nsmo-profile":
                     if query:
                         raise ValueError("NSMO profile accepts no filters")

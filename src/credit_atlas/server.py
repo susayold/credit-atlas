@@ -12,6 +12,8 @@ from .corporate_memos import CorporateMemos
 from .service import EvidenceChanged, ResearchService, TOKEN_PATTERN, filters_from
 
 STATIC = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js",
+          "/nsmo": "nsmo.html", "/nsmo.html": "nsmo.html",
+          "/nsmo.js": "nsmo.js", "/nsmo.css": "nsmo.css",
           "/workspace-content.js": "workspace-content.js",
           "/monitor.js": "monitor.js",
           "/kpi-analysis.js": "kpi-analysis.js",
@@ -29,6 +31,8 @@ def handler_for(service: ResearchService):
     if isinstance(getattr(service, 'sec_views', None), SecViews) and not isinstance(service.sec_views, VerifiedSecReadCache):
         service.sec_views = VerifiedSecReadCache(service.sec_views)
     web = service.root / "apps/web"
+    from .nsmo_views import NsmoViews
+    nsmo_views = NsmoViews(service.root)
     monitor_reviews = MonitorReviews(service)
     corporate_memos = CorporateMemos(service)
 
@@ -95,6 +99,11 @@ def handler_for(service: ResearchService):
                 if any(len(v) != 1 for v in values.values()):
                     raise ValueError("Duplicate query parameter")
                 query = {k: v[0] for k, v in values.items()}
+                if url.path == "/api/nsmo-profile":
+                    if query:
+                        raise ValueError("NSMO profile accepts no filters")
+                    self.send(200, nsmo_views.report(), head=head)
+                    return
                 if url.path in STATIC:
                     file = web / STATIC[url.path]
                     content = file.read_bytes()

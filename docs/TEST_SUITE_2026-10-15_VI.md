@@ -1,5 +1,24 @@
 # Verification toàn repository — 15/10/2026
 
+## Latest run after NSMO D02 aggregate workspace
+
+After adding the separate NSMO page/API, hash-bound aggregate response,
+quarterly status view and synthetic route/privacy checks, `scripts/test.ps1`
+ran the full app and vendored-engine suite.
+
+| Kết quả | Số lượng |
+|---|---:|
+| Collected/executed | 1,606 |
+| Passed | 1,606 |
+| Failures/errors/skips | 0 / 0 / 0 |
+| Elapsed | 344.93 seconds |
+| Focused NSMO tests | 16/16 passed |
+
+The local D02 endpoint serves aggregate profile data only after the PUF hash,
+release receipt, audit receipt and aggregate invariants reconcile. It exposes no
+loan identifiers or row-level data. Public-mirror regression tests also pass
+16/16 using synthetic private-data fixtures. No PD target or model is defined.
+
 ## Latest run after NSMO v7.0 private PUF acquisition and parser audit
 
 After adding lowercase-header support and focused regressions, `scripts/test.ps1`
@@ -11,13 +30,13 @@ ran the full application and vendored-engine suite.
 | Passed | 1,601 |
 | Failures/errors/skips | 0 / 0 / 0 |
 | Elapsed | 365.46 seconds |
-| Receipt | private local test receipt (omitted from this public release) |
+| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-puf/receipt.json` |
 
 The source-specific NSMO unit file passes 11/11, including lowercase FHFA PUF
 headers and case-insensitive duplicate-header rejection. Separately, the actual
 private PUF parser streamed 3,180,309 status observations through 51 quarter
 columns without an unknown code; aggregate-only data checks are in
-private local data-audit receipts (omitted from this public release). This does not qualify a target or model.
+`artifacts/private/nsmo-puf-20261015/`. This does not qualify a target or model.
 
 ## Latest run after Ginnie LoanPerf audit gate and parser
 

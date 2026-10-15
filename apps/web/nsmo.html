@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>CreditAtlas · D02 NSMO</title>
+  <link rel="stylesheet" href="/nsmo.css">
+  <script src="/nsmo.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="mast-inner">
+      <a class="brand" href="/" aria-label="CreditAtlas home"><span class="mark">CA</span><span>CreditAtlas<small>LOCAL · PRIVATE RESEARCH</small></span></a>
+      <nav aria-label="Research navigation"><a href="/">Tất cả workspaces</a><a href="/?view=sources">D01 · Freddie source</a></nav>
+    </div>
+  </header>
+  <main class="page">
+    <div class="eyebrow">P2 · MORTGAGE RESEARCH &nbsp; / &nbsp; D02 · SEPARATE NSMO CASE</div>
+    <div class="title-row"><div><h1>NSMO mortgage performance</h1><p class="lede">Khám phá sample mortgage và trạng thái quan sát theo quý. Nguồn này có population, cadence và quy tắc censoring riêng.</p></div><span class="status-pill">DESCRIPTIVE ONLY</span></div>
+    <div id="state" class="state" role="status" aria-live="polite">Đang xác minh receipt và PUF local…</div>
+    <div id="dashboard" hidden>
+      <section id="metrics" class="metric-grid" aria-label="NSMO sample summary"></section>
+      <section class="panel source-panel">
+        <div><div class="eyebrow">OFFICIAL SOURCE · v7.0</div><h2>National Survey of Mortgage Originations</h2><p>FHFA / CFPB · released 27 May 2026 · sample mortgages originated 2013–2024</p></div>
+        <a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a>
+      </section>
+      <section class="panel">
+        <div class="section-head"><div><div class="eyebrow">QUARTERLY STATUS SNAPSHOT</div><h2>Performance code theo thời gian</h2><p>Đếm trạng thái được báo cáo tại từng quý cuối kỳ.</p></div></div>
+        <div class="controls">
+          <label>Trạng thái cần xem<select id="status-choice" aria-label="Chọn trạng thái hiệu suất"></select></label>
+          <label>Quý chi tiết<select id="quarter-choice" aria-label="Chọn quý để xem chi tiết"></select></label>
+        </div>
+        <figure class="chart-frame"><svg id="trend" viewBox="0 0 980 340" role="img" aria-label="Số mortgage theo trạng thái qua các quý"></svg><figcaption id="trend-caption"></figcaption></figure>
+        <div id="quarter-table" class="table-wrap"></div>
+        <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định; đây không phải share trong risk set, incidence hay PD. Analysis-weight total là tổng trọng số của các dòng theo trạng thái, không phải loan count hoặc event rate.</p>
+      </section>
+      <section class="panel two-col">
+        <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination mix</h2><div id="vintages" class="table-wrap"></div></div>
+        <div><div class="eyebrow">FIELD QUALITY</div><h2>Analysis weight</h2><div id="weight-summary"></div><p class="footnote">FHFA mô tả Analysis_Weight là sampling weight × non-response adjustment. Việc phân tích dưới đây chưa chọn estimator hay variance treatment.</p></div>
+      </section>
+      <section class="warning"><strong>Không đọc đây là tỷ lệ vỡ nợ.</strong><p>Quý quan sát chứa các khoản chưa mở, mới mở, history-ended, gap và suppressed. Dashboard giữ các mã này riêng, dùng số đếm theo toàn bộ sample và không dựng mẫu số at-risk. Quan sát theo quý không cho biết chính xác ngày bắt đầu sự kiện, có thể bỏ sót diễn biến giữa hai mốc, và không tự tạo target 12 tháng.</p></section>
+      <section class="panel limitations"><div class="eyebrow">SCOPE & LIMITATIONS</div><ul id="limits"></ul><p class="disclaimer" id="disclaimer"></p></section>
+    </div>
+  </main>
+  <footer>CreditAtlas · local private research · NSMO stays separate from Freddie D01</footer>
+</body>
+</html>

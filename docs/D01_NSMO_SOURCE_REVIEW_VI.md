@@ -1,12 +1,12 @@
 # FHFA/CFPB NSMO: source review and acquisition gate
 
-Date checked: 2026-10-15. FHFA's May 27, 2026 NSMO v7.0 PUF was downloaded after the project owner authorized completion of the two-step monitoring/terms acknowledgement. The file has passed structural and code-domain checks; no credit-risk target or model has been created.
+Date checked: 2026-10-15. FHFA's May 27, 2026 NSMO v7.0 PUF has been downloaded after the user explicitly authorized the two-step monitoring/terms acknowledgement. The file has passed structural and code-domain checks; no credit-risk target or model has been created.
 
 ## Why this source matters
 
 FHFA says the current NSMO public-use file (May 27, 2026) contains 62,359 sample mortgages originated from 2013 through 2024 and quarterly mortgage-performance information through 2025 Q3. The sample is drawn from newly originated mortgages in the NMDB/Experian frame, about 6,000 loans per quarter. It is a public-use, de-identified sample, not the Freddie Mac Single-Family Loan-Level Dataset and not a Freddie annual vintage. It could support a separate external-cohort or robustness study after the raw file, survey response process, weights, censoring, and target definition are audited.
 
-Official source: [FHFA NSMO public-use-file page](https://www.fhfa.gov/data/nsmo) and its [Notice of Monitoring/Terms gate](https://www.fhfa.gov/data/nsmo/puf). The official gate was completed before fetching the CSV ZIP from FHFA. The raw ZIP/CSV and detailed receipts are kept in local private storage and are deliberately excluded from this public repository. The public release contains no credentials, cookies, identifiers, or row-level records.
+Official source: [FHFA NSMO public-use-file page](https://www.fhfa.gov/data/nsmo) and its [Notice of Monitoring/Terms gate](https://www.fhfa.gov/data/nsmo/puf). After the user authorized it, the official gate was completed and the CSV ZIP was fetched from FHFA. The raw ZIP/CSV and detailed receipts stay in a private local store outside this public repository. No credentials or cookies were saved.
 
 The agreement was reviewed before completing the gate. It prohibits processing intended to identify individuals, requires compliance with privacy laws, restricts use of FHFA/NMDB marks, requires a caveat that FHFA does not attest to post-download analyses, prohibits presenting modified data as official government material, and includes user warranty/indemnification language. No row-level PUF or IDs are included in public GitHub. If any future output cites this source, include the FHFA-required analysis disclaimer; do not imply FHFA endorsement.
 
@@ -27,7 +27,7 @@ Potentially useful mortgage and borrower fields include:
 
 The performance labels are not a drop-in match for Freddie's monthly state history. A target must define how to handle quarterly observation, 30/60/90+ DPD, bankruptcy, foreclosure, other charge-off/claim outcomes, prepayment/termination, missing or suppressed observations, and horizon censoring. Do not treat “not reported” or “history ended” as current/performing. Survey non-response and the supplied weights also need a separate representativeness review.
 
-A codebook-grounded parser helper now streams case-insensitive `perf_status_MMYY` columns into ordered quarter-end observations and preserves the original status family, including adverse, history-ended, gap, pre-open, and suppressed states. Against the actual PUF it found **51 consecutive quarter-end columns**, 2013-03-31 through 2025-09-30, for **3,180,309 status cells**. Every status code is in the reviewed domain; aggregate counts are available by rerunning the included audit script against a privately acquired PUF. The 11 parser tests include lowercase publisher headers and reject case-insensitive duplicate names. Two additional auditor tests verify that aggregate reports exclude IDs and fail closed on unknown status codes. This validates parser/input integrity, not an outcome definition. No PD label is produced.
+A codebook-grounded parser helper now streams case-insensitive `perf_status_MMYY` columns into ordered quarter-end observations and preserves the original status family, including adverse, history-ended, gap, pre-open, and suppressed states. Against the actual PUF it found **51 consecutive quarter-end columns**, 2013-03-31 through 2025-09-30, for **3,180,309 status cells**. Every status code is in the reviewed domain; aggregate counts are in the private audit receipt. The 11 parser tests include lowercase publisher headers and reject case-insensitive duplicate names. Two additional auditor tests verify that aggregate reports exclude IDs and fail closed on unknown status codes. This validates parser/input integrity, not an outcome definition. No PD label is produced.
 
 The unweighted status totals across all loan-quarter cells are: current (`C`) 978,598; 30–59 DPD (`1`) 4,859; 60–89 (`2`) 1,483; 90–119 (`3`) 717; 120–149 (`4`) 371; 150–179 (`5`) 252; 180+ (`6`) 1,189; Chapter 13 (`7`) 424; foreclosure/distressed disposition (`8`) 315; other adverse/charge-off (`9`) 307; history ended (`A`) 776,776; potentially closed (`B`) 0; opened-not-yet-reported (`K`) 4,396; archive gap (`M`) 1,246; pre-open (`P`) 1,343,384; opened during quarter (`Q`) 62,243; servicer-suppressed (`S`) 3,749; blank/unknown 0. These are cell counts, not unique-loan counts, event incidence, or PD. The large `P` and `A` categories mean a simple ever/never flag across the wide panel would be particularly misleading.
 
@@ -56,17 +56,16 @@ Next work sequence for the separate NSMO case:
 2. Produce quarter-by-quarter status counts and transitions; distinguish states `A`, `B`, `K`, `M`, `P`, `Q`, and `S` from observed delinquency/current and determine codebook-consistent rules for when a loan enters/leaves the observation risk set.
 3. Freeze a target protocol separately from Freddie. Define the quarterly horizon, event definition, competing termination outcomes, eligibility, censoring, missing/suppressed states and weighting/variance treatment before any PD estimation.
 4. Build a point-in-time feature allowlist; quarantine retrospective survey answers, post-origination scores and other future information.
-5. Add a separate D02/NSMO descriptive workspace with aggregate-only evidence, then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
+5. A first separate D02/NSMO descriptive page/API now serves aggregate-only evidence and the required FHFA caveat; expand/accept the metric views only after the codebook and observation-state rules are reconciled. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
 
 ## Official documentation acquired locally
 
-The official May 27, 2026 technical report and 336-page codebook were reviewed locally. Source-document and PUF receipts are kept in private local storage and are omitted here. Reacquire the source files directly from FHFA and run the included aggregate-only audit to reproduce the checks.
+The official May 27, 2026 technical report and 336-page codebook were reviewed locally; source-document receipts and the private PUF audit receipt remain outside this repository.
 
 - [NSMO technical documentation](https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf)
 - [NSMO codebook and unweighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-c-v70.pdf)
 - [FHFA public-use-file notice and agreement gate](https://www.fhfa.gov/data/nsmo/puf)
 - [ICPSR/DataLumos catalog record](https://www.datalumos.org/datalumos/project/219485/version/V2/view)
-
 
 ## Required FHFA analysis disclaimer
 

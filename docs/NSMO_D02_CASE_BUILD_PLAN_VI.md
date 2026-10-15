@@ -6,11 +6,11 @@ D01 panel.
 
 ## What is ready
 
-- FHFA v7.0 PUF (page updated 2026-05-27) was downloaded after the project owner
+- FHFA v7.0 PUF (page updated 2026-05-27) was downloaded after the user
   authorized the Notice of Monitoring and NMDB Terms acknowledgement.
-- The PUF and detailed receipts are held in private local storage and are
-  deliberately excluded from this repository. Only aggregate, non-identifying
-  profile evidence is described here.
+- The ZIP, CSV and detailed receipts are held in a private local store outside
+  the public repository. Only aggregate, non-identifying profile evidence is
+  described here.
 - 62,359 sample mortgages, 587 columns, 2013–2024 origination years, 51
   quarterly `perf_status_MMYY` columns from 2013Q1 to 2025Q3, 3,180,309 status
   cells, unique nonblank `nsmoid`, no malformed rows, valid positive
@@ -26,7 +26,7 @@ D01 panel.
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
 | D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned source dictionary with unavailable, retrospective and non-comparable fields flagged | Next |
 | D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Not started |
-| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Not started |
+| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Initial separate page/API implemented; full metric coverage and acceptance pending |
 | D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started |
 

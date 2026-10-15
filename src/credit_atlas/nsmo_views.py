@@ -1,0 +1,159 @@
+"""Verified aggregate-only serving contract for the separate NSMO D02 case."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from .nsmo import _PERFORMANCE_CODES
+from .workspace import contained, read_json, sha256
+
+
+_ROOT = "data/private/mortgage/nsmo-2026-05-27"
+_RECEIPTS = "artifacts/private/nsmo-puf-20261015"
+_FHFA_DISCLAIMER = (
+    "The opinions and analyses contained herein are solely of the users/authors "
+    "of any data analyses or papers, and the FHFA cannot and does not attest to "
+    "nor vouch for the quality, accuracy, or timeliness of the data, or analyses "
+    "derived from these data after the data has been retrieved from FHFA.gov."
+)
+_STATUS_LABELS = {
+    "1": "Delinquent: 30–59 days",
+    "2": "Delinquent: 60–89 days",
+    "3": "Delinquent: 90–119 days",
+    "4": "Delinquent: 120–149 days",
+    "5": "Delinquent: 150–179 days",
+    "6": "Delinquent: 180+ days",
+    "7": "Chapter 13 bankruptcy",
+    "8": "Foreclosure / distressed disposition",
+    "9": "Other adverse / charge-off",
+    "A": "History no longer reported",
+    "B": "Potentially closed",
+    "C": "Current",
+    "K": "Opened; performance not yet reported",
+    "M": "Missing archive gap",
+    "P": "Pre-open",
+    "Q": "Opened during quarter",
+    "S": "Servicer-suppressed",
+}
+
+
+class NsmoViews:
+    """Read the private, hash-bound aggregate receipt and expose no row data."""
+
+    def __init__(self, root: Path):
+        self.root = root.resolve()
+        self._cached: tuple[tuple[int, int, int, int], dict] | None = None
+
+    def report(self) -> dict:
+        audit_path = contained(self.root, f"{_RECEIPTS}/data-audit.json")
+        stat = audit_path.stat()
+        receipt_path = contained(self.root, f"{_RECEIPTS}/download-receipt.json")
+        audit = read_json(audit_path)
+        receipt = read_json(receipt_path)
+        if audit.get("status") != "PASS":
+            raise ValueError("NSMO aggregate profile is not verified")
+        if receipt.get("dataset_release") != "NSMO Public Use File v7.0, page updated 2026-05-27":
+            raise ValueError("NSMO release receipt is not the reviewed v7.0 release")
+        expected_path = contained(self.root, f"{_ROOT}/puf/nsmo_v70_1324_puf.csv")
+        source_stat = expected_path.stat()
+        identity = (stat.st_mtime_ns, stat.st_size, source_stat.st_mtime_ns, source_stat.st_size)
+        if self._cached and self._cached[0] == identity:
+            return self._cached[1]
+        expected_sha = receipt.get("csv_sha256")
+        if (
+            audit.get("csv_sha256") != expected_sha
+            or audit.get("csv_bytes") != receipt.get("csv_bytes")
+            or source_stat.st_size != receipt.get("csv_bytes")
+            or sha256(expected_path) != expected_sha
+        ):
+            raise ValueError("NSMO PUF no longer matches its acquisition and audit receipts")
+
+        rows = int(audit["row_count"])
+        perf = audit["performance"]
+        quarters = perf["quarterly_counts"]
+        expected_cells = rows * int(perf["column_count"])
+        if (
+            audit.get("unique_nonblank_nsmoid") != rows
+            or audit.get("duplicate_nsmoid_rows") != 0
+            or audit.get("blank_nsmoid_rows") != 0
+            or audit.get("bad_width_rows") != 0
+            or int(perf.get("cell_count", -1)) != expected_cells
+            or perf.get("unknown_status_counts")
+            or len(quarters) != int(perf["column_count"])
+        ):
+            raise ValueError("NSMO aggregate audit invariants do not reconcile")
+
+        public_quarters = []
+        allowed_codes = set(_PERFORMANCE_CODES)
+        for quarter in quarters:
+            counts = quarter["status_counts_unweighted"]
+            weights = quarter["status_weight_sums_descriptive_only"]
+            if set(counts) - allowed_codes or sum(int(value) for value in counts.values()) != rows:
+                raise ValueError("NSMO quarter status counts do not reconcile to the source sample")
+            public_quarters.append({
+                "quarter_end": quarter["quarter_end"],
+                "status_counts": {code: int(value) for code, value in counts.items()},
+                "status_weight_sums_descriptive_only": {
+                    code: float(value) for code, value in weights.items()
+                },
+            })
+
+        weights = audit["analysis_weight"]
+        report = {
+            "schema_version": "nsmo-profile-v1",
+            "status": "AVAILABLE",
+            "visibility": "local_private_research",
+            "source": {
+                "title": "FHFA/CFPB NSMO Public Use File v7.0",
+                "release_date": "2026-05-27",
+                "source_url": "https://www.fhfa.gov/data/nsmo",
+                "notice_and_terms_url": "https://www.fhfa.gov/data/nsmo/puf",
+                "source_sha256": expected_sha,
+            },
+            "sample": {
+                "mortgages": rows,
+                "columns": int(audit["column_count"]),
+                "unique_nonblank_ids": int(audit["unique_nonblank_nsmoid"]),
+                "origination_year_counts": audit["origination_year_counts"],
+                "origination_month_counts": audit["origination_month_counts"],
+                "survey_wave_counts": audit["survey_wave_counts"],
+                "bad_width_rows": int(audit["bad_width_rows"]),
+            },
+            "analysis_weight": {
+                "definition": "FHFA analysis weight (sampling weight × non-response adjustment)",
+                "valid_n": int(weights["valid_n"]),
+                "missing": int(weights["missing"]),
+                "invalid": int(weights["invalid"]),
+                "nonpositive": int(weights["nonpositive"]),
+                "min": float(weights["min"]),
+                "median": float(weights["median"]),
+                "max": float(weights["max"]),
+                "sum": float(weights["sum"]),
+            },
+            "performance": {
+                "column_count": int(perf["column_count"]),
+                "first_quarter_end": perf["first_quarter_end"],
+                "last_quarter_end": perf["last_quarter_end"],
+                "cell_count": int(perf["cell_count"]),
+                "status_codes": [
+                    {
+                        "code": code,
+                        "label": _STATUS_LABELS[code],
+                        "family": _PERFORMANCE_CODES[code][0],
+                    }
+                    for code in sorted(allowed_codes)
+                ],
+                "quarterly_counts": public_quarters,
+            },
+            "limitations": [
+                "Quarterly status counts use the fixed PUF row count as a descriptive reference, not an at-risk denominator or PD rate.",
+                "Weighted status sums are descriptive only and are not event rates, incidence estimates, or PD.",
+                "Quarterly snapshots do not establish exact event dates and may miss events between observations.",
+                "Status codes for non-observation, pre-open, reporting gaps, history end, and suppression remain distinct from current and delinquent states.",
+                "This source has its own sample/response process and is not pooled with Freddie D01 or counted as a Freddie vintage.",
+                "No target, model, score, or credit decision is produced.",
+            ],
+            "required_fhfa_analysis_disclaimer": _FHFA_DISCLAIMER,
+        }
+        self._cached = (identity, report)
+        return report

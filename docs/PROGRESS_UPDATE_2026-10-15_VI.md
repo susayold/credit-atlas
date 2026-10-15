@@ -1,5 +1,20 @@
 # Cập nhật tiến độ Credit Atlas — 15/10/2026
 
+## NSMO D02 workspace — first descriptive slice
+
+Sau khi người dùng cho phép hoàn tất acknowledgement Notice/Terms của FHFA,
+đã tải riêng NSMO v7.0 và hoàn thành audit cấu trúc/code domain. Trang `/nsmo`
+và API `/api/nsmo-profile` hiện phục vụ hồ sơ tổng hợp đã ràng buộc với hash,
+receipt tải xuống và audit; giao diện xem trạng thái theo quý, mix vintage và
+chất lượng `analysis_weight`. API không trả row hoặc ID. Không dựng at-risk
+denominator, event rate, PD hay target và không gộp với Freddie D01. UI/API
+acceptance cho lát cắt ban đầu đạt; coverage đầy đủ, field-by-field codebook,
+risk-set/censoring rules và target protocol vẫn còn mở. Full suite hiện tại
+**1.606/1.606 PASS**, focused NSMO **16/16 PASS**; D01 vẫn **26/50 = 52%**.
+Chi tiết: [D02 build plan](NSMO_D02_CASE_BUILD_PLAN_VI.md),
+[NSMO source review](D01_NSMO_SOURCE_REVIEW_VI.md) và
+[test suite](TEST_SUITE_2026-10-15_VI.md).
+
 ## Mức hoàn thành theo sổ nghiệm thu
 
 **26/50 yêu cầu đã có bằng chứng nghiệm thu đầy đủ: 52%.** Tỷ lệ đếm theo yêu cầu, không phải ước lượng giờ công hay mức độ sẵn sàng ngân hàng. Các module:

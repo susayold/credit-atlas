@@ -54,10 +54,21 @@ def main() -> None:
                 raise AssertionError("repeated-landmark dependence caveat is not visible")
             checks.append("repeated landmarks show snapshot and dependence caveat")
 
+            same_month_metrics = page.locator("#same-month-ambiguity-metrics").inner_text()
+            if not all(value in same_month_metrics for value in ("42,236", "126", "21")):
+                raise AssertionError(f"same-month snapshot-status totals do not match receipt: {same_month_metrics}")
+            same_month_rows = page.locator("#same-month-ambiguity-table tbody tr").all_inner_texts()
+            if len(same_month_rows) != 3 or not all("A · history ended" in row for row in same_month_rows):
+                raise AssertionError("same-month ambiguity table does not preserve the A-status breakdown")
+            checks.append("same-month close/snapshot status counts and interpretation render")
+
             page.locator("#target-vintage-band").select_option("2017-2019")
             rows = page.locator("#target-vintage-table tbody tr").all_inner_texts()
             if len(rows) != 3 or not all(year in " ".join(rows) for year in ("2017", "2018", "2019")):
                 raise AssertionError("vintage band filter does not return 2017–2019 rows")
+            same_month_rows = page.locator("#same-month-ambiguity-table tbody tr").all_inner_texts()
+            if len(same_month_rows) != 3 or not all("A · history ended" in row for row in same_month_rows):
+                raise AssertionError("vintage filter does not update same-month status breakdown")
             checks.append("vintage filter narrows repeated-landmark table")
 
             page.locator("#target-vintage-band").select_option("all")
@@ -106,13 +117,15 @@ def main() -> None:
 
             page.set_viewport_size({"width": 390, "height": 844})
             page.wait_for_timeout(150)
-            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth, transitionColumns: getComputedStyle(document.querySelector('#transition-support-metrics')).gridTemplateColumns.split(' ').length, transitionTableWidth: document.querySelector('#transition-support-table').clientWidth, transitionTableScroll: document.querySelector('#transition-support-table').scrollWidth})")
+            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth, transitionColumns: getComputedStyle(document.querySelector('#transition-support-metrics')).gridTemplateColumns.split(' ').length, transitionTableWidth: document.querySelector('#transition-support-table').clientWidth, transitionTableScroll: document.querySelector('#transition-support-table').scrollWidth, sameMonthColumns: getComputedStyle(document.querySelector('#same-month-ambiguity-metrics')).gridTemplateColumns.split(' ').length, sameMonthTableWidth: document.querySelector('#same-month-ambiguity-table').clientWidth, sameMonthTableScroll: document.querySelector('#same-month-ambiguity-table').scrollWidth})")
             if dimensions["scrollWidth"] > dimensions["width"] or dimensions["columns"] != 2:
                 raise AssertionError(f"target panel overflows or fails mobile KPI layout: {dimensions}")
             if dimensions["origColumns"] != 2 or dimensions["origTableScroll"] <= dimensions["origTableWidth"]:
                 raise AssertionError(f"origination panel mobile layout or table scroller is incorrect: {dimensions}")
             if dimensions["transitionColumns"] != 2 or dimensions["transitionTableScroll"] <= dimensions["transitionTableWidth"]:
                 raise AssertionError(f"transition support mobile layout or table scroller is incorrect: {dimensions}")
+            if dimensions["sameMonthColumns"] != 2 or dimensions["sameMonthTableScroll"] <= dimensions["sameMonthTableWidth"]:
+                raise AssertionError(f"same-month status mobile layout or table scroller is incorrect: {dimensions}")
             checks.append("mobile feasibility panels fit viewport and tables scroll horizontally")
             if errors:
                 raise AssertionError(f"Browser JavaScript errors: {errors}")

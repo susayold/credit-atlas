@@ -200,6 +200,26 @@ function renderTargetFeasibility(data){
       const quarterRows=[...grouped.entries()].sort((a,b)=>a[0].localeCompare(b[0])).map(([q,g])=>[q,n(g.n),n(g.counts.observed_90plus_event||0),n(g.counts.four_quarters_observed_no_event||0),n(g.counts.termination_competing_censor||0),n(g.counts.termination_same_month_ambiguous||0),n((g.counts.observation_censor_M||0)+(g.counts.observation_censor_S||0))]);
       $('target-quarter-table').replaceChildren(table(['Earliest eligible C quarter','Unique mortgages','90+','No 90+ complete','Termination','Same-month ambiguous','M/S'],quarterRows,[1,2,3,4,5,6]));
     }
+    const sameMonthRows=(data.same_month_ambiguity?.snapshot_status_counts_by_vintage_and_baseline_state||[])
+      .filter(row=>!years||years(row.origination_year));
+    const statusCounts=new Map();
+    sameMonthRows.forEach(row=>{
+      const key=row.baseline_state;
+      const counts=statusCounts.get(key)||{};
+      for(const [status,count] of Object.entries(row.snapshot_status_counts_unweighted||{}))counts[status]=(counts[status]||0)+Number(count||0);
+      statusCounts.set(key,counts);
+    });
+    const statusLabel=code=>code==='<BLANK>'?'Blank':code==='A'?'A · history ended':code;
+    const ambiguityRows=[...statusCounts.entries()].sort((a,b)=>({C:0,'1':1,'2':2}[a[0]]??9)-({C:0,'1':1,'2':2}[b[0]]??9))
+      .flatMap(([baseline,counts])=>Object.entries(counts).sort((a,b)=>a[0].localeCompare(b[0])).map(([status,count])=>[baseline,statusLabel(status),n(count)]));
+    const ambiguityTotals={C:0,'1':0,'2':0};
+    for(const [baseline,counts] of statusCounts)ambiguityTotals[baseline]=Object.values(counts).reduce((sum,value)=>sum+Number(value||0),0);
+    $('same-month-ambiguity-metrics').replaceChildren(
+      metric('Baseline C',n(ambiguityTotals.C),'Same-month tied quarterly snapshots'),
+      metric('Baseline 30–59 days',n(ambiguityTotals['1']),'Same-month tied quarterly snapshots'),
+      metric('Baseline 60–89 days',n(ambiguityTotals['2']),'Same-month tied quarterly snapshots')
+    );
+    $('same-month-ambiguity-table').replaceChildren(table(['Baseline state','Performance code in tied quarter','Snapshots'],ambiguityRows,[2]));
   }
   mode.addEventListener('change',draw);band.addEventListener('change',draw);draw();
 }

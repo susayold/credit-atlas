@@ -96,6 +96,12 @@
         <h3>Support theo quý landmark</h3><div id="target-quarter-table" class="table-wrap"></div>
         <p class="footnote">Mã 3–6 chỉ cho biết 90+ ngày trễ được quan sát tại một snapshot quý. “No 90+” yêu cầu đủ bốn snapshot quan sát được. Landmark lặp không độc lập; support theo outcome ở chế độ lặp không loại trừ nhau ở cấp khoản vay. Snapshot/loan counts là mô tả, không phải PD, incidence hoặc tỷ lệ default; trọng số và sai số lấy mẫu chưa được dùng.</p>
         <div class="origination-feasibility">
+          <div class="section-head"><div><div class="eyebrow">SAME-MONTH TERMINATION · CODE CHECK</div><h3>Mã performance tại quý trùng tháng đóng</h3><p>Kiểm tra status code được lưu ở snapshot quý có tháng kết thúc trùng Close_Year/Close_Month.</p></div></div>
+          <div id="same-month-ambiguity-metrics" class="metric-grid" aria-label="Same-month termination status counts"></div>
+          <div id="same-month-ambiguity-table" class="table-wrap"></div>
+          <p class="footnote">Code A nghĩa là performance history không còn được báo cáo, thường sau khi khoản vay đóng. A không cho biết ngày đóng trong tháng, không phân xử thứ tự giữa snapshot và termination, và không phải mã performing hoặc credit event. Giữ các quan sát này ở nhóm ambiguous/censor.</p>
+        </div>
+        <div class="origination-feasibility">
           <div class="section-head"><div><div class="eyebrow">ORIGINATION-ALIGNED · FEASIBILITY ONLY</div><h3>Snapshot 90+ trong 12 tháng sau quý mở khoản vay</h3><p>Loại quý mở khoản vay (mã Q); chỉ tổng hợp các quý quan sát kế tiếp trong cửa sổ tháng mở +12.</p></div></div>
           <div id="origination-feasibility-state" class="domain-state" role="status">Đang xác minh receipt origination…</div>
           <div id="origination-feasibility-metrics" class="metric-grid" aria-label="Origination feasibility metrics"></div>

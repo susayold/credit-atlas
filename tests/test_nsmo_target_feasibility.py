@@ -4,6 +4,7 @@ from scripts.audit_nsmo_target_feasibility import (
     _commit_unique_vintage_support,
     classify_followup,
     first_eligible_c_landmark,
+    same_month_close_snapshot_status,
 )
 
 
@@ -27,6 +28,18 @@ def test_close_before_quarter_snapshot_is_competing_censor():
 
 def test_close_in_snapshot_month_is_ambiguous():
     assert classify_followup(["C", "3", "A", "A", "A"], 2013 * 12 + 6, 0) == "termination_same_month_ambiguous"
+    assert same_month_close_snapshot_status(["C", "3", "A", "A", "A"], 2013 * 12 + 6, 0) == "3"
+
+
+def test_same_month_snapshot_status_does_not_resolve_within_month_order():
+    states = ["C", "3", "A", "A", "A"]
+    tied = same_month_close_snapshot_status(states, 2013 * 12 + 6, 0)
+    assert tied == "3"
+    assert classify_followup(states, 2013 * 12 + 6, 0) == "termination_same_month_ambiguous"
+
+
+def test_snapshot_status_is_not_attributed_when_close_precedes_quarter_end_month():
+    assert same_month_close_snapshot_status(["C", "3", "A", "A", "A"], 2013 * 12 + 5, 0) is None
 
 
 def test_close_after_event_snapshot_does_not_erase_observed_event():

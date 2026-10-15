@@ -167,6 +167,7 @@ def _write_target_feasibility_receipt(root: Path, source_sha: str) -> None:
     target = root / "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     outcomes = {"observed_90plus_event": 1, "four_quarters_observed_no_event": 1}
+    repeated_outcomes = {**outcomes, "termination_same_month_ambiguous": 2}
     target.write_text(json.dumps({
         "status": "PASS", "target_created": False,
         "source": {"sha256": source_sha},
@@ -175,11 +176,11 @@ def _write_target_feasibility_receipt(root: Path, source_sha: str) -> None:
         "baseline_quarter_state_aggregates": [{
             "baseline_quarter": "2013-03-31", "baseline_state": "C",
             "full_12m_snapshot_horizon_available": True,
-            "outcomes_unweighted": {"eligible_snapshot": 2, **outcomes},
+            "outcomes_unweighted": {"eligible_snapshot": 4, **repeated_outcomes},
         }],
         "origination_vintage_baseline_aggregates": [{
             "origination_year": "2013", "baseline_state": "C",
-            "full_horizon_baseline_snapshots_unweighted": outcomes,
+            "full_horizon_baseline_snapshots_unweighted": repeated_outcomes,
             "unique_mortgages_with_at_least_one_full_horizon_baseline": 2,
             "unique_mortgages_by_snapshot_outcome_class_nonexclusive": outcomes,
         }],
@@ -194,6 +195,10 @@ def _write_target_feasibility_receipt(root: Path, source_sha: str) -> None:
                 "unique_mortgage_count": 2, "outcomes_unweighted": outcomes,
             }],
         },
+        "same_month_ambiguous_snapshot_status_counts_by_baseline_state": {"C": {"A": 2}, "1": {}, "2": {}},
+        "same_month_ambiguous_snapshot_status_counts_by_vintage_and_baseline_state": [{
+            "origination_year": "2013", "baseline_state": "C", "snapshot_status_counts_unweighted": {"A": 2},
+        }],
     }), encoding="utf-8")
 
 
@@ -306,7 +311,22 @@ def test_nsmo_target_feasibility_is_hash_bound_and_reconciles_anchors(tmp_path):
     assert result["schema_version"] == "nsmo-target-feasibility-v1"
     assert result["repeated_landmarks"]["c_state_summary"]["unique_mortgages_with_at_least_one_full_horizon_baseline"] == 2
     assert result["one_landmark_per_mortgage"]["summary"]["outcomes_unweighted"]["observed_90plus_event"] == 1
+    assert result["same_month_ambiguity"]["snapshot_status_counts_by_baseline_state"] == {"C": {"A": 2}, "1": {}, "2": {}}
+    assert result["same_month_ambiguity"]["snapshot_status_counts_by_vintage_and_baseline_state"][0]["snapshot_status_counts_unweighted"] == {"A": 2}
     assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_target_feasibility_rejects_nonreconciling_same_month_status(tmp_path):
+    csv = _workspace(tmp_path)
+    digest = hashlib.sha256(csv.read_bytes()).hexdigest()
+    _write_target_feasibility_receipt(tmp_path, digest)
+    receipt_path = tmp_path / "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["same_month_ambiguous_snapshot_status_counts_by_baseline_state"]["C"]["A"] = 1
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="same-month state totals do not reconcile"):
+        NsmoViews(tmp_path).target_feasibility()
 
 
 def test_nsmo_target_feasibility_rejects_a_receipt_for_another_puf(tmp_path):
@@ -480,6 +500,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             feasibility = json.loads(response.read())
             assert response.status == 200
             assert feasibility["status"] == "AVAILABLE"
+            assert feasibility["same_month_ambiguity"]["snapshot_status_counts_by_baseline_state"] == {"C": {"A": 2}, "1": {}, "2": {}}
             assert "private-a" not in json.dumps(feasibility)
         with urlopen(base + "/api/nsmo-origination-feasibility", timeout=5) as response:
             feasibility = json.loads(response.read())

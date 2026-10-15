@@ -385,6 +385,53 @@ class NsmoViews:
         if quarter_totals != vintage_totals:
             raise ValueError("NSMO target feasibility quarter and vintage totals do not reconcile")
 
+        allowed_statuses = set("C123456789ABKMPSQ") | {"<BLANK>"}
+        same_month_source = receipt.get("same_month_ambiguous_snapshot_status_counts_by_baseline_state", {})
+        if not isinstance(same_month_source, dict):
+            raise ValueError("NSMO same-month ambiguity aggregates are invalid")
+        same_month_by_state: dict[str, dict[str, int]] = {}
+        for state in ("C", "1", "2"):
+            raw = same_month_source.get(state, {})
+            if not isinstance(raw, dict) or set(raw) - allowed_statuses:
+                raise ValueError("NSMO same-month snapshot status codes are invalid")
+            counts = {str(code): int(value) for code, value in raw.items()}
+            if any(value < 0 for value in counts.values()) or sum(counts.values()) != quarter_totals.get(state, {}).get("termination_same_month_ambiguous", 0):
+                raise ValueError("NSMO same-month state totals do not reconcile to ambiguous closures")
+            same_month_by_state[state] = counts
+
+        same_month_vintage_source = receipt.get("same_month_ambiguous_snapshot_status_counts_by_vintage_and_baseline_state")
+        if not isinstance(same_month_vintage_source, list):
+            raise ValueError("NSMO same-month vintage aggregates are missing")
+        same_month_vintage_rows = []
+        same_month_vintage_totals: dict[tuple[str, str], int] = {}
+        same_month_status_totals: dict[str, dict[str, int]] = {}
+        seen_same_month_keys: set[tuple[str, str]] = set()
+        for item in same_month_vintage_source:
+            year, state = str(item.get("origination_year", "")), str(item.get("baseline_state", ""))
+            key = (year, state)
+            raw = item.get("snapshot_status_counts_unweighted", {})
+            if (not year.isdigit() or state not in {"C", "1", "2"} or key in seen_same_month_keys
+                    or not isinstance(raw, dict) or set(raw) - allowed_statuses):
+                raise ValueError("NSMO same-month vintage key or status is invalid")
+            seen_same_month_keys.add(key)
+            counts = {str(code): int(value) for code, value in raw.items()}
+            if any(value < 0 for value in counts.values()):
+                raise ValueError("NSMO same-month vintage count cannot be negative")
+            same_month_vintage_rows.append({"origination_year": year, "baseline_state": state,
+                                            "snapshot_status_counts_unweighted": counts})
+            same_month_vintage_totals[key] = sum(counts.values())
+            state_total = same_month_status_totals.setdefault(state, {})
+            for code, value in counts.items():
+                state_total[code] = state_total.get(code, 0) + value
+        for row in vintage_rows:
+            key = (row["origination_year"], row["baseline_state"])
+            expected = row["full_horizon_baseline_snapshots_unweighted"].get("termination_same_month_ambiguous", 0)
+            if same_month_vintage_totals.get(key, 0) != expected:
+                raise ValueError("NSMO same-month vintage statuses do not reconcile to ambiguous closures")
+        if any(same_month_status_totals.get(state, {}) != same_month_by_state[state]
+               for state in ("C", "1", "2")):
+            raise ValueError("NSMO same-month status totals do not reconcile by baseline state")
+
         anchor_vintages = []
         anchor_totals: dict[str, int] = {}
         anchor_loan_count = 0
@@ -437,6 +484,10 @@ class NsmoViews:
                 "origination_vintage_rows": anchor_vintages,
                 "landmark_quarter_vintage_rows": anchor_quarters,
                 "summary": {"unique_mortgages": anchor_loan_count, "outcomes_unweighted": anchor_totals},
+            },
+            "same_month_ambiguity": {
+                "snapshot_status_counts_by_baseline_state": same_month_by_state,
+                "snapshot_status_counts_by_vintage_and_baseline_state": same_month_vintage_rows,
             },
             "limitations": [
                 "Exploratory feasibility counts only; this API creates no target labels, rates, PD, or model matrix.",

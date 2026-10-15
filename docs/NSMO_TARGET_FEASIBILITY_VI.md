@@ -24,6 +24,22 @@ nợ tốt; chúng dừng quan sát. Khoản vay có ngày đóng trước quý 
 kiện. Vì chỉ có năm/tháng đóng, đóng trong cùng tháng với snapshot được gắn
 `termination_same_month_ambiguous`, không phán thứ tự đóng hay sự kiện.
 
+### Status trong snapshot trùng tháng đóng
+
+Audit bổ sung đối chiếu performance code của đúng quý có tháng kết thúc trùng
+tháng snapshot. Cả 42.236 trường hợp baseline `C`, 126 baseline `1`, và 21
+baseline `2` đều có code `A` tại snapshot bị buộc cùng-tháng. Theo Appendix C,
+`A` là performance history không còn được báo cáo, trong đa số trường hợp sau
+khi khoản vay đóng; codebook cũng yêu cầu đọc `A/B` cùng các trường close status,
+year và month. Phân bố này giải thích trạng thái được lưu tại các quan sát
+tied-month, nhưng vẫn không cung cấp ngày trong tháng để xác định thứ tự snapshot
+so với termination. Do đó các trường hợp vẫn là ambiguous/censor, không được
+chuyển sang nhóm không quá hạn hoặc event.
+
+Dashboard hiển thị các tổng này và bảng theo vintage/state. Bộ lọc vintage dùng
+chung với các feasibility panel khác. Bảng chỉ phân tích mã quan sát được trong
+quý bị buộc cùng-tháng; nó không thay đổi risk-set hoặc outcome protocol.
+
 Định nghĩa này là **endpoint snapshot quan sát được**, không phải ngày phát sinh
 quá hạn lần đầu: các quý có thể bỏ lỡ biến cố giữa kỳ. `Close_Status` chỉ nói mở/
 kết thúc, không cho biết lý do nên không được diễn giải là trả trước hạn.

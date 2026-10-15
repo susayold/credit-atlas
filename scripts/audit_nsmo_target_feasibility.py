@@ -73,6 +73,23 @@ def first_eligible_c_landmark(statuses: list[str], close_ordinal: int | None,
     return None
 
 
+def same_month_close_snapshot_status(statuses: list[str], close_ordinal: int | None,
+                                     baseline_index: int, horizon: int = 4) -> str | None:
+    """Expose the quarter snapshot status when close month ties that quarter.
+
+    The returned status is an ambiguity diagnostic only: the file has no day of
+    month, so it cannot order that snapshot against the termination.
+    """
+    if close_ordinal is None or baseline_index + horizon >= len(statuses):
+        return None
+    for step in range(1, horizon + 1):
+        q_index = baseline_index + step
+        q_ordinal = _quarter_ordinal(q_index)
+        if close_ordinal <= q_ordinal:
+            return statuses[q_index] if close_ordinal == q_ordinal else None
+    return None
+
+
 def _quarter_ordinal(index: int) -> int:
     # Performance columns are ordered from March 2013, then June, September,
     # December. Index 0 therefore maps to YYYY=2013, MM=3.
@@ -121,6 +138,8 @@ def audit(path: Path) -> dict:
         vintage_weight_sums: dict[tuple[str, str], Counter] = defaultdict(Counter)
         vintage_unique_baselines: Counter[tuple[str, str]] = Counter()
         vintage_unique_outcomes: dict[tuple[str, str], Counter] = defaultdict(Counter)
+        same_month_status_counts: dict[str, Counter] = defaultdict(Counter)
+        same_month_vintage_status_counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
         first_c_landmark_by_vintage: dict[str, Counter] = defaultdict(Counter)
         first_c_landmark_by_quarter: dict[tuple[str, str], Counter] = defaultdict(Counter)
         first_c_landmark_weights: dict[str, Counter] = defaultdict(Counter)
@@ -163,6 +182,10 @@ def audit(path: Path) -> dict:
                     result = classify_followup(states, close, baseline_i)
                 counts[key][result] += 1
                 weight_sums[key][result] += weight
+                if result == "termination_same_month_ambiguous":
+                    tied_status = same_month_close_snapshot_status(states, close, baseline_i) or "<BLANK>"
+                    same_month_status_counts[baseline_status][tied_status] += 1
+                    same_month_vintage_status_counts[(vintage, baseline_status)][tied_status] += 1
                 # The distinct-loan support screen uses only baselines with a
                 # complete four-quarter window in the PUF. The same loan may
                 # contribute multiple snapshots, so unique outcomes are
@@ -206,6 +229,11 @@ def audit(path: Path) -> dict:
                     for name, value in sorted(vintage_weight_sums[key].items())
                 },
             })
+        same_month_by_vintage = [
+            {"origination_year": vintage, "baseline_state": state,
+             "snapshot_status_counts_unweighted": dict(sorted(counter.items()))}
+            for (vintage, state), counter in sorted(same_month_vintage_status_counts.items())
+        ]
         first_c_vintage_out = []
         for vintage, counter in sorted(first_c_landmark_by_vintage.items()):
             first_c_vintage_out.append({
@@ -243,6 +271,10 @@ def audit(path: Path) -> dict:
         "width_errors": width_errors,
         "baseline_quarter_state_aggregates": out,
         "origination_vintage_baseline_aggregates": vintage_out,
+        "same_month_ambiguous_snapshot_status_counts_by_baseline_state": {
+            state: dict(sorted(counter.items())) for state, counter in sorted(same_month_status_counts.items())
+        },
+        "same_month_ambiguous_snapshot_status_counts_by_vintage_and_baseline_state": same_month_by_vintage,
         "one_landmark_per_mortgage_support": {
             "selection_rule": "earliest C snapshot per mortgage with a full four-quarter horizon, excluding known closed-by-baseline loans",
             "target_created": False,

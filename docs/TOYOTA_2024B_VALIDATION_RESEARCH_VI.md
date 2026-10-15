@@ -6,7 +6,7 @@ Ngày chốt: 15/10/2026. Tất cả raw XML, Parquet và audit có asset key đ
 
 Mục tiêu của checkpoint là kiểm tra pipeline đã dùng cho Toyota 2022-B có tái lập được trên một trust khác và trên một giai đoạn servicing mới hay không. Đây là kiểm định chuyển giao giữa hai deal trong cùng Toyota issuer/servicer family. Nó chưa thay thế external validation với sponsor/servicer khác, không chứng minh tính đại diện của pool và không đủ để gọi kết quả là origination PD.
 
-Đã lấy 29 kỳ liên tiếp, 30/04/2024–31/08/2026: mỗi kỳ ghép filing SEC ABS-EE, EX-102 loan-level XML, EX-103 definitions và Form 10-D EX-99.1 Servicer’s Certificate theo report month. Nguồn gốc là SEC EDGAR, CIK 2012786; [ABS-EE filing 2024-04](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included) và [Form 10-D filing 2024-04](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Receipt private lưu URL, accession, HTTP metadata, byte count và SHA-256 cho từng nguồn.
+Đã lấy 29 kỳ liên tiếp, 30/04/2024–31/08/2026: mỗi kỳ ghép filing SEC ABS-EE, EX-102 loan-level XML, EX-103 definitions và Form 10-D EX-99.1 Servicer’s Certificate theo report month. Nguồn gốc là SEC EDGAR, CIK 2012786; [ABS-EE filing 2024-04](https://www.sec.gov/Archives/edgar/data/2012786/000095013124002192/0000950131-24-002192-index.htm) và [Form 10-D filing 2024-04](https://www.sec.gov/Archives/edgar/data/2012786/000095013124002190/0000950131-24-002190-index.htm). Receipt private lưu URL, accession, HTTP metadata, byte count và SHA-256 cho từng nguồn.
 
 Tháng 03/2024 không đưa vào vì filing ABS-EE tương ứng là kỳ inception/trùng kỳ và không có cặp 10-D được xác nhận trong acquisition manifest. Bắt đầu từ 04/2024 tạo được panel đồng kỳ 29/29 thay vì ghép các kỳ lệch ngày.
 
@@ -60,11 +60,11 @@ Tái lặp cùng cấu trúc recovery discrepancy trên hai deal gợi ý đây 
 
 ## 6. Nơi lưu và cách tái tạo
 
-- Acquisition receipt và dữ liệu gốc: `private evidence omitted from public release`
-- Panel Parquet/manifest: `private evidence omitted from public release`
-- Longitudinal audit: `private evidence omitted from public release`
-- Certificate tie-out: `private evidence omitted from public release`
-- Browser QA: `private evidence omitted from public release`
+- Acquisition receipt và dữ liệu gốc: `data/private/structured/toyota-2024b-validation-panel-5286fb3cae94/`
+- Panel Parquet/manifest: `data/private/derived/toyota-2024b-validation-panel-35e5183b1c22/`
+- Longitudinal audit: `artifacts/private/toyota-2024b-absee-panel-audit-148e4a9f9a76/audit.json`
+- Certificate tie-out: `artifacts/private/toyota-2024b-certificate-tieout-6223784d25dd/audit.json`
+- Browser QA: `artifacts/private/toyota-2024b-validation-ui-qa-a7665b477047/receipt.json`
 - Dựng panel: `scripts/build_toyota_2024b_validation_panel.py`
 - Audit panel và certificate: `scripts/audit_toyota_2024b_absee_panel.py`, `scripts/audit_toyota_2024b_certificate_tieout.py`
 - App card: `apps/web/app.js`; API qualification/pinned audit: `src/credit_atlas/absee_profile.py`
@@ -76,7 +76,7 @@ $env:PYTHONPATH='src'
 python scripts/build_toyota_2024b_validation_panel.py
 python scripts/audit_toyota_2024b_absee_panel.py
 python scripts/audit_toyota_2024b_certificate_tieout.py
-python -m credit_atlas.cli --root local machine path omitted serve --port 8780
+python -m credit_atlas.cli --root D:\data\Codex\credit-atlas serve --port 8780
 ```
 
 ## 7. Kết luận và việc kế tiếp

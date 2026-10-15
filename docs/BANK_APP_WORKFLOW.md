@@ -62,7 +62,7 @@ Browser `bank-browser-qa-3b92675e9f79`: **11 checks PASS**, Chrome:
 - Không JavaScript/console errors.
 
 Ảnh desktop/mobile, exported JSON và receipt ở
-`private evidence omitted from public release`; đã xem trực tiếp hai ảnh.
+`artifacts/private/bank-browser-qa-3b92675e9f79/`; đã xem trực tiếp hai ảnh.
 First run `bank-browser-qa-2b413354807d` qua P4 nhưng timeout khi chuyển sang
 cold retail verification với default assertion 5 giây. Giữ failed receipt;
 rerun tăng riêng cold-retail assertion lên 30 giây và qua navigation, vẫn giữ

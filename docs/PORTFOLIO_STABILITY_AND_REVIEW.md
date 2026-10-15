@@ -60,9 +60,9 @@ hoặc private artifact đổi, catalog đánh evidence_current=false và export
 chặn; record/history vẫn giữ để điều tra. Expired package được ghi rõ,
 không tự delete hoặc auto-renew. Qualification flags luôn false.
 
-Input plan `private evidence omitted from public release` là automated
+Input plan `data/private/portfolio-review-plan-20261009.json` là automated
 **draft**, owner ghi analyst assignment pending; không giả nhận human review.
-Default storage: `private evidence omitted from public release`, theo source
+Default storage: `artifacts/private/reviews-portfolio.sqlite3`, theo source
 snapshot; browser QA dùng database riêng để không tạo reviewed QA notes trong
 production workspace.
 
@@ -85,10 +85,10 @@ qua annotation. Historical revision có API/export; UI chưa có history picker.
 
 ## 4. Commands và verification
 
-    .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_convergence.py --assumptions private evidence omitted from public release
+    .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_convergence.py --assumptions data/private/exposure-convergence-plan-20261009.json
     .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_convergence.py --verify exposure-convergence-0741003b87f4
     .\.venv\Scripts\python.exe -X utf8 scripts/audit_exposure_convergence.py --convergence-id exposure-convergence-0741003b87f4
-    .\.venv\Scripts\python.exe -X utf8 scripts/build_portfolio_review.py --input private evidence omitted from public release --output private evidence omitted from public release
+    .\.venv\Scripts\python.exe -X utf8 scripts/build_portfolio_review.py --input data/private/portfolio-review-plan-20261009.json --output artifacts/private/portfolio-review-draft-20261009.json
     .\.venv\Scripts\python.exe -X utf8 scripts/browser_exposure_qa.py
     .\scripts\test.ps1
 

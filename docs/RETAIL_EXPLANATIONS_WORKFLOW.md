@@ -129,7 +129,7 @@ catalog binding, exact saved/API selected-case report/export parity, private
 no-store responses and unchanged consumed holdout ledger.
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_explanations.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_explanations.py --assumptions data/private/retail-explanations-plan-20261010.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_retail_explanations.py --verify retail-explanations-84b3ac3bab6e
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_retail_explanations.py --explanations-id retail-explanations-84b3ac3bab6e
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_retail_explanations_qa.py

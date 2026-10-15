@@ -30,10 +30,10 @@ ValidExcelQA dùngfilemẫu3EXAMPLE positions, tạo `exposure-import-c171213546
 
 ## Evidence trên đĩa
 
-- `private evidence omitted from public release`:62PASS.
-- `private evidence omitted from public release`:66independentchecksPASS.
-- `private evidence omitted from public release`:500independentchecksPASS.
-- `private evidence omitted from public release`:5browsergroupsPASS,source/bucket→draft/export,unsafePOSTreject,validupload/mobile; frozenholdoutledger unchanged. Desktop/mobile screenshots đãxem.
+- `artifacts/private/p4-intake-movement-tests-20261011.xml`:62PASS.
+- `artifacts/private/exposure-audit-42ac59e74266/audit-complete.json`:66independentchecksPASS.
+- `artifacts/private/exposure-movement-audit-5bc7404496f3/audit-complete.json`:500independentchecksPASS.
+- `artifacts/private/p4-acceptance-qa-435791cbf240/receipt.json`:5browsergroupsPASS,source/bucket→draft/export,unsafePOSTreject,validupload/mobile; frozenholdoutledger unchanged. Desktop/mobile screenshots đãxem.
 - QA trước thiếurepo root importpath; lần tiếp dùngtimeout ngắn ởcoldReview; lần sau phát hiệngenericPOSTerror. Không dùngcác lần chưaPASS làmnghiệmthu. HeadlessQA cuối dùngTEMP/TMP trênD vàdaemonHTTPthreads để khôngkẹt shutdown sau assertionfailure.
 
 Không chạy/recalculate trongMicrosoftExcel native. Không refit hoặc tune frozenmodels; coldReview chỉ xácminh/replay nghiêncứu đãlưu.

@@ -38,7 +38,7 @@ Sửa title/owner/narrative/status tạo revision mới; captured evidence giữ
 
 Danh sách lọc theo SEC view + CIK. Lịch sử/JSON giữ original capture kể cả khi current source sau đó không còn verify được; new memo lúc đó không được capture. Update narrative không thay source và không recalculate evidence cũ.
 
-**Xuất corporate memo JSON** gồm current memo và toàn bộ revisions. Lưu ở private SQLite `private evidence omitted from public release`, cùng origin loopback guards của app. Không nhận file path hoặc executable từ client.
+**Xuất corporate memo JSON** gồm current memo và toàn bộ revisions. Lưu ở private SQLite `artifacts/private/corporate-memos.sqlite3`, cùng origin loopback guards của app. Không nhận file path hoặc executable từ client.
 
 ## Scope và dữ liệu còn thiếu
 
@@ -48,6 +48,6 @@ P3.06 hiện có financial memo editor/capture/history/export. Complete corporat
 
 ## Kiểm tra
 
-Browser `private evidence omitted from public release`: **4 nhóm PASS**. AAPL/GM create/update qua actual UI, source capture và filing-date anchored trend, immutable revision/history/private export, issuer-scoped reload/mobile, no browser exceptions và holdout access ledger unchanged. Hai records QA giữ archived; title/owner ghi rõ QA, không là business conclusions.
+Browser `artifacts/private/corporate-memo-qa-1deb923c721e/receipt.json`: **4 nhóm PASS**. AAPL/GM create/update qua actual UI, source capture và filing-date anchored trend, immutable revision/history/private export, issuer-scoped reload/mobile, no browser exceptions và holdout access ledger unchanged. Hai records QA giữ archived; title/owner ghi rõ QA, không là business conclusions.
 
-Backend `private evidence omitted from public release`: **25 tests PASS** gồm memo+existing HTTP/review regression. Kiểm tra invalid/missing fields, unsupported source/cutoff, injected capture, immutable scope, revision conflict, source outage/historical readability, loopback guard, attachment/no-store và isolation theo issuer. Test results không thay authenticated bank approval hoặc missing legal/data qualification.
+Backend `artifacts/private/corporate-memo-tests-final-20261010.xml`: **25 tests PASS** gồm memo+existing HTTP/review regression. Kiểm tra invalid/missing fields, unsupported source/cutoff, injected capture, immutable scope, revision conflict, source outage/historical readability, loopback guard, attachment/no-store và isolation theo issuer. Test results không thay authenticated bank approval hoặc missing legal/data qualification.

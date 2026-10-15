@@ -512,6 +512,11 @@ def handler_for(service: ResearchService):
                     result = service.evidence(run)
                 elif url.path == "/api/monitoring":
                     result = service.monitoring(run)
+                elif url.path in {"/api/fhfa-nmdb-performance", "/api/fhfa-nmdb-performance-report"}:
+                    result = service.fhfa_nmdb_performance()
+                    if url.path.endswith("-report"):
+                        self.send(200, result, filename="FHFA-NMDB-public-aggregate-performance.json", head=head)
+                        return
                 elif url.path == "/api/studies":
                     result = service.studies(run)
                 elif url.path == "/api/episode-followup":

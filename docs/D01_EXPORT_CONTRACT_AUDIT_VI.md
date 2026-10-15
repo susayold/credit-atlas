@@ -17,7 +17,7 @@ report schema 1 nhúng bên trong, không chỉnh sửa report engine đã pin.
 | Privacy | Quét serialization của whole-sample export bằng đủ 50.000 source IDs: 0 match; không identifier/prediction keys |
 | Unsupported uses | `metric=PD12`, `use=ECL`, cash-flow override và run khác bị từ chối |
 
-Receipt: `private evidence omitted from public release`;
+Receipt: `artifacts/private/d01-export-contract-dc182aeaae7e/receipt.json`;
 reproducible audit: `scripts/audit_d01_export_contract.py`. Export là nghiên cứu
 mô tả sample. D3 CIF, balance transitions và reported loss không được đổi tên
 thành PD, ECL hoặc contractual cash flow.

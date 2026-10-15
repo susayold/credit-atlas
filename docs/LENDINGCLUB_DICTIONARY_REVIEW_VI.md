@@ -4,11 +4,11 @@ Ngày 12/10/2026. Đối chiếu dictionary của issuer với 90 cột trong b�
 
 ## 1. Nguồn và acquisition
 
-URL https://resources.lendingclub.com/LCDataDictionary.xlsx trả HTTP 200 và chuyển sang resources.happen.com. Quan hệ đổi tên được xác nhận trên [website công ty](https://www.happen.com/company/media-center) và [hồ sơ SEC](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included): ngày 22/06/2026, LendingClub đổi tên công ty và ngân hàng sang Happen.
+URL https://resources.lendingclub.com/LCDataDictionary.xlsx trả HTTP 200 và chuyển sang resources.happen.com. Quan hệ đổi tên được xác nhận trên [website công ty](https://www.happen.com/company/media-center) và [hồ sơ SEC](https://www.sec.gov/Archives/edgar/data/1409970/000140997026000163/hapn-20260630.htm): ngày 22/06/2026, LendingClub đổi tên công ty và ngân hàng sang Happen.
 
 Hai trang trên được đọc bằng công cụ nghiên cứu web. HTTP trực tiếp tới media page trả 403 và một URL IR PDF trả 404; không ghi nhận đã acquire bytes của các tài liệu đó. Workbook được tải qua URL resource công khai, không dùng login hoặc cookies.
 
-Workbook nguyên gốc có 23.582 bytes. Source folder: `private evidence omitted from public release`. Receipt SHA-256: `2c38861ef1b62a92dc79c1d37195ccf6f1e5885ef8f0f17c15d3c830061460ca`. ZIP/container integrity được kiểm tra; source không bị chỉnh sửa. Folder acquisition chưa hoàn tất của lượt trước được giữ lại.
+Workbook nguyên gốc có 23.582 bytes. Source folder: `data/private/retail/lendingclub-dictionary-source-65e0222b7c42`. Receipt SHA-256: `2c38861ef1b62a92dc79c1d37195ccf6f1e5885ef8f0f17c15d3c830061460ca`. ZIP/container integrity được kiểm tra; source không bị chỉnh sửa. Folder acquisition chưa hoàn tất của lượt trước được giữ lại.
 
 Workbook gồm LoanStats, browseNotes và RejectStats. Metadata ghi created 2013-01-15, modified 2017-09-28. Đây là metadata của file, không chứng minh ngày xuất bản hoặc historical availability. Nó cũng không chứng minh dictionary bao phủ mọi thay đổi đến năm 2020. License CC BY của dataset Mendeley không tự áp dụng cho dictionary của issuer; public release vẫn chưa được phê duyệt.
 
@@ -38,15 +38,15 @@ Danh sách loại khỏi application modelling trong lúc chờ review bổ sung
 
 ## 4. Verification
 
-Profile: `private evidence omitted from public release`.
+Profile: `artifacts/private/lendingclub-dictionary-profile-9b8a25e34bf8/profile.json`.
 
 SHA-256: `bf8415ed612602d0941b44ffffda81b912daa05832f7a4729ab594335a7072a3`.
 
-Preparation dùng openpyxl read-only, giữ literal definitions và chặn formula definitions. Không edit workbook. Audit độc lập đọc OOXML trực tiếp, không dùng openpyxl hoặc production parser: `private evidence omitted from public release`, PASS 280 định nghĩa, 560 ô và mapping của 90 cột.
+Preparation dùng openpyxl read-only, giữ literal definitions và chặn formula definitions. Không edit workbook. Audit độc lập đọc OOXML trực tiếp, không dùng openpyxl hoặc production parser: `artifacts/private/lendingclub-dictionary-audit-3fe039b24405/receipt.json`, PASS 280 định nghĩa, 560 ô và mapping của 90 cột.
 
-Backend/HTTP: `private evidence omitted from public release`, 36 tests PASS. Test đầu giả định open_act_il không có định nghĩa; workbook cho thấy nó trùng tên trực tiếp. Test được sửa để kiểm tra verification_status_joint, đúng là cột chưa có định nghĩa. Failed XML được giữ lại; không sửa source hoặc loại bureau field chỉ vì giả định đó.
+Backend/HTTP: `artifacts/private/lendingclub-dictionary-http-tests-20261012-fixed.xml`, 36 tests PASS. Test đầu giả định open_act_il không có định nghĩa; workbook cho thấy nó trùng tên trực tiếp. Test được sửa để kiểm tra verification_status_joint, đúng là cột chưa có định nghĩa. Failed XML được giữ lại; không sửa source hoặc loại bureau field chỉ vì giả định đó.
 
-Browser: `private evidence omitted from public release`, 4 nhóm PASS: định nghĩa và caveat, alias/undefined/outcome distinctions, API/export parity, filters/reload, mobile và outage recovery. Không browser errors; frozen holdout ledger không đổi.
+Browser: `artifacts/private/lendingclub-source-qa-330325d8c34f/receipt.json`, 4 nhóm PASS: định nghĩa và caveat, alias/undefined/outcome distinctions, API/export parity, filters/reload, mobile và outage recovery. Không browser errors; frozen holdout ledger không đổi.
 
 ## 5. API và app
 

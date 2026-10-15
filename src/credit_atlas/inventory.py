@@ -5,8 +5,7 @@ from .workspace import load_engine, read_json, contained, sha256
 
 def inventory(root):
     upstream = load_engine(root)
-    local_config = root / "workspace.local.json"
-    assets = read_json(local_config).get("annual_assets", []) if local_config.exists() else []
+    assets = read_json(root / "workspace.local.json")["annual_assets"]
     sources = []
     for asset in assets:
         archive = contained(root, asset["archive"])

@@ -165,7 +165,7 @@ not-applicable amount components, verifier tampering và failure-before-complete
 
 ## 8. Commands và phần còn lại của P3
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/prepare_sba.py --suite suite-619b1ee9aa8c
@@ -173,7 +173,7 @@ Từ `local machine path omitted`:
 ```
 
 Case hiện tại và receipts trong
-`private evidence omitted from public release`. Các failed parse attempts và
+`artifacts/private/business-sba-21c568f10f7d`. Các failed parse attempts và
 case method cũ được giữ làm historical evidence, không gọi là current verified
 case. Không cần đăng nhập Clarity cho nguồn SBA này.
 

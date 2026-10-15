@@ -1594,7 +1594,7 @@ Các mục này cũng xuất hiện dưới từng domain trong app tại **Các
 
 KPI QA mới: 19 checks PASS, 88 rendered KPI rows, 22 quality controls independently reconciled, independent arithmetic checks (D3/decomposition/loss, calibration gap, HHI/movement, SBA denominators, ABS surplus), từng vùng/tổng đối soát Decimal, bridge scope/zero/missing/inconsistent-total safeguards, lifetime transition row sums/rates và confirmed follow-up denominators, validation policy action/cost/capacity reconciliation và unavailable-policy safeguards, issuer ratio/period/unit checks và single-issuer outage safeguards, all-step ABS cash/reserve reconciliation và selected-ledger outage, exact/manual/disabled baseline controls, no-nearest fallback, filters/export/reload, mobile 390px và browser exceptions. Monitor regression trước bridge: 10 checks PASS. Không refit/rescore frozen holdout; access ledger giữ nguyên.
 
-Receipts: `private evidence omitted from public release` và `private evidence omitted from public release`. Export nguồn cho tài liệu: `private evidence omitted from public release`. Tài liệu được tạo bằng `scripts/build_kpi_analysis_guide.py`.
+Receipts: `artifacts/private/kpi-analysis-qa-cb670b239571/receipt.json` và `artifacts/private/monitor-qa-a6dbe5387a8b/receipt.json`. Export nguồn cho tài liệu: `artifacts/private/kpi-analysis-qa-cb670b239571/analysis-all.json`. Tài liệu được tạo bằng `scripts/build_kpi_analysis_guide.py`.
 
 Khi đọc một biến động: xác nhận nguồn/kỳ/grain → xem support và missingness → đọc actual + baseline → phân rã theo nhóm hoặc bridge → mở workflow nghiệp vụ → ghi nhận định trong review cùng evidence. Giả thuyết nguyên nhân phải được kiểm chứng bằng dữ liệu liên quan; không coi decomposition số học là bằng chứng nhân quả.
 

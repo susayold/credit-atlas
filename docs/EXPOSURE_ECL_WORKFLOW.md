@@ -143,11 +143,11 @@ recovery đã có trong expected cash flows.
 
 ## Commands / app / các phần còn thiếu
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/prepare_illustrative_ecl.py
-.\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_ecl.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_ecl.py --assumptions data/private/portfolio/your-ecl-input/assumptions.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_ecl.py --verify exposure-ecl-ba27d7207a44
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_exposure_ecl.py --ecl-id exposure-ecl-ba27d7207a44
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_exposure_qa.py

@@ -51,4 +51,4 @@ Giao diện intake không prefill số liệu giả đã bổ sung: form context
 
 Excel adapter/API/file picker và template có hướng dẫn/dropdowns đã bổ sung sau checkpoint engine; xem [Excel intake](AFFORDABILITY_EXCEL_INTAKE_VI.md). Còn source-document verification, verification ownership, completeness/overlap review và dữ liệu income/obligation thực. P1.05 chưa hoàn thành đầy đủ và 50 capability states chưa được nâng từ các sub-workflows này.
 
-Receipt cuối: `private evidence omitted from public release`, 34 tests PASS. Targeted engine/HTTP run có 17 tests PASS; engine riêng có 16 tests PASS. Failed test XML trước sửa vẫn được giữ. Đây là numerical/HTTP validation, không là verified-income hoặc production qualification.
+Receipt cuối: `artifacts/private/affordability-http-tests-20261012-final.xml`, 34 tests PASS. Targeted engine/HTTP run có 17 tests PASS; engine riêng có 16 tests PASS. Failed test XML trước sửa vẫn được giữ. Đây là numerical/HTTP validation, không là verified-income hoặc production qualification.

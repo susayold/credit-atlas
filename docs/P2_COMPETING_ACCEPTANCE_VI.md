@@ -27,9 +27,9 @@ Bootstrap đã tái tạo theo seed17/resamples500, dùng independently evaluate
 
 ## Receipts
 
-- Independent audit `private evidence omitted from public release`: source hashes,case receipt,48.066ledger rows,72curve rows,216probability checks,18bootstrap bounds và12export scopes PASS; retail holdout ledger unchanged.
-- Tests `private evidence omitted from public release`: **49 PASS**, gồm competing-event math/ties/unknown/gap/maturity/uncertainty,labels và frozen-serving filters/integrity.
-- Browser `private evidence omitted from public release`: **12scopes PASS** (4segments×6/12/24), selected headlines/ledger/source/export parity, chart-not-monthly disclosure, unknown segment unavailable,mobile,reload. Không page errors,ledger unchanged. Desktop và unavailable mobile đã visual-review.
+- Independent audit `artifacts/private/competing-acceptance-64e6477ee6ba/receipt.json`: source hashes,case receipt,48.066ledger rows,72curve rows,216probability checks,18bootstrap bounds và12export scopes PASS; retail holdout ledger unchanged.
+- Tests `artifacts/private/competing-acceptance-tests-20261012.xml`: **49 PASS**, gồm competing-event math/ties/unknown/gap/maturity/uncertainty,labels và frozen-serving filters/integrity.
+- Browser `artifacts/private/competing-browser-acceptance-b90cdc483f69/receipt.json`: **12scopes PASS** (4segments×6/12/24), selected headlines/ledger/source/export parity, chart-not-monthly disclosure, unknown segment unavailable,mobile,reload. Không page errors,ledger unchanged. Desktop và unavailable mobile đã visual-review.
 
 Report horizon filter chỉ lọc vintage_competing_risk table theo horizon. Binary target metadata vẫn12months và `censored_means=unavailable_not_negative`; không đổi nhãn12m sang24m vì người xem chọn chart24m. Export giữ scope này và source lineage.
 

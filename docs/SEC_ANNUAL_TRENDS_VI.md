@@ -56,21 +56,21 @@ Latest five-period exports có 20 period rows và 80 ratio cells trên bốn iss
 ## Verification và giới hạn
 
 Checkpoint driver bridge: backend receipt
-`private evidence omitted from public release`: **46 tests PASS** gồm
+`artifacts/private/sec-bridge-tests-20261010.xml`: **46 tests PASS** gồm
 bridge10, trends13, memo10 và coverage13. Independent Fraction arithmetic
 kiểm tra identities, offsetting effects, negative/zero numerator, recurring
 division, gap/concept/duration/missing gates và ambiguous-original linkage.
 Các captures memo cũ giữ nguyên; memo mới chứa bridge/source-method digest
 trong annual trend được server tạo.
 
-Browser `private evidence omitted from public release`:
+Browser `artifacts/private/sec-trends-qa-3cf29a711bdc/receipt.json`:
 **6 groups PASS**, four issuer UI/private exports, 67 supported ratio cells
 và65 supported bridge cells kiểm tra với independent rational arithmetic,
 comparison statuses trong tables,3/5/10 selector/reload/mobile/outage recovery
 và unchanged frozen holdout ledger. Residual trong bảng hiển thị compact
 (zero hoặc scientific notation); exact decimal nằm trong bridge evidence/JSON.
 
-`private evidence omitted from public release`: 6 nhóm PASS, gồm actual UI/export của bốn issuers, selector/reload, mobile, outage/recovery và pre-source cutoff empty. Exact supported ratios và comparable deltas đối chiếu source-field arithmetic. Holdout access ledger không đổi.
+`artifacts/private/sec-trends-qa-cc887f418aa3/receipt.json`: 6 nhóm PASS, gồm actual UI/export của bốn issuers, selector/reload, mobile, outage/recovery và pre-source cutoff empty. Exact supported ratios và comparable deltas đối chiếu source-field arithmetic. Holdout access ledger không đổi.
 
 Backend có 41 distinct tests trong SEC financials/views/trends, gồm comparability boundaries, concept changes, gap, ambiguous originals/amendments, positive/zero/negative baseline, invalid filters và real HTTP origin/attachment guards. Receipts: `sec-trends-tests-20261010.xml` và `sec-trend-http-tests-20261010.xml` (12 trend tests overlap, không cộng hai totals trực tiếp).
 

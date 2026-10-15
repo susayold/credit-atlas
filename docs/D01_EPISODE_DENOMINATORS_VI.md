@@ -1,6 +1,6 @@
 # D01 — Event rows, unique loans và mẫu số follow-up
 
-**Ngày:** 15/10/2026. Scope là episode ledger của frozen Freddie Mac origination sample 2012. Audit độc lập hash-check `episodes.parquet`, canonical `dim_loan`, snapshot và projection follow-up; không xuất raw loan ID. [Audit JSON](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), [receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Tạo lại bằng `scripts/audit_d01_episode_denominators.py`.
+**Ngày:** 15/10/2026. Scope là episode ledger của frozen Freddie Mac origination sample 2012. Audit độc lập hash-check `episodes.parquet`, canonical `dim_loan`, snapshot và projection follow-up; không xuất raw loan ID. [Audit JSON](../artifacts/private/d01-episode-denominators-a3a3093f04b8/audit.json), [receipt](../artifacts/private/d01-episode-denominators-a3a3093f04b8/receipt.json). Tạo lại bằng `scripts/audit_d01_episode_denominators.py`.
 
 ## Hạt dữ liệu và số đếm
 
@@ -27,4 +27,4 @@ Audit chỉ xác nhận định nghĩa grain và denominator cho descriptive eve
 
 ## App và regression
 
-UI ghi rõ event rows là occurrences, distinct loans là support và không cộng ngang event types. Bảng follow-up nói rõ status rows phân hoạch event occurrences, còn unique-loan support có thể lặp giữa statuses. Browser regression kiểm tra 1.713 khoản Toàn sample, 1.094 Relief, 619 non-Relief, cùng disclosure về denominator; [browser receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included) ghi **25 checks PASS**.
+UI ghi rõ event rows là occurrences, distinct loans là support và không cộng ngang event types. Bảng follow-up nói rõ status rows phân hoạch event occurrences, còn unique-loan support có thể lặp giữa statuses. Browser regression kiểm tra 1.713 khoản Toàn sample, 1.094 Relief, 619 non-Relief, cùng disclosure về denominator; [browser receipt](../artifacts/private/browser-qa-f35adbcaeddf/receipt.json) ghi **25 checks PASS**.

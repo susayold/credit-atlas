@@ -11,7 +11,7 @@ không đồng nghĩa hoàn thành 50 chức năng hoặc có model đã đượ
 Một ứng dụng CreditAtlas, năm workspace chuyên biệt. Shared core quản lý
 source snapshots, schema, units, evidence, run registry, findings và exports.
 Mỗi workspace sở hữu data contracts, target, model và phép tính riêng.
-Research gốc: `local machine path omitted`,
+Research gốc: `D:\data\Codex\research\credit-risk-master\2026-10-08\CREDIT_RISK_MASTER_RESEARCH.md`,
 chương 33–37 và các case D01–D11. Kế hoạch D01 đầy đủ tiếp tục có hiệu lực
 trong `PLAN_MODULE_01.md`; kế hoạch suite này không thay thế các gate R0–R4.
 

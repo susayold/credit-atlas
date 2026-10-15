@@ -53,7 +53,7 @@ downloaded CSV có **994 nonmissing values trong interval đó**. Fresh HTTP que
 download bằng HTTP vẫn chứa cùng discontinuation definition. Không kết luận
 CSV là corrected historical series, không tự giải thích unknown provenance.
 
-Evidence lưu ở `private evidence omitted from public release`:
+Evidence lưu ở `artifacts/private/market-source-audit-6f228267b689/`:
 filtered CSV, downloaded notes HTML và hai immutable URL/time/bytes/SHA receipts.
 Đây là **high-severity historical semantic risk**; cause chưa xác định.
 
@@ -85,7 +85,7 @@ conflict, không được xóa hoặc đổi thành PASS.
 
 ## Canonical outputs và API
 
-Trong `private evidence omitted from public release`:
+Trong `artifacts/private/market-case-1f4a60893d6c/`:
 
 - `native-observations.parquet`: series/date/raw-decimal/usable-decimal/raw-string/quality flag.
 - `aligned-daily-context.parquet`: exact-date outer join, source presence/value,
@@ -95,7 +95,7 @@ Trong `private evidence omitted from public release`:
   selected-source lineage, independent checks và method/output hashes.
 
 Market-view builder lưu private snapshot, case-receipt hash, snapshot hash và
-method hashes. Serving rechecks selected sources/canonical private evidence omitted from public release
+method hashes. Serving rechecks selected sources/canonical outputs/current
 methods, không dùng stale fallback khi evidence thay đổi. Không phải hash lại
 SBA/UCI ~1GB để đọc một market series; full batch đã verify khi intake, sau đó
 case pin selected sources cùng acquisition receipt. Source paths không trong UI.

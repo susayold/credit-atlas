@@ -18,9 +18,9 @@ Ngày12/10/2026. Đối chiếu yêu cầu P2.06 trong plan, trên case `d01-a24
 
 ## Evidence hiện có
 
-- Independent audit: `private evidence omitted from public release`; saved follow-up projection cùng folder. Kiểm tra SHA của dim_loan,fact_loan_month,episodes,case receipt và methods.
-- Tests: `private evidence omitted from public release`, **26 PASS**. Bao gồm upstream portfolio semantics, follow-up interruption/anchor/grain, scoped export và frozen-service integrity/filter handling.
-- Browser: `private evidence omitted from public release`, **8follow-up scopes +4timeline event types +4segment exports PASS**; mobile,invalid-token400,cross-origin403; không page errors; frozen retail holdout ledger không đổi.
+- Independent audit: `artifacts/private/cure-acceptance-ac5b999767fe/receipt.json`; saved follow-up projection cùng folder. Kiểm tra SHA của dim_loan,fact_loan_month,episodes,case receipt và methods.
+- Tests: `artifacts/private/cure-acceptance-tests-20261012.xml`, **26 PASS**. Bao gồm upstream portfolio semantics, follow-up interruption/anchor/grain, scoped export và frozen-service integrity/filter handling.
+- Browser: `artifacts/private/cure-browser-acceptance-f3834b743ccf/receipt.json`, **8follow-up scopes +4timeline event types +4segment exports PASS**; mobile,invalid-token400,cross-origin403; không page errors; frozen retail holdout ledger không đổi.
 - Export thêm8scope checks trong independent audit:4segments×all/absent1990 transition year; chart range2020-01/02 và horizon6 không lọc episode6/12follow-up. Chỉ segment áp vào report này.
 - Desktop follow-up và timeline screenshots đã visual-review. Các output chỉ ở private workspace. Không đọc retail final predictors, không fit model và không thay source files.
 
@@ -44,6 +44,6 @@ Chỉ đánh dấu P2.06 `full_completion_proven=true`; các capability khác gi
 
 ## Bổ sung denominator audit — 15/10/2026
 
-Tách rõ occurrence grain và unique-loan support: 4.902 event rows thuộc 1.713 loans; repeated one-month cure/redefault rows được giữ, không diễn giải thành borrowers độc lập. Follow-up status phân hoạch chính xác toàn bộ event rows theo event type × segment × 6/12m horizon trong 24/24 checks. `distinct_loans` của status groups không cộng thành unique loans vì cùng loan có event lặp rơi vào nhiều statuses. Tái tạo ở [denominator audit](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included) và [method note](D01_EPISODE_DENOMINATORS_VI.md). Không ước lượng cure/redefault probability từ các support counts; spell-level risk set và censoring vẫn cần trước survival model.
+Tách rõ occurrence grain và unique-loan support: 4.902 event rows thuộc 1.713 loans; repeated one-month cure/redefault rows được giữ, không diễn giải thành borrowers độc lập. Follow-up status phân hoạch chính xác toàn bộ event rows theo event type × segment × 6/12m horizon trong 24/24 checks. `distinct_loans` của status groups không cộng thành unique loans vì cùng loan có event lặp rơi vào nhiều statuses. Tái tạo ở [denominator audit](../artifacts/private/d01-episode-denominators-a3a3093f04b8/audit.json) và [method note](D01_EPISODE_DENOMINATORS_VI.md). Không ước lượng cure/redefault probability từ các support counts; spell-level risk set và censoring vẫn cần trước survival model.
 
-UI regression 15/10 xác nhận event table theo Toàn sample/Relief/non-Relief hiển thị unique-loan support đúng và giữ disclosure về mẫu số; [receipt 25 checks PASS](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+UI regression 15/10 xác nhận event table theo Toàn sample/Relief/non-Relief hiển thị unique-loan support đúng và giữ disclosure về mẫu số; [receipt 25 checks PASS](../artifacts/private/browser-qa-f35adbcaeddf/receipt.json).

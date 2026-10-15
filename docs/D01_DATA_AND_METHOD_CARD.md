@@ -154,7 +154,7 @@ positions but their origination and performance Loan Identifier sets are
 disjoint, so they are parser references only. Freddie Mac states SFLLD history
 is published through March 31, 2026 and requires Clarity registration/sign-in
 for full, yearly and sample downloads; see the [official SFLLD page](https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset)
-and [reference audit](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+and [reference audit](../artifacts/private/freddie-release47-reference-audit-c3ce87022b8b/audit.json).
 
 ## Reproduction and review
 

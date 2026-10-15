@@ -18,8 +18,8 @@ Các stage timestamps và flags là local research evidence, không chứng nh�
 
 ## Verification
 
-- `private evidence omitted from public release`:17 tests PASS. Metadata-only fixtures không có raw predictor/score matrices; kiểm real stage IDs, unsupported scopes, changed metrics, production-claim rejection, final access before freeze rejection và source-contract invariants.
-- `private evidence omitted from public release`: source/split/selection/metrics/uncertainty parity PASS; sáu audit trail rows và private JSON download khớp API; governance unqualified flags giữ nguyên; reload/mobile/cross-origin/query/outage-retry PASS.
+- `artifacts/private/retail-dossier-tests.xml`:17 tests PASS. Metadata-only fixtures không có raw predictor/score matrices; kiểm real stage IDs, unsupported scopes, changed metrics, production-claim rejection, final access before freeze rejection và source-contract invariants.
+- `artifacts/private/retail-dossier-browser-eb13e7928485/receipt.json`: source/split/selection/metrics/uncertainty parity PASS; sáu audit trail rows và private JSON download khớp API; governance unqualified flags giữ nguyên; reload/mobile/cross-origin/query/outage-retry PASS.
 - Browser chạy dưới inference/refit/deep-verifier tripwires: forbidden_calls0; retail holdout ledger không đổi. App đọc saved artifacts khi mở màn.
 
 Nghiệm thu current research dossier không nâng thành full production governance. Model-review ownership, monitoring protocol, intended-use approval, temporal/deployment cohorts và authenticated organizational sign-off vẫn là next steps. Mục tiêu100% toàn dự án chưa hoàn thành.

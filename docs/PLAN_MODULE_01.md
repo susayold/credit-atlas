@@ -77,7 +77,7 @@ Công việc tiếp theo là hoàn thiện R0/R1 và chuẩn bị R2. Số lư�
 - [47.25. Những điểm chưa chắc chắn và quyết định xử lý](#chuong-47-25)
 - [47.26. Nguồn được đọc và độ chắc chắn của plan](#chuong-47-26)
 
-Giữ đủ 26 mục và 30 task của chương 47. Research gốc: [CREDIT_RISK_MASTER_RESEARCH.md](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). SHA-256 lúc trích: 7140a343a3e89970de7d9d6bfe7a27d0fd5648b09d24dba099e40140f3e7ed60.
+Giữ đủ 26 mục và 30 task của chương 47. Research gốc: [CREDIT_RISK_MASTER_RESEARCH.md](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md). SHA-256 lúc trích: 7140a343a3e89970de7d9d6bfe7a27d0fd5648b09d24dba099e40140f3e7ed60.
 
 ---
 
@@ -85,7 +85,7 @@ Giữ đủ 26 mục và 30 task của chương 47. Research gốc: [CREDIT_RISK
 
 ## 47. P2 / D01 — Kế hoạch xây Residential Mortgage Lifecycle & Loss Lab
 
-**Ngày lập và đối chiếu: 08/10/2026. Đây là kế hoạch triển khai; lượt này chưa tải thêm annual data, chạy lại pipeline, fit model hoặc xây app.** Phạm vi chọn từ [P2 ở chương 34](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), [charter D01 ở 44.1](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included) và [ưu tiên ở 46.1](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Kế hoạch này cụ thể hóa D01 bằng tài liệu repo đọc trực tiếp qua GitHub, thay cho việc giả định mọi phần còn cần xây từ đầu.
+**Ngày lập và đối chiếu: 08/10/2026. Đây là kế hoạch triển khai; lượt này chưa tải thêm annual data, chạy lại pipeline, fit model hoặc xây app.** Phạm vi chọn từ [P2 ở chương 34](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md#chuong-34), [charter D01 ở 44.1](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md#chuong-44-1) và [ưu tiên ở 46.1](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md#chuong-46-1). Kế hoạch này cụ thể hóa D01 bằng tài liệu repo đọc trực tiếp qua GitHub, thay cho việc giả định mọi phần còn cần xây từ đầu.
 
 <a id="chuong-47-1"></a>
 
@@ -110,7 +110,7 @@ Sản phẩm giúp một risk analyst trả lời sáu câu hỏi:
 
 ### 47.2. Đã có gì trong GitHub và khoảng trống nào thật sự phải giải quyết?
 
-Repo nền ưu tiên: [susayold/credit-risk-strategy-lab](../PUBLIC_RELEASE_SCOPE.md#vendored-engine). Tài liệu được đọc ở nhánh `master` ngày 08/10/2026; `block-status.md` tự ghi ngày cập nhật 12/09/2026. Đọc tài liệu không thay cho kiểm tra code, dữ liệu local và chạy lại kết quả. Những số liệu bên dưới là **bằng chứng do repo ghi nhận**, chưa được tái đo trong lượt lập plan này.
+Repo nền ưu tiên: [susayold/credit-risk-strategy-lab](https://github.com/susayold/credit-risk-strategy-lab). Tài liệu được đọc ở nhánh `master` ngày 08/10/2026; `block-status.md` tự ghi ngày cập nhật 12/09/2026. Đọc tài liệu không thay cho kiểm tra code, dữ liệu local và chạy lại kết quả. Những số liệu bên dưới là **bằng chứng do repo ghi nhận**, chưa được tái đo trong lượt lập plan này.
 
 | Thành phần | Bằng chứng đã đọc | Phần cần làm khi triển khai |
 |---|---|---|
@@ -126,11 +126,11 @@ Repo nền ưu tiên: [susayold/credit-risk-strategy-lab](../PUBLIC_RELEASE_SCOP
 | Website/Excel | Local dashboard; workbook 15 sheets; repo ghi 4.569 preview cells khớp XLSX | Browser QA, đồng nhất snapshot, adapter CreditAtlas và giới hạn export/publication |
 | Reproducibility | Repo ghi 375 tests; hai foundation runs khớp 13 tables và bốn summaries | Chạy lại trong môi trường được pin và snapshot hiện tìm thấy; mở rộng reproduction cho final case |
 
-Nguồn đối chiếu: [README](../PUBLIC_RELEASE_SCOPE.md#vendored-engine), [implementation status](../PUBLIC_RELEASE_SCOPE.md#vendored-engine), [model comparison](../vendor/credit_risk_strategy_lab/docs/model-comparison.md).
+Nguồn đối chiếu: [README](https://github.com/susayold/credit-risk-strategy-lab/blob/master/README.md), [implementation status](https://github.com/susayold/credit-risk-strategy-lab/blob/master/block-status.md), [model comparison](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/model-comparison.md).
 
 **Khoảng trống quan trọng nhất là support và protocol, không phải thiếu tên thuật toán.** Trong 102 positive early-entry, repo ghi 89 thuộc Relief Refinance và chỉ 13 thuộc non-Relief. Split audit hiện có 100 positive đủ điều kiện train, còn các vintage calibration/validation/final test chưa có. 4,51 triệu monthly records không biến thành 4,51 triệu independent outcomes cho target này. Vì vậy chưa hợp lý để train thêm một model rồi tuyên bố flagship đã hoàn thành.
 
-Hai sửa nghĩa cần ghi rõ so với cách nói khái quát ở chương 34: annual sample year là **origination vintage**, còn acquisition/first observation xác định entry; lựa chọn vintage trên UI phải có tên trục chính xác. Target D3 hiện tại cũng cần giữ tên **D3 event risk**, thay vì mặc định đổi thành default PD. Chi tiết gốc: [source semantics ADR](../vendor/credit_risk_strategy_lab/docs/decisions/ADR-002-source-semantics.md).
+Hai sửa nghĩa cần ghi rõ so với cách nói khái quát ở chương 34: annual sample year là **origination vintage**, còn acquisition/first observation xác định entry; lựa chọn vintage trên UI phải có tên trục chính xác. Target D3 hiện tại cũng cần giữ tên **D3 event risk**, thay vì mặc định đổi thành default PD. Chi tiết gốc: [source semantics ADR](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/decisions/ADR-002-source-semantics.md).
 
 <a id="chuong-47-3"></a>
 
@@ -201,7 +201,7 @@ Snapshot Freddie đọc từ release hiện nay chưa chứng minh các field đ
 
 Đo máy ngày 08/10/2026 trong lượt này: Intel i5-9500; physical RAM 25.709.551.616 bytes, khoảng **23,94 GiB**; D: còn khoảng **85 GiB** tại thời điểm kiểm tra. Free space thay đổi theo các tác vụ khác. Không lấy kích thước ZIP 2012 khoảng 70,5 MB trong repo để suy ra tổng raw+staged+Parquet+temp+artifacts sẽ nhỏ tương ứng.
 
-Toàn bộ code, data, scratch và exports mới nằm dưới **D:\data\Codex**. Đường repo local sẽ xác định ở M01-001; nếu cần tạo mới, đường đề xuất là `local machine path omitted`. Đây là đường thiết kế, chưa tạo checkout trong lượt này. Dataset private đặt ở thư mục riêng thuộc D:, được ignore và không đi vào app bundle.
+Toàn bộ code, data, scratch và exports mới nằm dưới **D:\data\Codex**. Đường repo local sẽ xác định ở M01-001; nếu cần tạo mới, đường đề xuất là `D:\data\Codex\credit-atlas`. Đây là đường thiết kế, chưa tạo checkout trong lượt này. Dataset private đặt ở thư mục riêng thuộc D:, được ignore và không đi vào app bundle.
 
 Budget khởi điểm đề xuất, kiểm tra lại sau pilot:
 
@@ -240,9 +240,9 @@ flowchart LR
 
 Đây là sơ đồ triển khai dự kiến. Nếu snapshot hoặc contract chưa qualified, dependent model stage trả trạng thái unmet và không sinh prediction artifacts.
 
-Stack giữ nền đang có: Python ≥3.12; repo pin DuckDB 1.5.5, PyArrow 22.0.0, scikit-learn 1.8.0 cho optional model dependencies. Phiên bản này được đọc từ [pyproject.toml](../vendor/credit_risk_strategy_lab/pyproject.toml), không phải đề nghị tự động nâng lên phiên bản mới. Tái tạo môi trường cũ trước; kiểm tra tương thích nếu sau đó thay pins, đặc biệt custom JSON-tree persistence phụ thuộc layout của scikit-learn.
+Stack giữ nền đang có: Python ≥3.12; repo pin DuckDB 1.5.5, PyArrow 22.0.0, scikit-learn 1.8.0 cho optional model dependencies. Phiên bản này được đọc từ [pyproject.toml](https://github.com/susayold/credit-risk-strategy-lab/blob/master/pyproject.toml), không phải đề nghị tự động nâng lên phiên bản mới. Tái tạo môi trường cũ trước; kiểm tra tương thích nếu sau đó thay pins, đặc biệt custom JSON-tree persistence phụ thuộc layout của scikit-learn.
 
-Analytics dùng Parquet + DuckDB; immutable file manifests làm registry trước. CreditAtlas lâu dài theo [kiến trúc 38.4](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), FastAPI và React là các lựa chọn đã đề xuất, nhưng R0 phải đọc stack website hiện có để quyết định reuse components. R1 có thể hoàn thiện trên website sẵn có và adapter aggregate trước khi port UI. Chỉ thêm API khi có nhu cầu drill-down/private query thực; chưa cần PostgreSQL, Redis, MLflow services hoặc orchestration riêng để có MVP local.
+Analytics dùng Parquet + DuckDB; immutable file manifests làm registry trước. CreditAtlas lâu dài theo [kiến trúc 38.4](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md#chuong-38-4), FastAPI và React là các lựa chọn đã đề xuất, nhưng R0 phải đọc stack website hiện có để quyết định reuse components. R1 có thể hoàn thiện trên website sẵn có và adapter aggregate trước khi port UI. Chỉ thêm API khi có nhu cầu drill-down/private query thực; chưa cần PostgreSQL, Redis, MLflow services hoặc orchestration riêng để có MVP local.
 
 <a id="chuong-47-8"></a>
 
@@ -289,7 +289,7 @@ Không nối các release của cùng source như independent loans; adapter ph�
 | Label-known month | Khi đủ bằng chứng outcome trong reconstruction; lọc theo fit cutoff; không tự là historical publication timestamp |
 | Relief segment | Giữ flag và diagnostic riêng; không tự loại, không dùng như shortcut feature chưa qua review |
 
-Các quy tắc này đến từ [observation and censoring contract](../vendor/credit_risk_strategy_lab/docs/methodology/observation-and-censoring.md). Điểm dễ nhầm là **prepay trước D3 được gán 0 có chủ ý trong estimand event-before-prepayment**, còn censored/unknown không được gán 0. Một target “default nếu khoản vay không prepay” là câu hỏi khác, không được suy ra từ nhãn đang có.
+Các quy tắc này đến từ [observation and censoring contract](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/observation-and-censoring.md). Điểm dễ nhầm là **prepay trước D3 được gán 0 có chủ ý trong estimand event-before-prepayment**, còn censored/unknown không được gán 0. Một target “default nếu khoản vay không prepay” là câu hỏi khác, không được suy ra từ nhãn đang có.
 
 Bảng reconciliation mà clean rebuild phải kiểm tra với snapshot hiện có:
 
@@ -326,7 +326,7 @@ Bảng reconciliation mà clean rebuild phải kiểm tra với snapshot hiện 
 | Loss và recoveries | Signed components theo release; missing khác 0; negative values giữ nếu valid | Clipping hết loss/recovery âm hoặc dùng sign từ layout cũ |
 | Geography/borrowers/assistance | Giữ conditional availability và definition changes | Xem pre-2018 borrowers=2 là chính xác hai người; coi structural missing là borrower risk |
 
-Source authority: [canonical dictionary](../vendor/credit_risk_strategy_lab/docs/data_dictionary/canonical.md) và [ADR-002](../vendor/credit_risk_strategy_lab/docs/decisions/ADR-002-source-semantics.md). R0/R2 phải đối chiếu trực tiếp code, source layout và raw edge rows; tài liệu được đọc chưa thay cho validation parser.
+Source authority: [canonical dictionary](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/data_dictionary/canonical.md) và [ADR-002](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/decisions/ADR-002-source-semantics.md). R0/R2 phải đối chiếu trực tiếp code, source layout và raw edge rows; tài liệu được đọc chưa thay cho validation parser.
 
 Rule thất bại nghiêm trọng như duplicate grain, enum chưa biết, post-terminal path bất hợp lý hoặc join fanout phải tạo failure report và dừng dependent stage. Missing thuộc đặc tính nguồn được giữ thành null + reason; nó không tự làm hỏng toàn bộ dữ liệu.
 
@@ -336,7 +336,7 @@ Rule thất bại nghiêm trọng như duplicate grain, enum chưa biết, post-
 
 **Origination-feature baseline** kế thừa strict allowlist hiện có: Classic FICO, original DTI, original LTV/CLTV, original UPB, original term, dwelling units; categorical occupancy, purpose, property type, first-time-homebuyer. Missing indicators; median imputation/scaling và category vocabulary fit trên train only. Chưa dùng future delinquency, current/terminal balance, actual loss, future modifications hoặc label dates làm predictors.
 
-Loan IDs/private geography không là model inputs. Original interest rate, seller/channel, Relief/HARP và field thay đổi definition chỉ xét ở ablation đã định nghĩa khi đủ availability; model baseline không tự thêm mọi numeric column. Entirely missing feature được loại/ablate trong research dù engineering encoder có thể xử lý nó để tránh crash. [Feature catalogue](../vendor/credit_risk_strategy_lab/docs/feature-catalogue.md).
+Loan IDs/private geography không là model inputs. Original interest rate, seller/channel, Relief/HARP và field thay đổi definition chỉ xét ở ablation đã định nghĩa khi đủ availability; model baseline không tự thêm mọi numeric column. Entirely missing feature được loại/ablate trong research dù engineering encoder có thể xử lý nó để tránh crash. [Feature catalogue](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/feature-catalogue.md).
 
 Candidate protocol đã có trong repo:
 
@@ -359,7 +359,7 @@ Gate R2 tối thiểu:
 4. Đo event counts, uncertainty và subgroup support. Repo có guardrail phát triển ≥100 positive/100 negative mỗi partition; **không coi đó là chứng minh sample size đủ** cho model phức tạp hoặc mọi segment.
 5. Protocol revision/selection history được lưu; model readiness chỉ bật sau các checks đã chốt. Censored exclusions và quần thể mất do missing features phải báo riêng.
 
-Nguồn: [validation protocol](../vendor/credit_risk_strategy_lab/docs/methodology/validation-protocol.md). Dataset release có follow-up tới 03/2026 ở lần đối chiếu này; nếu thêm recent vintage, audit maturity theo từng landmark. Không dùng một năm hiện đại chỉ để dashboard trông cập nhật khi outcomes chưa đủ horizon.
+Nguồn: [validation protocol](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/validation-protocol.md). Dataset release có follow-up tới 03/2026 ở lần đối chiếu này; nếu thêm recent vintage, audit maturity theo từng landmark. Không dùng một năm hiện đại chỉ để dashboard trông cập nhật khi outcomes chưa đủ horizon.
 
 <a id="chuong-47-12"></a>
 
@@ -437,7 +437,7 @@ Trình tự:
 4. Tổng component bridge đối chiếu reported loss trên rows đủ components; report residual, unavailable count và unresolved coverage riêng.
 5. Phân nhóm loss theo event/vintage/Relief/available fields trong scope support; tránh gọi resolved-only mean là expected loss cho toàn bộ loans.
 
-ADR repo ghi 374 reported-loss rows match signed components, sáu trường hợp thiếu defect dates và một recent disposition. Đây là reference cần tái kiểm tra, **không phải 374 independent complete training labels đã đủ cho severity model**. B18 hiện vẫn dưới model-support gate và expected-loss dollars chưa available. [ADR-002](../vendor/credit_risk_strategy_lab/docs/decisions/ADR-002-source-semantics.md), [block status](../PUBLIC_RELEASE_SCOPE.md#vendored-engine).
+ADR repo ghi 374 reported-loss rows match signed components, sáu trường hợp thiếu defect dates và một recent disposition. Đây là reference cần tái kiểm tra, **không phải 374 independent complete training labels đã đủ cho severity model**. B18 hiện vẫn dưới model-support gate và expected-loss dollars chưa available. [ADR-002](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/decisions/ADR-002-source-semantics.md), [block status](https://github.com/susayold/credit-risk-strategy-lab/blob/master/block-status.md).
 
 Severity/LGD chỉ mở sau multi-vintage qualification, recovery completion/time-to-resolution audit và balance/default denominator được chốt. Negative net losses hoặc ratios ngoài khoảng 0–1 có thể có nghĩa theo components; không clipping để làm distribution đẹp. Chưa lấy `D3-risk × resolved mean loss` làm accounting ECL hay lender P&L.
 
@@ -447,9 +447,9 @@ Severity/LGD chỉ mở sau multi-vintage qualification, recovery completion/tim
 
 Repo đã có adapter cho UNRATE, USSTHPI và MORTGAGE30US, kiểm tra revisions/units/staleness và join không fanout. R1 có thể hiển thị retrospective context khi nguồn cho phép; predictive macro fit là extension sau source acquisition thật.
 
-As-of plan kế thừa convention của repo: cutoff là đầu ngày, sử dụng knowledge tới ngày trước; giữ `reference_period`, `realtime_start/end`, revision và availability status. Không tự dùng latest series khi historical vintage request thiếu; không interpolate annual/quarterly tới loan-month rồi gọi dữ liệu observed monthly. [Macro availability contract](../vendor/credit_risk_strategy_lab/docs/methodology/macro-availability.md). FRED có real-time parameters để truy xuất knowledge theo thời gian. [FRED real-time periods](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html).
+As-of plan kế thừa convention của repo: cutoff là đầu ngày, sử dụng knowledge tới ngày trước; giữ `reference_period`, `realtime_start/end`, revision và availability status. Không tự dùng latest series khi historical vintage request thiếu; không interpolate annual/quarterly tới loan-month rồi gọi dữ liệu observed monthly. [Macro availability contract](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/macro-availability.md). FRED có real-time parameters để truy xuất knowledge theo thời gian. [FRED real-time periods](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html).
 
-FHFA regional HPI chỉ là context. Nếu tạo proxy current property value hoặc proxy LTV bằng index ratio, output phải ghi giả định base value/geography/quality và là proxy; thiếu đúng original valuation basis thì không tạo. Latest HPI series không có archival publication evidence dùng cho descriptive context, không đưa ngược vào earlier prediction. [FHFA HPI datasets](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+FHFA regional HPI chỉ là context. Nếu tạo proxy current property value hoặc proxy LTV bằng index ratio, output phải ghi giả định base value/geography/quality và là proxy; thiếu đúng original valuation basis thì không tạo. Latest HPI series không có archival publication evidence dùng cho descriptive context, không đưa ngược vào earlier prediction. [FHFA HPI datasets](https://www.fhfa.gov/data/hpi/datasets).
 
 Optional forecast/stress sequence:
 
@@ -518,7 +518,7 @@ Các ID dưới đây là backlog triển khai, **chưa là task đã thực hi�
 | M01-026 | R1/R3; 022, mature model inputs sau 021 | Freshness/missingness/support monitoring và investigation runbook | Distinguish source lag/structural missing/drift; chưa có mature labels không sinh calibration alarms giả |
 | M01-027 | R3; 021–022 | Frozen model batch/query scoring interface nếu UI cần | Scores match validated artifacts; correct feature order; unknown model/source/run fails clearly |
 | M01-028 | R1 subset, R4 full; 024–027 theo scope | Browser/user-flow/export/privacy QA | Empty/missing/low-support/gated states; private/public modes đúng; no private payload in bundle |
-| M01-029 | R4; 028 | Final clean reproduction từ source manifests tới final report | Numeric private evidence omitted from public release cùng frozen study; credentials không cần nằm trong repository |
+| M01-029 | R4; 028 | Final clean reproduction từ source manifests tới final report | Numeric outputs/lineage cùng frozen study; credentials không cần nằm trong repository |
 | M01-030 | R4; 029 | Case study, methods/model/data cards, demo và handoff checklist | Người đọc hiểu question/data/target/results/limits; artifact links/run versions đầy đủ |
 
 Critical path model: **001–004 → 005–009 → 007/015/016 → 017–021 → 022/027 → 028–030**. Critical path descriptive: **001–004 → 008–014 → 022–025 → R1 browser/reconciliation checks**. Một số công việc dùng cùng artifacts nên có thể xen kẽ; bảng không yêu cầu chờ xong model mới hoàn thiện giao diện descriptive.
@@ -634,7 +634,7 @@ Từ ngày 2 có thể xác định source-access readiness và chuẩn bị M01
 | P5 cash-flow projection extension | Chỉ future modeled schedules/scenario cash flows nếu đã tạo và kiểm định | Current UPB rounding/performance snapshots không tự là observed full cash flow; assumptions và CF engine còn riêng |
 | Shared core | Source/run/snapshot registry, evidence refs, typed exports, filter/report context, findings/review history | Domain math ở `crsl`; abstraction mới phải qua D02 hoặc case khác để chứng minh dùng chung |
 
-Header và permitted-use checks theo [38.3](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Unknown/unsupported output type có error rõ; không truyền một cột `pd` chung rồi để consumers tự đoán nghĩa. Workspaces chung UI/registry không đòi loan IDs hoặc populations giữa sources giống nhau.
+Header và permitted-use checks theo [38.3](D:/data/Codex/research/credit-risk-master/2026-10-08/CREDIT_RISK_MASTER_RESEARCH.md#chuong-38-3). Unknown/unsupported output type có error rõ; không truyền một cột `pd` chung rồi để consumers tự đoán nghĩa. Workspaces chung UI/registry không đòi loan IDs hoặc populations giữa sources giống nhau.
 
 <a id="chuong-47-25"></a>
 
@@ -663,19 +663,19 @@ Nguồn repo đọc trực tiếp qua kết nối GitHub ngày 08/10/2026. SHAs 
 
 | Tài liệu | Blob SHA lúc đọc | Dùng để chốt |
 |---|---|---|
-| [README](../PUBLIC_RELEASE_SCOPE.md#vendored-engine) | `4a71aeed526387c8020b2653adc4870276b583a2` | Foundation, data/model/UI/reproduction evidence status |
-| [Block status](../PUBLIC_RELEASE_SCOPE.md#vendored-engine) | `4f291b5afd406dbdb3477a6f91af7587b03f6b3e` | B01–B35 gaps và current split/support |
-| [Charter](../vendor/credit_risk_strategy_lab/docs/charter.md) | `b5f192c4527a6d30a3ecc5eaa5a45e443fdb3f22` | Mortgage scope, audience và permitted claims |
-| [Canonical dictionary](../vendor/credit_risk_strategy_lab/docs/data_dictionary/canonical.md) | `5dbac9a5b869e9843ec0ce3431149cb96835a6b5` | Grain, types, source sentinels, unit/state semantics |
-| [Observation/censoring](../vendor/credit_risk_strategy_lab/docs/methodology/observation-and-censoring.md) | `ba56337d26ad6f6ba7760ff8306aa76f63cee6a5` | Target, attrition, prepay/exits, episodes |
-| [Source semantics ADR](../vendor/credit_risk_strategy_lab/docs/decisions/ADR-002-source-semantics.md) | `2268aa2f8de6bb4456e1c932e72d4c4e3b7f6a43` | Origination/entry correction, missingness, loss references |
-| [Validation protocol](../vendor/credit_risk_strategy_lab/docs/methodology/validation-protocol.md) | `8aca49889345084ec257eb5505e1bbdc43698357` | Candidate schedule/cutoffs, class support, PIT/freeze limitations |
-| [Feature catalogue](../vendor/credit_risk_strategy_lab/docs/feature-catalogue.md) | `405a6ba3d362fb86be1e93a76dd550042d67bf94` | Baseline allowlist, train-only transform và exclusions |
-| [Model comparison](../vendor/credit_risk_strategy_lab/docs/model-comparison.md) | `61efcedf30951cc803e865a725d9b7cca7720acb` | Same-cohort runner, challenger persistence, outstanding validation |
-| [Macro availability](../vendor/credit_risk_strategy_lab/docs/methodology/macro-availability.md) | `5bfe98527179f09f4a8ead9c68efa104f7834145` | As-of conventions, real-data/access gaps và units/revisions |
-| [Source access](../vendor/credit_risk_strategy_lab/docs/source-access.md) | `64fea848f15d5097ff8147397b2f7bc9e8f4f7d9` | Annual sample 2012, format-example boundary và Clarity route |
-| [Dependencies](../vendor/credit_risk_strategy_lab/pyproject.toml) | `ee9128a18ff93a03144ad7d4d51ef79cd7b3a107` | Existing Python/DuckDB/PyArrow/model pins |
+| [README](https://github.com/susayold/credit-risk-strategy-lab/blob/master/README.md) | `4a71aeed526387c8020b2653adc4870276b583a2` | Foundation, data/model/UI/reproduction evidence status |
+| [Block status](https://github.com/susayold/credit-risk-strategy-lab/blob/master/block-status.md) | `4f291b5afd406dbdb3477a6f91af7587b03f6b3e` | B01–B35 gaps và current split/support |
+| [Charter](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/charter.md) | `b5f192c4527a6d30a3ecc5eaa5a45e443fdb3f22` | Mortgage scope, audience và permitted claims |
+| [Canonical dictionary](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/data_dictionary/canonical.md) | `5dbac9a5b869e9843ec0ce3431149cb96835a6b5` | Grain, types, source sentinels, unit/state semantics |
+| [Observation/censoring](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/observation-and-censoring.md) | `ba56337d26ad6f6ba7760ff8306aa76f63cee6a5` | Target, attrition, prepay/exits, episodes |
+| [Source semantics ADR](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/decisions/ADR-002-source-semantics.md) | `2268aa2f8de6bb4456e1c932e72d4c4e3b7f6a43` | Origination/entry correction, missingness, loss references |
+| [Validation protocol](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/validation-protocol.md) | `8aca49889345084ec257eb5505e1bbdc43698357` | Candidate schedule/cutoffs, class support, PIT/freeze limitations |
+| [Feature catalogue](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/feature-catalogue.md) | `405a6ba3d362fb86be1e93a76dd550042d67bf94` | Baseline allowlist, train-only transform và exclusions |
+| [Model comparison](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/model-comparison.md) | `61efcedf30951cc803e865a725d9b7cca7720acb` | Same-cohort runner, challenger persistence, outstanding validation |
+| [Macro availability](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/methodology/macro-availability.md) | `5bfe98527179f09f4a8ead9c68efa104f7834145` | As-of conventions, real-data/access gaps và units/revisions |
+| [Source access](https://github.com/susayold/credit-risk-strategy-lab/blob/master/docs/source-access.md) | `64fea848f15d5097ff8147397b2f7bc9e8f4f7d9` | Annual sample 2012, format-example boundary và Clarity route |
+| [Dependencies](https://github.com/susayold/credit-risk-strategy-lab/blob/master/pyproject.toml) | `ee9128a18ff93a03144ad7d4d51ef79cd7b3a107` | Existing Python/DuckDB/PyArrow/model pins |
 
-Official source documentation được đối chiếu thêm: [Freddie SFLLD](https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset), [FRED real-time periods](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html), [FHFA HPI datasets](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Chúng xác nhận source routes/calendar/data types cần xét, chưa thay cho payload profiling.
+Official source documentation được đối chiếu thêm: [Freddie SFLLD](https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset), [FRED real-time periods](https://fred.stlouisfed.org/docs/api/fred/realtime_period.html), [FHFA HPI datasets](https://www.fhfa.gov/data/hpi/datasets). Chúng xác nhận source routes/calendar/data types cần xét, chưa thay cho payload profiling.
 
 Effort, screen design, backlog, release sequencing và resource budgets là **đề xuất triển khai**. Counts/tests/artifacts của repo được dẫn với status đúng; chưa có bằng chứng mới về model performance từ lượt này. Plan này giữ research gốc, 32-source catalog và 11 case charters làm nền; chương 47 là đường tra cụ thể cho việc bắt đầu D01.

@@ -163,31 +163,31 @@ DSCR analytics checkpoint:32exact adjacent-year bridges và8missing-prior scopes
 
 | Receipt | Kết quả đã lưu | Phạm vi |
 |---|---|---|
-|[p4-acceptance-qa-435791cbf240](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|P4 intake/precision/concentration/review draft/private exports/mobile|
-|[absee-profile-qa-eee5f9a1c959](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Quarantined ABS-EE coverage UI/API/JSON/mobile/outage/ledger|
-|[absee-profile-audit-00668467a11d](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Independent localParquet488219rows/651missingness/99money sums; not XML fidelity|
-|[managed-pool-qa-bc2cc24261d2](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Managed stock/flow source/API/JSON/mobile/outage/ledger|
-|[managed-pool-audit-8693d36cb33c](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Independent210values/105checks/14raw ratios|
-|[kpi-analysis-qa-95251bc16b81](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|KPI/source/baseline regression|
-|[kpi-workbook-qa-08a849344ada](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|KPI Excel|
-|[sec-trends-qa-3cf29a711bdc](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Annual ratio trends/driver bridge|
-|[sec-coverage-qa-1c32f79854e0](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Explicit interest coverage proxies|
-|[sec-debt-qa-662fad1cb983](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Principal maturity source profile|
-|[sec-workbook-qa-03d578d3b62d](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|SEC Analysis/Facts Excel|
-|[sec-debt-xlsx-qa-de64508d62d6](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Maturity Excel|
-|[corporate-memo-qa-2cf35018c3e3](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Memo immutable capture/history|
-|[kpi-inspector-qa-9479d922c579](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Latest KPI inspector/input source/CSV/mobile|
-|[kpi-trace-qa-6806b6dbe015](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|88 metric source/input trace audit|
-|[sec-events-qa-a355fade2b6e](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Issuer filings metadata/browser/export|
-|[facilities-qa-18dedf9f1512](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Versioned facility calendar/covenant clause/source/export|
-|[note-schedule-qa-9827487edb65](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Source note terms/nominal cashflows/independent PDF/browser/export|
-|[note-rules-qa-f5dd8158e6b9](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Issuer API-linked base payment rules/source/cutoff/browser/export|
-|[retail-source-quality-qa-594921ea7ac8](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Acquisition profile/API/UI/JSON/Excel scope/mobile/outage/ledger|
-|[kpi-inspector-qa-0b9964df5e79](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Five-domain inspector regression after source-quality integration|
-|[abs-benchmark-qa-22780656071d](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Administrator SOFR/SIFMA calendar/UI/export/mobile/outage|
-|[abs-benchmark-audit-a9d88282311d](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Independent20-period date/rational-rate/coupon/interest source comparison|
-|[pool-history-qa-5930436fbc94](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Static-pool selectors/curve/source/export/reload/mobile/outage|
-|[pool-history-audit-a38fbe7ce809](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)|PASS|Independent63cohort-metric groups/1998populated/1362blank source positions|
+|[p4-acceptance-qa-435791cbf240](D:/data/Codex/credit-atlas/artifacts/private/p4-acceptance-qa-435791cbf240/receipt.json)|PASS|P4 intake/precision/concentration/review draft/private exports/mobile|
+|[absee-profile-qa-eee5f9a1c959](D:/data/Codex/credit-atlas/artifacts/private/absee-profile-qa-eee5f9a1c959/receipt.json)|PASS|Quarantined ABS-EE coverage UI/API/JSON/mobile/outage/ledger|
+|[absee-profile-audit-00668467a11d](D:/data/Codex/credit-atlas/artifacts/private/absee-profile-audit-00668467a11d/receipt.json)|PASS|Independent localParquet488219rows/651missingness/99money sums; not XML fidelity|
+|[managed-pool-qa-bc2cc24261d2](D:/data/Codex/credit-atlas/artifacts/private/managed-pool-qa-bc2cc24261d2/receipt.json)|PASS|Managed stock/flow source/API/JSON/mobile/outage/ledger|
+|[managed-pool-audit-8693d36cb33c](D:/data/Codex/credit-atlas/artifacts/private/managed-pool-audit-8693d36cb33c/receipt.json)|PASS|Independent210values/105checks/14raw ratios|
+|[kpi-analysis-qa-95251bc16b81](D:/data/Codex/credit-atlas/artifacts/private/kpi-analysis-qa-95251bc16b81/receipt.json)|PASS|KPI/source/baseline regression|
+|[kpi-workbook-qa-08a849344ada](D:/data/Codex/credit-atlas/artifacts/private/kpi-workbook-qa-08a849344ada/receipt.json)|PASS|KPI Excel|
+|[sec-trends-qa-3cf29a711bdc](D:/data/Codex/credit-atlas/artifacts/private/sec-trends-qa-3cf29a711bdc/receipt.json)|PASS|Annual ratio trends/driver bridge|
+|[sec-coverage-qa-1c32f79854e0](D:/data/Codex/credit-atlas/artifacts/private/sec-coverage-qa-1c32f79854e0/receipt.json)|PASS|Explicit interest coverage proxies|
+|[sec-debt-qa-662fad1cb983](D:/data/Codex/credit-atlas/artifacts/private/sec-debt-qa-662fad1cb983/receipt.json)|PASS|Principal maturity source profile|
+|[sec-workbook-qa-03d578d3b62d](D:/data/Codex/credit-atlas/artifacts/private/sec-workbook-qa-03d578d3b62d/receipt.json)|PASS|SEC Analysis/Facts Excel|
+|[sec-debt-xlsx-qa-de64508d62d6](D:/data/Codex/credit-atlas/artifacts/private/sec-debt-xlsx-qa-de64508d62d6/receipt.json)|PASS|Maturity Excel|
+|[corporate-memo-qa-2cf35018c3e3](D:/data/Codex/credit-atlas/artifacts/private/corporate-memo-qa-2cf35018c3e3/receipt.json)|PASS|Memo immutable capture/history|
+|[kpi-inspector-qa-9479d922c579](D:/data/Codex/credit-atlas/artifacts/private/kpi-inspector-qa-9479d922c579/qa.json)|PASS|Latest KPI inspector/input source/CSV/mobile|
+|[kpi-trace-qa-6806b6dbe015](D:/data/Codex/credit-atlas/artifacts/private/kpi-trace-qa-6806b6dbe015/receipt.json)|PASS|88 metric source/input trace audit|
+|[sec-events-qa-a355fade2b6e](D:/data/Codex/credit-atlas/artifacts/private/sec-events-qa-a355fade2b6e/receipt.json)|PASS|Issuer filings metadata/browser/export|
+|[facilities-qa-18dedf9f1512](D:/data/Codex/credit-atlas/artifacts/private/facilities-qa-18dedf9f1512/receipt.json)|PASS|Versioned facility calendar/covenant clause/source/export|
+|[note-schedule-qa-9827487edb65](D:/data/Codex/credit-atlas/artifacts/private/note-schedule-qa-9827487edb65/receipt.json)|PASS|Source note terms/nominal cashflows/independent PDF/browser/export|
+|[note-rules-qa-f5dd8158e6b9](D:/data/Codex/credit-atlas/artifacts/private/note-rules-qa-f5dd8158e6b9/receipt.json)|PASS|Issuer API-linked base payment rules/source/cutoff/browser/export|
+|[retail-source-quality-qa-594921ea7ac8](D:/data/Codex/credit-atlas/artifacts/private/retail-source-quality-qa-594921ea7ac8/receipt.json)|PASS|Acquisition profile/API/UI/JSON/Excel scope/mobile/outage/ledger|
+|[kpi-inspector-qa-0b9964df5e79](D:/data/Codex/credit-atlas/artifacts/private/kpi-inspector-qa-0b9964df5e79/qa.json)|PASS|Five-domain inspector regression after source-quality integration|
+|[abs-benchmark-qa-22780656071d](D:/data/Codex/credit-atlas/artifacts/private/abs-benchmark-qa-22780656071d/receipt.json)|PASS|Administrator SOFR/SIFMA calendar/UI/export/mobile/outage|
+|[abs-benchmark-audit-a9d88282311d](D:/data/Codex/credit-atlas/artifacts/private/abs-benchmark-audit-a9d88282311d/receipt.json)|PASS|Independent20-period date/rational-rate/coupon/interest source comparison|
+|[pool-history-qa-5930436fbc94](D:/data/Codex/credit-atlas/artifacts/private/pool-history-qa-5930436fbc94/receipt.json)|PASS|Static-pool selectors/curve/source/export/reload/mobile/outage|
+|[pool-history-audit-a38fbe7ce809](D:/data/Codex/credit-atlas/artifacts/private/pool-history-audit-a38fbe7ce809/receipt.json)|PASS|Independent63cohort-metric groups/1998populated/1362blank source positions|
 
 Receipt PASS không được dùng để chứng nhận phần ngoài phạm vi test: production governance, actual institution ECL, full legal terms, multi-vintage OOT, licensing hay toàn bộ native Excel qualification.
 

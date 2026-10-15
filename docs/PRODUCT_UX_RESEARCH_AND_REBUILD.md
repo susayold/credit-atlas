@@ -187,7 +187,7 @@ triển khai P2/P3/P5; xem phần7 cho trạng thái bản hiện tại.
 
 ## 7. Nghiệm thu mở rộng (10/10/2026)
 
-Các receipt nằm trong `private evidence omitted from public release`.
+Các receipt nằm trong `artifacts/private/<id>/receipt.json`.
 
 | Phạm vi | Evidence | Kết quả |
 |---|---|---|

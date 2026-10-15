@@ -9,7 +9,7 @@ Mở app: http://127.0.0.1:8770/?view=abs&workspace_tab=absee-dictionary
 - GovInfo, CFR2025/title17/volume3/section229.1125: PDF22pages277027bytes và
   XML126324bytes, tổng403351bytes. Edition2025-04-01, không gọi là bản luật
   hiện hành2026 chưa xác minh.
-- Folder: private evidence omitted from public release
+- Folder: data/private/structured/schedule-al-1b72bcb43754.
 - Receipt SHA256:4cfb99d09c146fb50bd81ef83ca0b7009fe0c1c94d5e968748c5f8833a28b91b.
 - PDF SHA256:8660bd608ed6055846f6d18d7da096ed65e6b23823dd0c7bb9bb0bea2a83690b.
 - XML SHA256:555d156af01886b7dba75b89158215ea95fe0055c24debeac1224ad1268213b9.
@@ -17,7 +17,7 @@ Mở app: http://127.0.0.1:8770/?view=abs&workspace_tab=absee-dictionary
 - Link XML: https://www.govinfo.gov/content/pkg/CFR-2025-title17-vol3/xml/CFR-2025-title17-vol3-sec229-1125.xml
 
 SEC technical-specification index dẫn ABSv3.1ZIP; tải trực tiếp HTTP trả403.
-Lần thử được lưu tại private evidence omitted from public release
+Lần thử được lưu tại data/private/structured/absee-spec-73039c4b61a5/
 acquisition-failed.json. Không đổi endpoint/credentials để vượt restriction.
 GovInfo là nguồn định nghĩa CFR riêng, không phải bản thay thế XSD.
 
@@ -50,17 +50,17 @@ không thêm observations: mirror vẫn488219asset-period rows,11files,3month ga
 
 ## Evidence đã đạt
 
-- dictionary: private evidence omitted from public release
+- dictionary: artifacts/private/absee-dictionary-6cc1ca9b700d/dictionary.json.
 - Backend8testsPASS: dictionary+existingprofile. Kiểm tra definition semantics
   đại diện, không lẫn auto lease, roman zero-balance clauses, missing schema,
   source mutation, forbidden filters và XMLDTD.
-- Independent audit: private evidence omitted from public release
+- Independent audit: artifacts/private/absee-dictionary-audit-ff545e6098b9/
   receipt.json:62full XML paragraph matches,62full PDF definition matches,
   62aggregate coverage comparisons và2source hashesPASS.
 - Auto-loan evidence ở PDFphysicalpages16–18/printed606–608; đã xem ảnh render.
   Audit ban đầu cần bỏ footer/header khi nối paragraph qua trang; không sửa
   source để làm audit đạt. ReceiptISSUES_FOUND ban đầu vẫn giữ.
-- Browser: private evidence omitted from public release
+- Browser: artifacts/private/absee-dictionary-qa-ef7efae33197/receipt.json,
   5groupsPASS: search/detail/source flags, API/export, missing schema/reload/
   mobile, outage/retry, invalid scope/noerrors/holdoutledger unchanged.
 - Existing coverage browser regression: absee-profile-qa-efd98c82ee7c,

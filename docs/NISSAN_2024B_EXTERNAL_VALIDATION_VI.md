@@ -4,7 +4,7 @@ Ngày chốt: 15/10/2026. Nguồn raw XML và Parquet chứa asset identifier n�
 
 ## 1. Mục tiêu và nguồn
 
-Nissan 2024-B được chọn làm bộ kiểm tra khác issuer/servicer family sau hai deal Toyota. SEC EDGAR xác nhận Form 10-D kỳ báo cáo 31/10/2024 của Nissan Auto Receivables 2024-B Owner Trust, accession `0001193125-24-264295`, gồm EX-99.1 Servicer’s Certificate; [SEC filing detail](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Nissan ABS-EE có EX-102 và EX-103; ví dụ SEC filing 2026 kỳ 05/2026 được đăng dưới Nissan Auto Receivables filing group [SEC ABS-EE detail](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+Nissan 2024-B được chọn làm bộ kiểm tra khác issuer/servicer family sau hai deal Toyota. SEC EDGAR xác nhận Form 10-D kỳ báo cáo 31/10/2024 của Nissan Auto Receivables 2024-B Owner Trust, accession `0001193125-24-264295`, gồm EX-99.1 Servicer’s Certificate; [SEC filing detail](https://www.sec.gov/Archives/edgar/data/2035264/000119312524264295/0001193125-24-264295-index.htm). Nissan ABS-EE có EX-102 và EX-103; ví dụ SEC filing 2026 kỳ 05/2026 được đăng dưới Nissan Auto Receivables filing group [SEC ABS-EE detail](https://www.sec.gov/Archives/edgar/data/1129068/000119312526231956/0001193125-26-231956-index.htm).
 
 Acquisition ghép đúng report month của ABS-EE và 10-D trong 23 kỳ liên tục **31/10/2024–31/08/2026**. 09/2024 có hai filing ABS-EE nhưng không tìm được 10-D đồng kỳ đủ căn cứ nên bị loại khỏi khoảng liên tục. EX-99.1 có ngày collection period khớp kỳ certificate; acquisition receipt lưu URL, accession, metadata HTTP, kích thước và SHA-256 từng attachment.
 
@@ -71,7 +71,7 @@ Recovery khớp 17/23 kỳ với cả certificate dòng `Recoveries of Defaulted
 - **07/2025:** 33 first-code-4 rows cộng $577.420,34; 3 key đã có code 4/charge-off ở tháng 06 lặp lại $77.765,22; cả 36 row cộng $655.185,56. Trong khi đó 10-D báo 1 receivable và principal **−$59.000,49**. Certificate recovery $257.636,52 khớp ABS-EE; certificate monthly net loss **−$316.637,01** bằng −$59.000,49 − $257.636,52. 10-D cũng báo current net-loss ratio **−0,39%**.
 - **08/2025:** đủ 54 positive charge-off rows và $860.007,75 khớp certificate, nhưng chỉ 24 là first code-4 keys; 30 repeated rows là $522.608,93. First-code-4 amount riêng là $337.398,82.
 
-Mẫu tháng 07 phù hợp với khả năng certificate ghi một adjustment/reversal âm, nhưng audit không xác định được receivable nào hoặc lý do. Tháng 08 chứng minh rule first-code-4 không phải lúc nào cũng tái tạo count/principal certificate; ở tháng này positive charge-off rows mới khớp. Vì vậy phải giữ event logic theo issuer và phân kỳ, không chọn một rule chung cho mọi tháng. Audit drilldown lưu hashed asset IDs và adjacent-row values trong [exception artifact](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included); không chứa borrower IDs nguyên gốc.
+Mẫu tháng 07 phù hợp với khả năng certificate ghi một adjustment/reversal âm, nhưng audit không xác định được receivable nào hoặc lý do. Tháng 08 chứng minh rule first-code-4 không phải lúc nào cũng tái tạo count/principal certificate; ở tháng này positive charge-off rows mới khớp. Vì vậy phải giữ event logic theo issuer và phân kỳ, không chọn một rule chung cho mọi tháng. Audit drilldown lưu hashed asset IDs và adjacent-row values trong [exception artifact](../artifacts/private/nissan-2024b-event-exceptions-90406964d980/audit.json); không chứa borrower IDs nguyên gốc.
 
 ## 5. KPI surveillance trong 10-D và phép bảo toàn số học
 
@@ -106,15 +106,15 @@ Nissan là external issuer evidence có giá trị vì app/pipeline đã phải 
 
 ## 7. Nguồn project và tái tạo
 
-- Acquisition: `private evidence omitted from public release`
-- Panel: `private evidence omitted from public release`
-- Longitudinal audit: `private evidence omitted from public release`
-- Certificate tie-out: `private evidence omitted from public release`
+- Acquisition: `data/private/structured/nissan-2024b-validation-panel-7cd3605b4e07/`
+- Panel: `data/private/derived/nissan-2024b-validation-panel-9534e22c34fc/`
+- Longitudinal audit: `artifacts/private/nissan-2024b-absee-panel-audit-8b5590abd3d5/audit.json`
+- Certificate tie-out: `artifacts/private/nissan-2024b-certificate-tieout-d7a71f85c77c/audit.json`
 - Acquisition / panel builder / audits: `scripts/acquire_nissan_2024b_validation_panel.py`, `scripts/build_nissan_2024b_validation_panel.py`, `scripts/audit_nissan_2024b_absee_panel.py`, `scripts/audit_nissan_2024b_certificate_tieout.py`
-- Live SEC submissions census refresh: `scripts/audit_nissan_2024b_submission_history.py`; [verified census audit](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), latest filing 2026-09-25, exact match with acquisition snapshot, no July 2025 amendments.
-- Recovery timing and June 2025 DPD drilldown: [private diagnostic](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
-- Full-window comparison of literal vs candidate DPD boundaries: `scripts/audit_nissan_2024b_dpd_boundary_rules.py`; [audit](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
-- Reproducible certificate event drilldown: `scripts/audit_nissan_2024b_event_exception_detail.py`; [private exception audit](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+- Live SEC submissions census refresh: `scripts/audit_nissan_2024b_submission_history.py`; [verified census audit](../artifacts/private/nissan-2024b-submission-refresh-a26fc17a6676/audit.json), latest filing 2026-09-25, exact match with acquisition snapshot, no July 2025 amendments.
+- Recovery timing and June 2025 DPD drilldown: [private diagnostic](../artifacts/private/nissan-2024b-recovery-dpd-exceptions-71362b31b1c1/audit.json).
+- Full-window comparison of literal vs candidate DPD boundaries: `scripts/audit_nissan_2024b_dpd_boundary_rules.py`; [audit](../artifacts/private/nissan-2024b-dpd-boundary-audit-762c0a8bcdf2/audit.json).
+- Reproducible certificate event drilldown: `scripts/audit_nissan_2024b_event_exception_detail.py`; [private exception audit](../artifacts/private/nissan-2024b-event-exceptions-90406964d980/audit.json).
 - App API pin and external issuer card: `src/credit_atlas/absee_profile.py`, `apps/web/app.js`
 
 Đây là checkpoint partial cho surveillance/collateral-history work. Tổng nghiệm thu vẫn **26/50 = 52%** vì các tiêu chí PD/LGD, event mapping và một số tie-out chưa đạt.

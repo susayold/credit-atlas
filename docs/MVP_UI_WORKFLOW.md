@@ -27,7 +27,7 @@ lượt cuối không có unexpected console/page errors. Lượt pytest đầu 
 do host temp path C: bị chặn; rerun dùng explicit unique D: basetemp đã PASS.
 
 Các phần dưới ghi lịch sử MVP/workbench trước đợt banner rows này.
-Chạy server từ `local machine path omitted`:
+Chạy server từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 -m credit_atlas.cli serve --port 8770
@@ -66,7 +66,7 @@ Prompt cuối:
 
 ## Bằng chứng kiểm tra
 
-`private evidence omitted from public release`: **10 checks PASS**.
+`artifacts/private/mvp-ux-qa-1134f61f4300/receipt.json`: **10 checks PASS**.
 Trình duyệt thật mở trang chủ mặc định, tải ảnh, kiểm tra source filter,
 mở đủ P1–P5 qua thẻ domain, đọc kết quả frozen Retail/Excel Portfolio,
 kiểm tra selected navigation, mobile390px, menu và reload. Không unexpected
@@ -76,7 +76,7 @@ Screenshots đã kiểm tra trực quan: `home-desktop.png`, `home-mobile.png`,
 `portfolio-desktop.png`, `portfolio-mobile.png`, `retail-desktop.png` trong
 folder receipt trên. Desktop1440px, mobile390px.
 
-`private evidence omitted from public release`: **15 tests PASS** cho HTTP boundary,
+`artifacts/private/mvp-http-20261010.xml`: **15 tests PASS** cho HTTP boundary,
 Excel HTTP và suite snapshot integrity. Node `--check apps/web/app.js` PASS.
 Full regression1.098 PASS trước lần redesign này là evidence của phiên bản
 trước; không dùng làm bằng chứng full regression của giao diện mới.

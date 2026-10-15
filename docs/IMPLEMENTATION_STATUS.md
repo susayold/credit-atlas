@@ -77,10 +77,10 @@ chapter 47 of the consolidated research plan.
   TEST_SUITE_2026-10-15_VI.md.
 - Latest after NSMO status parser: full application and vendor suite passed
   1,574/1,574 via `scripts/test.ps1` in 391 seconds; receipt:
-  `private evidence omitted from public release`.
+  `artifacts/private/test-suite-direct-20261015/receipt.json`.
 - Latest after NSMO CSV-streaming extension: 1,577/1,577 passed via
   `scripts/test.ps1` in 341.4 seconds; receipt:
-  `private evidence omitted from public release`.
+  `artifacts/private/test-suite-direct-20261015-nsmo-stream/receipt.json`.
 - M01-022 descriptive export is verified across five real-case scopes. The
   wrapper/report schemas, case/run/method digests, empty-year behavior,
   deterministic repeat, 50,000-ID scan and fail-closed unsupported metric
@@ -105,7 +105,7 @@ was downloaded. Official documentation directs users to authenticated Clarity.
 
 Commands source-access and download-samples now support direct HTTP acquisition.
 Download manifests and optional Netscape cookie files remain under ignored
-private evidence omitted from public release The downloader allows only the official Clarity HTTPS host,
+data/private/access. The downloader allows only the official Clarity HTTPS host,
 rejects other-host redirects, bounds download/decompressed size, checks member
 names and CRC, records SHA-256, and omits signed URLs/cookies from receipts.
 Archive checks are separate from source rights/schema/population qualification.
@@ -130,10 +130,10 @@ zero annual vintages. The current official page says SFLLD covers about 56
 million loans through March 31, 2026 and directs users to register/sign in to
 Clarity for full, by-year and sample data; the login requirement remains the
 data gate. See FREDDIE_PUBLIC_REFERENCE_REVIEW_VI.md and
-`private evidence omitted from public release`.
+`artifacts/private/freddie-release47-reference-audit-c3ce87022b8b/audit.json`.
 
 Mortgage real-data browser acceptance was rerun on 2026-10-15: 39 checks pass
-in `private evidence omitted from public release`. This verifies the current
+in `artifacts/private/browser-qa-7a281849bd29`. This verifies the current
 descriptive UI flow, not R2/R3 completion. R2/R3 remain unmet until authorized
 annual vintages, multi-vintage support/protocol and actual model gates pass.
 
@@ -142,16 +142,16 @@ acceptance requirements have been audited.
 
 Latest evidence:
 
-- Browser (2026-10-15): private evidence omitted from public release 39 checks PASS.
+- Browser (2026-10-15): artifacts/private/browser-qa-7a281849bd29/receipt.json, 39 checks PASS.
 - Chart/support (2026-10-15): docs/D01_CHART_SUPPORT_AUDIT_VI.md; six numerical/data-support checks PASS.
 - Reproduction (2026-10-15): docs/D01_REPRODUCTION_AUDIT_VI.md; fresh eight-stage source-manifest comparison PASS, 13 tables and four stable summaries have zero differences.
 - Descriptive handoff: docs/D01_CASE_STUDY_VI.md consolidates scope, target, KPI denominators, findings, data/model gates and evidence links; final model card/demo remain pending R2/R3.
-- Package: private evidence omitted from public release
-- Benchmark: private evidence omitted from public release
-- Study: private evidence omitted from public release
-- Feature audit: private evidence omitted from public release
+- Package: artifacts/private/package-audit-e96ce7a09397/receipt.json.
+- Benchmark: artifacts/private/api-benchmark-bc3af91d5fd0/receipt.json.
+- Study: artifacts/private/study-e7b5a47685c1/study-complete.json.
+- Feature audit: artifacts/private/feature-audit-585be3bb2299/feature-complete.json.
 - Export contract: docs/EXPORT_CONTRACT.md.
-- Actual blocked assessment: private evidence omitted from public release
+- Actual blocked assessment: artifacts/private/assessment-76010ad019fd/assessment-complete.json.
 - Development adapter: docs/DEVELOPMENT_ASSESSMENT.md.
 - Import/study instructions: docs/SOURCE_AND_STUDY_WORKFLOW.md.
 

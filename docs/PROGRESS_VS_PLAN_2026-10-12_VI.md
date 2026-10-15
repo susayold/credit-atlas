@@ -313,7 +313,7 @@ Cột đầu ra dưới đây là **đích yêu cầu trong plan**, không khẳ
 
 **Bước tiếp theo ghi trong sổ:** Thêm temporal comparison và confidence intervals khi có đủ vintages.
 
-- Nghiệm thu: p2-transition-full-current-requirement-20261012. All explicit current P2.05 inputs/private evidence omitted from public release on official2012 descriptive case;next-stage CI/multi-vintage/OOT requirements remain open
+- Nghiệm thu: p2-transition-full-current-requirement-20261012. All explicit current P2.05 inputs/outputs/acceptance on official2012 descriptive case;next-stage CI/multi-vintage/OOT requirements remain open
   Báo cáo: [P2_TRANSITION_ACCEPTANCE_VI.md](P2_TRANSITION_ACCEPTANCE_VI.md).
 
 #### P2.06 — Cure & redefault

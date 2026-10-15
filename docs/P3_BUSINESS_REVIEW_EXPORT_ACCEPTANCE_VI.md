@@ -34,4 +34,4 @@ Narrative là analyst input; Reviewed/Owner tự khai báo. Memo không tự tr�
 
 ## Kết luận phạm vi
 
-Các private reports/JSON, memo history và filter-scoped Excel đáp ứng đầu ra P3.10 hiện tại. Giữ nguyên required inputs/private evidence omitted from public release trong sổ 50 yêu cầu. Scoped borrower handoff, reviewer authentication và actual risk-decision inputs không được suy ra từ gói research này.
+Các private reports/JSON, memo history và filter-scoped Excel đáp ứng đầu ra P3.10 hiện tại. Giữ nguyên required inputs/outputs/acceptance/next trong sổ 50 yêu cầu. Scoped borrower handoff, reviewer authentication và actual risk-decision inputs không được suy ra từ gói research này.

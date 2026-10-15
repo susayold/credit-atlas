@@ -193,7 +193,7 @@ KPI và ba bảng assumptions/cases/actions. Case đầu `lower_thresholds` có 
 review / capacity 600, overflow 1.677; expected cost 4.808,640601 declared units,
 retrospective proxy 4.643. Cả ba declared threshold cases vượt assumed capacity.
 Không tối ưu bằng final, không chứng nhận reviewer efficacy hay realized profit.
-Receipt `private evidence omitted from public release`: **13 PASS**.
+Receipt `artifacts/private/kpi-analysis-qa-056721421547/receipt.json`: **13 PASS**.
 Hạng mục tiếp theo A4 là issuer financial ratios với filing-specific evidence.
 
 Monitor đã có 55 KPI readouts, formulas/support, interpretation, source tables, JSON export và các chỉ số cần dữ liệu bổ sung. P2 có phân rã thay đổi tỷ lệ D3 giữa hai kỳ theo tử số/mẫu số, chọn count hoặc UPB. P4 có hai snapshot cùng USD/region.
@@ -261,4 +261,4 @@ Tài liệu actual và definitions: [KPI handbook](KPI_ANALYSIS_GUIDE_VI.md). T�
 
 ## Checkpoint A2 — migration/cure readout
 
-Đã tích hợp lifetime transitions (segment all) và 12-month confirmed-event follow-up vào monitor/export. Có 10 KPI mới và hai bảng support. Monthly history window không lọc các lifetime KPIs; basis count/UPB thay trọng số transition. Cure counts là forward-only events; chưa có probability estimand cho sustained cure/redefault từ risk set phù hợp. Receipt `private evidence omitted from public release`: 11 checks PASS, gồm mỗi origin row reconcile, count/UPB cell rates và follow-up event denominators. Tiếp theo A3: saved validation policy economics.
+Đã tích hợp lifetime transitions (segment all) và 12-month confirmed-event follow-up vào monitor/export. Có 10 KPI mới và hai bảng support. Monthly history window không lọc các lifetime KPIs; basis count/UPB thay trọng số transition. Cure counts là forward-only events; chưa có probability estimand cho sustained cure/redefault từ risk set phù hợp. Receipt `artifacts/private/kpi-analysis-qa-20ea65746668/receipt.json`: 11 checks PASS, gồm mỗi origin row reconcile, count/UPB cell rates và follow-up event denominators. Tiếp theo A3: saved validation policy economics.

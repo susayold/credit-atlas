@@ -18,13 +18,13 @@ World Omni Auto Receivables Trust 2025-A, CIK 0002046523, auto retail
 installment receivables. Trang chính thức liên kết prospectus và hai workbook:
 https://www.worldomni.com/asset_securities.html
 
-Source `abs-source-e67abf50bb2c` nằm trong `private evidence omitted from public release`:
+Source `abs-source-e67abf50bb2c` nằm trong `data/private/structured`:
 4 file, **2.156.553 bytes**. Bao gồm bản chụp index HTML, prospectus PDF,
 `WOART_2025-A_2025.xls` và `WOART_2025-A_2026.xls`.
 Mỗi file có URL, HTTP200, thời điểm tải, kích thước, SHA256 trong receipt.
 Download tuần tự, giới hạn 16 MiB/file, không redirect, không cookies.
 
-Inventory hiện tại `abs-inventory-57a286117455` trong `private evidence omitted from public release`:
+Inventory hiện tại `abs-inventory-57a286117455` trong `artifacts/private`:
 **20 kỳ collection Jan2025–Aug2026 / 20.132 ô lưu trữ** gồm 8.993 ô có nội
 dung, 11.079 styled blanks và 60 empty-text cells. Inventory ban đầu
 `abs-inventory-4be0c8a1fa03` gọi tất cả 20.132 ô là `nonempty_cells`; tên

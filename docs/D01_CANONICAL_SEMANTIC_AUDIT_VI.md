@@ -48,7 +48,7 @@ giữ theo contract nhưng chưa có raw edge row trong vintage này để kiể
 | July 2026 General User Guide Release 47, pp. 4–17; file layout | `vendor/credit_risk_strategy_lab/docs/data_dictionary/canonical.md`, `src/crsl/canonical.py`, `src/crsl/contracts.py` | Official public example/layout review in `docs/FREDDIE_PUBLIC_REFERENCE_REVIEW_VI.md`; sample/layout files không phải annual source |
 | Token, enums, raw preservation, numeric casts | `SENTINELS`, `ENUMS`, `clean_expr`, `assert_source` | `vendor/credit_risk_strategy_lab/tests/test_contracts.py`, `test_canonical.py`; audit receipt below |
 | Target horizon, observed exits, loss sign/coverage | `src/crsl/labels.py`, `src/crsl/losses.py` | `test_labels.py`, `test_losses.py`, `test_vintage.py`; broader suite recorded in implementation status |
-| Actual case trace | D01 frozen canonical parquets and source-receipt-linked case | `private evidence omitted from public release` and `audit.json` |
+| Actual case trace | D01 frozen canonical parquets and source-receipt-linked case | `artifacts/private/d01-canonical-semantics-e2fe2cdc8cbf/receipt.json` and `audit.json` |
 
 ## Kết luận và phần còn mở
 

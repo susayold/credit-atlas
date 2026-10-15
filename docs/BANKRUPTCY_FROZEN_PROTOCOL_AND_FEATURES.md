@@ -65,7 +65,7 @@ không predictor. Firm IDs và dates chưa có: vẫn **unknown entity overlap**
 Reserved final chỉ41 positives; future uncertainty phải phản ánh small support.
 
 Registry key = SHA256(original official ARFF ZIP digest + horizon), dưới
-`private evidence omitted from public release`. Atomic directory reservation
+`artifacts/private/bankruptcy-study-registry`. Atomic directory reservation
 pin một study cho source/horizon; case ID, CSV mirror hoặc method version không
 được dùng để reset study. Rerun cùng case trả verified existing study; case
 mới trên cùng original source/horizon bị từ chối và phải reuse study cũ.

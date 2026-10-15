@@ -4,7 +4,7 @@ Ngày cập nhật: 11/10/2026. Bổ sung vào P5.05/P5.10; chưa đóng full co
 
 ## Dữ liệu vừa tải bằng HTTP/API
 
-Source `sofr-source-a076d14b0327`, thư mục `private evidence omitted from public release`:
+Source `sofr-source-a076d14b0327`, thư mục `data/private/reference-rates`:
 
 - 443 bản ghi SOFRAI từ API New York Fed, effective dates 02/01/2025–09/10/2026. Mỗi bản ghi có SOFR averages 30/90/180 ngày và index; module này dùng average30day.
 - Lịch SIFMA U.S. năm 2025 trong archive và năm 2026 trong trang current.

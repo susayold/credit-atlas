@@ -41,9 +41,9 @@ Memo mới capture thêm coverage với expense concept hiện đang chọn; m�
 
 Debt schedules, principal repayments, facility terms, permitted EBITDA adjustments, covenant test dates/thresholds và scope của công ty con. Các qualification EBIT ICR, DSCR, covenant compliance và issuer PD hiện false. Phần này bổ sung C4 financial analysis; chưa đóng C4 debt-service/covenant gate.
 
-Backend: `private evidence omitted from public release`, 33 tests PASS cho coverage, memo capture và HTTP guards. Browser QA đối chiếu exported observations với raw SEC companyfacts, tính lại ratios bằng Decimal, kiểm tra selectors/reload/mobile/outage và giữ nguyên frozen holdout access ledger.
+Backend: `artifacts/private/sec-coverage-tests-final-20261010.xml`, 33 tests PASS cho coverage, memo capture và HTTP guards. Browser QA đối chiếu exported observations với raw SEC companyfacts, tính lại ratios bằng Decimal, kiểm tra selectors/reload/mobile/outage và giữ nguyên frozen holdout access ledger.
 
-Browser receipt `private evidence omitted from public release`:
+Browser receipt `artifacts/private/sec-coverage-qa-1c32f79854e0/receipt.json`:
 **4 groups PASS**. Default 5-period scope có tổng supported ratio cells:
 AAPL0, MSFT4, Ford2, GM0 (mỗi kỳ có hai ratio cells). Cả supported và
 missing/ambiguous field candidates được đối chiếu raw; switching sang

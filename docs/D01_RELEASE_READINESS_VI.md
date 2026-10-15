@@ -7,12 +7,12 @@ theo, không phải quyết định phát hành công khai.
 
 | Control | Kết quả hiện tại | Evidence |
 |---|---|---|
-| Python/runtime lock | Python 3.12.14; 19/19 distributions khớp `requirements-lock.txt` | `private evidence omitted from public release` |
+| Python/runtime lock | Python 3.12.14; 19/19 distributions khớp `requirements-lock.txt` | `artifacts/private/d01-release-readiness-89b0c5945a8f/receipt.json` |
 | Engine provenance | Pinned commit `8d9994cfcb91fe871d66a4238c3f56053d71e920`; SHA-256 khớp cả 164 file copy | Cùng receipt, `vendor/credit_risk_strategy_lab/UPSTREAM.json` |
 | Storage boundary | Repo, vendor, raw/private data và derived/private artifacts đều ở D: | Cùng receipt |
 | Private file exclusion | 0 private paths trong 969 Git candidates | Cùng receipt |
-| Served-bundle privacy | 15 static assets, quét byte-level đối với đủ 50.000 source loan IDs; 0 matches; assets đúng explicit allowlist | `private evidence omitted from public release` |
-| Foundation resource | Clean descriptive rebuild 192,264 giây, peak working set 812.138.496 bytes (~774,5 MiB) | `private evidence omitted from public release` |
+| Served-bundle privacy | 15 static assets, quét byte-level đối với đủ 50.000 source loan IDs; 0 matches; assets đúng explicit allowlist | `artifacts/private/package-audit-4dd8b231c83e/receipt.json` |
+| Foundation resource | Clean descriptive rebuild 192,264 giây, peak working set 812.138.496 bytes (~774,5 MiB) | `artifacts/private/d01-a24484b21a21/foundation-complete.json` |
 
 Lock ứng dụng gồm DuckDB 1.5.5/PyArrow 22.0.0; optional groups pin
 scikit-learn 1.8.0, NumPy 2.5.3, SciPy 1.18.1, Playwright 1.56.0 và xlrd

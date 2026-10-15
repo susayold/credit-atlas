@@ -29,9 +29,9 @@ Origination profile coi original principal<=0 là unsupported theo existing cont
 
 ## Receipts
 
-- Independent `private evidence omitted from public release`: **513monthly scope rows /7.182checks**,13dimensions/102profile groups,16exports PASS. Source/case/method hashes lưu trong receipt; retail holdout ledger unchanged.
-- `private evidence omitted from public release`: **27tests PASS** gồm zero/NULL/terminal/zero-denominator boundaries,profile/export integrity,portfolio và frozen-serving scopes.
-- Browser `private evidence omitted from public release`: **6scopes /408profile bucket checks /360chart points PASS**, header/value theo basis,empty range/mobile/reload và scoped downloads. Desktop UPB và empty mobile đã visual-review; không page errors; ledger unchanged.
+- Independent `artifacts/private/portfolio-acceptance-d7a11b41726a/receipt.json`: **513monthly scope rows /7.182checks**,13dimensions/102profile groups,16exports PASS. Source/case/method hashes lưu trong receipt; retail holdout ledger unchanged.
+- `artifacts/private/portfolio-acceptance-tests.xml`: **27tests PASS** gồm zero/NULL/terminal/zero-denominator boundaries,profile/export integrity,portfolio và frozen-serving scopes.
+- Browser `artifacts/private/portfolio-browser-acceptance-28552f897b7b/receipt.json`: **6scopes /408profile bucket checks /360chart points PASS**, header/value theo basis,empty range/mobile/reload và scoped downloads. Desktop UPB và empty mobile đã visual-review; không page errors; ledger unchanged.
 
 Một lần kiểm tra header bằng accessibility role không resolve được; test cuối kiểm tra trực tiếp nội dung th cuối cùng và toàn bộ values, không bỏ kiểm tra label/basis.
 

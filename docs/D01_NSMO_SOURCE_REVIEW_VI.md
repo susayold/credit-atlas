@@ -6,7 +6,7 @@ Date checked: 2026-10-15. This is a candidate source review; it does not claim t
 
 FHFA says the current NSMO public-use file (May 27, 2026) contains 62,359 sample mortgages originated from 2013 through 2024 and quarterly mortgage-performance information through 2025 Q3. The sample is drawn from newly originated mortgages in the NMDB/Experian frame, about 6,000 loans per quarter. It is a public-use, de-identified sample, not the Freddie Mac Single-Family Loan-Level Dataset and not a Freddie annual vintage. It could support a separate external-cohort or robustness study after the raw file, survey response process, weights, censoring, and target definition are audited.
 
-Official source: [FHFA NSMO public-use-file page](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). FHFA lists CSV, JSON, R, SAS, Stata, and XML formats and says that downloading and using the files acknowledges the FHFA Notice of Monitoring and Terms of Service. The data payload was not requested because accessing it requires an explicit “I agree” acknowledgement to monitoring on the user's behalf. The user must authorize that acknowledgement before the payload is fetched.
+Official source: [FHFA NSMO public-use-file page](https://www.fhfa.gov/data/nsmo). FHFA lists CSV, JSON, R, SAS, Stata, and XML formats and says that downloading and using the files acknowledges the FHFA Notice of Monitoring and Terms of Service. The data payload was not requested because accessing it requires an explicit “I agree” acknowledgement to monitoring on the user's behalf. The user must authorize that acknowledgement before the payload is fetched.
 
 ## What the official codebook says is available
 
@@ -52,10 +52,10 @@ Initial work sequence after authorized download:
 
 ## Official documentation acquired locally
 
-The official May 27, 2026 technical report and 336-page codebook were downloaded to `private evidence omitted from public release` for schema review. Their SHA-256 values are recorded in `private evidence omitted from public release`. These are documentation files only; no PUF microdata are present in that folder.
+The official May 27, 2026 technical report and 336-page codebook were downloaded to `data/private/mortgage/nsmo-2026-05-27/source_docs/` for schema review. Their SHA-256 values are recorded in `artifacts/private/nsmo-source-docs-20261015/receipt.json`. These are documentation files only; no PUF microdata are present in that folder.
 
 - [NSMO technical documentation](https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf)
 - [NSMO codebook and unweighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-c-v70.pdf)
-- [FHFA public-use-file notice and agreement gate](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included)
+- [FHFA public-use-file notice and agreement gate](https://www.fhfa.gov/data/nsmo/puf)
 - [ICPSR/DataLumos catalog record](https://www.datalumos.org/datalumos/project/219485/version/V2/view)
 

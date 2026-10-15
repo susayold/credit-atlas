@@ -27,9 +27,9 @@ Nguồn issuer: https://www.worldomni.com/abs/ManagedPool-Retail.xlsx, được 
 
 ## Kiểm tra đã lưu
 
-- `private evidence omitted from public release`: 21 tests PASS (managed + static pool), gồm missing/sign/date/ratio/scope và inconsistent-total handling.
-- `private evidence omitted from public release`: openpyxl đọc workbook độc lập với projection XML; 210 giá trị, 105 reconciliation và 14 derived ratios PASS.
-- `private evidence omitted from public release`: 4 nhóm browser PASS, API/JSON parity, exact source/unit/sign, mobile/reload, source outage/recovery và frozen holdout ledger unchanged. Desktop/mobile screenshots đã xem.
+- `artifacts/private/managed-pool-tests-20261011.xml`: 21 tests PASS (managed + static pool), gồm missing/sign/date/ratio/scope và inconsistent-total handling.
+- `artifacts/private/managed-pool-audit-8693d36cb33c/receipt.json`: openpyxl đọc workbook độc lập với projection XML; 210 giá trị, 105 reconciliation và 14 derived ratios PASS.
+- `artifacts/private/managed-pool-qa-bc2cc24261d2/receipt.json`: 4 nhóm browser PASS, API/JSON parity, exact source/unit/sign, mobile/reload, source outage/recovery và frozen holdout ledger unchanged. Desktop/mobile screenshots đã xem.
 - Lần QA trước `managed-pool-qa-3cad4448bae9` bị dừng vì route mô phỏng outage sai pattern (API không có query string); không dùng làm evidence nghiệm thu. Source audit ban đầu sửa xử lý openpyxl EmptyCell trước khi có receipt PASS.
 
 ## Liên hệ plan

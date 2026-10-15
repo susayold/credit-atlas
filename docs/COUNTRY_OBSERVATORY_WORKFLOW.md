@@ -45,7 +45,7 @@ khác theo quốc gia và thời kỳ. Không tự biến thành CET1/RWA compli
   Source/canonical/view bytes và methods kiểm tra mỗi lần đọc; sửa summary rồi
   cập nhật digest vẫn bị phát hiện khi projection không khớp nguồn.
 
-Private files nằm dưới `private evidence omitted from public release` và `private evidence omitted from public release`
+Private files nằm dưới `data/private/country-observatory` và `artifacts/private`
 trên D:. Batch đầu `country-source-44479f1d7ba5` đã tải nhưng bị adapter ban đầu
 chặn do blank ISO3/name whitespace; không có case ready từ batch đó. Sau sửa
 exact-join contract, batch mới ở trên đã tải và được kiểm chứng. Không sửa

@@ -6,7 +6,7 @@ Official issuer index: https://www.ebmud.com/about-us/financial-information/offi
 
 Hai PDF được lấy từ links có label trên index, không đoán URL hoặc dựa vào filename. Water statement ngày March 31, 2026 có 308 physical pages; Wastewater ngày April 15, 2026 có 282 pages. Tổng 590 pages. Đây là official statements/summary provisions, chưa phải executed full indenture chain.
 
-Source: `private evidence omitted from public release`; receipt SHA `99a9782c07621805b5a437a389953d097bec71e389382493c225e8d59fa3eeb1`. Source/profile integrity được kiểm tra trước mỗi report. Profile hiện tại `private evidence omitted from public release`; SHA `c31ab0fc82e030f38c5c457d7b95731059ebdd8a1ba322fb8671e52dd8b083f5`.
+Source: `data/private/business/utility-contract-source-cac5d22ec69d`; receipt SHA `99a9782c07621805b5a437a389953d097bec71e389382493c225e8d59fa3eeb1`. Source/profile integrity được kiểm tra trước mỗi report. Profile hiện tại `artifacts/private/utility-contract-profile-05bce98c9db8/profile.json`; SHA `c31ab0fc82e030f38c5c457d7b95731059ebdd8a1ba322fb8671e52dd8b083f5`.
 
 ## Phân biệt ba phạm vi
 
@@ -39,13 +39,13 @@ Appendix H là color redline: blue underlining additions, red strikethrough dele
 
 ## Verification và app
 
-Independent audit dùng pdfplumber, không gọi production parser: `private evidence omitted from public release`, PASS 3 source hashes, 2 document identities và 22 clause-role/page checks. Audit đầu phát hiện predicate Fiscal Year ở nhầm definition page; đã dùng đúng anchor và bổ sung continuation page, không sửa source PDF. Failed receipt `utility-contract-audit-f832fb85bca8` được giữ.
+Independent audit dùng pdfplumber, không gọi production parser: `artifacts/private/utility-contract-audit-4e07ea00a93c/receipt.json`, PASS 3 source hashes, 2 document identities và 22 clause-role/page checks. Audit đầu phát hiện predicate Fiscal Year ở nhầm definition page; đã dùng đúng anchor và bổ sung continuation page, không sửa source PDF. Failed receipt `utility-contract-audit-f832fb85bca8` được giữ.
 
-Visual review trực tiếp Water rate-covenant page22, Water redline page304 và Wastewater default-caveat page279 xác nhận layout/redline/proposed scope. Backend/HTTP: `private evidence omitted from public release`, 36 checks PASS về scopes, thresholds/policy, future effective-date guard, integrity và existing HTTP boundary.
+Visual review trực tiếp Water rate-covenant page22, Water redline page304 và Wastewater default-caveat page279 xác nhận layout/redline/proposed scope. Backend/HTTP: `artifacts/private/utility-contract-http-tests-20261011.xml`, 36 checks PASS về scopes, thresholds/policy, future effective-date guard, integrity và existing HTTP boundary.
 
 `/api/utility-debt-service`/private JSON trả thêm `legal_evidence`. P3 → Utility DSCR có Covenant description & proposed amendments, statement date, policy/rate distinctions, page evidence và required inputs. Applicable historical threshold/headroom/compliance vẫn null. Chưa nâng 50 capability states hoặc đóng C4.
 
-Browser receipt: `private evidence omitted from public release`, 5 groups PASS sau bổ sung legal pane: hai systems/dates/supplements,reported covenant/policy distinctions,proposed default text,scope/export parity,URL/year bounds,mobile vàoutage recovery. Không browser errors,holdout ledger unchanged.
+Browser receipt: `artifacts/private/utility-debt-qa-0708e7218772/receipt.json`, 5 groups PASS sau bổ sung legal pane: hai systems/dates/supplements,reported covenant/policy distinctions,proposed default text,scope/export parity,URL/year bounds,mobile vàoutage recovery. Không browser errors,holdout ledger unchanged.
 
 ## Đầu vào còn cần
 

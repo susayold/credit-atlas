@@ -44,7 +44,7 @@ early stopping, internal validation hoặc hyperparameter search. Xem đầy đ�
 
 ## 3. Quyết định từ validation
 
-Bundle chốt: `private evidence omitted from public release`.
+Bundle chốt: `artifacts/private/retail-freeze-3dc86f5afe01`.
 Model chọn: **boosting/raw**. Không refit khi freeze; encoder/model/settings
 được sao chép đúng bytes từ development artifacts đã kiểm tra.
 
@@ -68,7 +68,7 @@ tiêu chí này, nên giữ raw probability. Không lựa chọn theo final-test
 
 ## 4. Đánh giá cuối đã chạy thật
 
-Run: `private evidence omitted from public release`.
+Run: `artifacts/private/retail-holdout-061c440ea867`.
 Chỉ model đã chốt được score; không fit, tune, thay model hoặc chọn threshold
 trên final test. Không chạy lại tất cả model để chọn model thắng trên holdout.
 
@@ -97,7 +97,7 @@ probability = 1 và tổng số khách hàng/events được đối chiếu.
 - `access-start.json` ghi mục đích và frozen bundle hash trước predictor query.
   Query chỉ lấy 19 allowlisted fields của final test; không chọn demographic
   predictors hoặc các development clients.
-- SQLite ledger private `private evidence omitted from public release` claim
+- SQLite ledger private `artifacts/private/retail-holdout-access.sqlite` claim
   source hash + partitions hash + protocol hash trước lần mở. Một frozen model
   khác không được score lại cùng source/split qua adapter này. Lần thất bại
   cũng giữ claim; cần điều tra audit thay vì âm thầm mở lại.
@@ -131,7 +131,7 @@ evidence, codec parity và unseen buckets, từ chối wrong-role/nonfinite/bool
 không gọi fit khi evaluation, ledger chống mở lại source/split và full synthetic
 holdout flow với development predictors cố tình không hợp lệ.
 
-Từ `local machine path omitted`, lệnh đã dùng:
+Từ `D:\data\Codex\credit-atlas`, lệnh đã dùng:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/freeze_retail.py --comparison retail-comparison-b560ea676127

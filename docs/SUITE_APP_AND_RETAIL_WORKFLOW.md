@@ -62,7 +62,7 @@ ICE OAS raw observations vẫn private; catalog chỉ nêu metadata và source s
 
 ## Chạy lại build và app
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/build_suite_view.py --warehouse source-warehouse-281662304758 --freeze retail-freeze-3dc86f5afe01 --holdout retail-holdout-061c440ea867 --business business-sba-21c568f10f7d
@@ -87,7 +87,7 @@ Browser suite acceptance kiểm tra nguồn thật, domain filter, holdout metri
 disabled mortgage filters, independent navigation, URL reload, private export
 không có individual IDs/scores hoặc model parameters, mobile page overflow
 và retail availability khi mortgage run catalog rỗng. Screenshots/receipts
-private dưới `private evidence omitted from public release`.
+private dưới `artifacts/private/suite-browser-qa-*`.
 
 Latest actual suite browser receipt: `suite-browser-qa-f5d061d221cd/receipt.json`,
 **16 checks PASS**, gồm business scope/reload/export/mobile và source/retail checks.

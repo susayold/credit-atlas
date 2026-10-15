@@ -19,9 +19,9 @@ Ngày 12/10/2026. Đối chiếu nguyên yêu cầu P2.05 trong `PLAN_WORKBENCH_
 
 ## Receipts và current-state checks
 
-- Independent audit: `private evidence omitted from public release`; full served projection ở cùng folder. Verify bốn source Parquet hashes, frozen case receipt và method hashes. Không fit model, không mở retail final predictors; frozen retail ledger không đổi.
-- Tests: `private evidence omitted from public release`, **22 PASS**, gồm gap/terminal/year/missing-UPB/distinct support, invalid join/grain, scoped export, cross-case/method/source integrity và filter validation.
-- Browser: `private evidence omitted from public release`, **6scope cases PASS**: all/all/count; relief2012/count; non-relief2025/balance; unknown2012/count; all2020/balance; all1990/count. Có mobile,absent-year reload,cross-origin rejection và invalid-year400. Desktop matrix/all và empty-year đã visual review.
+- Independent audit: `artifacts/private/transition-acceptance-be68432843fc/receipt.json`; full served projection ở cùng folder. Verify bốn source Parquet hashes, frozen case receipt và method hashes. Không fit model, không mở retail final predictors; frozen retail ledger không đổi.
+- Tests: `artifacts/private/transition-acceptance-tests-20261012.xml`, **22 PASS**, gồm gap/terminal/year/missing-UPB/distinct support, invalid join/grain, scoped export, cross-case/method/source integrity và filter validation.
+- Browser: `artifacts/private/transition-browser-acceptance-a2c7e68b7d22/receipt.json`, **6scope cases PASS**: all/all/count; relief2012/count; non-relief2025/balance; unknown2012/count; all2020/balance; all1990/count. Có mobile,absent-year reload,cross-origin rejection và invalid-year400. Desktop matrix/all và empty-year đã visual review.
 
 Lần independent audit đầu dùng sai tên JSON key `supplemental` thay vì `supplemental_evidence`; đã sửa script audit, không sửa service để khớp test. Lần chạy có receipt PASS ở trên là lần dùng đúng contract. Không lấy output chưa hoàn tất làm evidence.
 

@@ -104,7 +104,7 @@ inferred from these metrics.
 
 ## 4. Consumption ledger and read-only review
 
-`private evidence omitted from public release` records original-source
+`artifacts/private/bankruptcy-holdout-access.sqlite` records original-source
 ZIP/horizon lineage,study/freeze IDs,freeze digest,evaluation ID and status.
 Atomic primary-key claim precedes the final predictor query. A failed claimed
 evaluation remains consumed; no automatic retry/reset/new-case substitution.

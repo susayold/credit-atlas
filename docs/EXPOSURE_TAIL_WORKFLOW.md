@@ -29,7 +29,7 @@ không triển khai một IRB capital calculation hay tuyên bố Basel complian
 - Default definition của scenario được giữ trong report; target 90+ delinquency
   giả định chưa phải validated regulatory-default mapping.
 
-File input: `private evidence omitted from public release`.
+File input: `data/private/exposure-tail-plan-20261009.json`.
 Schema exact keys, private visibility và public_release_approved=false.
 Một plan phải chỉ rõ scenario_set_id/case, seed, draws, alphas và sensitivity
 cases. Correlation 0–0,95; LGD systemic spread 0–1; levels 0,5–0,999.
@@ -145,7 +145,7 @@ sensitivity comparison, VaR/ES support và joint segment contributions.
 Dimension exposure khác không thay scope của tail portfolio; currency filter
 giữ source binding. Tail version selection chưa persist URL.
 
-    .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_tail.py --assumptions private evidence omitted from public release
+    .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_tail.py --assumptions data/private/exposure-tail-plan-20261009.json
     .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_tail.py --verify exposure-tail-10a079f18dc9
     .\.venv\Scripts\python.exe -X utf8 scripts/audit_exposure_tail.py --tail-id exposure-tail-10a079f18dc9
     .\.venv\Scripts\python.exe -X utf8 scripts/browser_exposure_qa.py

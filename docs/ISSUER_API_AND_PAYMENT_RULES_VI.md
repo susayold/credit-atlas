@@ -15,13 +15,13 @@ Không coi Q4FilingId là SEC accession; SEC accession của registration là
 0001140361-24-044880.
 
 Bundle S-3ASR gồm base indenture92pages,818655bytes:
-`private evidence omitted from public release`.
+`data/private/sec-documents/sec-documents-480342e5f2e5`.
 SHA256 `f1a1d73cef7fadd2d3065a826e4d2618e48ad02d976df55e7c80d38fb7fa1183`.
 Đã identity-check Apple/date/indenture, extract toàn bộ page text;
 selected clauses render để kiểm tra text/layout. Không có full legal-review claim.
 
 [Trang issuer](https://investor.apple.com/sec-filings/default.aspx),
-[SEC base indenture](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+[SEC base indenture](https://www.sec.gov/Archives/edgar/data/320193/000114036124044880/ny20033611x4_ex4-1.htm).
 
 ## App và ý nghĩa nghiệp vụ
 
@@ -48,7 +48,7 @@ Full debt-service/DSCR/covenant actuals chưa đạt.
 
 ## Nghiệm thu và lineage
 
-Immutable rules `private evidence omitted from public release`.
+Immutable rules `artifacts/private/apple-note-rules-c04461282288`.
 Verification khóa builder/rules/PDF/page text/feed hashes và kiểm tra metadata
 CIK/form/date/DocumentList→PDF link. Cutoff/issuer guards không trả future
 source hoặc rules của issuer khác. Base source tách khỏi SECfinancialview.
@@ -56,6 +56,6 @@ source hoặc rules của issuer khác. Base source tách khỏi SECfinancialvie
 GET `/api/sec-note-rules`, `/api/sec-note-rules-report` vớiview_id/cik/asof;
 private attachment/no-store/local-origin/duplicate/unknown guards.
 Backend rules+note schedules34testsPASS,
-`private evidence omitted from public release`.
-Browser/source/export/mobile/outage6groupsPASS: `private evidence omitted from public release`. Desktop/mobile và sourcePDF45/46/72 đã visualreview; frozen holdout ledger unchanged.
+`artifacts/private/note-rules-tests-20261011.xml`.
+Browser/source/export/mobile/outage6groupsPASS: `artifacts/private/note-rules-qa-f5dd8158e6b9/receipt.json`. Desktop/mobile và sourcePDF45/46/72 đã visualreview; frozen holdout ledger unchanged.
 P3.08/C4 vẫnMột phần; goal100% chưa đạt.

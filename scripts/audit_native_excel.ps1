@@ -2,7 +2,7 @@ param([Parameter(Mandatory=$true)][string]$PlanPath)
 $ErrorActionPreference='Stop'
 $plan=Get-Content -LiteralPath $PlanPath -Raw | ConvertFrom-Json
 $out=[IO.Path]::GetFullPath($plan.output_folder)
-if(-not $out.StartsWith((Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\private\native-excel-qa-'),[StringComparison]::OrdinalIgnoreCase)){throw 'Unexpected native QA target'}
+if(-not $out.StartsWith('D:\data\Codex\credit-atlas\artifacts\private\native-excel-qa-',[StringComparison]::OrdinalIgnoreCase)){throw 'Unexpected native QA target'}
 $results=[Collections.Generic.List[object]]::new()
 $app=$null;$owned=$false;$book=$null
 try {

@@ -106,7 +106,7 @@ no-store responses. Rank4470 report/download matched the saved cohort and
 its contribution vector exactly. Consumed holdout ledger unchanged.
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_cohort_explanations.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_cohort_explanations.py --assumptions data/private/retail-cohort-explanations-plan-20261010.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_retail_cohort_explanations.py --verify retail-cohort-explanations-02487bb9d1a2
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_retail_cohort_explanations.py --cohort-id retail-cohort-explanations-02487bb9d1a2
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_retail_cohort_explanations_qa.py

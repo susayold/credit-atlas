@@ -1,11 +1,10 @@
-# Never commit source microdata, private evidence, local settings, or credentials
 .venv/
 __pycache__/
 .pytest_cache/
 *.egg-info/
 artifacts/
-data/
 outputs/
+data/
 .cache/
 .tmp/
 workspace.local.json
@@ -16,3 +15,5 @@ dist/
 .env
 .env.*
 !.env.example
+vendor/credit_risk_strategy_lab/artifacts/
+vendor/credit_risk_strategy_lab/data/private/

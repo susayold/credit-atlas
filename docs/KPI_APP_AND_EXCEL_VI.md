@@ -38,7 +38,7 @@ Checkpoint 10/10/2026. Mở **Risk monitor**: phần **Dữ liệu & phân tích
 
 Server kiểm tra cấu trúc, kích thước và sự nhất quán của readout với snapshot; verify source artifacts theo evidence refs trước export. Server **không tính lại độc lập mọi actual do browser derive**. Builder đối chiếu các phép trừ/relative changes với app, thử baseline zero và unavailable, rồi export cached formula results. Báo cáo chỉ được tạo trên loopback cùng origin; không nhận output path hoặc executable từ browser.
 
-Browser receipt `private evidence omitted from public release`: 4 nhóm checks PASS, gồm cả năm dossiers, download workbook all-domain, filtered P2/disabled baseline và mobile/ledger. Từng actual/unit/baseline của 110 rows được đối chiếu JSON; tám comparison formulas đối chiếu independent arithmetic. Regression KPI/baseline: 19 PASS, `private evidence omitted from public release`. Backend: 31 tests PASS, `private evidence omitted from public release`.
+Browser receipt `artifacts/private/kpi-workbook-qa-08a849344ada/receipt.json`: 4 nhóm checks PASS, gồm cả năm dossiers, download workbook all-domain, filtered P2/disabled baseline và mobile/ledger. Từng actual/unit/baseline của 110 rows được đối chiếu JSON; tám comparison formulas đối chiếu independent arithmetic. Regression KPI/baseline: 19 PASS, `artifacts/private/kpi-analysis-qa-95251bc16b81/receipt.json`. Backend: 31 tests PASS, `artifacts/private/kpi-xlsx-tests-20261010.xml`.
 
 Bốn sheets đã được render và kiểm tra; saved XLSX đã được đọc XML độc lập để kiểm tra formula text/cached values và không có error cells. Chưa kiểm tra trực tiếp recalculation trong Microsoft Excel desktop. Workbook dùng scalar IF/AND/ISNUMBER và phép toán; không macros, external formula links hoặc What-If Data Tables.
 

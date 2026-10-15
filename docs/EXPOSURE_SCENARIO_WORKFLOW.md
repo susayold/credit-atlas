@@ -99,10 +99,10 @@ bởi post-calculation hash guard; corrupted assumptions giữ timestamp bị re
 
 ## Reproduce, API và app
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_scenarios.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_scenarios.py --assumptions data/private/portfolio/mortgage-illustrative-stress-v1/assumptions.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_exposure_scenarios.py --verify exposure-scenario-9655e30419ec
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_exposure_scenarios.py --scenario-id exposure-scenario-9655e30419ec
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_exposure_qa.py

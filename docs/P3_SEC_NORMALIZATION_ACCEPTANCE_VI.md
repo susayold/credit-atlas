@@ -4,7 +4,7 @@
 
 ## Dữ liệu và numerical evidence
 
-Audit độc lập `private evidence omitted from public release` PASS toàn bộ 105.441 source fact entries, 13.374 filings và occurrence records, concept definitions và quality metrics. Raw JSON đọc Decimal, canonical Parquet đọc batch 512; so sánh exact full rows theo source keys, không sampling. Case/raw/receipt/method hashes giữ nguyên.
+Audit độc lập `artifacts/private/sec-normalization-acceptance-e466059ee35f/receipt.json` PASS toàn bộ 105.441 source fact entries, 13.374 filings và occurrence records, concept definitions và quality metrics. Raw JSON đọc Decimal, canonical Parquet đọc batch 512; so sánh exact full rows theo source keys, không sampling. Case/raw/receipt/method hashes giữ nguyên.
 
 67 annual statements × tám fields = 536 field states: 468 supported, 48 missing, 20 ambiguous. Mọi candidate evidence và field values/status khớp independent raw-fact selection. CIK/accession/form/filing date/start/end/unit/taxonomy giữ riêng; annual candidates đủ 330–400 inclusive days, không ghép quarterly/YTD theo FY. Conflicting value/period không chọn alias đẹp hơn; missing/ambiguous giữ null; native EUR/shares/pure/USD-per-share không chuyển thành USD.
 
@@ -16,11 +16,11 @@ Chi tiết audit trước nghiệm thu: [P3_SEC_NORMALIZATION_AUDIT_VI.md](P3_SE
 
 Lượt đầu vẫn dùng nguyên verifier để rederive và đối soát toàn bộ source/canonical/projected view; đầu vào được hash trước và sau. Các lần đọc tiếp theo kiểm tra lại hashes của toàn bộ raw files, canonical files, receipts, view và core methods, chỉ reuse projection nếu graph byte-identical. File bị sửa, method bị sửa, verification thất bại hoặc dữ liệu đổi trong lần verify đều fail closed. Lock tránh nhiều cold verifications chạy đồng thời; projection trả về là deep copy; tối đa tám view entries trong cache.
 
-`private evidence omitted from public release`: tám lượt đọc song song và 67 annual report parities PASS, original full-verifier call count = 1, đủ 28 pinned input paths được hash mỗi lần. Không model fit/inference hoặc mở Retail final predictors; holdout ledger giữ nguyên.
+`artifacts/private/sec-cache-runtime-probe-a1506d5aa260/receipt.json`: tám lượt đọc song song và 67 annual report parities PASS, original full-verifier call count = 1, đủ 28 pinned input paths được hash mỗi lần. Không model fit/inference hoặc mở Retail final predictors; holdout ledger giữ nguyên.
 
 ## API/app/export
 
-`private evidence omitted from public release`: PASS trên server hiện tại:
+`artifacts/private/sec-normalization-browser-a4fd0723cf79/receipt.json`: PASS trên server hiện tại:
 
 - Cả 67 annual statement reports qua HTTP khớp exact saved statements và giữ historical_availability_qualified=false.
 - Bốn issuer latest UI: 32 field rows khớp status/exact USD values/start/end/evidence counts; downloaded JSON khớp nguồn.

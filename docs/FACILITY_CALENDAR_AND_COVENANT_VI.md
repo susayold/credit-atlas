@@ -26,10 +26,10 @@ khác. Tổng các commitments trong selected catalog là21tỷ USD sau28/07/202
 Các tổng này không phải debt principal, EAD hoặc unused availability; local
 facilities và các debt instruments khác nằm ngoài catalog.
 
-Nguồn2026: [Ford8-K15/04/2026](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included),
+Nguồn2026: [Ford8-K15/04/2026](https://www.sec.gov/Archives/edgar/data/37996/000003799626000079/f-20260415.htm),
 acquired issuer-hosted PDF333pages,2553943bytes,
 SHA256 `7fcf8c25fade59e2965d8013131e5dc96d4709297289fc87ff84f22758a59e10`.
-Folder `private evidence omitted from public release` có acquisition,
+Folder `data/private/sec-documents/sec-documents-b46630da17d1` có acquisition,
 original PDF, extracted page text và identity receipt. Cộng ba PDF trước:
 bốn PDF780pages. PDF780pages không đồng nghĩa780pages đã legal-review.
 
@@ -38,7 +38,7 @@ bốn PDF780pages. PDF780pages không đồng nghĩa780pages đã legal-review.
 Corporate revolving definition **Available Liquidity** trên PDFpage39,
 printedpage12; minimum4tỷ USD tạiSection7.2 PDFpage132, printedpage105.
 Hai trang đã render và visual-review tại
-`private evidence omitted from public release`.
+`artifacts/private/facility-source-review-20261011`.
 Scope áp dụng khi commitments còn hiệu lực hoặc các nghĩa vụ nêu trong clause
 còn tồn tại. Cần đọc đầy đủ agreement để xác minh applicability.
 
@@ -60,7 +60,7 @@ P3.07 giữCần dữ liệu, P3.08 giữMột phần.
 
 ## Evidence và API
 
-Immutable catalog: `private evidence omitted from public release`.
+Immutable catalog: `artifacts/private/ford-facilities-1ac0d5d77a40`.
 Catalog receipt khóa hashcatalog, builder và từng sourcePDF/page extraction;
 API verify lại nguồn, page text và extraction anchors. Hash checks phát hiện
 thay đổi, không thay legal/numerical independent review.
@@ -71,8 +71,8 @@ guards, unknown/duplicate scope rejection. SECview dùng để xác minh issuer
 identity; facility sources là acquisition riêng, thể hiện trong export.
 
 Backend facilities + SECevents:34testsPASS,
-`private evidence omitted from public release`.
+`artifacts/private/facilities-tests-20261011.xml`.
 Browser/source/export/mobile/outage5groupsPASS:
-`private evidence omitted from public release`.
+`artifacts/private/facilities-qa-18dedf9f1512/receipt.json`.
 Desktop/mobile screenshots đã xem; frozen holdout ledger unchanged.
 Không nâng completion chỉ vì narrow backend/browser testsPASS.

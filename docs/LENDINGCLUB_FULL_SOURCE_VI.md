@@ -13,7 +13,7 @@ Trang download cũ của issuer trả HTTP 403. Không dùng login, cookies ho�
 
 Các file được stream xuống D:, có SHA-256 riêng và size khớp publisher inventory. GZIP magic, full decompression CRC/trailer và uncompressed sizes đã kiểm tra khi profiling. Không tạo bản CSV giải nén toàn bộ trên đĩa.
 
-Source folder: `private evidence omitted from public release`.
+Source folder: `data/private/retail/lendingclub-full-source-3954d375d972`.
 
 Acquisition receipt SHA-256: `8c75b6f45be94ccc7e610f3be8aa1f51246b48bc69331dea8db518c69f657d55`.
 
@@ -59,19 +59,19 @@ Không tự gộp Default, Charged Off và Late thành cùng target. Legacy poli
 
 ## 4. Preprocessing provenance
 
-Dataset description dẫn tới repo `nateGeorge/preprocess_lending_club_data`. Đã acquire README, concat_data.py, scrape_data.py và commit metadata tại `private evidence omitted from public release`, pin commit `a1c4927fee20979dc5f7a3bb3d70742bb977d723`. Không chạy code đã tải.
+Dataset description dẫn tới repo `nateGeorge/preprocess_lending_club_data`. Đã acquire README, concat_data.py, scrape_data.py và commit metadata tại `data/private/retail/lendingclub-preprocessing-source-9a051fd43a9e`, pin commit `a1c4927fee20979dc5f7a3bb3d70742bb977d723`. Không chạy code đã tải.
 
 Source code mô tả đọc quarterly CSV, bỏ dòng banner qua header selection, concat và xuất gzip; bỏ ký hiệu % của int_rate/revol_util rồi chuyển float. Code và description chưa chứng minh version này tái tạo chính xác mọi downloaded file hoặc giải thích transformations của bản Mendeley. Giữ separate provenance cho hai publisher snapshots.
 
 ## 5. Profile và kiểm tra
 
-Bounded Arrow/GZIP profile: `private evidence omitted from public release`.
+Bounded Arrow/GZIP profile: `artifacts/private/lendingclub-full-profile-f4168e8d746c/profile.json`.
 
 SHA-256: `f8be3a2f137172f019d4cce743c173c03176f1fb5d3e3b54e67350ee34f60098`.
 
 Profile chứa whole-source missingness, month/category counts, raw source statuses, missing-date records và gzip integrity evidence. Không fit/rescore model, không impute và không edit source. Frozen holdout ledger không đổi.
 
-Independent DuckDB census đã PASS: `private evidence omitted from public release`. Kiểm tra rows, 160 column missingness counts, 830 month/category cells, category totals và missing-date records. Memory limit 512 MB, temp storage trên D:, frozen holdout ledger không đổi. Kiểm tra SQL null conversions để không làm mất raw blank/NA distinctions. Đây là parser/census verification, chưa là target, original fidelity hoặc rights certification.
+Independent DuckDB census đã PASS: `artifacts/private/lendingclub-full-audit-13dc84314050/receipt.json`. Kiểm tra rows, 160 column missingness counts, 830 month/category cells, category totals và missing-date records. Memory limit 512 MB, temp storage trên D:, frozen holdout ledger không đổi. Kiểm tra SQL null conversions để không làm mất raw blank/NA distinctions. Đây là parser/census verification, chưa là target, original fidelity hoặc rights certification.
 
 ## 6. Phần tiếp theo
 
@@ -85,8 +85,8 @@ Màn hình hiển thị grain/date/category fields, raw whole-source records, se
 
 Approval rate và fixed-horizon PD luôn unavailable. Không impute repayment labels cho rejected data. Profile quality counts là whole-source, không được giả như chất lượng cohort đã lọc.
 
-Backend/HTTP: `private evidence omitted from public release`, 30 tests PASS. Browser: `private evidence omitted from public release`, 4 groups PASS về source/API/export parity, Current/missing scopes, rejected grain/score missingness, kind/category/URL reset, mobile và outage/recovery. Không browser errors, frozen holdout ledger unchanged. Desktop/mobile summary screenshots đã xem trực tiếp.
+Backend/HTTP: `artifacts/private/lendingclub-full-http-tests-20261012.xml`, 30 tests PASS. Browser: `artifacts/private/lendingclub-full-source-qa-58d41056f7e3/receipt.json`, 4 groups PASS về source/API/export parity, Current/missing scopes, rejected grain/score missingness, kind/category/URL reset, mobile và outage/recovery. Không browser errors, frozen holdout ledger unchanged. Desktop/mobile summary screenshots đã xem trực tiếp.
 
 Bước API/UI ở mục6 đã được bổ sung trong scope này; các target/time/fidelity/rights và intended-use gates vẫn mở.
 
-Prepared-source/dictionary regression: `private evidence omitted from public release`, 4 groups PASS sau khi thêm tab mới. Source filters/export, dictionary aliases/undefined outcomes, mobile và outage recovery giữ nguyên; holdout ledger không đổi.
+Prepared-source/dictionary regression: `artifacts/private/lendingclub-source-qa-4f4d7e5c9504/receipt.json`, 4 groups PASS sau khi thêm tab mới. Source filters/export, dictionary aliases/undefined outcomes, mobile và outage recovery giữ nguyên; holdout ledger không đổi.

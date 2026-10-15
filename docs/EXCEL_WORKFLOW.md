@@ -55,7 +55,7 @@ the original typed app data remains the precision and lineage authority.
 ## Runtime and reproducibility
 
 The packaged input template is `apps/excel/templates/CreditAtlas-Portfolio-Input.xlsx`.
-The deliverables are under `private evidence omitted from public release`.
+The deliverables are under `outputs/01a119ef-c68b-7292-b81e-8192458d08f8`.
 Authoring uses bundled Node and `@oai/artifact-tool` through
 `apps/excel/build_workbook.mjs`. This development workspace has a junction to
 the bundled package runtime; another machine must supply that runtime/package
@@ -82,7 +82,7 @@ saved-XLSX audit reads XML and checks cached controls. Browser QA exercises
 template download, upload, separate USD/VND totals, native report download,
 formula caches, mobile layouts and private source-bound review workflows.
 
-Actual live checkpoint: `private evidence omitted from public release`, PASS.
+Actual live checkpoint: `artifacts/private/excel-live-019213c72060.json`, PASS.
 Browser checkpoint: `exposure-browser-qa-349d06c7515b`, 19 checks PASS.
 Final Excel tests: 9 PASS. See FIVE_WORKSPACES_STATUS.md for full-suite
 resource failure and isolated successful retry.

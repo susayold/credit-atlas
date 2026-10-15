@@ -49,10 +49,10 @@ Partial enddate không tự làfullremaining debt service.
 ## Evidence
 
 AcquiredPDF90pages,589879bytes tại
-`private evidence omitted from public release`;
+`data/private/sec-documents/sec-documents-fbf41f7fbac2`;
 SHA256 `1237b0d46464bd0564997f6f9e061d1a27e21d3dba9236dc229f8839891f1760`.
-[SECcertificate](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
-Immutablecatalog `private evidence omitted from public release`, hashes khóa
+[SECcertificate](https://www.sec.gov/Archives/edgar/data/320193/000114036125018400/ef20048691_ex4-1.htm).
+Immutablecatalog `artifacts/private/apple-notes-be3d7047f347`, hashes khóa
 catalog/builder/PDF/page extraction, terms cópageanchors. PDFpages35/48
 đã render và visualreview;41cũng giữrender cho series2035.
 
@@ -62,8 +62,8 @@ local-origin/no-store/duplicate/unknown guards. Export giữsource terms,
 pathassumptions, rowformulas, annual partitions vàqualificationfalse.
 
 Backend note+facilities36testsPASS,
-`private evidence omitted from public release`.
-Browser/source-table independentaudit6groupsPASS: `private evidence omitted from public release`. Desktop/mobile screenshots đã xem; export parity, outage recovery và frozen holdout ledger unchanged.
+`artifacts/private/note-schedules-tests-20261011.xml`.
+Browser/source-table independentaudit6groupsPASS: `artifacts/private/note-schedule-qa-9827487edb65/receipt.json`. Desktop/mobile screenshots đã xem; export parity, outage recovery và frozen holdout ledger unchanged.
 
 P3.08/C4 vẫnMột phần: chỉ4series; issuer inventory, latest balance,
 actual calendar/payment inputs/full legal regime/covenant liquidity và
@@ -73,7 +73,7 @@ dated outstanding/redemption history và borrower-scoped actual cashflows.
 
 ## Base indenture research cho bước tiếp theo
 
-Đã tìm đúng [Base indenture01/11/2024](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), accession0001140361-24-044880, EX4.1. Section101 định nghĩa Business Day phụ thuộc Place of Payment và ngày ngân hàng được phép/bắt buộc đóng theo luật hoặc executive order. Section113 chuyển payment/maturity tới next succeeding Business Day, không cộng interest cho thời gian chuyển đó. Cần xác minh Place of Payment, các overrides và calendar trước adjusted-date qualification. Hiện mới đọc web, chưa có full acquired base-indenture file trong catalog.
+Đã tìm đúng [Base indenture01/11/2024](https://www.sec.gov/Archives/edgar/data/320193/000114036124044880/ny20033611x4_ex4-1.htm), accession0001140361-24-044880, EX4.1. Section101 định nghĩa Business Day phụ thuộc Place of Payment và ngày ngân hàng được phép/bắt buộc đóng theo luật hoặc executive order. Section113 chuyển payment/maturity tới next succeeding Business Day, không cộng interest cho thời gian chuyển đó. Cần xác minh Place of Payment, các overrides và calendar trước adjusted-date qualification. Hiện mới đọc web, chưa có full acquired base-indenture file trong catalog.
 
 ## Acquired base source và app rules
 

@@ -172,7 +172,7 @@ create/update/archive/reload/export/mobile; QA records giữ archived. Backend
 gồm revision conflict, immutable snapshot, invalid source/context và local-origin
 HTTP guards. [Review workflow](KPI_ANALYST_REVIEW_WORKFLOW_VI.md).
 Post-integration KPI/baseline regression **19 PASS** tại
-`private evidence omitted from public release`; handbook dùng export này.
+`artifacts/private/kpi-analysis-qa-cb670b239571/receipt.json`; handbook dùng export này.
 
 **Checkpoint B2:** baseline controls cho P2/P4/P5: auto đúng previous calendar
 month, manual exact prior period hoặc disable main baseline. Request/resolved/
@@ -189,7 +189,7 @@ mỗi domain: reliability support, Mortgage field missingness/integrity, SBA
 retained duplicates/parse counts, SEC manifest/date checks, Portfolio partition
 counts/zero balance, ABS check failure shares/ledger steps. Source/grain/support
 và giới hạn rõ; chưa có P1 raw-feature/P4 missing-amount profiles nên unavailable.
-**18 checks PASS**, `private evidence omitted from public release`:
+**18 checks PASS**, `artifacts/private/kpi-analysis-qa-90b929dc7eae/receipt.json`:
 independent source/denominator reconciliation của cả 22 controls, rendered scopes,
 export/filter/reload/mobile và previous numerical/source-outage checks.
 No composite score/automatic certification. Handbook cập nhật từ export này.
@@ -197,7 +197,7 @@ No composite score/automatic certification. Handbook cập nhật từ export n�
 **Checkpoint A5:** **88 KPI**, thêm tám ABS replay/cash metrics và latest-period
 cash/reserve bridge, all-priority ledger. Integer-cent per-step + sequence +
 total reconciliation; selected collection 2026-08-31/payment 2026-09-15.
-**17 checks PASS**, `private evidence omitted from public release`:
+**17 checks PASS**, `artifacts/private/kpi-analysis-qa-092358439eb1/receipt.json`:
 independent Decimal cash/reserve steps/sequence, source/period payout parity,
 ledger outage (source stock KPIs còn, replay unavailable), toàn bộ domain/filter/
 export/mobile regressions. Access ledger unchanged. Đây là conditional reported
@@ -209,7 +209,7 @@ với current ratio, liabilities/assets, net margin, OCF/revenue. Pinned SEC vie
 `sec-view-b92d9914f1dc`, filing-date cutoff 2026-10-10; report dates/filings riêng.
 Exact financial fields/concept evidence + links đúng issuer/accession/cutoff.
 Ford net margin missing và GM margins/cashflow ratios ambiguous giữ unavailable.
-**15 checks PASS**: `private evidence omitted from public release`,
+**15 checks PASS**: `artifacts/private/kpi-analysis-qa-96cfabe47d97/receipt.json`,
 independent Decimal ratios, periods/units/filing cutoff và single-issuer API outage.
 SEC không join SBA/default labels; chưa có DSCR/covenants/issuer PD. Handbook
 đã cập nhật; checkpoint A3/A2 phía dưới giữ lịch sử. Tiếp theo A5 ABS cash bridge.
@@ -220,7 +220,7 @@ retrospective proxy, cost/client và difference vs accept_all. Pinned
 `retail-policy-bd4b8623de28`, case đầu `lower_thresholds`; không chọn winner.
 Ba bảng assumptions, sáu cases/benchmarks và action-level support; cost units
 giữ riêng khỏi USD/TWD. **13 checks PASS** tại
-`private evidence omitted from public release`, gồm all-case
+`artifacts/private/kpi-analysis-qa-056721421547/receipt.json`, gồm all-case
 cost/action decomposition và unavailable-policy safeguards. Final holdout
 access ledger unchanged. Checkpoints 55/45 KPI dưới là lịch sử trước A3.
 
@@ -237,7 +237,7 @@ Handbook cập nhật; các checkpoint 45 KPI/bridge dưới đây là lịch s�
 contribution trên prior total và top tăng/giảm; integer-cent reconciliation.
 Tổng delta Feb→Mar 2026 **-13.037.124,22 USD**. Đây là grouped snapshot movement,
 không phải realized loss hoặc chứng minh nguyên nhân. [Plan 15 bước tiếp theo](PLAN_KPI_ANALYTICS_NEXT_VI.md).
-Nghiệm thu bridge **10 checks PASS**: `private evidence omitted from public release`.
+Nghiệm thu bridge **10 checks PASS**: `artifacts/private/kpi-analysis-qa-d384f923595f/receipt.json`.
 Đối soát độc lập Decimal từng vùng/tổng; kiểm tra absent buckets, zero baseline,
 missing prior, incompatible scope, inconsistent totals, export/reload/mobile.
 Handbook đã cập nhật từ export của receipt này. Chưa hoàn thành các bước A2–C6.
@@ -512,7 +512,7 @@ Actual combined inventory/bridge/scenario/ECL/tail browser **16 checks PASS**:
 `exposure-browser-qa-124c0e921076`; desktop/mobile 390px, seed/tail support,
 joint ES contributions, scoped export parity, reload và no JS errors.
 Live8770 đã restart và tail API/private export parity PASS; receipt
-`private evidence omitted from public release`.
+`artifacts/private/exposure-tail-live-20261009.json`.
 Workflow: [EXPOSURE_TAIL_WORKFLOW.md](EXPOSURE_TAIL_WORKFLOW.md).
 Multi-seed convergence, actual calibrated default/recovery/contract adapters,
 borrower linkage, finance/review và các mục còn lại của toàn 5 workspaces/50
@@ -686,7 +686,7 @@ hoạch chi tiết và tự code. Toàn bộ suite chưa hoàn tất; kế hoạ
 
 Batch `suite-619b1ee9aa8c`: **20/20 files tải và profile thành công**, tổng
 **1.042.444.750 bytes**. Không có failed source trong batch. Raw và receipts:
-`local machine path omitted evidence omitted from public release`.
+`D:\data\Codex\credit-atlas\data\private\public-suite\suite-619b1ee9aa8c`.
 Các source metadata/dictionary được tính là file, không tính thành populations.
 
 | Workspace | Dữ liệu thật đã có | Mức hỗ trợ hiện tại |
@@ -741,7 +741,7 @@ sentinels/empty strings. Source hashes reverified before completion. CSV fields
 remain source-native strings until typed domain adapters have reviewed meaning.
 
 Latest successful warehouse:
-`private evidence omitted from public release`.
+`artifacts/private/source-warehouse-281662304758/warehouse-complete.json`.
 **17 tables, 2.320.165 rows** across source-native datasets. Two UCI metadata
 JSONs and one SBA dictionary XLSX remain original reference artifacts.
 No borrower/entity cross-source joins or model fitting performed in this run.
@@ -753,7 +753,7 @@ bank-quarter duplicates, missing/horizon profiles, HTTP redirects, modified
 raw hashes and preservation of native CSV empty/sentinel values in Parquet.
 
 Retail extension checkpoint: **490 tests passed** (375 engine + 115 application).
-Latest actual case: `private evidence omitted from public release`.
+Latest actual case: `artifacts/private/retail-case-470bdb40682f/case-complete.json`.
 All 30.000 typed clients and 180.000 history rows reconcile to raw values with
 independent bidirectional SQL EXCEPT ALL: zero differing rows. Predictor contract
 has 13 monetary numeric fields and six status categorical fields; four
@@ -763,7 +763,7 @@ and final-test scoring had not occurred at this canonical checkpoint. See
 [RETAIL_DATA_AND_PROTOCOL.md](RETAIL_DATA_AND_PROTOCOL.md).
 
 Retail feature preparation is implemented and actually run:
-`private evidence omitted from public release`.
+`artifacts/private/retail-features-d53aa8ba9ed6/features-complete.json`.
 17.999 train-only encoder fit rows; 81 encoded columns; 26.999 development
 rows across train/calibration/validation. JSON encoder reload and saved Parquet
 matrix parity both pass for every row. Split assignments are independently
@@ -801,7 +801,7 @@ semantics, reliability boundary/calibration support, all three native/persisted
 model fits with poisoned final-test predictors excluded, and rejection of
 changed development feature values before fitting.
 
-Commands from `local machine path omitted`:
+Commands from `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/acquire_public_suite.py
@@ -968,7 +968,7 @@ its unavailable model data into completion. The active suite goal remains open.
 
 Đã bổ sung bản đồ 50 capability (10/domain), sáu trường mô tả/capability, client Markdown download và workflow deep links. Nội dung dùng chung nguồn editorial `scripts/build_workspace_content.py`; chi tiết trong PLAN_WORKBENCH_DETAIL.md. Hướng dẫn task/source hiện trước API lớn; Retail có model dossier bảy bước và metric interpretation từ saved snapshot. Không fit/chấm lại model. Roadmap vẫn phân biệt đã có/có điều kiện/một phần/cần dữ liệu.
 
-Verification: `private evidence omitted from public release` 13 PASS; `private evidence omitted from public release` 13 PASS; `private evidence omitted from public release` 15 PASS. Desktop/mobile inspected; no horizontal overflow at 390px; frozen holdout ledger unchanged. HTTP listener backlog increased to support concurrent same-origin banner/static requests; loopback/allowlist/privacy contracts retained.
+Verification: `artifacts/private/content-detail-qa-37d04a4c18e0/receipt.json` 13 PASS; `artifacts/private/mvp-ux-qa-6b6c8d3bf49f/receipt.json` 13 PASS; `artifacts/private/content-http-20261010-final.xml` 15 PASS. Desktop/mobile inspected; no horizontal overflow at 390px; frozen holdout ledger unchanged. HTTP listener backlog increased to support concurrent same-origin banner/static requests; loopback/allowlist/privacy contracts retained.
 
 ## Enterprise credit monitor — 10/10/2026
 
@@ -976,4 +976,4 @@ App mặc định chuyển sang Risk monitor; catalog năm domain/hàng ảnh v�
 
 Research mở rộng: ENTERPRISE_CREDIT_MONITOR_RESEARCH.md, 14 hãng (Oracle, Moody’s, S&P Global, Bloomberg, BlackRock, MSCI, SAS, FIS, Numerix, Experian, nCino, CreditRiskMonitor, Taktile, Regnology). OneSumX owner/2026 product update dùng thông báo Regnology; URL WK cũ không dùng để xác nhận current capability.
 
-Verified receipts: `private evidence omitted from public release` 10 PASS, including controlled P4 outage isolation; `private evidence omitted from public release` 13 PASS; `private evidence omitted from public release` 15 PASS. Desktop and 390px mobile inspected; holdout access ledger unchanged. UI release không hoàn thành các data/model/legal/production dependencies của 50-capability suite.
+Verified receipts: `artifacts/private/monitor-qa-e2b68e7d703a/receipt.json` 10 PASS, including controlled P4 outage isolation; `artifacts/private/mvp-ux-qa-3c12ddc36ffc/receipt.json` 13 PASS; `artifacts/private/monitor-http-20261010.xml` 15 PASS. Desktop and 390px mobile inspected; holdout access ledger unchanged. UI release không hoàn thành các data/model/legal/production dependencies của 50-capability suite.

@@ -8,7 +8,7 @@ Checkpoint 11/10/2026. Tab **ABS-EE coverage** của P5 đọc profile aggregate
 
 - Metadata chính thức: `https://data.sec.gov/submissions/CIK0002046523.json`, identity World Omni Auto Receivables Trust 2025-A; recent filings có22 ABS-EE entries.
 - Parquet mirror: `https://huggingface.co/datasets/DenyTranDFW/World_Omni_Auto_Receivables_Trust_2025_A_2046523`; revision `071b897ec737ae05bd5e17be707f46e3d68b6a7c`. Đã lưu API repo, README và11files monthly. Hai files cut-off/hypothetical bị loại khỏi selected monthly set.
-- Source `private evidence omitted from public release`:14files/28542411bytes, receipt SHA `482aff4e853f68cdb718c6251fd4355eeea7d96c1cc32bfb8a4449ab443b49f1`. Có nguyên bản Parquet; không có XML gốc.
+- Source `data/private/structured/absee-mirror-f97dcd09916d`:14files/28542411bytes, receipt SHA `482aff4e853f68cdb718c6251fd4355eeea7d96c1cc32bfb8a4449ab443b49f1`. Có nguyên bản Parquet; không có XML gốc.
 - Archive index chính thức của accession mới nhất `0001104659-26-111552` thử qua HTTP trả403. Không dùng xác thực hoặc lách restriction. Chưa tải EX102/EX103 từSEC.
 
 ## Coverage thực đọc
@@ -43,10 +43,10 @@ README khaiGPL nhưng thống kê “Parquet files:1” không khớp fileinvent
 
 ## Evidence
 
-- Profile: `private evidence omitted from public release`, SHA `94e1e9d5742d04e20cd6203da0d11b7dafe7f18ba7ef517de5588d8c68c13ddd`; receipt structural checks PASS.
-- Independent Arrow columnar audit: `private evidence omitted from public release`,488219rows/651missingness checks/99exact money sums PASS. Chỉ đối chiếu localParquet projection, không chứng minh XML fidelity.
-- Tests: `private evidence omitted from public release`,5PASS: exact/zero/missing/nonfinite/date/duplicate/sign/scope/pinned-profile mutation/gaps.
-- Browser: `private evidence omitted from public release`,4groupsPASS: API/JSON/qualification flags/schema parity, reload/mobile, outage/recovery, noerrors/frozenledger unchanged. Desktop/mobile đã xem.
+- Profile: `artifacts/private/absee-profile-63397e5ebbc6/profile.json`, SHA `94e1e9d5742d04e20cd6203da0d11b7dafe7f18ba7ef517de5588d8c68c13ddd`; receipt structural checks PASS.
+- Independent Arrow columnar audit: `artifacts/private/absee-profile-audit-00668467a11d/receipt.json`,488219rows/651missingness checks/99exact money sums PASS. Chỉ đối chiếu localParquet projection, không chứng minh XML fidelity.
+- Tests: `artifacts/private/absee-profile-tests-20261011.xml`,5PASS: exact/zero/missing/nonfinite/date/duplicate/sign/scope/pinned-profile mutation/gaps.
+- Browser: `artifacts/private/absee-profile-qa-eee5f9a1c959/receipt.json`,4groupsPASS: API/JSON/qualification flags/schema parity, reload/mobile, outage/recovery, noerrors/frozenledger unchanged. Desktop/mobile đã xem.
 - Independent audit lần đầu thiếu large-string separator kernel; đã sửa trước khi có PASS receipt, không dùng lần lỗi làm evidence.
 
 ## Việc cần làm để đóng capability

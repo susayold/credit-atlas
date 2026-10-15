@@ -39,8 +39,8 @@ GET `/api/fannie-samples?family=all|single-family|multifamily`; GET `/api/fannie
 
 ## Evidence
 
-- Source `private evidence omitted from public release`, SHA `860dcf9ea0bc879977dc854f23d424c869e2783fd30dc9f36695939533429124`.
-- Profile `private evidence omitted from public release`, SHA `e2575f225eeffc6d99beee07f5165c1b3a7c1a34e85d3c09f1f5d2c2ebed128e`.
+- Source `data/private/mortgage/fannie-public-samples-4d84128d3cb6/acquisition-complete.json`, SHA `860dcf9ea0bc879977dc854f23d424c869e2783fd30dc9f36695939533429124`.
+- Profile `artifacts/private/fannie-public-profile-fafc20762187/profile.json`, SHA `e2575f225eeffc6d99beee07f5165c1b3a7c1a34e85d3c09f1f5d2c2ebed128e`.
 - Independent DuckDB `fannie-public-audit-b518c8fa1c6a/receipt.json`: **1.015 rows / 96.749 positions / 173 field missingness checks PASS**, categories, duplicate key support và DSCR summaries khớp. Frozen retail ledger không đổi.
 - `fannie-samples-http-tests-20261012-final.xml`: **27 PASS** gồm Fannie source/API và HTTP regression. Lần đầu LendingClub hash IO vượt socket5seconds; test helper cho riêng full-source route budget30seconds vì hash~650MB, ordinary routes giữ5seconds. Không thay source/hash verification hoặc kỳ vọng response.
 - Browser `fannie-samples-qa-a19e7e45fbf4/receipt.json`: **4 nhóm PASS**, source/export parity; family/status/DSCR/quality scopes; mobile; outage/retry. Ledger không đổi, không page errors.

@@ -22,9 +22,9 @@ Generation/request guards tiếp tục chặn late responses. QA dùng hai respo
 
 ## Receipts
 
-- `private evidence omitted from public release`: full index,16list scopes,10timelines,static/label/monthly/event fields,prefix search và15static asset checks PASS. Source input/index/case/method hashes được lưu.
-- `private evidence omitted from public release`: **19 PASS** gồm cross-run token rejection,private queries không trả sourceID,foreign loan finding không ghi được,frozen integrity và filters.
-- `private evidence omitted from public release`: **10timeline cases PASS**, empty/pending/invalid/outage context clearing,late-list-response discard,recovery và mobile. Không page errors; frozen retail ledger unchanged. Timeline và empty/error mobile đã visual-review.
+- `artifacts/private/lifecycle-acceptance-54135e394300/receipt.json`: full index,16list scopes,10timelines,static/label/monthly/event fields,prefix search và15static asset checks PASS. Source input/index/case/method hashes được lưu.
+- `artifacts/private/lifecycle-acceptance-tests-20261012.xml`: **19 PASS** gồm cross-run token rejection,private queries không trả sourceID,foreign loan finding không ghi được,frozen integrity và filters.
+- `artifacts/private/lifecycle-browser-acceptance-b48e0b41cd89/receipt.json`: **10timeline cases PASS**, empty/pending/invalid/outage context clearing,late-list-response discard,recovery và mobile. Không page errors; frozen retail ledger unchanged. Timeline và empty/error mobile đã visual-review.
 - Lượt browser trước sửa không PASS ở empty search và được giữ riêng; không lấy nó làm evidence nghiệm thu.
 
 ## Hồi quy sau thay đổi frontend

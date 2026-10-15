@@ -36,7 +36,7 @@ Không bypass access. PDF Ford 28/07/2025 được tải qua URL tài liệu cô
 doanh nghiệp trên CloudFront; 64 trang,594149 bytes, SHA-256:
 `20f5e0471d8809213a6fb28c051acbe3f3167480d7e06cfd151c7cfc8460e85f`.
 
-Folder `private evidence omitted from public release` giữ original PDF,
+Folder `data/private/sec-documents/sec-documents-6f8e86a15804` giữ original PDF,
 page text, rendered pages1/10/42, identity check và `draft-terms.json`.
 Đã đọc các trang liên quan, chưa full legal/amendment-chain review.
 

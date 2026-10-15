@@ -33,9 +33,9 @@ Summary frozen ghi 0 expense-formula checked rows vì input parquet của summar
 
 ## Bằng chứng
 
-- `private evidence omitted from public release`: toàn bộ 381 records, 4.191 raw-to-canonical Decimal checks, 3.810 saved-row field checks, signed components, coverage, availability, exact loss/expense residuals và source hashes. Receipt giữ trạng thái finding lúc audit; hai presentation gaps được xử lý bằng diagnostics được kiểm tra sau đó.
-- `private evidence omitted from public release`: 26 tests PASS, gồm signed gain, magnitude, missing/zero exposure, repeated terminal selection, query scope, frozen service và vendor loss contracts.
-- `private evidence omitted from public release`: 4 segment scopes PASS; 220 field-quality values, signed/magnitude ratios, component table và 7 bridge rectangles khớp source; hai loại exports đúng scope; mobile 390px không overflow; cross-origin/query bị từ chối; ledger holdout không đổi.
+- `artifacts/private/observed-loss-source-audit-627ae17a9d01/receipt.json`: toàn bộ 381 records, 4.191 raw-to-canonical Decimal checks, 3.810 saved-row field checks, signed components, coverage, availability, exact loss/expense residuals và source hashes. Receipt giữ trạng thái finding lúc audit; hai presentation gaps được xử lý bằng diagnostics được kiểm tra sau đó.
+- `artifacts/private/observed-loss-details-tests.xml`: 26 tests PASS, gồm signed gain, magnitude, missing/zero exposure, repeated terminal selection, query scope, frozen service và vendor loss contracts.
+- `artifacts/private/observed-loss-details-browser-84fdd0059671/receipt.json`: 4 segment scopes PASS; 220 field-quality values, signed/magnitude ratios, component table và 7 bridge rectangles khớp source; hai loại exports đúng scope; mobile 390px không overflow; cross-origin/query bị từ chối; ledger holdout không đổi.
 
 `/api/observed-loss-details[-report]?run=...` là whole-source loss-code scope; không áp portfolio segment/date/horizon. Main aggregate report vẫn xuất legacy snapshot; JSON diagnostics riêng có signed ratios và expense checks. Cả hai được ghi rõ scope, không đại diện thị trường. API không trả raw loan IDs hoặc paths; frozen case được verify trước/sau đọc canonical.
 

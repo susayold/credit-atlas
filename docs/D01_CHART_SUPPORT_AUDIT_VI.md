@@ -17,6 +17,6 @@ The six checks passed:
 
 Browser acceptance also confirms the portfolio stock/share charts, all three competing-incidence series and their risk-set support, and the signed loss component chart render together with the relevant denominator or unresolved-support text. It clicks a sparse transition cell and confirms the distinct-loan warning. The expanded run passes 39 browser checks, including 390px mobile overflow checks for portfolio, vintage, transitions, loss, and models plus fail-closed stale-evidence, missing-run, unlisted-run, connection-failure, and malformed-JSON states.
 
-Evidence: [chart/support receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included), [browser QA receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included). Re-run with `PYTHONPATH=src python scripts/audit_d01_chart_support.py` and `PYTHONPATH=src python scripts/browser_qa.py`.
+Evidence: [chart/support receipt](../artifacts/private/d01-chart-support-a5a39d8e7acc/receipt.json), [browser QA receipt](../artifacts/private/browser-qa-7a281849bd29/receipt.json). Re-run with `PYTHONPATH=src python scripts/audit_d01_chart_support.py` and `PYTHONPATH=src python scripts/browser_qa.py`.
 
 This closes the specific pending chart/support audit under M01-024. It does not close M01-024 overall: actual mortgage model fitting/validation remains blocked by missing vintages and readiness gates, and multi-vintage descriptive comparisons remain open.

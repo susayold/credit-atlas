@@ -1,6 +1,6 @@
 # Nghiên cứu bộ Loan Dataset công khai của Bondora / Go & Grow
 
-Ngày tải và profile: 15/10/2026. Nguồn được tải từ liên kết “Download Loan Dataset” do trang thống kê chính thức của Go & Grow công bố. Bản gốc được giữ riêng trong `private evidence omitted from public release`; không đưa ID khoản vay hoặc từng dòng lên giao diện hay tài liệu công khai.
+Ngày tải và profile: 15/10/2026. Nguồn được tải từ liên kết “Download Loan Dataset” do trang thống kê chính thức của Go & Grow công bố. Bản gốc được giữ riêng trong `data/private/retail/bondora-source/`; không đưa ID khoản vay hoặc từng dòng lên giao diện hay tài liệu công khai.
 
 ## Nguồn và dấu vết tải
 
@@ -8,7 +8,7 @@ Ngày tải và profile: 15/10/2026. Nguồn được tải từ liên kết “
 - File XLSX công khai: [Loan Dataset](https://sabanners001.blob.core.windows.net/statistics/public/loan_dataset_investor.xlsx).
 - Trang hiện ghi rõ đây là dữ liệu về khách hàng tín dụng và các khoản vay; pháp nhân Go&Grow OÜ cũng ghi rõ mình không phải đơn vị cho vay và không phát hành khoản vay. Vì vậy nên gọi đây là dữ liệu loan-level của nhóm Bondora, được phân phối qua trang Go & Grow; không diễn giải Go & Grow là lender.
 - Máy chủ blob trả `Content-Length=162618206`, `Content-Type=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `Last-Modified=2026-08-10T06:05:47Z`, `ETag=0x8DEF6A56BF40FAD`. SHA-256 của bản tải: `a75db03e24747aa8462f6f429b6cbdd2f7010be03da020a4bbd3536c4e1a07bf`.
-- Receipt profile và số liệu tổng hợp: `private evidence omitted from public release` và `profile.json`. Script có thể chạy lại bằng bundled Python có `openpyxl`: `scripts/audit_bondora_public_dataset.py`.
+- Receipt profile và số liệu tổng hợp: `artifacts/private/bondora-public-dataset-profile/receipt.json` và `profile.json`. Script có thể chạy lại bằng bundled Python có `openpyxl`: `scripts/audit_bondora_public_dataset.py`.
 - Trang public cung cấp file tải nhưng nghiên cứu này chưa xác nhận quyền tái phân phối, công bố lại dữ liệu từng dòng hoặc dùng thương mại. Giữ bản sao nội bộ; kiểm tra điều khoản áp dụng và xin phép trước khi phát hành dữ liệu hoặc dịch vụ dựa trên file.
 
 ## Cấu trúc và quy mô đã đo

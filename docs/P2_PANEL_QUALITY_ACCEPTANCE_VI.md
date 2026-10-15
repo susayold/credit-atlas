@@ -25,13 +25,13 @@ Không globally replace9/99/999. Delinquency codes là categories;XX giữUNKNOW
 
 ## Receipts
 
-- Independent `private evidence omitted from public release`:18technical/64blank/6sentinel checks và whole monthly state/terminal mapping PASS; source/case/method hashes lưu; retail holdout ledger unchanged.
-- `private evidence omitted from public release`: **49tests PASS**, source/canonical/monitoring/frozen-service boundaries,keys,unknown/sentinels/gaps và immutable scopes.
-- Browser `private evidence omitted from public release`: **4segment scopes PASS**, exact integrity/availability/action readouts và private export. Quality không bị segment filter làm đổi population; mobile/no page errors/ledger unchanged. Desktop quality readout đã visual-review.
+- Independent `artifacts/private/panel-quality-acceptance-6f1ed5abead2/receipt.json`:18technical/64blank/6sentinel checks và whole monthly state/terminal mapping PASS; source/case/method hashes lưu; retail holdout ledger unchanged.
+- `artifacts/private/panel-quality-acceptance-tests.xml`: **49tests PASS**, source/canonical/monitoring/frozen-service boundaries,keys,unknown/sentinels/gaps và immutable scopes.
+- Browser `artifacts/private/panel-quality-browser-acceptance-861f7799b297/receipt.json`: **4segment scopes PASS**, exact integrity/availability/action readouts và private export. Quality không bị segment filter làm đổi population; mobile/no page errors/ledger unchanged. Desktop quality readout đã visual-review.
 
 ## Provenance finding — không đồng nghĩa publisher authentication
 
-Raw archive receipt `vendor/credit_risk_strategy_lab/private evidence omitted from public release` ghi rõ:
+Raw archive receipt `vendor/credit_risk_strategy_lab/data/private/raw/35c41582157804e3f632d68140246fcc6eb0973590ba0cf9a0f03600bf8499f9.receipt.json` ghi rõ:
 
 `release_confirmation: user_supplied; not authenticated by file hash registry`
 

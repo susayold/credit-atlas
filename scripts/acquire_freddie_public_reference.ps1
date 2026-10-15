@@ -1,5 +1,5 @@
 $ErrorActionPreference='Stop'
-$taskRoot = Split-Path -Parent $PSScriptRoot
+$taskRoot='D:\data\Codex\credit-atlas'
 $taskOut=Join-Path $taskRoot ('data\private\mortgage\freddie-public-reference-'+[guid]::NewGuid().ToString('N').Substring(0,12))
 New-Item -ItemType Directory -Path $taskOut | Out-Null
 $taskSources=@(

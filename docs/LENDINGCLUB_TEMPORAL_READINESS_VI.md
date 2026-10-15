@@ -39,15 +39,15 @@ Một temporal split theo issue_d là cohort partition. Nó chưa là OOT qualif
 
 ## 4. Phương pháp và verification
 
-Profile DuckDB với memory limit 512 MB, temp storage trên D: `private evidence omitted from public release`.
+Profile DuckDB với memory limit 512 MB, temp storage trên D: `artifacts/private/lendingclub-temporal-profile-1333a9b4a286/profile.json`.
 
 Profile SHA-256: `8b4b6cbee90ef9b9ff09f29f62a183c28a000cf0cb9725e23582ecc7ec529425`.
 
-Independent Arrow/GZIP audit: `private evidence omitted from public release`, PASS 4 date profiles và 5,120 metrics của 1,024 cohort groups. Parser, month-ordinal arithmetic và aggregations khác implementation chính. Source hashes và frozen holdout ledger được kiểm tra; không fit/rescore model.
+Independent Arrow/GZIP audit: `artifacts/private/lendingclub-temporal-audit-eb737547b85a/receipt.json`, PASS 4 date profiles và 5,120 metrics của 1,024 cohort groups. Parser, month-ordinal arithmetic và aggregations khác implementation chính. Source hashes và frozen holdout ledger được kiểm tra; không fit/rescore model.
 
 Windows Arrow không parse English abbreviated months trực tiếp trong runtime này. Auditor chuyển literal month sang numeric year/month, dùng day1 chỉ làm anchor tháng và parse numeric date. Không sử dụng timezone hoặc diễn giải thành actual event day. Các lượt lỗi parser trước sửa không được dùng làm evidence PASS.
 
-Backend/HTTP: `private evidence omitted from public release`, 34 tests PASS. Kiểm tra scope Current, global date profiles, missing-date records, integrity guard, rejected-not-applicable và giữ cutoff/PD12/maturity unavailable.
+Backend/HTTP: `artifacts/private/lendingclub-temporal-http-tests-20261012.xml`, 34 tests PASS. Kiểm tra scope Current, global date profiles, missing-date records, integrity guard, rejected-not-applicable và giữ cutoff/PD12/maturity unavailable.
 
 ## 5. API/UI
 
@@ -55,7 +55,7 @@ Full LendingClub report thêm `temporal_evidence`. Accepted trả source date pr
 
 App hiển thị date roles/min/max, selected payment-span counts, chronology counts, table cohort evidence và inputs cần trước fit. Các output certified cutoff và PD12 labels vẫn null; maturity và application-feature timing vẫn chưa qualified.
 
-Browser receipt `private evidence omitted from public release`: 4 groups PASS, gồm distinct date maxima, payment-span counts, cutoff/label unavailable, accepted/rejected applicability, source/filter/export parity, URL reload, mobile và outage recovery. Không browser errors; holdout ledger không đổi. Desktop temporal screenshot đã xem trực tiếp.
+Browser receipt `artifacts/private/lendingclub-full-source-qa-2ac428dd27c2/receipt.json`: 4 groups PASS, gồm distinct date maxima, payment-span counts, cutoff/label unavailable, accepted/rejected applicability, source/filter/export parity, URL reload, mobile và outage recovery. Không browser errors; holdout ledger không đổi. Desktop temporal screenshot đã xem trực tiếp.
 
 ## 6. Đầu vào cần bổ sung để đóng gate
 

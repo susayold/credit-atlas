@@ -1,7 +1,7 @@
 param([Parameter(Mandatory=$true)][string]$PlanPath)
 $ErrorActionPreference='Stop';$plan=Get-Content -LiteralPath $PlanPath -Raw | ConvertFrom-Json
 $out=[IO.Path]::GetFullPath($plan.output_folder)
-if(-not $out.StartsWith((Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts\private\native-excel-qa-sec-perturb-'),[StringComparison]::OrdinalIgnoreCase)){throw 'Invalid QA scope'}
+if(-not $out.StartsWith('D:\data\Codex\credit-atlas\artifacts\private\native-excel-qa-sec-perturb-',[StringComparison]::OrdinalIgnoreCase)){throw 'Invalid QA scope'}
 $app=$null;$book=$null;$owned=$false;$results=[Collections.Generic.List[object]]::new()
 try{
  $app=New-Object -ComObject Excel.Application;if($app.Workbooks.Count -ne 0){throw 'Nonempty Excel instance'}

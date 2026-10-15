@@ -1,4 +1,4 @@
-$ErrorActionPreference='Stop';$root=Split-Path -Parent $PSScriptRoot;$out=Join-Path $root 'artifacts\private\maturity-native-render-20261015'
+$ErrorActionPreference='Stop';$root='D:\data\Codex\credit-atlas';$out=Join-Path $root 'artifacts\private\maturity-native-render-20261015'
 New-Item -ItemType Directory -Path $out -Force | Out-Null
 $m=Get-Content (Join-Path $root 'artifacts\private\maturity-workbook-scope-audit-46d6a12f8d2d\receipt.json') -Raw | ConvertFrom-Json
 $app=$null;$book=$null;$owned=$false;$results=[Collections.Generic.List[object]]::new()

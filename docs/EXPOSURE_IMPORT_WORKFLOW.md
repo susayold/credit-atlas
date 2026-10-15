@@ -99,11 +99,11 @@ validated_model bị reject; cần adapter/engine phù hợp trước khi hỗ t
 
 ## 4. Chạy và kiểm tra lại
 
-Chạy từ `local machine path omitted`, dùng Python trong .venv:
+Chạy từ `D:\data\Codex\credit-atlas`, dùng Python trong .venv:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/prepare_mortgage_exposures.py --case d01-a24484b21a21 --month 2026-03
-.\.venv\Scripts\python.exe -X utf8 scripts/import_exposures.py --csv private evidence omitted from public release --metadata private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/import_exposures.py --csv data/private/portfolio/your-input/source.csv --metadata data/private/portfolio/your-input/metadata.json
 .\.venv\Scripts\python.exe -X utf8 scripts/import_exposures.py --verify exposure-import-57b88e00bedb
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_exposure_import.py --import-id exposure-import-57b88e00bedb
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_exposure_qa.py

@@ -20,7 +20,7 @@ Captured snapshot, thời điểm capture và source digests bất biến giữa
 
 ## 4. Data contract và lưu trữ
 
-Storage: `private evidence omitted from public release` dưới local machine path omitted SQLite transaction giữ record mới nhất và lịch sử revision atomically. Không thay source/model files hoặc holdout access ledger. Snapshot JSON được hash; nguồn được verify và hash riêng tại capture. Digest là dấu vết nội dung, không phải chữ ký của analyst.
+Storage: `artifacts/private/monitor-reviews.sqlite3` dưới D:\data\Codex\credit-atlas. SQLite transaction giữ record mới nhất và lịch sử revision atomically. Không thay source/model files hoặc holdout access ledger. Snapshot JSON được hash; nguồn được verify và hash riêng tại capture. Digest là dấu vết nội dung, không phải chữ ký của analyst.
 
 Source kinds theo domain: P1 suite + saved policy khi có; P2 verified mortgage run; P3 suite + SEC view; P4 exposure imports theo current/baseline; P5 ABS view. Không dùng review này để join SBA/SEC/UCI thành borrower identity.
 
@@ -34,8 +34,8 @@ Các record có tiêu đề `QA monitor-review-qa-…` do kiểm tra giao diện
 
 ## 6. Nghiệm thu checkpoint B3
 
-Actual browser: `private evidence omitted from public release`, **7 PASS** qua năm domain, persisted reload/private export, mobile và unchanged holdout ledger. API/unit review tests **6 PASS**; 15 legacy HTTP/Excel/suite tests PASS (21 distinct). Receipts JUnit: `private evidence omitted from public release` và `private evidence omitted from public release` (overlap năm tests).
+Actual browser: `artifacts/private/monitor-review-qa-f0bc7bae609e/receipt.json`, **7 PASS** qua năm domain, persisted reload/private export, mobile và unchanged holdout ledger. API/unit review tests **6 PASS**; 15 legacy HTTP/Excel/suite tests PASS (21 distinct). Receipts JUnit: `artifacts/private/monitor-review-api-20261010.xml` và `artifacts/private/monitor-review-http-20261010.xml` (overlap năm tests).
 
-KPI/source/baseline regression sau integration: `private evidence omitted from public release`, **19 PASS**, 88 nghiệp vụ KPIs + 22 quality controls. Kiểm tra này không phải independent recomputation của mọi snapshot review do client khác gửi; scope capture đã ghi ở contract.
+KPI/source/baseline regression sau integration: `artifacts/private/kpi-analysis-qa-cb670b239571/receipt.json`, **19 PASS**, 88 nghiệp vụ KPIs + 22 quality controls. Kiểm tra này không phải independent recomputation của mọi snapshot review do client khác gửi; scope capture đã ghi ở contract.
 
 Liên quan: [KPI handbook](KPI_ANALYSIS_GUIDE_VI.md), [Plan phát triển](PLAN_KPI_ANALYTICS_NEXT_VI.md), [Trạng thái và receipts](FIVE_WORKSPACES_STATUS.md).

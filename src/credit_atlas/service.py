@@ -178,6 +178,10 @@ class ResearchService:
         from .monitoring import build
         return build(self.case(case_id)["snapshot"])
 
+    def fhfa_nmdb_performance(self):
+        from .nmdb_aggregate import read
+        return read(self.root)
+
     def studies(self, case_id):
         from .study_registry import list_studies
         return list_studies(self, case_id)

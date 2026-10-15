@@ -12,7 +12,7 @@ Evidence được resolve từ **current verified immutable case**, với filter
 
 ## Kiểm tra
 
-- 41 tests trong `private evidence omitted from public release` PASS: persistence/reopen, concurrent stale revision, atomic history, invalid input, foreign case/loan scope, exact historical exports, frozen evidence guards.
+- 41 tests trong `artifacts/private/finding-review-tests.xml` PASS: persistence/reopen, concurrent stale revision, atomic history, invalid input, foreign case/loan scope, exact historical exports, frozen evidence guards.
 - Browser dùng server loopback và database QA riêng trên D:, với frozen mortgage case thật. Tạo finding từ cả 9 views; kiểm filters, reviewer text và status revisions; tải 4 historical versions; stale editor bị409; modal-open context giữ nguyên khi application state đổi; HTML trong memo không thực thi.
 - Export riêng Sources/Loss giữ provenance/diagnostics; lifecycle finding có pseudonymous timeline, không raw loan ID. Invalid revision/missing version/cross-origin bị từ chối.
 - Kiểm hash 44 source/output file entries sau QA, database findings thật và retail holdout ledger không đổi. Mobile 390px không overflow.

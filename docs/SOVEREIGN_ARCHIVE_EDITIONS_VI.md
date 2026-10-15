@@ -6,7 +6,7 @@ Ngày checkpoint: 11/10/2026. P4.09 thêm nguồn và phương pháp đối chi�
 
 Đã tải sáu file qua HTTP trực tiếp từ Bank of Canada: hai trang công bố, hai XLSX và hai paper PDF cho edition 2023/2024. Mỗi XLSX/PDF phải có link trong trang edition trước khi receipt acquisition được chốt. HTTPS origin, size bounds, CRC, PDF header và source hashes đã được kiểm tra. Không theo external links hoặc tính lại workbook.
 
-- Folder: `private evidence omitted from public release`.
+- Folder: `data/private/country/sovereign-archive-source-e0310b79a4da`.
 - Receipt SHA-256: `21ba37b2a39d743dff6b835042044bff572f5d0eb14794254ab9eaabc87166e6`.
 - Trang 2023: https://www.bankofcanada.ca/2023/07/staff-analytical-note-2023-10/
 - Trang 2024: https://www.bankofcanada.ca/2024/07/staff-analytical-note-2024-19/
@@ -24,7 +24,7 @@ Raw XLSX giữ tên gốc, gồm `BoC-BoE-Database-2023-08-29.xlsx`. HTTP Last-M
 
 Tổng 42.519 rows ×16 selected metrics =680.304 value positions. Đây là 16 chỉ tiêu đã chọn, không phải toàn bộ trường raw workbook.
 
-Profile mới: `private evidence omitted from public release`.
+Profile mới: `artifacts/private/sovereign-default-profile-08270bdda389/profile.json`.
 SHA-256: `578e9aaad6b34e157829ca3f4007fc1210b9b2e627c677c2bec9f30d253e7d83`.
 
 Source acquisition ban đầu 2025/2026 và profile cũ được giữ nguyên. Report xác minh cả hai receipts và cả12 source files, rồi đọc profile pinned. Không tự chọn profile mới nhất.
@@ -68,11 +68,11 @@ World sovereign counts và positive country-stock counts khác phạm vi. Countr
 
 ## Kiểm chứng
 
-- Independent openpyxl audit: `private evidence omitted from public release`, PASS.
+- Independent openpyxl audit: `artifacts/private/sovereign-default-audit-d922ba86fe99/receipt.json`, PASS.
 - Kiểm tra680.304positions, gồm515.678missing,72.509zeros,1.341source markers và9.954schema-absent positions. Kiểm tra entity metadata, source rows, reference headers và12source hashes. Production parser giữ raw XML text; audit cho phép riêng sai số chuyển đổi sang float của openpyxl.
-- Backend/HTTP/WDI regression:59PASS, `private evidence omitted from public release`.
-- Archive browser:5groupsPASS, `private evidence omitted from public release`. Test alias/revision/export, starred null, schema absence/date, entity options, count conflict, URL reload và mobile. Desktop source-check/mobile controls screenshots đã xem trực tiếp.
-- Current2025/2026/WDI-tab regression:9groupsPASS, `private evidence omitted from public release`, gồm scoped export, null/zero, peer paging, mobile, outage/retry và delayed WDI catalog response.
+- Backend/HTTP/WDI regression:59PASS, `artifacts/private/sovereign-archive-country-tests-20261011-fixed.xml`.
+- Archive browser:5groupsPASS, `artifacts/private/sovereign-archive-qa-31dd2cab89d8/receipt.json`. Test alias/revision/export, starred null, schema absence/date, entity options, count conflict, URL reload và mobile. Desktop source-check/mobile controls screenshots đã xem trực tiếp.
+- Current2025/2026/WDI-tab regression:9groupsPASS, `artifacts/private/sovereign-default-qa-665a94fd3732/receipt.json`, gồm scoped export, null/zero, peer paging, mobile, outage/retry và delayed WDI catalog response.
 - Retail frozen holdout ledger không đổi.
 
 Lần test trước có một assertion sai rằng PLW không có ở2023. Source inventory chứng minh PLW có; test được sửa dùng CHN, mã thực sự không có ởedition2023. Source/parser không bị sửa để làm test này pass. Kết quả thất bại cũ được giữ trong `sovereign-archive-country-tests-20261011.xml`.
@@ -86,9 +86,9 @@ Nguồn đo nominal annual stocks in default, không đủ để tự tạo defa
 ## Chạy lại
 
 ```powershell
-# Từ local machine path omitted
+# Từ D:\data\Codex\credit-atlas
 .venv\Scripts\python.exe -X utf8 scripts/prepare_sovereign_defaults.py
-python scripts/audit_sovereign_defaults.py
+& 'C:\Users\sangk\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -X utf8 scripts/audit_sovereign_defaults.py
 .venv\Scripts\python.exe -X utf8 scripts/browser_sovereign_archive_qa.py
 ```
 

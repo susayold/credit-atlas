@@ -28,10 +28,10 @@ Kết quả không chứa đường dẫn máy, filename gốc, raw loan ID hay 
 
 ## Kiểm tra đã thực hiện
 
-- `private evidence omitted from public release`: 25 tests PASS, gồm 8 tests provenance và frozen-service regression.
-- `private evidence omitted from public release`: 4 segment scopes PASS; metadata so trực tiếp với source-use receipt; JSON tải về khớp API; 4 query không hợp lệ bị từ chối và cross-origin trả 403; mobile 390px không overflow; ledger holdout không đổi.
-- `private evidence omitted from public release`: cả 4 whole-source quality scopes và exports vẫn PASS sau thay đổi.
+- `artifacts/private/mortgage-provenance-tests.xml`: 25 tests PASS, gồm 8 tests provenance và frozen-service regression.
+- `artifacts/private/mortgage-provenance-browser-06016d651e3a/receipt.json`: 4 segment scopes PASS; metadata so trực tiếp với source-use receipt; JSON tải về khớp API; 4 query không hợp lệ bị từ chối và cross-origin trả 403; mobile 390px không overflow; ledger holdout không đổi.
+- `artifacts/private/panel-quality-browser-acceptance-9b6359fcccd8/receipt.json`: cả 4 whole-source quality scopes và exports vẫn PASS sau thay đổi.
 - Portfolio: 6 scopes/408 bucket checks/360 chart points PASS; Lifecycle: 10 timelines PASS; Transition: 6 scopes PASS; Competing outcomes: 12 scopes PASS; Cure/Redefault: 8 follow-up scopes và 4 event types PASS. Receipt mới được ghi trong `runtime_regression_evidence` của P2.02–P2.07.
-- `private evidence omitted from public release`: audit toàn bộ index/corpus, 16 list scopes, 10 timeline probes và scan 15 static assets PASS sau thay đổi UI/API; holdout ledger không đổi.
+- `artifacts/private/lifecycle-acceptance-6b951d223297/receipt.json`: audit toàn bộ index/corpus, 16 list scopes, 10 timeline probes và scan 15 static assets PASS sau thay đổi UI/API; holdout ledger không đổi.
 
 Tại checkpoint sửa provenance, P2.01 chưa được nâng nghiệm thu chỉ dựa vào thay nhãn. Audit đầy đủ source/run explorer, lineage và data readiness sau đó được ghi tại [P2_SOURCE_RUN_ACCEPTANCE_VI.md](P2_SOURCE_RUN_ACCEPTANCE_VI.md). Các annual vintages mới, publisher provenance/availability và mô hình multi-vintage chưa đủ bằng chứng. Mục tiêu toàn dự án chưa đạt 100%.

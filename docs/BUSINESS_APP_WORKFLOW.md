@@ -78,7 +78,7 @@ Không có model fit hoặc mở lại retail holdout predictors trong projectio
 
 ## 5. Build/run và phạm vi còn lại
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/build_suite_view.py --warehouse source-warehouse-281662304758 --freeze retail-freeze-3dc86f5afe01 --holdout retail-holdout-061c440ea867 --business business-sba-21c568f10f7d

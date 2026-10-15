@@ -1,24 +1,40 @@
 # Verification toàn repository — 15/10/2026
 
-## Latest run after NSMO CSV-streaming extension
+## Latest run after Ginnie LoanPerf audit gate and parser
 
-`scripts/test.ps1` ran the complete app and vendor suite after adding the streaming NSMO status parser.
+`scripts/test.ps1` ran the full app and vendor suite after adding the Ginnie Mae
+Loan Performance File source contract, terms-gated aggregate-only ZIP auditor,
+and synthetic fixtures. This verifies code behavior against the documented
+59-field pipe-delimited contract; no Ginnie production payload was downloaded
+or used in these tests.
 
 | Kết quả | Số lượng |
 |---|---:|
-| Collected/executed | 1.577 |
-| Passed | 1.577 |
+| Collected/executed | 1.587 |
+| Passed | 1.587 |
 | Failures/errors/skips | 0 / 0 / 0 |
-| Elapsed | 341.4 seconds |
-| Receipt | `private evidence omitted from public release` |
+| Elapsed | 336.22 seconds |
+| Receipt | `artifacts/private/ginnie-loanperf-source-review-20261015/receipt.json` |
 
-The previous direct run at 1,574 tests is preserved in `private evidence omitted from public release`. The earlier batch receipt below preserves per-batch JUnit and logs for 1,568 tests.
+## Latest run after FHFA NMDB standalone export and parser bounds
+
+`scripts/test.ps1` ran the complete app and vendor suite after adding quarter-continuity and percentage-bound validation, the NMDB source JSON endpoint, and D01 download-error handling.
+
+| Kết quả | Số lượng |
+|---|---:|
+| Collected/executed | 1.581 |
+| Passed | 1.581 |
+| Failures/errors/skips | 0 / 0 / 0 |
+| Elapsed | 320.51 seconds |
+| Receipt | `artifacts/private/test-suite-direct-20261015-nmdb-export/receipt.json` |
+
+The previous direct run at 1,580 tests after initial NMDB context integration is preserved in `artifacts/private/test-suite-direct-20261015-nmdb-context/receipt.json`; previous runs at 1,577 and 1,574 are preserved in their receipts. The earlier batch receipt below preserves per-batch JUnit and logs for 1,568 tests.
 
 ## Earlier sequential-batch run
 
 Toàn bộ test suite được thu thập một lần và chạy tuần tự qua 21 process mới
 (tối đa 8 test files mỗi process). Receipt mới nhất:
-`private evidence omitted from public release`.
+`artifacts/private/test-batches-e8453a2adc33/receipt.json`.
 
 | Kết quả | Số lượng |
 |---|---:|

@@ -1,6 +1,6 @@
 # P1.04 và P1.09 — policy/subgroup theo saved validation evidence
 
-Đã chuyển đường phục vụ catalog/report/preview/save của Policy và subgroup sang verifier dùng saved predictions. Không gọi lại model inference/refit. Source/model bundles vẫn giữ nguyên; policy và subgroup QA lưu trong thư mục riêng dưới private evidence omitted from public release
+Đã chuyển đường phục vụ catalog/report/preview/save của Policy và subgroup sang verifier dùng saved predictions. Không gọi lại model inference/refit. Source/model bundles vẫn giữ nguyên; policy và subgroup QA lưu trong thư mục riêng dưới artifacts/private.
 
 ## P1.04 — decision policy
 

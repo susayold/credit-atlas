@@ -86,7 +86,7 @@ Live8770 updated and checked: `retail-subgroups-live-f4e0fb0873fc/receipt.json`
 EDUCATION, private/no-store responses and unchanged holdout ledger.
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_subgroups.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_subgroups.py --assumptions data/private/retail-subgroups-plan-20261010.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_retail_subgroups.py --verify retail-subgroups-3cf671cf3152
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_retail_subgroups.py --subgroups-id retail-subgroups-3cf671cf3152
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_retail_subgroups_qa.py

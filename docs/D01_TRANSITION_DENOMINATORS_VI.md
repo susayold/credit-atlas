@@ -1,6 +1,6 @@
 # D01 — Cách đọc denominator trong transition matrix
 
-**Ngày:** 15/10/2026. Scope là 2012 origination sample trong frozen case `d01-a24484b21a21`; 4.510.559 loan-month observations tạo **4.460.559 adjacent observed month-pairs**. Independent acceptance dựng lại bằng destination-side LAG trên panel đầy đủ và đối soát 1.091 year/segment cells cùng 94 lifetime/segment cells. [P2.05 acceptance](P2_TRANSITION_ACCEPTANCE_VI.md), [independent receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+**Ngày:** 15/10/2026. Scope là 2012 origination sample trong frozen case `d01-a24484b21a21`; 4.510.559 loan-month observations tạo **4.460.559 adjacent observed month-pairs**. Independent acceptance dựng lại bằng destination-side LAG trên panel đầy đủ và đối soát 1.091 year/segment cells cùng 94 lifetime/segment cells. [P2.05 acceptance](P2_TRANSITION_ACCEPTANCE_VI.md), [independent receipt](../artifacts/private/transition-acceptance-be68432843fc/receipt.json).
 
 ## Một transition row là gì?
 

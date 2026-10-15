@@ -4,13 +4,13 @@
 
 ## Source/API/formula checks
 
-`private evidence omitted from public release`: PASS 36 scopes. Mỗi downloaded XLSX được SHA đối sánh với immutable server capture và filters của trend/coverage. Independent XML/Fraction/Decimal audit kiểm tra ratio/delta caches, linked Facts numeric/exact text, missing-input guards, ordered bridge effects/counterfactual/residual, hai sheets và không formula-error cells. Source/code/builder hashes không đổi trong run; holdout access ledger không đổi.
+`artifacts/private/sec-workbook-scope-audit-1133f2bb3c7b/receipt.json`: PASS 36 scopes. Mỗi downloaded XLSX được SHA đối sánh với immutable server capture và filters của trend/coverage. Independent XML/Fraction/Decimal audit kiểm tra ratio/delta caches, linked Facts numeric/exact text, missing-input guards, ordered bridge effects/counterfactual/residual, hai sheets và không formula-error cells. Source/code/builder hashes không đổi trong run; holdout access ledger không đổi.
 
-`private evidence omitted from public release`: 43 PASS, gồm workbook/filter/source capture, trends/driver bridge và coverage boundaries.
+`artifacts/private/sec-analysis-excel-acceptance-tests.xml`: 43 PASS, gồm workbook/filter/source capture, trends/driver bridge và coverage boundaries.
 
 ## Native Excel
 
-`private evidence omitted from public release`: PASS đủ 36 workbooks bằng Excel 16.0, CalculateFullRebuild trên disposable read-only copies. Đối chiếu toàn bộ 73.656 populated cells và 14.040 formulas của Analysis/Facts; không lưu bản sao, source bytes giữ nguyên. Formula comparison chỉ bỏ optional quoting quanh hai tên sheet đơn giản; không đổi references/logic. Typed ISO UTC dates đối chiếu bằng native Excel serial/OADate.
+`artifacts/private/native-excel-qa-sec-1a75771ee189/receipt.json`: PASS đủ 36 workbooks bằng Excel 16.0, CalculateFullRebuild trên disposable read-only copies. Đối chiếu toàn bộ 73.656 populated cells và 14.040 formulas của Analysis/Facts; không lưu bản sao, source bytes giữ nguyên. Formula comparison chỉ bỏ optional quoting quanh hai tên sheet đơn giản; không đổi references/logic. Typed ISO UTC dates đối chiếu bằng native Excel serial/OADate.
 
 Hai lần comparison đầu thất bại được giữ riêng:
 

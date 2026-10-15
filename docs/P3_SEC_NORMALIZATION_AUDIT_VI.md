@@ -6,7 +6,7 @@ Case `sec-case-33077fe45722`, nguồn `sec-source-13cf03606e0c`, bốn issuer AA
 
 ## Audit đã thực thi
 
-`private evidence omitted from public release`: PASS.
+`artifacts/private/sec-normalization-acceptance-e466059ee35f/receipt.json`: PASS.
 
 - 105.441 fact entries: raw JSON Decimal → canonical Parquet, exact row parity theo CIK/taxonomy/concept/unit/source ordinal; giữ native units và annotation/extra JSON.
 - 13.374 unique filings và 13.374 occurrence records: tất cả submissions/history arrays đối soát với canonical filings và occurrence records. Conflicting occurrences không được chọn tùy ý.
@@ -20,7 +20,7 @@ Audit lần đầu bị MemoryError khi chuyển toàn bộ Parquet thành Pytho
 
 ## Tests
 
-`private evidence omitted from public release`: 33 PASS, gồm production normalization/views guards và independent-audit cases. Cases độc lập kiểm tra quarter/YTD, issuer filing/unit mismatches, equal/conflicting candidates, annual start conflicts, instant zero và unknown taxonomy.
+`artifacts/private/sec-normalization-acceptance-tests.xml`: 33 PASS, gồm production normalization/views guards và independent-audit cases. Cases độc lập kiểm tra quarter/YTD, issuer filing/unit mismatches, equal/conflicting candidates, annual start conflicts, instant zero và unknown taxonomy.
 
 ## Runtime còn phải chứng minh
 

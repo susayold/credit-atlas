@@ -75,7 +75,7 @@ independent audit dùng Fraction và source CSV raw amounts/units.
 
 ## Chạy lại và app
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/prepare_mortgage_exposures.py --case d01-a24484b21a21 --month 2026-02

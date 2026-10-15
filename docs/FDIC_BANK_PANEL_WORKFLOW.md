@@ -10,7 +10,7 @@ Freddie Mac thêm vintage vẫn chờ Clarity login.
 **42/42 quý 2016-03-31–2026-06-30**, **214.809 bank-quarter records**, **6.290
 CERT khác nhau** trong cả giai đoạn. 42 financial JSON + definitions/OpenAPI =
 **40.046.591 bytes**. Raw ở
-`private evidence omitted from public release` với start, per-source và
+`data/private/bank-history/fdic-history-3e5ccce29513/` với start, per-source và
 completion receipts: URL, SHA-256, bytes, retrieval time, counts và field contract.
 
 API chỉ filter REPDTE, không thêm ACTIVE/INSURED/class: population này không
@@ -58,7 +58,7 @@ ROA với nonmissing counts, không gọi ending-ASSET weighted mean là industr
 
 ## Outputs và kiểm tra thật
 
-Trong `private evidence omitted from public release`:
+Trong `artifacts/private/bank-panel-13a7ad74220f/`:
 
 - `bank-quarter.parquet`: 214.809 rows × 12 typed canonical fields.
 - `peer-quarter.parquet`: quarter/asset band, records, money sums/known counts,
@@ -96,7 +96,7 @@ hoặc regulatory capital adequacy qualification.
 
 ## Rerun
 
-PowerShell tại `local machine path omitted`, TEMP/TMP trên D: theo setup:
+PowerShell tại `D:\data\Codex\credit-atlas`, TEMP/TMP trên D: theo setup:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/acquire_bank_history.py

@@ -4,7 +4,7 @@ UCI350 Taiwan historical credit-card cohort, source-defined next-month payment
 default. The frozen client-level class-stratified random partitions were used;
 this is not out-of-time validation or a calibrated model for Vietnam.
 
-Actual run: `private evidence omitted from public release`.
+Actual run: `artifacts/private/retail-assessment-b8b96f471254`.
 Source case `retail-case-470bdb40682f`, feature preparation
 `retail-features-d53aa8ba9ed6`. Raw sources, canonical case and feature receipts
 are verified before fitting and again before the completion receipt.

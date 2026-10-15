@@ -21,7 +21,7 @@ Chi tiết:[P3_RATIO_TREND_AUDIT_VI.md](P3_RATIO_TREND_AUDIT_VI.md).
 
 PDF exports chỉ đổi PageSetup trongmemory rồiClose(false);original workbook hashes giữ nguyên. Preview copies/PDF/PNG là QA intermediates,không phải thêmmodel hoặc thayactuals.
 
-Chi tiết:[P3_SEC_EXCEL_SCOPE_AUDIT_VI.md](P3_SEC_EXCEL_SCOPE_AUDIT_VI.md). Native visual receipt:`private evidence omitted from public release`.
+Chi tiết:[P3_SEC_EXCEL_SCOPE_AUDIT_VI.md](P3_SEC_EXCEL_SCOPE_AUDIT_VI.md). Native visual receipt:`artifacts/private/sec-native-render-20261015/visual-review.json`.
 
 ## Giới hạn giữ nguyên
 

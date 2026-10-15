@@ -6,7 +6,7 @@
 
 Nguồn hiện được tích hợp có 50.000 khoản và 4.510.559 loan-month observations từ tháng 01/2012 đến 03/2026. Các reporting months thuộc cùng origination vintage, không phải 15 vintages độc lập. File hiện hành là latest-revised retrospective source; ngày quan sát không chứng minh dữ liệu đã sẵn có tại thời điểm dự báo lịch sử. Target event là first-observed source delinquency state numeric 03–99 trong 12 tháng t+1…t+12, với prepayment/maturity và các exits khác được giữ thành competing outcomes. Target này không đồng nghĩa regulatory default hoặc 30/60/90 DPD chuẩn hóa.
 
-Các phát hiện dưới đây được tính lại từ frozen `report.json` sau khi kiểm SHA với `case-complete.json`; panel, label, stock, transition, episode và vintage artifacts có lineage về cùng pipeline. Audit không materialize loan IDs. Tái tạo bằng `scripts/audit_d01_analyst_findings.py`; [audit JSON](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included) và [receipt](../PUBLIC_RELEASE_SCOPE.md#private-research-artifacts-are-not-included).
+Các phát hiện dưới đây được tính lại từ frozen `report.json` sau khi kiểm SHA với `case-complete.json`; panel, label, stock, transition, episode và vintage artifacts có lineage về cùng pipeline. Audit không materialize loan IDs. Tái tạo bằng `scripts/audit_d01_analyst_findings.py`; [audit JSON](../artifacts/private/d01-analyst-findings-a9579df23a87/audit.json) và [receipt](../artifacts/private/d01-analyst-findings-a9579df23a87/receipt.json).
 
 ## 1. Tồn kho D3 trong sample tăng rất mạnh vào giữa năm 2020
 

@@ -55,7 +55,7 @@ Probability estimates themselves remain finite-precision model outputs.
 
 ## Actual illustrative study
 
-Plan: `private evidence omitted from public release`.
+Plan: `data/private/retail-policy-plan-20261010.json`.
 Study: `retail-policy-bd4b8623de28`, primary full replay verified.
 Cost matrix: accept 0/10; review 1/3; decline 2/0 for non-event/event.
 Capacity: 600. These are illustrative assumptions, not recommended costs.
@@ -94,7 +94,7 @@ Reports are private/no-store and aggregate-only, with no client identifiers.
 Plans require one to eight unique named cases, ordered [0,1] decimal-text
 thresholds, all six decimal-text costs, explicit private visibility and false
 public release approval. No final-test/model-selection filter is accepted.
-Receipt verification hashes source/private evidence omitted from public release verifies the upstream
+Receipt verification hashes source/outputs/methods, verifies the upstream
 freeze and replays every aggregate from selected saved validation scores.
 Preview results use the same bound source with fresh explicit assumptions.
 Serving performs full replay on first access, then hashes the complete freeze,
@@ -104,7 +104,7 @@ restored size/mtime is rejected. Cached scores remain private; preview uses
 these verified fixed probabilities and recomputes only declared policy costs.
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_policy.py --assumptions private evidence omitted from public release
+.\.venv\Scripts\python.exe -X utf8 scripts/build_retail_policy.py --assumptions data/private/retail-policy-plan-20261010.json
 .\.venv\Scripts\python.exe -X utf8 scripts/build_retail_policy.py --verify retail-policy-bd4b8623de28
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_retail_policy.py --policy-id retail-policy-bd4b8623de28
 .\.venv\Scripts\python.exe -X utf8 scripts/browser_retail_policy_qa.py

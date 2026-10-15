@@ -17,7 +17,7 @@
 | Sources và exports | 4 segment scopes giữ coverage toàn sample và đúng lineage; phạm vi tháng chỉ áp vào bảng được quy định |
 | Mobile | 390px không overflow; không sửa retail holdout |
 
-Nguồn kiểm tra: `private evidence omitted from public release`, `private evidence omitted from public release`. Kiểm tra provenance riêng: `mortgage-provenance-browser-06016d651e3a/receipt.json`; 25 tests trong `mortgage-provenance-tests.xml` PASS.
+Nguồn kiểm tra: `artifacts/private/source-run-acceptance-8d10b50dbedf/receipt.json`, `artifacts/private/source-run-browser-acceptance-c0e7b5549a22/receipt.json`. Kiểm tra provenance riêng: `mortgage-provenance-browser-06016d651e3a/receipt.json`; 25 tests trong `mortgage-provenance-tests.xml` PASS.
 
 ## Cách đọc phạm vi nghiệm thu
 

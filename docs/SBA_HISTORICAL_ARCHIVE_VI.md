@@ -1,6 +1,6 @@
 # SBA historical archive — snapshot 31/03/2026
 
-Đã tải sáu CSV qua HTTP từ host chính thức `data.sba.gov`, tổng 885.226.430 bytes. Ngày snapshot được kiểm tra trên toàn bộ nội dung, không suy từ filename hoặc HTTP Last-Modified. Các bytes được lưu riêng trong `private evidence omitted from public release`; acquisition receipt giữ nguyên trạng thái trước profiling để bảo toàn lịch sử.
+Đã tải sáu CSV qua HTTP từ host chính thức `data.sba.gov`, tổng 885.226.430 bytes. Ngày snapshot được kiểm tra trên toàn bộ nội dung, không suy từ filename hoặc HTTP Last-Modified. Các bytes được lưu riêng trong `data/private/business-archive/sba-march-candidate-cf08cefd5f53`; acquisition receipt giữ nguyên trạng thái trước profiling để bảo toàn lịch sử.
 
 ## Dữ liệu thực đã bổ sung
 
@@ -18,11 +18,11 @@ Ngày `AsOfDate` gốc là `3/31/2026` trên toàn bộ records. Program gốc `
 
 ## Audit và report
 
-- Profile DuckDB: `private evidence omitted from public release`.
-- Audit độc lập Python CSV/Decimal: `private evidence omitted from public release`, PASS toàn bộ sáu file. Đối soát headers, row widths, raw dates, status/program counts, known/blank counts và tổng GrossApproval/GrossChargeOffAmount chính xác.
-- Report tổng hợp hiện tại: `private evidence omitted from public release`; receipt cùng thư mục. Report builder kiểm tra lại toàn bộ SHA raw bytes, acquisition/profile/audit bindings và audit method trước khi xuất. Report `dca117e2566d` giữ lại làm checkpoint trước API/UI.
-- Tests: `private evidence omitted from public release`, 21 PASS. Bao gồm exact decimal vượt độ chính xác float, missing không thành zero, raw statuses, date/program/coverage gates, audit/profile/acquisition/method/raw tamper rejection, query scope, private export và origin guard.
-- Actual browser: `private evidence omitted from public release`, 5 nhóm PASS. Đối soát program/status rows và exact amounts với API; download parity; reload/tab; June case giữ nguyên; mobile; lỗi API/retry. Holdout access ledger không đổi. Desktop/mobile screenshots đã lưu và mobile đã được xem trực tiếp.
+- Profile DuckDB: `artifacts/private/sba-candidate-profile-080b005671c4/profile.json`.
+- Audit độc lập Python CSV/Decimal: `artifacts/private/sba-historical-audit-e953b55508eb/receipt.json`, PASS toàn bộ sáu file. Đối soát headers, row widths, raw dates, status/program counts, known/blank counts và tổng GrossApproval/GrossChargeOffAmount chính xác.
+- Report tổng hợp hiện tại: `artifacts/private/sba-historical-report-f94f2ec47265/report.json`; receipt cùng thư mục. Report builder kiểm tra lại toàn bộ SHA raw bytes, acquisition/profile/audit bindings và audit method trước khi xuất. Report `dca117e2566d` giữ lại làm checkpoint trước API/UI.
+- Tests: `artifacts/private/sba-historical-archive-http-tests.xml`, 21 PASS. Bao gồm exact decimal vượt độ chính xác float, missing không thành zero, raw statuses, date/program/coverage gates, audit/profile/acquisition/method/raw tamper rejection, query scope, private export và origin guard.
+- Actual browser: `artifacts/private/sba-archive-browser-9f81f814d663/receipt.json`, 5 nhóm PASS. Đối soát program/status rows và exact amounts với API; download parity; reload/tab; June case giữ nguyên; mobile; lỗi API/retry. Holdout access ledger không đổi. Desktop/mobile screenshots đã lưu và mobile đã được xem trực tiếp.
 - Code: `src/credit_atlas/business_archive.py`; build bằng `.venv\Scripts\python.exe -X utf8 scripts\build_sba_historical_archive.py` từ project root.
 
 ## Phạm vi phân tích

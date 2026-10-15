@@ -37,7 +37,7 @@ Nguồn có 3.932 negative statement cells; giữ nguyên, không clipping. PAY 
 
 API `/api/retail-data-contract[-report]?view_id=...` chỉ nhận suite-view scope đã verify. Không hỗ trợ client_id hoặc final-test partition query. Chỉ đọc pinned pre-freeze metadata/aggregate JSON, không materialize predictors hay fit/rescore.
 
-Đã tải metadata và dataset-page hiện tại qua HTTP vào `private evidence omitted from public release`. Metadata `data` object không có khác biệt với bản đã pin. Hai tài liệu mới không thêm client rows hoặc temporal cohorts; creation/update/retrieval dates không thay observation months hoặc chứng minh historical availability.
+Đã tải metadata và dataset-page hiện tại qua HTTP vào `data/private/retail-reference/uci350-reference-6d33854afcef`. Metadata `data` object không có khác biệt với bản đã pin. Hai tài liệu mới không thêm client rows hoặc temporal cohorts; creation/update/retrieval dates không thay observation months hoặc chứng minh historical availability.
 
 ## Phần còn thiếu
 

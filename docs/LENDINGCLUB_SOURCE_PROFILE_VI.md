@@ -10,7 +10,7 @@ Mendeley Data version1, contributor David Maloney/Towson University, DOI10.17632
 
 API public file inventory được xác định từ code của trang web (allowAnonymous). Root folder phải là `root`; request folder rỗng trả error400 đã được giữ trong discovery artifact. Không cần login/cookies hoặc computer use. CSV396,562,202bytes được stream xuống D:, size và SHA-256 khớp publisher metadata: `de4b17ea90bbd524de55a4b270650bcb2e764f8466bd279b10d194d000b6648a`.
 
-Source folder `private evidence omitted from public release`; acquisition receipt SHA `36f28b6635bd35b10759fb98dd1bfb55faf54199107996e9959eb0dc4bc86603`. File gốc giữ nguyên. Không fit/rescore model Retail đang frozen.
+Source folder `data/private/retail/lendingclub-source-2a2766348144`; acquisition receipt SHA `36f28b6635bd35b10759fb98dd1bfb55faf54199107996e9959eb0dc4bc86603`. File gốc giữ nguyên. Không fit/rescore model Retail đang frozen.
 
 ## Coverage đã kiểm tra
 
@@ -44,9 +44,9 @@ Các nguồn khác đã khảo sát: FICO HELOC original challenge URL hiện re
 
 ## Verification
 
-Streaming stdlibCSV/Decimal profile: `private evidence omitted from public release`, SHA `0ab0d8179811cec4499a83fd727e1d5cf7597f37b9b703f64af10774d9ed9e36`. Không malformed-width rows; source date validation không có lỗi. Missing tokens được ghi explicit; không impute.
+Streaming stdlibCSV/Decimal profile: `artifacts/private/lendingclub-profile-28db23b7bd0a/profile.json`, SHA `0ab0d8179811cec4499a83fd727e1d5cf7597f37b9b703f64af10774d9ed9e36`. Không malformed-width rows; source date validation không có lỗi. Missing tokens được ghi explicit; không impute.
 
-Independent Arrow CSV engine audit: `private evidence omitted from public release` PASS. Kiểm tra publisher hash,rows,90column missingness,11numeric profiles/88checks,105monthly status cells,2label cross cells,date range,application types và IDs. Frozen holdout ledger unchanged. Numerical parser agreement chưa là semantic/leakage/source-original fidelity validation.
+Independent Arrow CSV engine audit: `artifacts/private/lendingclub-audit-4c9405321ec9/receipt.json` PASS. Kiểm tra publisher hash,rows,90column missingness,11numeric profiles/88checks,105monthly status cells,2label cross cells,date range,application types và IDs. Frozen holdout ledger unchanged. Numerical parser agreement chưa là semantic/leakage/source-original fidelity validation.
 
 ## Công việc tiếp
 
@@ -63,8 +63,8 @@ Retail → LendingClub source đã tích hợp nguồn riêng. API `/api/lending
 
 Giao diện có source/window/selected record counts,terminal Charged Off share,monthly status chart/table,selected-field statistics,90-column whole-source missingness,duplicate-target encoding,qualification gates vàpublisher/licence/hash evidence. Month/status filter áp dụngcohort counts; numeric/missingness stats luônwhole-source vàghi rõscope. Source-status filter không đổi mẫu số của window share. Absent month-status cell giữnull,không thànhcertified zero. Non-numeric field không cónumeric profile.
 
-Backend/HTTP `private evidence omitted from public release`:30testsPASS. Browser `private evidence omitted from public release`:4groupsPASS — source/API/export parity,filters/URL reload,whole-source statistics,mobile/non-numeric unavailable vàoutage/recovery. No browser errors;frozen holdout ledger unchanged. Desktop/mobile summary screenshots đãvisual-review. Browser đầu phát hiện lexical `history` variable shadowing URL history;đãrename local chart container vàrerun,không bỏ qua lỗi.
+Backend/HTTP `artifacts/private/lendingclub-http-tests-20261012.xml`:30testsPASS. Browser `artifacts/private/lendingclub-source-qa-c7baf1748a66/receipt.json`:4groupsPASS — source/API/export parity,filters/URL reload,whole-source statistics,mobile/non-numeric unavailable vàoutage/recovery. No browser errors;frozen holdout ledger unchanged. Desktop/mobile summary screenshots đãvisual-review. Browser đầu phát hiện lexical `history` variable shadowing URL history;đãrename local chart container vàrerun,không bỏ qua lỗi.
 
 API/UI đã hoàn thành phần explorer nêu ở bước1; còn dictionary/preprocessing/event/decision/reject/target/OOT gates ở bước2–4. Không gọi terminal sample share làPD hoặcapp approval rate.
 
-Retail source-quality regression: `private evidence omitted from public release`,6groupsPASS. UCI source/API/UI/JSON/Excel,mobile,reload,unavailable-source handling và88KPI/22controls giữ nguyên;frozen holdout ledger unchanged. Không refit hoặc rescore final-test predictors.
+Retail source-quality regression: `artifacts/private/retail-source-quality-qa-d271669f6f69/receipt.json`,6groupsPASS. UCI source/API/UI/JSON/Excel,mobile,reload,unavailable-source handling và88KPI/22controls giữ nguyên;frozen holdout ledger unchanged. Không refit hoặc rescore final-test predictors.

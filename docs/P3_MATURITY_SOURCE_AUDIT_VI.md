@@ -4,21 +4,21 @@ Original scope gồm selected-filing principal buckets, exact candidates/definit
 
 ## Source/API
 
-`private evidence omitted from public release`: PASS toàn bộ67annual filings ×2explicit debt families =134scopes/804bucket cells. Raw companyfacts candidate selection được làm độc lập, exact CIK/accession/form/filed/end/instant/USD và six concept definitions khớp API. 228supported/576missing;228candidate evidence entries. 38complete disclosed schedules/96partial. Real corpus không cónegative/all-zero/ambiguous buckets trongscope này;23synthetic tests bao phủcác boundary cases.
+`artifacts/private/sec-maturity-acceptance-audit-36b22846d6dc/receipt.json`: PASS toàn bộ67annual filings ×2explicit debt families =134scopes/804bucket cells. Raw companyfacts candidate selection được làm độc lập, exact CIK/accession/form/filed/end/instant/USD và six concept definitions khớp API. 228supported/576missing;228candidate evidence entries. 38complete disclosed schedules/96partial. Real corpus không cónegative/all-zero/ambiguous buckets trongscope này;23synthetic tests bao phủcác boundary cases.
 
 Summary/subtotal/complete-total/shares/first-three-years vàtied largest buckets khớp Decimal80. Unsupported share không trở thànhzero; debt-only vàdebt/capital-lease families khôngfallback hoặc cộngchồng. After-year-five giữopen-ended; principal amounts không trở thànhcarrying debt,EAD,interest payment hoặcDSCR.
 
-Actual browser `private evidence omitted from public release`: PASS bốnissuers,raw-source JSON exports,explicit family/reload/mobile,outage/recovery vàholdout ledger không đổi. MSFTzero bucket vẫn supported;Ford/GMmissing không thànhzero debt.
+Actual browser `artifacts/private/sec-debt-qa-5648923643e0/receipt.json`: PASS bốnissuers,raw-source JSON exports,explicit family/reload/mobile,outage/recovery vàholdout ledger không đổi. MSFTzero bucket vẫn supported;Ford/GMmissing không thànhzero debt.
 
 ## Excel
 
-`private evidence omitted from public release`: PASS8latest issuer/family scopes. DownloadSHA khớp immutable server capture;23formulas mỗi workbook khớp source/cached ratios vàmissing guards.
+`artifacts/private/maturity-workbook-scope-audit-46d6a12f8d2d/receipt.json`: PASS8latest issuer/family scopes. DownloadSHA khớp immutable server capture;23formulas mỗi workbook khớp source/cached ratios vàmissing guards.
 
-`private evidence omitted from public release`: Excel16.0 CalculateFullRebuild PASS1408populatedcells và184formulas trên8read-only copies. Không lưu thay đổi;date serial vàoptional simple-sheet quoting được chuẩn hóa trongcomparison,mọireference/logic còn được so sánh.
+`artifacts/private/native-excel-qa-sec-817f40ce0d7a/receipt.json`: Excel16.0 CalculateFullRebuild PASS1408populatedcells và184formulas trên8read-only copies. Không lưu thay đổi;date serial vàoptional simple-sheet quoting được chuẩn hóa trongcomparison,mọireference/logic còn được so sánh.
 
-`private evidence omitted from public release`: actual UI workbook download/source parity choAAPL/MSFT/AAPL-lease,mobile,error/recovery vàsingle export control PASS. CLI helper import đãsửa đểchạyđược cảscript vàpackage context; khôngsửa production debt calculations hoặcsource.
+`artifacts/private/sec-debt-xlsx-qa-798b967d62b7/receipt.json`: actual UI workbook download/source parity choAAPL/MSFT/AAPL-lease,mobile,error/recovery vàsingle export control PASS. CLI helper import đãsửa đểchạyđược cảscript vàpackage context; khôngsửa production debt calculations hoặcsource.
 
-Tests:`private evidence omitted from public release`,23PASS.
+Tests:`artifacts/private/sec-maturity-acceptance-tests.xml`,23PASS.
 
 ## Kiểm tra bổ sung đã hoàn thành ngày 15/10/2026
 
@@ -32,9 +32,9 @@ Script `scripts/record_maturity_verified_delivery.py` kiểm tra các receipts, 
 
 ## Dữ liệu gốc mới: Apple annual debt reconciliation
 
-Đã tải báo cáo 10-K 2025 qua HTTP, lưu ở `private evidence omitted from public release`. Issuer SEC feed liên kết trực tiếp URL HTML với CIK 0000320193, form 10-K và filing date 31/10/2025. Hai bảng debt được lưu kèm SHA; acquisition receipt ban đầu chưa kiểm feed, bằng chứng liên kết bổ sung nằm trong audit receipt.
+Đã tải báo cáo 10-K 2025 qua HTTP, lưu ở `data/private/sec-documents/apple-annual-debt-d2fac541f9a3`. Issuer SEC feed liên kết trực tiếp URL HTML với CIK 0000320193, form 10-K và filing date 31/10/2025. Hai bảng debt được lưu kèm SHA; acquisition receipt ban đầu chưa kiểm feed, bằng chứng liên kết bổ sung nằm trong audit receipt.
 
-`private evidence omitted from public release` PASS: hai bridge principal → carrying → noncurrent cho 2025/2024; sáu fiscal maturity buckets khớp capture SEC hiện có; tổng bốn original note sizes khớp aggregate issuance 2025. Phép đối chiếu dùng số nguyên với đơn vị USD millions, không dùng production debt parser.
+`artifacts/private/apple-annual-debt-bridge-1c634704d304/receipt.json` PASS: hai bridge principal → carrying → noncurrent cho 2025/2024; sáu fiscal maturity buckets khớp capture SEC hiện có; tổng bốn original note sizes khớp aggregate issuance 2025. Phép đối chiếu dùng số nguyên với đơn vị USD millions, không dùng production debt parser.
 
 Năm 2025: principal 91.281 triệu USD, discount/costs −309 triệu và hedge adjustment −294 triệu cho carrying 90.678 triệu USD. Current carrying 12.350 triệu và noncurrent 78.328 triệu khớp. Principal bucket năm đầu 12.393 triệu USD cao hơn current carrying 43 triệu USD: hai đại lượng không thể thay thế nhau.
 

@@ -7,7 +7,7 @@ source label là regulatory default hoặc một approval-time underwriting targ
 
 ## Source và typed adapter
 
-Raw acquisition: `private evidence omitted from public release`
+Raw acquisition: `data/private/public-suite/suite-619b1ee9aa8c/uci-retail.csv`
 và metadata JSON cùng directory. Adapter `src/credit_atlas/retail.py` kiểm tra
 chính xác X1…X23 mapping với descriptions trong official UCI metadata, binary
 Y, unique ID và domain ranges trước khi ghi typed Parquet.

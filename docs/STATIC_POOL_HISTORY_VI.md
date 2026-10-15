@@ -4,7 +4,7 @@ Ngày cập nhật11/10/2026. Đây là bổ sung lịch sử collateral/cohort 
 
 ## Nguồn mới
 
-Source `pool-history-source-757ce3631134` trong `private evidence omitted from public release`, tổng3file/606.781bytes:
+Source `pool-history-source-757ce3631134` trong `data/private/structured`, tổng3file/606.781bytes:
 
 - Bản chụp [issuer index](https://www.worldomni.com/asset_securities.html).
 - [StaticPool-WOART.xlsx](https://www.worldomni.com/abs/StaticPool-WOART.xlsx), linked trực tiếp từ index;10sheets.

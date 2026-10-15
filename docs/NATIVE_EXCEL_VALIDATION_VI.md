@@ -25,12 +25,12 @@ ratio definitions, model, source snapshots hay lịch sử export cũ.
 
 ## Evidence
 
-- Native baseline: private evidence omitted from public release
+- Native baseline: artifacts/private/native-excel-qa-6f5a5c654e50/receipt.json
 - Native perturbation: cùng folder/perturbation-receipt.json
 - Native raw readback: cùng folder/native-results.json
-- UI export: private evidence omitted from public release
-- Backend: private evidence omitted from public release
-- Bản SEC đã sửa: private evidence omitted from public release
+- UI export: artifacts/private/sec-workbook-qa-72ba3961cedf/receipt.json
+- Backend: artifacts/private/sec-native-fix-tests-20261011.xml
+- Bản SEC đã sửa: outputs/sec-analysis-native-fix-20261011/CreditAtlas-SEC.xlsx
 
 Giữ receipt cũ native-excel-qa-49ba87348c99/perturbation-receipt.json FAIL:
 13ca ban đầu phát hiện SEC_missing_numerator lỗi tại I23/B10. Receipt mới

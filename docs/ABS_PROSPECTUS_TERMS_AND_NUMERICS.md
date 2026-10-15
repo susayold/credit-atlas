@@ -5,7 +5,7 @@
 Prospectus chính thức ngày 22/01/2025:
 https://www.worldomni.com/abs/WOART_2025-A_Final_Prospectus.pdf
 
-File nguồn đã tải ở `private evidence omitted from public release`,
+File nguồn đã tải ở `data/private/structured/abs-source-e67abf50bb2c`,
 SHA256 `dc34695537492fd7f452e3dd735d4938e76eedde87f441e127e94875e708e653`.
 Module chỉ hỗ trợ đúng document version này. `abs_contract.py` lưu terms
 được review thủ công từ các trang liên quan, không tự claim parser đầy đủ

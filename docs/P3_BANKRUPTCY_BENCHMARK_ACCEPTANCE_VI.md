@@ -50,4 +50,4 @@ Model card hiện hành: `docs/BANKRUPTCY_FINAL_MODEL_CARD.md`, giữ intended u
 
 Exact groups không phải firm IDs. Nguồn thiếu firm identity và publication dates, nên chưa chứng minh entity-disjoint/OOT hoặc application-time availability. Bankruptcy label không tự trở thành loan default. Không qualification cho Vietnam SME PD, approvals, limits, pricing, IFRS9 ECL hoặc deployment trên hồ sơ mới.
 
-Nghiệm thu này đóng P3.04 theo **benchmark hiện tại**; bước thu thập identified dated statements cho deployed corporate-risk study vẫn giữ nguyên trong plan. Không sửa required inputs/private evidence omitted from public release để phù hợp với phần đã có.
+Nghiệm thu này đóng P3.04 theo **benchmark hiện tại**; bước thu thập identified dated statements cho deployed corporate-risk study vẫn giữ nguyên trong plan. Không sửa required inputs/outputs/acceptance/next để phù hợp với phần đã có.

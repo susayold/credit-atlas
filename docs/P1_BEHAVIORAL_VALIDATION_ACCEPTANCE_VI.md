@@ -28,10 +28,10 @@ Case/assessment/comparison/freeze hashes khớp. Freeze receipt và holdout acce
 
 ## Bằng chứng
 
-- `private evidence omitted from public release`: 24 point metrics, 60 reliability bins, 132 interval values khớp; max absolute error **1,3322676295501878e−15**, tolerance1e−12; validation ID/label parity, suite projection và selection-rule parity; model-fit/scoring/final-predictor reads đều0; ledger không đổi. Access intent được lưu trước audit.
-- `private evidence omitted from public release`: **19 tests PASS**, gồm độc lập tie/weighted/edge metric checks và synthetic assessment/comparison guards. Synthetic tests không fit lại actual benchmark.
-- `private evidence omitted from public release`: 6 variants, 60 bin rows, 39 known chart points, 6 metric rows, 20 paired metric rows và suite export khớp; reload/tab/mobile PASS; final-chart population label giữ đúng; ledger không đổi.
-- `private evidence omitted from public release`: source/month/category/target contract regression PASS sau bổ sung validation explorer.
+- `artifacts/private/retail-validation-acceptance-1a726071255c/receipt.json`: 24 point metrics, 60 reliability bins, 132 interval values khớp; max absolute error **1,3322676295501878e−15**, tolerance1e−12; validation ID/label parity, suite projection và selection-rule parity; model-fit/scoring/final-predictor reads đều0; ledger không đổi. Access intent được lưu trước audit.
+- `artifacts/private/retail-validation-acceptance-tests.xml`: **19 tests PASS**, gồm độc lập tie/weighted/edge metric checks và synthetic assessment/comparison guards. Synthetic tests không fit lại actual benchmark.
+- `artifacts/private/retail-validation-browser-acceptance-0c1160bc0618/receipt.json`: 6 variants, 60 bin rows, 39 known chart points, 6 metric rows, 20 paired metric rows và suite export khớp; reload/tab/mobile PASS; final-chart population label giữ đúng; ledger không đổi.
+- `artifacts/private/retail-data-contract-browser-954d18e891a6/receipt.json`: source/month/category/target contract regression PASS sau bổ sung validation explorer.
 
 App vẽ chỉ supported bins; empty bins hiển thị **Unavailable**, không tạo điểm0%. Chart validation có nhãn riêng, không gọi nhầm final-test. Suite JSON export giữ cả sáu variants và paired results; dropdown chỉ chọn chart đang xem, không thay đổi scope của whole-suite export hoặc selected model.
 

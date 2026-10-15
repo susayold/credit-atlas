@@ -55,6 +55,20 @@ def run(root: Path):
                 if view == "sources":
                     expect(page.locator("#content")).to_contain_text("Quality monitoring & investigation", timeout=15000)
                     checks.append("source monitoring and investigation view")
+                    nmdb = page.locator("#fhfa-nmdb-performance")
+                    expect(nmdb).to_contain_text("2026Q2", timeout=15000)
+                    assert nmdb.locator('svg[role="img"]').count() == 2
+                    expect(nmdb).to_contain_text("not a loan-level panel")
+                    checks.append("public FHFA NMDB aggregate history renders with source-population caveats")
+                    with page.expect_download() as captured:
+                        page.get_by_role("button", name="Xuất FHFA NMDB aggregate JSON", exact=True).click()
+                    download = captured.value
+                    download.save_as(str(output / "fhfa-nmdb-context.json"))
+                    context_export = json.loads((output / "fhfa-nmdb-context.json").read_text(encoding="utf-8"))
+                    assert context_export["status"] == "AVAILABLE"
+                    assert len(context_export["rows"]) == 98
+                    assert context_export["quality"]["archive_sha256"] == "f13c2b3a09b3c4318d43bcf2ba1fcc1e79f9b9c5a1c5ac2f49553dc377787dca"
+                    checks.append("FHFA NMDB standalone source export includes all quarters and the verified archive hash")
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")
@@ -282,6 +296,134 @@ def run(root: Path):
             expect(error_page.locator("#notice.error")).to_contain_text("Không đọc được private research API")
             assert error_page.locator(".metric-value").count() == 0
             checks.append("HTTP 503 run-catalog failure shows unavailable notice without metrics")
+            error_page.unroute("**/api/runs*")
+
+            error_page.route("**/api/period-transitions*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic transition-service outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=transitions", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Synthetic transition-service outage")
+            assert error_page.locator(".matrix-cell button").count() == 0
+            checks.append("HTTP 503 transition mart outage shows unavailable evidence without a transition matrix")
+            error_page.unroute("**/api/period-transitions*")
+
+            error_page.route("**/api/episode-followup*", lambda route: route.fulfill(
+                status=502, content_type="text/html", body="<html>upstream unavailable</html>"))
+            error_page.goto(base + "/?run=" + case_id + "&view=transitions", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Forward-only episode events")
+            expect(error_page.locator("#content")).to_contain_text("Research API HTTP 502 returned a non-JSON error")
+            checks.append("HTTP 502 episode-follow-up failure keeps local events and marks supplemental evidence unavailable")
+            error_page.unroute("**/api/episode-followup*")
+
+            error_page.route("**/api/monitoring*", lambda route: route.fulfill(
+                status=500, content_type="application/json",
+                body=json.dumps({"error": "Synthetic source-monitoring failure"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Synthetic source-monitoring failure")
+            expect(error_page.locator("#content")).to_contain_text("Origination rows")
+            checks.append("HTTP 500 monitoring failure is surfaced beside source profile, not rendered as zero")
+            error_page.unroute("**/api/monitoring*")
+
+            error_page.route("**/api/loans*", lambda route: route.fulfill(
+                status=500, content_type="application/json",
+                body=json.dumps({"error": "Synthetic private-loan query failure"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=lifecycle", wait_until="networkidle")
+            expect(error_page.locator(".loan-selection-list")).to_contain_text("Synthetic private-loan query failure")
+            assert error_page.locator(".loan-row").count() == 0
+            checks.append("HTTP 500 private-loan query failure clears rows and displays the query error")
+            error_page.unroute("**/api/loans*")
+
+            error_page.route("**/api/timeline*", lambda route: route.fulfill(
+                status=502, content_type="text/html", body="<html>timeline upstream unavailable</html>"))
+            error_page.goto(base + "/?run=" + case_id + "&view=lifecycle", wait_until="networkidle")
+            expect(error_page.locator(".loan-row").first).to_be_visible()
+            expect(error_page.locator(".loan-layout .card").nth(1)).to_contain_text("Research API HTTP 502 returned a non-JSON error")
+            checks.append("HTTP 502 private timeline failure keeps selectable loans and marks timeline unavailable")
+            error_page.unroute("**/api/timeline*")
+
+            failed_downloads = []
+            error_page.on("download", lambda download: failed_downloads.append(download.suggested_filename))
+            error_page.route("**/api/report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic private-report export outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=portfolio", wait_until="networkidle")
+            error_page.locator("#export-report").click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic private-report export outage")
+            assert failed_downloads == []
+            checks.append("HTTP 503 private-report export shows an error and does not trigger a fake download")
+            error_page.unroute("**/api/report*")
+
+            context_downloads = []
+            error_page.on("download", lambda download: context_downloads.append(download.suggested_filename))
+            error_page.route("**/api/fhfa-nmdb-performance-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic NMDB export outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            error_page.get_by_role("button", name="Xuất FHFA NMDB aggregate JSON", exact=True).click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic NMDB export outage")
+            assert context_downloads == []
+            checks.append("NMDB source export failure is surfaced and does not produce a file")
+            error_page.unroute("**/api/fhfa-nmdb-performance-report*")
+
+            error_page.route("**/api/mortgage-provenance*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic provenance-service outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Synthetic provenance-service outage")
+            assert error_page.locator("#mortgage-provenance").count() == 0
+            checks.append("HTTP 503 source-provenance failure is visible without presenting a partial provenance card")
+            error_page.unroute("**/api/mortgage-provenance*")
+
+            error_page.route("**/api/studies*", lambda route: route.fulfill(
+                status=502, content_type="text/html", body="<html>study store unavailable</html>"))
+            error_page.goto(base + "/?run=" + case_id + "&view=models", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Actual research model: chưa qualified")
+            expect(error_page.locator("#content")).to_contain_text("Thiếu annual vintages bắt buộc")
+            expect(error_page.locator("#content")).to_contain_text("Research API HTTP 502 returned a non-JSON error")
+            checks.append("HTTP 502 prepared-study failure preserves the before-fit gate and marks study evidence unavailable")
+            error_page.unroute("**/api/studies*")
+
+            error_page.route("**/api/observed-loss-details*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic loss-diagnostics outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=loss", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Synthetic loss-diagnostics outage")
+            expect(error_page.locator("#content")).to_contain_text("Signed observed loss bridge")
+            assert error_page.locator("#observed-loss-details").count() == 0
+            checks.append("HTTP 503 loss-diagnostics failure retains frozen bridge but omits unavailable diagnostic metrics")
+            error_page.unroute("**/api/observed-loss-details*")
+
+            error_page.route("**/api/findings*", lambda route: route.fulfill(
+                status=500, content_type="application/json",
+                body=json.dumps({"error": "Synthetic findings-service outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=evidence", wait_until="networkidle")
+            expect(error_page.locator("#content")).to_contain_text("Synthetic findings-service outage")
+            expect(error_page.locator("#content")).to_contain_text("Frozen run lineage")
+            checks.append("HTTP 500 findings failure is surfaced while frozen run lineage remains visible")
+            error_page.unroute("**/api/findings*")
+
+            error_page.route("**/api/finding-history*", lambda route: route.fulfill(
+                status=502, content_type="text/html", body="<html>history service unavailable</html>"))
+            error_page.goto(base + "/?run=" + case_id + "&view=evidence", wait_until="networkidle")
+            error_page.get_by_role("button", name="Xem history", exact=True).first.click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Research API HTTP 502 returned a non-JSON error")
+            checks.append("HTTP 502 finding-history failure is surfaced without fabricating review history")
+            error_page.unroute("**/api/finding-history*")
+
+            error_page.route("**/api/findings", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic finding-save outage"}))
+                if route.request.method == "POST" else route.continue_())
+            error_page.get_by_role("button", name="+ Lưu finding", exact=True).click()
+            error_page.locator("#finding-title").fill("QA ONLY — failed save")
+            error_page.locator("#finding-body").fill("Synthetic failure test; must remain unsaved.")
+            error_page.locator("#save-finding").click()
+            expect(error_page.locator("#finding-dialog")).to_be_visible()
+            expect(error_page.locator("#finding-error")).to_contain_text("Synthetic finding-save outage")
+            checks.append("HTTP 503 finding-save failure keeps the dialog open and exposes the error")
+            error_page.unroute("**/api/findings")
+            error_page.locator("#cancel-finding").click()
+
             error_page.close()
             assert not errors, errors
             checks.append("no browser JavaScript or console errors")

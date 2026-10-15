@@ -1,5 +1,5 @@
 $ErrorActionPreference='Stop'
-$taskRoot = Split-Path -Parent $PSScriptRoot
+$taskRoot='D:\data\Codex\credit-atlas'
 if((Get-PSDrive -Name D).Free -lt 3GB){throw 'Need at least 3GB free for private raw archive and profiling'}
 $taskOut=Join-Path $taskRoot ('data\private\business-archive\sba-march-candidate-'+[guid]::NewGuid().ToString('N').Substring(0,12))
 New-Item -ItemType Directory -Path $taskOut | Out-Null

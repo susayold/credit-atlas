@@ -6,9 +6,9 @@ Checkpoint mới nhất: app hiện phục vụ4edition2023–2026/42519rows. Xe
 
 Đã tải bằng HTTP trực tiếp từ Bank of Canada sáu file: hai trang công bố, hai workbook BoC–BoE Database 2025/2026, paper 2026 và methodology. Receipt/hash kiểm tra trước mỗi lần đọc; không mở Excel, không theo external links và không tính lại công thức nguồn.
 
-- Source: `private evidence omitted from public release`.
+- Source: `data/private/country/sovereign-default-source-001afb29b84a`.
 - Receipt SHA-256: `1f5821cfeaeda3bfbc696fbdfeb1098cf15934b6ef2866f22759e5f10c3956a9`.
-- Profile: `private evidence omitted from public release`.
+- Profile: `artifacts/private/sovereign-default-profile-3536a1e212a6/profile.json`.
 - Profile SHA-256: `f7de62e13544b731e129cb6a6e443dde41694dfbea4f63cbb0d1ff4e419f0453`.
 
 | Edition | Reference years | Entity-year rows | Entities |
@@ -49,13 +49,13 @@ Domestic arrears giữ riêng, không cộng vào debt in default. Nominal annua
 
 ## Kiểm chứng
 
-- Independent openpyxl audit: `private evidence omitted from public release`, PASS.
+- Independent openpyxl audit: `artifacts/private/sovereign-default-audit-e696243f6f06/receipt.json`, PASS.
 - Kiểm tra toàn bộ 350.032 metric values, bao gồm 235.520 null và 72.356 zeros; metadata/entity/source rows/year headers và hash sáu nguồn cũng được đối chiếu.
 - Openpyxl chuyển số XML thành float; audit chỉ cho phép sai số chuyển đổi binary rất nhỏ. Production giữ raw XML text riêng.
-- 13 tests normalization/scope/source mutation/profile mutation/revision/null/zero/provisional/conflict PASS: `private evidence omitted from public release`.
-- HTTP tests kiểm tra report, attachment, HEAD, invalid/duplicate filters và loopback origin; cùng normalization và WDI country regression: 56 PASS trong 40,57 giây, `private evidence omitted from public release`.
-- UI/API/export/mobile/outage/initial retry/late response: 9 groups PASS, `private evidence omitted from public release`. Export World2024 và participation bằng scoped API; null PLW/zero NAM/positive VNM giữ riêng; cancelled WDI catalog không ghi đè sovereign context. Frozen retail ledger không đổi.
-- Existing World Bank regression: 10 groups PASS, `private evidence omitted from public release`, gồm countries/aggregates, missing year, export, URL reload, mobile và điều hướng các domain khác.
+- 13 tests normalization/scope/source mutation/profile mutation/revision/null/zero/provisional/conflict PASS: `artifacts/private/sovereign-default-tests-20261011.xml`.
+- HTTP tests kiểm tra report, attachment, HEAD, invalid/duplicate filters và loopback origin; cùng normalization và WDI country regression: 56 PASS trong 40,57 giây, `artifacts/private/sovereign-country-http-tests-20261011.xml`.
+- UI/API/export/mobile/outage/initial retry/late response: 9 groups PASS, `artifacts/private/sovereign-default-qa-260a5c59a3ce/receipt.json`. Export World2024 và participation bằng scoped API; null PLW/zero NAM/positive VNM giữ riêng; cancelled WDI catalog không ghi đè sovereign context. Frozen retail ledger không đổi.
+- Existing World Bank regression: 10 groups PASS, `artifacts/private/country-browser-qa-6d510975f388/receipt.json`, gồm countries/aggregates, missing year, export, URL reload, mobile và điều hướng các domain khác.
 - Mobile overflow do metric label dài đã sửa bằng scoped form CSS. Screenshot mobile được xem trực tiếp; không dùng overflow test để chứng nhận mọi màn hoặc mọi workbook.
 
 ## Chưa hoàn thành
@@ -66,11 +66,11 @@ Nguồn này bổ sung evidence cho P4.09; không nâng trạng thái 50 capabil
 
 ## Chạy lại
 
-Từ `local machine path omitted`:
+Từ `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .venv\Scripts\python.exe -X utf8 scripts/prepare_sovereign_defaults.py
-python scripts/audit_sovereign_defaults.py
+& 'C:\Users\sangk\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -X utf8 scripts/audit_sovereign_defaults.py
 ```
 
 Prepare tạo artifact mới; profile đang phục vụ vẫn được pin theo path/hash đã ghi, không tự đổi sang artifact mới nhất.

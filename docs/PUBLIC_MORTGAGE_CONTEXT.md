@@ -1,7 +1,7 @@
 # Actual public mortgage context acquisition — 2026-10-09
 
 Downloaded through HTTPS using native curl, without credentials or computer use.
-Receipt: `private evidence omitted from public release`.
+Receipt: `data/private/public-context/fred-c8f88c10f8c7/run-complete.json`.
 The three source CSVs, native-frequency Parquet, monthly context and saved
 SHA-256 digests remain in that private directory. All output hashes verified.
 
@@ -46,7 +46,7 @@ qualification must then run before fitting.
 
 ## Re-run
 
-From `local machine path omitted`:
+From `D:\data\Codex\credit-atlas`:
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts/acquire_public_mortgage_context.py

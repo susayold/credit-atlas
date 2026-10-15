@@ -1,5 +1,5 @@
 $ErrorActionPreference='Stop'
-$taskRoot = Split-Path -Parent $PSScriptRoot
+$taskRoot='D:\data\Codex\credit-atlas'
 $taskOut=Join-Path $taskRoot ('data\private\retail-reference\uci350-reference-'+[guid]::NewGuid().ToString('N').Substring(0,12))
 New-Item -ItemType Directory -Path $taskOut | Out-Null
 $taskSources=@(@{file='metadata.json';url='https://archive.ics.uci.edu/api/dataset?id=350'},@{file='dataset-page.html';url='https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients'})

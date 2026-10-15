@@ -1,12 +1,12 @@
 # Apple 2025 — debt dimensions và giới hạn nhận diện instrument
 
-Đã tải gói XBRL trực tiếp qua HTTP từ URL loại XBRL trong issuer SEC feed, cùng rendered XBRL report của filing 10-K ngày 31/10/2025. Dữ liệu nằm trong `private evidence omitted from public release`; archive ZIP giữ nguyên, kiểm CRC và giới hạn kích thước trước đọc XML. Không thực thi nội dung tải về hoặc giải nén tùy ý vào filesystem.
+Đã tải gói XBRL trực tiếp qua HTTP từ URL loại XBRL trong issuer SEC feed, cùng rendered XBRL report của filing 10-K ngày 31/10/2025. Dữ liệu nằm trong `data/private/sec-documents/apple-annual-xbrl-a596bfb03297`; archive ZIP giữ nguyên, kiểm CRC và giới hạn kích thước trước đọc XML. Không thực thi nội dung tải về hoặc giải nén tùy ý vào filesystem.
 
 ## Dữ liệu và kiểm chứng
 
 Profile giữ 155 facts có tên chứa debt/interest, gồm context, period, dimensions, unit, decimals, value và nil. Đây là tập tìm kiếm rộng: có cả khoản đầu tư debt securities, noncontrolling-interest income và narrative blocks; không được gọi là 155 khoản nợ của Apple.
 
-Audit `private evidence omitted from public release` PASS:
+Audit `artifacts/private/apple-xbrl-debt-audit-b216f108cb2d/receipt.json` PASS:
 
 - 150 facts numeric khớp raw XML instance bằng parser DOM độc lập với parser ElementTree tạo profile, kể cả multiplicity theo concept/context/value.
 - Năm facts không numeric được giữ riêng: ba narrative blocks và hai duration values. Không tuyên bố đã kiểm numeric các facts này.

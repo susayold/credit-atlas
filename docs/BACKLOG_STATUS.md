@@ -233,3 +233,18 @@ verifies the private profile/export and an injected export outage. See
 `artifacts/private/browser-qa-ce65ee3cf106/receipt.json`. This is a separate
 credit-access case and does not change D01's 26/50 completion count or its
 unmet multi-vintage gate.
+
+## 2026-10-15 CFPB mortgage geography context
+
+Identified and acquired the current CFPB Mortgage Performance Trends release as
+a supplemental monthly geography series: four official CSVs, 2008-01–2025-12,
+30–89-day and 90+-day delinquency for 507 county equivalents and 51
+state/district records, plus the national record. The 216-month tables have no
+blank or nonnumeric observation cells and are preserved in private storage with
+SHA-256 receipts. CFPB attributes the data to the same NMDB sample family as
+the existing FHFA aggregate package; it is therefore a monthly geography view,
+not an independent validation sample, new Freddie vintage, loan-level panel,
+or model feature. Minimum geography sample thresholds, imputation, revisions
+and emergency-reporting limitations are documented in
+`docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`. D01 stays at 26/50; app
+integration is the next engineering step.

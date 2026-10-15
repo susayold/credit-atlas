@@ -182,6 +182,40 @@ target labels/model/PD created**. Audit code là
 trang `/nsmo` so sánh anchor, lọc vintage, xem support theo quý và giữ warning
 không diễn giải thành PD.
 
+## Sensitivity theo độ dài horizon: 6, 12 và 24 tháng
+
+Cập nhật 16/10/2026: audit aggregate-only mới so sánh 2, 4 và 8 snapshot quý
+kế tiếp từ mỗi baseline `C`. Chỉ xét baseline có đủ số quý theo dõi đến cuối
+horizon; giữ 90+ (`3`–`6`), competing adverse (`7`–`9`), kết thúc trước kỳ,
+cùng-tháng ambiguous và M/S censor thành các nhóm riêng. Mỗi mortgage được
+deduplicate trong bộ nhớ khi đếm support unique; receipt không ghi ID.
+
+| Horizon | Baseline C snapshots đủ cửa sổ | Mortgage unique có ≥1 baseline đủ cửa sổ | Snapshot 90+ quan sát được | Mortgage unique có ≥1 snapshot 90+ | Kết thúc trước kỳ tiếp theo | Đóng cùng tháng ambiguous | M/S censor |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 2 quý (~6 tháng) | 926.331 | 61.645 | 964 | 623 | 44.695 | 22.849 | 3.437 |
+| 4 quý (~12 tháng) | 872.888 | 59.703 | 2.174 | 753 | 83.092 | 42.236 | 6.196 |
+| 8 quý (~24 tháng) | 770.257 | 55.701 | 3.683 | 735 | 140.280 | 71.229 | 9.937 |
+
+Số mortgage unique có 90+ là **outcome support trong tập baseline đủ horizon**,
+không phải số sự kiện độc lập và không phải tỷ lệ. Các tập baseline của ba
+horizon không lồng nhau: horizon dài loại các baseline ở cuối PUF vì thiếu follow-up;
+vì vậy 735 unique ở 24 tháng thấp hơn 753 ở 12 tháng không mâu thuẫn và không
+cho thấy risk giảm. Mortgage có thể xuất hiện ở nhiều baseline quý và cùng loan
+có thể xuất hiện ở các outcome class khác nhau theo từng baseline quý.
+
+Khi horizon tăng, competing termination/cùng-tháng ambiguity tăng đáng kể, còn
+follow-up đủ quan sát giảm. Đây là trade-off thiết kế quan trọng: cửa sổ ngắn có
+ít tín hiệu 90+ hơn; cửa sổ dài có nhiều thời gian để thấy 90+ nhưng cũng tích
+lũy thêm censor và làm cohort khả dụng nhỏ hơn. M/S censor và termination không
+được chuyển thành negative. Không tính tỷ lệ, CI, PD hay model từ bảng này.
+
+Receipt riêng, aggregate-only và source-hash-bound:
+`artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json`.
+Tái lập bằng `scripts/audit_nsmo_horizon_sensitivity.py`; edge tests nằm trong
+`tests/test_nsmo_horizon_sensitivity.py`. Kết quả sensitivity củng cố quyết định
+hiện tại: D02-5 vẫn mở để chốt estimand/cohort/censoring; chưa tạo target labels
+và chưa bắt đầu D02-6 modeling.
+
 ## Đối chiếu chuyển tiếp kề quý và lần đầu quan sát 90+
 
 Cập nhật 16/10/2026: một audit độc lập đếm mọi chuyển tiếp kề snapshot từ C/1/2

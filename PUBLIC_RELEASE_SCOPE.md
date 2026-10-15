@@ -26,7 +26,7 @@ included as software/documentation. The production loan-level payload is not
 included; the user must first accept the publisher's current Terms of Use and
 acquire the data privately.
 
-The FHFA/CFPB NSMO v7.0 source review, codebook-grounded status parser, aggregate-only audit scripts, FHFA Appendix D weighted-table checks, SAS labels/formats, sanitized 587-field dictionary/value-label crosswalk, a 319-field/46-wave structural coverage index, and a six-item candidate crosswalk are included. The acquisition/audit scripts cover the official historical questionnaire PDFs, but the PDFs and question-text receipts remain private. The actual PUF was acquired privately
+The FHFA/CFPB NSMO v7.0 source review, codebook-grounded status parser, aggregate-only audit scripts, FHFA Appendix D weighted-table checks, SAS labels/formats, sanitized 587-field dictionary/value-label crosswalk, a 587-row derived predictor timing/use-boundary inventory, a 319-field/46-wave structural coverage index, and a six-item candidate crosswalk are included. The inventory is not an approved feature allowlist; no feature is approved. The acquisition/audit scripts cover the official historical questionnaire PDFs, but the PDFs and question-text receipts remain private. The actual PUF was acquired privately
 after the project owner authorized the FHFA Notice of Monitoring and NMDB Terms
 gate; no NSMO ZIP/CSV, identifiers, row-level extracts, cookies, or private
 receipts are part of this public repository. Anyone reproducing the research

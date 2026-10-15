@@ -71,6 +71,15 @@ def main() -> None:
             if "không có trường response-mode ở cấp mortgage" not in limitation:
                 raise AssertionError("Mode-to-mortgage linkage limitation is not visible")
             checks.append("UI explains no respondent-level mode linkage and no causal interpretation")
+            dictionary_count = page.locator("#dictionary-count").inner_text()
+            if "587 feature gates" not in dictionary_count or "0 feature đã duyệt" not in dictionary_count:
+                raise AssertionError("Dictionary does not disclose the full gate inventory and zero approved features")
+            page.locator("#field-search").fill("sex_o1")
+            page.locator("#field-results button").first.click()
+            detail = page.locator("#field-detail").inner_text()
+            if "SENSITIVE_OR_PROXY_POLICY_REVIEW" not in detail or "NOT_APPROVED_GOVERNANCE_REVIEW_REQUIRED" not in detail:
+                raise AssertionError("Sensitive-field governance gate is not shown in the field detail")
+            checks.append("587 model gates are searchable; sensitive fields show an explicit governance hold")
             if errors:
                 raise AssertionError(f"Browser JavaScript errors: {errors}")
             browser.close()
@@ -79,7 +88,7 @@ def main() -> None:
         server.server_close()
         worker.join(timeout=5)
     receipt = {
-        "schema_version": "nsmo-response-mode-browser-qa-v1",
+        "schema_version": "nsmo-dictionary-gates-browser-qa-v2",
         "status": "PASS",
         "built_at": datetime.now(timezone.utc).isoformat(),
         "checks": checks,

@@ -16,6 +16,12 @@ const sources = [
     pdf_page: "PDF page", printed_page: "Printed page", field_family: "Field group", timing_class: "Timing",
     predictor_use: "Predictor-use gate", sas_length: "SAS length", sas_format: "SAS format", sas_label: "SAS label / description",
   } },
+  { sheet: "NSMO feature gates", file: "nsmo-v70-predictor-gates.csv", table: "NsmoFeatureGates", headers: {
+    codebook_order: "Codebook order", csv_column: "CSV field name", codebook_name: "Codebook name",
+    field_family: "Field family", timing_class: "Measurement timing", publisher_predictor_gate: "Publisher gate",
+    eligibility_bucket: "CreditAtlas use boundary", intended_scope: "Intended scope", decision_status: "Current approval status",
+    required_review: "Open review before use", sas_label: "Variable label",
+  }, numeric: new Set(["codebook_order"]) },
   { sheet: "NSMO categories", file: "nsmo-v70-value-labels.csv", table: "NsmoCategories", headers: {
     format_name: "SAS format", format_value: "Category code (preserved)", format_label: "Category label",
   } },
@@ -77,7 +83,8 @@ guide.showGridLines = false;
 const guideRows = [
   ["CreditAtlas · D02 data reference workbook", ""],
   ["Purpose", "Excel copy of the D02 reference tables and public aggregate datasets, arranged by source for filtering and review."],
-  ["NSMO", "Field dictionary, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
+  ["NSMO", "Field dictionary, feature timing gates, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
+  ["Model gates", "The feature-gates sheet classifies all 587 fields by timing and scope. It is a review inventory, not an approved feature allowlist; no model feature is currently approved."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],

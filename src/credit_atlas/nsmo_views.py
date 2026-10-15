@@ -53,7 +53,7 @@ class NsmoViews:
     def __init__(self, root: Path):
         self.root = root.resolve()
         self._cached: tuple[tuple[int, int, int, int], dict] | None = None
-        self._dictionary_cache: tuple[tuple[int, int, int, int, int, int, int, int], dict] | None = None
+        self._dictionary_cache: tuple[tuple[int, ...], dict] | None = None
 
     def dictionary(self) -> dict:
         """Return only the sanitized, public v7.0 codebook/label crosswalk."""
@@ -61,14 +61,11 @@ class NsmoViews:
         labels_path = contained(self.root, "docs/data/nsmo-v70-value-labels.csv")
         coverage_path = contained(self.root, "docs/data/nsmo-v70-wave-coverage.csv")
         item_review_path = contained(self.root, "docs/data/nsmo-v70-wave-item-comparability.csv")
-        if not all(path.is_file() for path in (field_path, labels_path, coverage_path, item_review_path)):
+        gates_path = contained(self.root, "docs/data/nsmo-v70-predictor-gates.csv")
+        if not all(path.is_file() for path in (field_path, labels_path, coverage_path, item_review_path, gates_path)):
             raise ValueError("NSMO public field dictionary failed its v7.0 schema check")
-        field_stat, labels_stat, coverage_stat, item_stat = (
-            field_path.stat(), labels_path.stat(), coverage_path.stat(), item_review_path.stat())
-        identity = (field_stat.st_mtime_ns, field_stat.st_size,
-                    labels_stat.st_mtime_ns, labels_stat.st_size,
-                    coverage_stat.st_mtime_ns, coverage_stat.st_size,
-                    item_stat.st_mtime_ns, item_stat.st_size)
+        stats = [path.stat() for path in (field_path, labels_path, coverage_path, item_review_path, gates_path)]
+        identity = tuple(value for stat in stats for value in (stat.st_mtime_ns, stat.st_size))
         if self._dictionary_cache and self._dictionary_cache[0] == identity:
             return self._dictionary_cache[1]
         with field_path.open(encoding="utf-8-sig", newline="") as stream:
@@ -79,18 +76,28 @@ class NsmoViews:
             wave_coverage = list(csv.DictReader(stream))
         with item_review_path.open(encoding="utf-8-sig", newline="") as stream:
             item_comparability = list(csv.DictReader(stream))
+        with gates_path.open(encoding="utf-8-sig", newline="") as stream:
+            predictor_gates = list(csv.DictReader(stream))
         required_fields = {"csv_column", "codebook_name", "codebook_part", "field_family",
                            "timing_class", "predictor_use", "sas_format", "sas_label"}
         required_labels = {"format_name", "format_value", "format_label"}
         required_coverage = {"csv_column", "observed_response_waves", "entirely_not_asked_waves",
                              "partially_not_asked_waves", "not_applicable_waves"}
         required_item_review = {"field", "assessment"}
+        required_gates = {"codebook_order", "csv_column", "codebook_name", "field_family", "timing_class",
+                          "publisher_predictor_gate", "eligibility_bucket", "intended_scope", "decision_status",
+                          "required_review", "sas_label"}
         if (len(fields) != 587 or any(not required_fields.issubset(row) for row in fields)
                 or len({row["csv_column"].casefold() for row in fields}) != 587
                 or any(not required_labels.issubset(row) for row in value_labels)
                 or any(not required_coverage.issubset(row) for row in wave_coverage)
                 or not item_comparability
                 or any(not required_item_review.issubset(row) for row in item_comparability)
+                or len(predictor_gates) != 587
+                or any(not required_gates.issubset(row) for row in predictor_gates)
+                or len({row["csv_column"].casefold() for row in predictor_gates}) != 587
+                or {row["csv_column"] for row in predictor_gates} != {row["csv_column"] for row in fields}
+                or any(row["decision_status"].startswith("APPROVED") for row in predictor_gates)
                 or len({row["field"].casefold() for row in item_comparability}) != len(item_comparability)
                 or not {row["field"] for row in item_comparability}.issubset(
                     {row["csv_column"] for row in fields})
@@ -103,6 +110,8 @@ class NsmoViews:
                   "wave_coverage_count": len(wave_coverage), "wave_coverage": wave_coverage,
                   "item_comparability_count": len(item_comparability),
                   "item_comparability": item_comparability,
+                  "predictor_gate_count": len(predictor_gates), "approved_feature_count": 0,
+                  "predictor_gates": predictor_gates,
                   "value_labels": value_labels}
         self._dictionary_cache = (identity, report)
         return report

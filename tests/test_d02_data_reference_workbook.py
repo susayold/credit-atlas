@@ -10,11 +10,12 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert path.is_file()
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
-        "Start here", "NSMO fields", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
+        "Start here", "NSMO fields", "NSMO feature gates", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
         "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
+        "NSMO feature gates": "nsmo-v70-predictor-gates.csv",
         "NSMO categories": "nsmo-v70-value-labels.csv",
         "NSMO wave coverage": "nsmo-v70-wave-coverage.csv",
         "NSMO item wording": "nsmo-v70-wave-item-comparability.csv",
@@ -48,3 +49,9 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert usability.cell(46, 9).value == 3
     assert usability.cell(47, 9).value == 494
     assert workbook["Start here"]["B2"].value.startswith("Excel copy of the D02")
+    gates = workbook["NSMO feature gates"]
+    assert gates.max_row == 588
+    assert gates.cell(2, 2).value == "nsmoid"
+    assert gates.cell(2, 7).value == "IDENTIFIER_EXCLUDE"
+    assert all(not str(gates.cell(row, 9).value).startswith("APPROVED") for row in range(2, gates.max_row + 1))
+    assert workbook["Start here"]["B4"].value.startswith("The feature-gates sheet")

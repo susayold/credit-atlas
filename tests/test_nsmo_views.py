@@ -110,6 +110,11 @@ def _write_public_dictionary(root: Path) -> None:
     (data / "nsmo-v70-wave-item-comparability.csv").write_text(
         "field,assessment\nfield_0,WORDING_VERSION_BREAK: separate wave groups\n",
         encoding="utf-8")
+    gate_rows = ["codebook_order,csv_column,codebook_name,field_family,timing_class,publisher_predictor_gate,eligibility_bucket,intended_scope,decision_status,required_review,sas_label"]
+    for index in range(587):
+        family = "survey_response" if index == 0 else "metadata"
+        gate_rows.append(f"{index+1},field_{index},Field {index},{family},unknown,REVIEW,POST_ORIGINATION_RESPONSE_EXCLUDE,Descriptive only,AUXILIARY_ONLY_OR_EXCLUDED_FROM_FEATURES,Review timing,Label {index}")
+    (data / "nsmo-v70-predictor-gates.csv").write_text("\n".join(gate_rows) + "\n", encoding="utf-8")
 
 
 def _write_domain_receipts(root: Path, source_sha: str) -> None:
@@ -260,6 +265,9 @@ def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     assert result["item_comparability_count"] == 1
     assert result["item_comparability"][0] == {
         "field": "field_0", "assessment": "WORDING_VERSION_BREAK: separate wave groups"}
+    assert result["predictor_gate_count"] == 587
+    assert result["approved_feature_count"] == 0
+    assert result["predictor_gates"][0]["eligibility_bucket"] == "POST_ORIGINATION_RESPONSE_EXCLUDE"
     assert result["fields"][0]["csv_column"] == "field_0"
     assert result["value_labels"][0]["format_label"] == "One"
     assert result["wave_coverage"][0]["observed_response_waves"] == "1-46"

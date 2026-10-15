@@ -1,5 +1,39 @@
 # Cập nhật tiến độ Credit Atlas — 15/10/2026
 
+## Cập nhật tiếp theo — 16/10/2026
+
+Public mirror đã nhận source-only feasibility screen D02-3/5 và docs protocol.
+Public regression trên mirror đạt **1.445 passed, 196 skipped** trong 492,22
+giây; skips yêu cầu private payload/evidence theo public skiplist. `node --check`
+cho app cũng pass. Script target có synthetic tests riêng, không cần PUF để chạy.
+
+Đối chiếu Technical Documentation v7.0 mục 8–9: `Analysis_Weight` kết hợp
+sampling weight với non-response adjustment; FHFA cảnh báo simple-random-sample
+SE sẽ bị thấp và khuyến nghị survey procedure. PUF có 587 trường nhưng chỉ chứa
+weight, không có PSU/strata/replicate-weight field. Vì vậy model thử nghiệm sau
+này chỉ có thể báo hiệu năng nội bộ sample nếu chưa lấy được phương pháp variance
+thích hợp; không thể gọi là population PD hay suy luận thống kê.
+
+## D02-3/5 — kiểm tra feasibility target 12 tháng
+
+Chạy audit aggregate-only trên toàn bộ PUF: 62.359 hồ sơ, 51 snapshot quý, tạo
+147 hàng nhóm quý × trạng thái gốc, không xuất record/ID và không tạo nhãn
+target. Thử định nghĩa bốn quý tiếp theo với cohort C chính, cohort trạng thái
+1/2 tách riêng; mã 3–6 là 90+ ngày, còn 7/8/9 giữ riêng. Trong các snapshot C
+có đủ cửa sổ quý, 2.174 lần gặp trạng thái 90+ được quan sát, 738.773 snapshot
+có đủ bốn quý không gặp 90+, 42.236 có đóng khoản vay trong cùng tháng với
+snapshot nên thứ tự chưa biết, 83.092 bị cạnh tranh bởi khoản vay đóng trước
+snapshot kế tiếp và 6.196 gặp trạng thái M/S mất quan sát. Đây là baseline
+snapshots lặp lại theo một khoản vay, không phải số khoản vay độc lập hay tỷ lệ
+default/PD.
+
+Kết luận: dữ liệu đủ để tiếp tục thiết kế một endpoint theo trạng thái snapshot,
+nhưng chưa đủ để freeze target cho modeling. Cần giải quyết competing risks,
+censoring/selection, cách xử lý cùng-tháng, và sample design/variance trước khi
+ước lượng. Synthetic boundary tests: **7/7 PASS**. Chi tiết và protocol còn mở:
+[target feasibility](NSMO_TARGET_FEASIBILITY_VI.md); private aggregate receipt:
+`artifacts/private/nsmo-target-feasibility-20261015/receipt.json`.
+
 ## D02 tiếp tục — questionnaire và wave comparability
 
 Đã tải riêng **22 questionnaire package FHFA** cho wave 1–46, lưu source hashes

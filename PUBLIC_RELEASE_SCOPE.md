@@ -34,6 +34,12 @@ must obtain the current PUF directly from FHFA and accept its current notice and
 terms themselves. The associated analysis note includes FHFA's required
 disclaimer and does not imply agency endorsement.
 
+An aggregate-only target feasibility screen for four-quarter (about 12-month)
+performance snapshots is also included, with synthetic tests and a sanitized
+method note. Its private receipt and all PUF-derived exact aggregate tables stay
+outside Git. The note documents that the candidate protocol is not frozen and
+that no target labels, PD estimates, or model outputs are part of this release.
+
 
 ## Host-provided Excel builder dependency
 

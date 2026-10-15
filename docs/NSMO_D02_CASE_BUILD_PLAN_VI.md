@@ -1,6 +1,6 @@
 # D02 — NSMO mortgage-performance workspace
 
-Updated: 2026-10-15. D02 is a separate FHFA/CFPB National Survey of Mortgage
+Updated: 2026-10-16. D02 is a separate FHFA/CFPB National Survey of Mortgage
 Originations (NSMO) case. It does not use, extend, or relabel the Freddie Mac
 D01 panel.
 
@@ -45,6 +45,11 @@ D01 panel.
   Across the panel, every A (history no longer reported) belongs to a terminated
   mortgage, B does not occur, and 678 mortgages have no observed C/1–9 status.
   These findings inform eligibility design but do not yet define an at-risk set.
+  A separate aggregate-only feasibility screen tested a candidate four-quarter
+  endpoint from C/1/2 baselines. It found 872,888 current-state baseline
+  snapshots with a full 4-quarter horizon, but 42,236 same-month termination
+  ambiguities and 83,092 competing termination censors; these are repeated
+  snapshots, not unique loans or rates. See `NSMO_TARGET_FEASIBILITY_VI.md`.
 - A second domain audit scans and emits aggregates only for 30 origination
   mortgage/borrower fields (including the cash-out flag), five origination
   VantageScore fields, 51 quarterly respondent-score fields, and 23 quarterly
@@ -63,9 +68,9 @@ D01 panel.
 | D02-0 — access and storage | Review FHFA gate/terms, download official v7.0, preserve source hashes, keep PUF private | Official URL, release, ZIP/CSV hashes, user authorization record, no secrets | Complete |
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
 | D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587/587 header match, 587 SAS labels, 59 formats / 377 value labels, timing gates, Appendix D 462/462 selected weighted-cell check, 319×46 SAS-coded wave coverage and a six-item questionnaire pilot | Structural wave coverage complete; six common-item candidates identified for descriptive trend review; routing, response-mode/population equivalence and predictor allowlist still require formal review |
-| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete, including all 50 adjacent-quarter observed transition matrices; formal risk-set/target protocol remains open |
+| D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete, including all 50 adjacent-quarter observed transition matrices. Candidate C/1/2 snapshots screened for a four-quarter horizon; close-month ambiguity and censoring remain material, so risk-set protocol is still open. |
 | D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary with 319 survey-field wave coverage; Edge QA passes against verified local PUF. Some analytical domain extensions remain open |
-| D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started; do not report PD/rates until frozen |
+| D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Preliminary feasibility candidate assessed: four subsequent quarterly snapshots; codes 3–6 proposed as 90+ endpoint, 7/8/9 retained separately, non-observation censored and same-month closure ambiguous. Protocol not frozen; competing risks, censoring/selection, and design variance still need resolution. No target/PD/model outputs. |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started |
 
 ## Intended metrics and guardrails
@@ -111,6 +116,9 @@ python scripts\audit_nsmo_performance_states.py `
   --puf-csv $puf --sas-labels "$docs\nsmo_v70_labels.sas" `
   --sas-formats "$docs\nsmo_v70_formats.sas" `
   --output artifacts\private\nsmo-performance-state-audit\receipt.json
+python scripts\audit_nsmo_target_feasibility.py `
+  --puf-csv $puf `
+  --output artifacts\private\nsmo-target-feasibility\receipt.json
 python scripts\audit_nsmo_domain_aggregates.py `
   --puf-csv $puf --sas-labels "$docs\nsmo_v70_labels.sas" `
   --sas-formats "$docs\nsmo_v70_formats.sas" `

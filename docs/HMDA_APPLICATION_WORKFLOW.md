@@ -110,3 +110,7 @@ Full P2 còn HMDA reference joins/coverage/review, CRE/DSCR/maturity và model q
 .\.venv\Scripts\python.exe -X utf8 scripts/prepare_hmda_applications.py hmda-source-979e0862af13
 .\.venv\Scripts\python.exe -X utf8 scripts/audit_hmda_applications.py hmda-case-94ca64da2e30
 ```
+
+## Refresh check — 2026-10-15
+
+The official bounded API was queried again for this same 2023–2025 Maryland / home-purchase / site-built scope. All three CSV byte counts and SHA-256 values matched the source received on 2026-10-09; yearly row counts and public-amount aggregates were unchanged. The verification receipt is private at `artifacts/private/hmda-refresh-audit-13597103ed21/receipt.json`. Because there is no source delta, the existing canonical case remains the application evidence; no duplicate case was generated.

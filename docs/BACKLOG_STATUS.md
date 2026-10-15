@@ -358,6 +358,12 @@ P4 acceptance now covers inventory JSON and movement bridge exports end to end. 
 The combined Portfolio/Retail workbench acceptance also passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`: source-bound Portfolio summary and concentration, review drafts, native-currency Excel export and HTTP 503 behavior, on-demand movement/scenario tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroups, and client explanation export. An expected browser console error from the synthetic 503 is accounted for explicitly. This closes the tested P4 attachment paths; it does not close the full M01-028 route inventory. D01 remains 26/50, and no additional gated loan-performance data or model qualification gate changed.
 
 
+## 2026-10-15 data refresh and new-source access check
+
+Re-acquired the official HMDA 2023–2025 Maryland home-purchase/site-built pilot on October 15, with before/after aggregate reconciliations. The 2023, 2024, and 2025 CSV hashes, byte lengths, yearly counts, and public loan-amount sums exactly match the verified October 9 source; comparison receipt: `artifacts/private/hmda-refresh-audit-13597103ed21/receipt.json`. No duplicate canonical case was created.
+
+Reviewed CFPB Consumer Credit Trends as a possible P1/P4 market-context source. The official page reports a September 17, 2026 dashboard refresh and a cross-product sample from one nationwide credit bureau, but the linked all-data CSV returned HTTP 403 to ordinary direct clients. No payload was downloaded or access control bypassed. Source fit and evidence are documented in `docs/CFPB_CONSUMER_CREDIT_TRENDS_REVIEW_VI.md`. This aggregate source would support market monitoring only, not borrower-level modeling or repayment labels. The already acquired CFPB Mortgage Performance Trends file covers January 2008–December 2025 and was published August 2026; no newer release is listed on the official download page at this checkpoint.
+
 ## 2026-10-15 Bankruptcy profile export failure coverage
 
 Added a real-source browser acceptance for the bankruptcy ratio profile export: the scoped JSON matches the verified source evidence, retains the 64-feature and horizon/precision audit, and an injected HTTP 503 is shown in the UI without creating a fake download. The suite passes 9/9 checks at `artifacts/private/bankruptcy-browser-qa-6949e456b58c/receipt.json`.

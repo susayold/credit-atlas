@@ -86,3 +86,10 @@ payment history, and it cannot stand in for Freddie loan-level vintages. The
 unrestricted CFPB monthly delinquency CSVs have been acquired separately, with
 NMDB/sample, suppression, imputation and revision caveats in
 `docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`.
+
+
+## Recheck 15/10/2026 — HMDA scope and CFPB multi-product trend data
+
+The bounded CFPB HMDA API was re-acquired for the existing Maryland home-purchase/site-built 2023–2025 scope. All three CSVs are byte/hash identical to the verified source received 09/10/2026, and yearly counts/amounts match; the recheck receipt is `artifacts/private/hmda-refresh-audit-13597103ed21/receipt.json`. No data revision was available in this scope, so the existing profiled canonical case remains the app source.
+
+A separate CFPB Consumer Credit Trends source review found an official all-products CSV for mortgage, credit-card, auto, and student credit context. CFPB lists the dashboards as updated 17/09/2026 and describes the underlying inputs as a nationally representative sample from one nationwide credit bureau, with direct identifiers removed. The official `all_data.csv` URL returned HTTP 403 to standard Python and curl clients from this environment; no alternate identity or access workaround was used. This is aggregate market context, not individual loan performance, a borrower model-training file, or an independent panel. See `docs/CFPB_CONSUMER_CREDIT_TRENDS_REVIEW_VI.md`.

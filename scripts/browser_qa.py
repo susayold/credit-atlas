@@ -27,6 +27,8 @@ def run(root: Path):
     if not actual:
         raise ValueError("Real verified case required for browser acceptance")
     case_id = actual[0]["case_id"]
+    hmda_views = [row for row in service.hmda_views.catalog()["views"] if row["status"] == "verified"]
+    bank_views = [row for row in service.bank_views.catalog()["views"] if row["status"] == "verified"]
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(service))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
@@ -806,6 +808,38 @@ def run(root: Path):
             error_page.locator("#cancel-finding").click()
 
             error_page.close()
+            # HMDA and FDIC exports are delivered through the same attachment
+            # handler as D01. Exercise their actual route shapes so a failed
+            # direct GET cannot silently save an error response as a report.
+            failed_workspace_downloads = []
+            error_page = context.new_page()
+            error_page.on("download", lambda download: failed_workspace_downloads.append(download.suggested_filename))
+            if hmda_views:
+                error_page.route("**/api/hmda-report*", lambda route: route.fulfill(
+                    status=503, content_type="application/json",
+                    body=json.dumps({"error": "Synthetic HMDA export outage"})))
+                error_page.route("**/api/hmda-labeled-report*", lambda route: route.fulfill(
+                    status=503, content_type="application/json",
+                    body=json.dumps({"error": "Synthetic HMDA export outage"})))
+                error_page.goto(base + "/?view=hmda&hmda_view_id=" + hmda_views[0]["view_id"], wait_until="networkidle")
+                error_page.locator("#export-report").click()
+                expect(error_page.locator("#notice.error")).to_contain_text("Synthetic HMDA export outage")
+                assert failed_workspace_downloads == []
+                checks.append("HMDA GET export outage is visible and creates no error-file download")
+                error_page.unroute("**/api/hmda-report*")
+                error_page.unroute("**/api/hmda-labeled-report*")
+            if bank_views:
+                error_page.route("**/api/bank-report*", lambda route: route.fulfill(
+                    status=503, content_type="application/json",
+                    body=json.dumps({"error": "Synthetic FDIC bank export outage"})))
+                error_page.goto(base + "/?view=bank&bank_view_id=" + bank_views[0]["view_id"], wait_until="networkidle")
+                error_page.locator("#export-report").click()
+                expect(error_page.locator("#notice.error")).to_contain_text("Synthetic FDIC bank export outage")
+                assert failed_workspace_downloads == []
+                checks.append("FDIC bank GET export outage is visible and creates no error-file download")
+                error_page.unroute("**/api/bank-report*")
+            error_page.close()
+
             assert not errors, errors
             checks.append("no browser JavaScript or console errors")
             context.close()

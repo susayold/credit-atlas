@@ -55,12 +55,14 @@ Các file production liên quan trong catalog cùng lần kiểm tra:
 
 ### Excel field-reference workbook — 16/10/2026
 
-Đã tạo workbook Excel analyst-facing từ layout LoanPerf v1.0: đủ 59 trường
-`LP`, 4 `HH`, 3 `TT`, các code values được publisher công bố, và QA summary
-aggregate của sample công khai. Workbook đặt trong private D:; không chứa
-loan-level rows, pool/loan keys hay cookie. Các code `0`/blank chưa được layout
-định nghĩa vẫn được đánh dấu cần production validation; workbook không tự suy
-ra PD/target. Production ZIP và profile/authentication vẫn là bước kế tiếp.
+Đã tạo một workbook Excel analyst-facing gồm layout LoanPerf (59 `LP` + 7
+`HH/TT`), liquidation (15 `LR` + 6 `HH/TT`) và payment history (5 `LL` + 26
+`HH/PH/PT/TT`), cùng code references và aggregate QA riêng cho ba public
+samples. Workbook đặt trong private D:; không chứa loan-level rows, pool/loan
+keys hay cookie. Hai field-label discrepancies ở PH-1/PT-1 được nêu rõ; các
+code `0`/blank chưa được layout định nghĩa được đánh dấu cần production
+validation. Workbook không tự suy ra PD/target. Production ZIP và
+profile/authentication vẫn là bước kế tiếp.
 
 Ưu tiên tải `LoanPerf_202606.zip` làm pilot với parser đã có. Sau khi schema/key và phạm vi permission được xác nhận, audit riêng `liqloanqtr` và `llpaymhist` làm nguồn bổ sung; chỉ ghép nếu layout và key chứng minh đúng grain/period. Forbearance không được tự động coi là outcome hay predictor. Không tải annual 2.3 GB trước khi pilot xác nhận dung lượng expanded, parser throughput và cách bảo quản.
 

@@ -98,6 +98,24 @@ def run(root: Path):
                     assert len(context_export["rows"]) == 98
                     assert context_export["quality"]["archive_sha256"] == "f13c2b3a09b3c4318d43bcf2ba1fcc1e79f9b9c5a1c5ac2f49553dc377787dca"
                     checks.append("FHFA NMDB standalone source export includes all quarters and the verified archive hash")
+                    pudb = page.locator("#fhfa-pudb-acquisition")
+                    expect(pudb).to_contain_text("2,093,767", timeout=15000)
+                    expect(pudb).to_contain_text("no monthly payment performance")
+                    expect(pudb).to_contain_text("not all applications/denials")
+                    checks.append("FHFA PUDB acquisition profile renders with explicit no-performance/no-denial limits")
+                    with page.expect_download() as captured:
+                        page.get_by_role("button", name="Xuất FHFA PUDB aggregate profile", exact=True).click()
+                    download = captured.value
+                    pudb_path = output / "fhfa-pudb-aggregate-profile.json"
+                    download.save_as(str(pudb_path))
+                    pudb_export = json.loads(pudb_path.read_text(encoding="utf-8"))
+                    assert pudb_export["status"] == "AVAILABLE"
+                    assert pudb_export["visibility"] == "private"
+                    assert pudb_export["public_release_approved"] is False
+                    assert pudb_export["rows"] == 2_093_767 and pudb_export["columns"] == 66
+                    assert pudb_export["unique_record_keys"] == pudb_export["rows"]
+                    assert "record_num_sf_ctf" not in pudb_export
+                    checks.append("FHFA PUDB export contains verified aggregates and no record-level keys")
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")
@@ -413,6 +431,16 @@ def run(root: Path):
             assert context_downloads == []
             checks.append("NMDB source export failure is surfaced and does not produce a file")
             error_page.unroute("**/api/fhfa-nmdb-performance-report*")
+
+            error_page.route("**/api/fhfa-pudb-profile-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic FHFA PUDB export outage"})))
+            error_page.goto(base + "/?run=" + case_id + "&view=sources", wait_until="networkidle")
+            error_page.get_by_role("button", name="Xuất FHFA PUDB aggregate profile", exact=True).click()
+            expect(error_page.locator("#notice.error")).to_contain_text("Synthetic FHFA PUDB export outage")
+            assert context_downloads == []
+            checks.append("FHFA PUDB export failure is visible and does not create a fake file")
+            error_page.unroute("**/api/fhfa-pudb-profile-report*")
 
             error_page.route("**/api/mortgage-provenance*", lambda route: route.fulfill(
                 status=503, content_type="application/json",

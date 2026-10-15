@@ -137,6 +137,7 @@ async function sources(container,generation){
   const steps=el("ol","muted-text");monitoring.investigation_order.forEach(step=>steps.append(el("li","",step)));monitor.append(steps);section(container,monitor);
   await fannieSamplePane(container,generation);
   await fhfaNmdbPerformancePane(container,generation);
+  await fhfaPudbPane(container,generation);
 }
 async function fhfaNmdbPerformancePane(container,generation){
  const box=card('FHFA NMDB · U.S. mortgage performance context','Quarterly national aggregate · comparison context only; independent source population');box.id='fhfa-nmdb-performance';container.append(box);
@@ -149,6 +150,38 @@ async function fhfaNmdbPerformancePane(container,generation){
   const forbearance=card('Forbearance context','Separate series · reported from 2019 Q4');forbearance.append(lineChart(rows,[{key:'forbearance',color:'amber'}],{percentage:true,label:'FHFA NMDB quarterly national forbearance share'}),note('Forbearance is not added to delinquency categories or interpreted as default.'));trends.append(delinquency,forbearance);section(box,trends);
   const noteBox=callout(r.scope_notes.join(' '),true);box.append(noteBox);const source=el('a','button secondary','Mở FHFA NMDB source page');source.href=r.source_page;source.target='_blank';source.rel='noopener noreferrer';box.append(source);
   box.append(button('Xuất FHFA NMDB aggregate JSON',()=>downloadJSON('/api/fhfa-nmdb-performance-report','FHFA-NMDB-public-aggregate-performance.json')));
+ }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
+}
+async function fhfaPudbPane(container,generation){
+ const box=card('FHFA Enterprise PUDB · 2025 acquisition-access profile','Mortgage-level annual acquisitions · source aggregate only; not payment performance');box.id='fhfa-pudb-acquisition';container.append(box);
+ try{
+  const r=await api('/api/fhfa-pudb-profile');if(generation!==renderGeneration)return;
+  if(r.status!=='AVAILABLE'){box.append(empty(r.reason||'FHFA PUDB acquisition profile unavailable.'));return;}
+  box.append(supportList([['FHFA release',r.source_release_date],['2025 acquisitions',number(r.rows)],['Fields',number(r.columns)],['Unique source record keys',number(r.unique_record_keys)],['Archive SHA-256',r.archive_sha256]]));
+  const labelMaps={
+   enterprise:{'1':'Fannie Mae','2':'Freddie Mac'},
+   purpose_ctf:{'1':'Purchase','2':'Refinance · no cash-out/unknown','4':'Home improvement/rehabilitation','7':'Cash-out refinance','9':'Other/not available'},
+   fed_guarantee_ctf:{'1':'Conventional/other','2':'FHA-insured','3':'VA-guaranteed','4':'FSA/RHS-guaranteed'},
+   fthb:{'1':'First-time buyer: yes','2':'First-time buyer: no','9':'Not available'},
+   occupancy_sf_ctf:{'1':'Principal residence','2':'Second home','3':'Investment property','9':'Not available'},
+   lien_status:{'1':'First lien','2':'Subordinate lien','3':'Not secured by lien','9':'Not available'},
+   dti_cat:{'10':'<20%','20':'20–<30%','30':'30–<36%','50':'50–60%','60':'>60%','99':'Not available'},
+   score_borr_model:{'1':'Equifax Beacon 5.0','2':'Experian Fair Isaac','3':'FICO Classic 04','4':'FICO Classic 98','5':'VantageScore 2.0','6':'VantageScore 3.0','7':'Multiple models','8':'Other model','11':'FICO 9','12':'FICO 8','13':'FICO 10','14':'FICO 10T','15':'VantageScore 4.0','99':'Not available'},
+   race1_borr:{'1':'American Indian or Alaska Native','2':'Asian','3':'Black or African American','4':'Native Hawaiian or Other Pacific Islander','5':'White','6':'Not provided','7':'Not applicable','9':'Not available'},
+   ethnicity_borr:{'1':'Hispanic or Latino','2':'Not Hispanic or Latino','3':'Not provided','4':'Not applicable','9':'Not available'},
+   sex_borr:{'1':'Male','2':'Female','3':'Not provided','4':'Not applicable','9':'Not available'},
+   age_borr_cat:{'1':'Under 25','2':'25–34','3':'35–44','4':'45–54','5':'55–64','6':'65–74','7':'Over 74','9':'Not available'},
+   state_fips:{},tract_rural:{'1':'Rural tract','0':'Not rural tract'}
+  };
+  const titles={enterprise:'Enterprise',purpose_ctf:'Mortgage purpose',fed_guarantee_ctf:'Federal guarantee',fthb:'First-time buyer',occupancy_sf_ctf:'Occupancy',lien_status:'Lien status',dti_cat:'DTI category',score_borr_model:'Borrower score model',race1_borr:'Borrower race field 1',ethnicity_borr:'Borrower ethnicity',sex_borr:'Borrower sex',age_borr_cat:'Borrower age band',state_fips:'State FIPS',tract_rural:'Rural-tract indicator'};
+  const countRows=field=>Object.entries(r.category_counts?.[field]||{}).map(([code,count])=>{const value=Number(count),suppressed=value<30;return [labelMaps[field]?.[code]||(code==='<BLANK>'?'Blank/not available':code),suppressed?'Suppressed (<30)':number(value),suppressed?'Suppressed':percent(value/r.rows)];});
+  const details=el('details');details.append(el('summary','','One-dimensional acquisition mix · counts below 30 suppressed in view/export'));
+  for(const field of Object.keys(titles)){if(!r.category_counts?.[field])continue;const section=card(titles[field],'2025 acquired-mortgage records');section.append(table(['Category',{label:'Records',number:true},'Share of file'],countRows(field)));details.append(section);}
+  box.append(details);
+  box.append(callout('Separate credit-access/acquisition context. This file includes no monthly delinquency, default, foreclosure, prepayment, or realized-loss outcomes. It covers Enterprise purchases, not all applications/denials, and must not be joined to D01 or used for default-model training.',true));
+  r.limitations.forEach(x=>box.append(note(x)));
+  const source=el('a','button secondary','Mở FHFA Enterprise PUDB source page');source.href='https://www.fhfa.gov/data/pudb';source.target='_blank';source.rel='noopener noreferrer';box.append(source);
+  box.append(button('Xuất FHFA PUDB aggregate profile',()=>downloadJSON('/api/fhfa-pudb-profile-report','FHFA-Enterprise-PUDB-2025-private-acquisition-profile.json')));
  }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
 }
 async function fannieSamplePane(container,generation){

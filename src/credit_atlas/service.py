@@ -182,6 +182,10 @@ class ResearchService:
         from .nmdb_aggregate import read
         return read(self.root)
 
+    def fhfa_pudb_profile(self):
+        from .fhfa_pudb import read
+        return read(self.root)
+
     def studies(self, case_id):
         from .study_registry import list_studies
         return list_studies(self, case_id)

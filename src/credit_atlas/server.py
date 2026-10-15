@@ -517,6 +517,13 @@ def handler_for(service: ResearchService):
                     if url.path.endswith("-report"):
                         self.send(200, result, filename="FHFA-NMDB-public-aggregate-performance.json", head=head)
                         return
+                elif url.path in {"/api/fhfa-pudb-profile", "/api/fhfa-pudb-profile-report"}:
+                    if query:
+                        raise ValueError("FHFA PUDB profile accepts no filters")
+                    result = service.fhfa_pudb_profile()
+                    if url.path.endswith("-report"):
+                        self.send(200, result, filename="FHFA-Enterprise-PUDB-2025-private-acquisition-profile.json", head=head)
+                        return
                 elif url.path == "/api/studies":
                     result = service.studies(run)
                 elif url.path == "/api/episode-followup":

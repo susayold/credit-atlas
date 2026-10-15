@@ -8,7 +8,7 @@ from credit_atlas.workspace import app_root,timestamp,write_new,sha256
 def run():
     root=app_root();os.environ['TEMP']=os.environ['TMP']=str(root/'.tmp')
     out=root/'artifacts/private'/('remaining-domains-qa-'+uuid.uuid4().hex[:12]);out.mkdir()
-    base='http://127.0.0.1:8770';checks=[];errors=[]
+    base=os.environ.get('CREDIT_ATLAS_QA_BASE','http://127.0.0.1:8770');checks=[];errors=[]
     ledger=root/'artifacts/private/retail-holdout-access.sqlite';before=sha256(ledger)
     def get(path,params={}):
         with urlopen(base+path+'?'+urlencode(params),timeout=240) as response:return json.load(response)
@@ -83,7 +83,15 @@ def run():
             export_page.unroute(route);checks.append(label)
         reject_export('/?view=retail&view_id=suite-view-74e07524f6d0&workspace_tab=evidence','#retail-governance-dossier','**/api/retail-dossier-report*','Synthetic Retail dossier export outage',lambda:export_page.get_by_role('button',name='Xuất Retail model dossier JSON').click(),'Retail model dossier 503 is visible and creates no fake download')
         reject_export('/?view=retail&view_id=suite-view-74e07524f6d0&workspace_tab=evidence','#retail-data-contract','**/api/retail-data-contract-report*','Synthetic Retail data contract export outage',lambda:export_page.get_by_role('button',name='Xuất Retail data contract JSON').click(),'Retail data contract 503 is visible and creates no fake download')
-        reject_export('/?view=retail&view_id=suite-view-74e07524f6d0&workspace_tab=policy','#retail-subgroups','**/api/retail-subgroup-report*','Synthetic Retail subgroup export outage',lambda:export_page.get_by_role('button',name='Xuất subgroup đã kiểm tra').click(),'Retail subgroup export 503 is visible and creates no fake download')
+        export_page.goto(base+'/?view=retail&view_id=suite-view-74e07524f6d0&workspace_tab=policy',wait_until='domcontentloaded');expect(export_page.locator('#retail-policy')).to_be_visible()
+        if export_page.locator('#retail-subgroups').count():
+            export_page.route('**/api/retail-subgroup-report*',lambda r:r.fulfill(status=503,content_type='application/json',body=json.dumps({'error':'Synthetic Retail subgroup export outage'})))
+            export_page.get_by_role('button',name='Xuất subgroup đã kiểm tra').click();expect(export_page.locator('#notice.error')).to_contain_text('Synthetic Retail subgroup export outage');assert fake_downloads==[]
+            export_page.unroute('**/api/retail-subgroup-report*');checks.append('Retail subgroup export 503 is visible and creates no fake download')
+        else:
+            expect(export_page.locator('#retail-policy')).to_contain_text('Chưa có policy study cho frozen model này.')
+            assert export_page.get_by_role('button',name='Xuất subgroup đã kiểm tra').count()==0
+            checks.append('Retail subgroup export stays unavailable when no saved policy/study exists; no private policy was created')
         reject_export('/?view=business','#business-summary','**/api/business-report*','Synthetic SBA report outage',lambda:export_page.locator('#export-report').click(),'SBA aggregate report 503 is visible and creates no fake download')
         reject_export('/?view=abs','#abs-period-metrics','**/api/abs-report*','Synthetic ABS report outage',lambda:export_page.locator('#export-report').click(),'ABS period report 503 is visible and creates no fake download')
         reject_export('/?view=country&workspace_tab=macro','#country-timeline','**/api/country-report*','Synthetic World Bank report outage',lambda:export_page.locator('#export-report').click(),'World Bank country report 503 is visible and creates no fake download')

@@ -249,6 +249,48 @@ Workbook/API/UI chỉ cung cấp aggregate unweighted support; receipt source-bo
 với SHA-256 PUF và không chứa ID hoặc loan rows. Bảng này xuất hiện trong `/nsmo`
 như feasibility panel, với bộ lọc entry state và vintage.
 
+### Entry selection by origination vintage
+
+Audit mới đối chiếu toàn bộ population PUF với lý do trước-entry, theo năm mở
+khoản vay. Entry share ở đây là `mortgages entered / mortgages in that PUF
+origination vintage`; nó chỉ mô tả selection vào risk set của audit. Nó không
+phải tỷ lệ delinquency, incidence hay PD.
+
+| Vintage | PUF mortgages | Entered C/1/2 | Entry share | Pre-entry non-observation | Closed before / same-month entry | Pre-entry 90+ / adverse 7–9 |
+|---|---:|---:|---:|---:|---:|---:|
+| 2013 | 6,063 | 5,071 | 83.64% | 965 | 13 / 11 | 1 / 2 |
+| 2014 | 6,250 | 5,434 | 86.94% | 759 | 28 / 29 | 0 / 0 |
+| 2015 | 6,169 | 5,537 | 89.76% | 584 | 32 / 13 | 0 / 3 |
+| 2016 | 6,269 | 5,726 | 91.34% | 476 | 39 / 28 | 0 / 0 |
+| 2017 | 5,148 | 4,700 | 91.30% | 408 | 29 / 10 | 0 / 1 |
+| 2018 | 4,687 | 4,360 | 93.02% | 282 | 35 / 10 | 0 / 0 |
+| 2019 | 5,004 | 4,727 | 94.46% | 208 | 43 / 24 | 0 / 2 |
+| 2020 | 5,637 | 5,459 | 96.84% | 136 | 23 / 19 | 0 / 0 |
+| 2021 | 5,379 | 5,127 | 95.32% | 200 | 34 / 18 | 0 / 0 |
+| 2022 | 3,854 | 3,636 | 94.34% | 179 | 22 / 17 | 0 / 0 |
+| 2023 | 3,936 | 3,714 | 94.36% | 131 | 68 / 23 | 0 / 0 |
+| 2024 | 3,963 | 3,820 | 96.39% | 75 | 47 / 20 | 1 / 0 |
+
+The entry share ranges from 83.64% to 96.84%; 2013 has the most pre-entry
+non-observation (965), versus 75 for 2024. This is consistent with the risk-set
+definition removing loans whose prior history is unknown, but does not identify
+why missingness differs or establish that the excluded loans have different
+risk. The apparent vintage pattern therefore needs sensitivity analysis before
+any outcome comparison. The app's “Entry selection by origination vintage” table
+shows the full partition and filters with the shared vintage selector. The
+separate code table retains K/M/S: PUF-wide pre-entry counts are 4,270 K, 64 M,
+and 69 S. For 2013 the split is 951/6/8; for 2024 it is 65/6/4. Other
+pre-entry missing codes and the administrative/no-baseline exclusions are zero
+in this PUF, and remain separate fields in the aggregate API.
+
+Rebuild the private aggregate receipt after obtaining the current PUF:
+
+```powershell
+python scripts\audit_nsmo_first_entry_risk_set.py `
+  --puf-csv data\private\mortgage\nsmo-2026-05-27\puf\nsmo_v70_1324_puf.csv `
+  --output artifacts\private\nsmo-first-entry-risk-set-20261016\receipt.json
+```
+
 Receipt riêng tư hiện tại: `artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json`.
 API `/api/nsmo-first-observed-transition-support` xác minh receipt với SHA-256
 PUF trước khi trả aggregate cho `/nsmo`; browser acceptance mở rộng đạt 10/10

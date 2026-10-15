@@ -127,6 +127,8 @@ def audit(path: Path) -> dict:
     intervals_by_state: Counter[str] = Counter()
     by_vintage_state: dict[tuple[str, str], dict[str, Counter[str]]] = defaultdict(
         lambda: {"loans": Counter(), "intervals": Counter(), "exits": Counter()})
+    by_vintage_population: dict[str, dict[str, Counter[str]]] = defaultdict(
+        lambda: {"population": Counter(), "exclusions": Counter(), "exits": Counter()})
     seen_ids: set[str] = set()
     rows = width_errors = empty_ids = duplicate_ids = 0
 
@@ -162,9 +164,14 @@ def audit(path: Path) -> dict:
             try:
                 year, month = int(row[pos["open_year"]]), int(row[pos["open_month"]])
             except ValueError:
+                by_vintage_population["unknown"]["population"]["puf_mortgages"] += 1
+                by_vintage_population["unknown"]["exclusions"]["invalid_origination_month"] += 1
                 partitions["invalid_origination_month"] += 1
                 continue
+            vintage = str(year) if 2013 <= year <= 2024 else "unknown"
+            by_vintage_population[vintage]["population"]["puf_mortgages"] += 1
             if not (2013 <= year <= 2024 and 1 <= month <= 12):
+                by_vintage_population[vintage]["exclusions"]["invalid_origination_month"] += 1
                 partitions["invalid_origination_month"] += 1
                 continue
 
@@ -178,17 +185,19 @@ def audit(path: Path) -> dict:
                     pass
             statuses = [row[i].strip().upper() for i in idx]
             result = classify_first_entry_path(statuses, quarters, year, month, close)
-            vintage = str(year)
             if not result["entry"]:
                 reason = result["reason"]
                 partitions[reason] += 1
+                by_vintage_population[vintage]["exclusions"][reason] += 1
                 continue
 
             partitions["entered_risk_set"] += 1
+            by_vintage_population[vintage]["population"]["entered_risk_set"] += 1
             entry_state = result["entry_state"]
             entry_states[entry_state] += 1
             exit_class = result["exit"]
             exits_after_entry[exit_class] += 1
+            by_vintage_population[vintage]["exits"][exit_class] += 1
             key = (vintage, entry_state)
             by_vintage_state[key]["loans"]["entered"] += 1
             by_vintage_state[key]["exits"][exit_class] += 1
@@ -206,6 +215,15 @@ def audit(path: Path) -> dict:
                              "at_risk_quarter_intervals": sum(groups["intervals"].values()),
                              "intervals_by_class": dict(sorted(groups["intervals"].items())),
                              "first_exit_by_class": dict(sorted(groups["exits"].items()))})
+    vintage_population_rows = []
+    for year, groups in sorted(by_vintage_population.items()):
+        vintage_population_rows.append({
+            "origination_year": year,
+            "puf_mortgages": groups["population"]["puf_mortgages"],
+            "entered_risk_set": groups["population"]["entered_risk_set"],
+            "pre_entry_exclusions": dict(sorted(groups["exclusions"].items())),
+            "first_exit_after_entry": dict(sorted(groups["exits"].items())),
+        })
     return {
         "schema_version": "nsmo-first-entry-risk-set-feasibility-v1",
         "status": "PASS" if valid else "FAIL",
@@ -227,6 +245,7 @@ def audit(path: Path) -> dict:
         "risk_set_entry_by_state_unweighted": dict(sorted(entry_states.items())),
         "first_exit_after_entry_unweighted": dict(sorted(exits_after_entry.items())),
         "at_risk_quarter_intervals_by_start_state_unweighted": dict(sorted(intervals_by_state.items())),
+        "population_and_entry_by_origination_vintage_unweighted": vintage_population_rows,
         "by_origination_vintage_and_entry_state_unweighted": vintage_rows,
         "limitations": [
             "First-entry dynamic-monitoring support only; this is not origination PD and has no frozen estimand.",

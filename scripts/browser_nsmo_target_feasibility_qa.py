@@ -122,6 +122,16 @@ def main() -> None:
                 raise AssertionError(f"first-entry risk-set metrics do not match the verified receipt: {risk_metrics}")
             if page.locator("#first-entry-risk-set-table tbody tr").count() != 31:
                 raise AssertionError("first-entry risk-set table does not show all vintage/state groups")
+            selection_rows = page.locator("#first-entry-population-table tbody tr").all_inner_texts()
+            if len(selection_rows) != 12 or "2013" not in selection_rows[0] or "83.64%" not in selection_rows[0]:
+                raise AssertionError(f"vintage entry-selection reconciliation is incorrect: {selection_rows[:1]}")
+            if "2024" not in selection_rows[-1] or "96.39%" not in selection_rows[-1]:
+                raise AssertionError(f"latest-vintage entry-selection support is incorrect: {selection_rows[-1:]}")
+            missing_rows = page.locator("#first-entry-missing-table tbody tr").all_inner_texts()
+            if len(missing_rows) != 12 or not all(value in missing_rows[0] for value in ("2013", "951", "6", "8")):
+                raise AssertionError(f"pre-entry missing-status classes do not reconcile for 2013: {missing_rows[:1]}")
+            if not all(value in missing_rows[-1] for value in ("2024", "65", "6", "4")):
+                raise AssertionError(f"pre-entry missing-status classes do not reconcile for 2024: {missing_rows[-1:]}")
             risk_note = page.locator("#first-entry-risk-set-note").inner_text()
             if "administrative end: 23,802" not in risk_note or "population entry partition is 57,311" not in risk_note:
                 raise AssertionError("first-entry risk-set censoring/support note is incomplete")
@@ -134,7 +144,11 @@ def main() -> None:
             page.locator("#target-vintage-band").select_option("2017-2019")
             if page.locator("#first-entry-risk-set-table tbody tr").count() != 3:
                 raise AssertionError("shared vintage filter does not narrow first-entry risk-set rows")
-            checks.append("first-entry state and shared vintage filters update the table")
+            if page.locator("#first-entry-population-table tbody tr").count() != 3:
+                raise AssertionError("shared vintage filter does not narrow entry-selection rows")
+            if page.locator("#first-entry-missing-table tbody tr").count() != 3:
+                raise AssertionError("shared vintage filter does not narrow pre-entry status rows")
+            checks.append("entry-state and shared vintage filters update risk-set and selection tables")
             page.locator("#risk-entry-state").select_option("all")
             page.locator("#target-vintage-band").select_option("all")
 

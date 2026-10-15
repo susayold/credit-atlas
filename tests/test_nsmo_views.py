@@ -267,6 +267,11 @@ def _write_first_entry_risk_set_receipt(root: Path, source_sha: str) -> None:
         "risk_set_entry_by_state_unweighted": {"C": 2},
         "first_exit_after_entry_unweighted": {"observed_90plus": 1, "administrative_end": 1},
         "at_risk_quarter_intervals_by_start_state_unweighted": {"C": 3},
+        "population_and_entry_by_origination_vintage_unweighted": [{
+            "origination_year": "2013", "puf_mortgages": 2, "entered_risk_set": 2,
+            "pre_entry_exclusions": {},
+            "first_exit_after_entry": {"observed_90plus": 1, "administrative_end": 1},
+        }],
         "by_origination_vintage_and_entry_state_unweighted": [{
             "origination_year": "2013", "entry_state": "C", "mortgages_entered": 2,
             "at_risk_quarter_intervals": 3, "intervals_by_class": {"C": 3},
@@ -433,6 +438,7 @@ def test_nsmo_first_entry_risk_set_is_hash_bound_and_aggregate_only(tmp_path):
     assert result["schema_version"] == "nsmo-first-entry-risk-set-feasibility-v1"
     assert result["risk_set_entry_by_state_unweighted"] == {"C": 2}
     assert result["first_exit_after_entry_unweighted"]["observed_90plus"] == 1
+    assert result["population_and_entry_by_origination_vintage_unweighted"][0]["puf_mortgages"] == 2
     assert "private-a" not in json.dumps(result)
 
 
@@ -451,6 +457,17 @@ def test_nsmo_first_entry_risk_set_rejects_nonreconciling_vintage(tmp_path):
     receipt["by_origination_vintage_and_entry_state_unweighted"][0]["mortgages_entered"] = 3
     target.write_text(json.dumps(receipt), encoding="utf-8")
     with pytest.raises(ValueError, match="vintage groups do not reconcile"):
+        NsmoViews(tmp_path).first_entry_risk_set_feasibility()
+
+
+def test_nsmo_first_entry_risk_set_rejects_nonreconciling_population_vintage(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    target = tmp_path / "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
+    receipt = json.loads(target.read_text(encoding="utf-8"))
+    receipt["population_and_entry_by_origination_vintage_unweighted"][0]["puf_mortgages"] = 3
+    target.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ValueError, match="vintage population counts do not reconcile"):
         NsmoViews(tmp_path).first_entry_risk_set_feasibility()
 
 
@@ -595,6 +612,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             risk_set = json.loads(response.read())
             assert response.status == 200
             assert risk_set["risk_set_entry_by_state_unweighted"] == {"C": 2}
+            assert risk_set["population_and_entry_by_origination_vintage_unweighted"][0]["entered_risk_set"] == 2
             assert "private-a" not in json.dumps(risk_set)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)

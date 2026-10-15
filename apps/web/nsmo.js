@@ -327,9 +327,17 @@ async function loadFirstEntryRiskSetFeasibility(){
 }
 function renderFirstEntryRiskSetFeasibility(data){
   const band=$('target-vintage-band'),entryChoice=$('risk-entry-state');
-  const outcomeLabels={observed_90plus:'Observed 90+',competing_adverse_7:'7',competing_adverse_8:'8',competing_adverse_9:'9',termination_competing:'Closed before next quarter',termination_same_month_ambiguous:'Same-month ambiguous',administrative_end:'Administrative end'};
   function draw(){
     const years=band.value==='all'?null:band.value.split('-').map(Number),entry=entryChoice.value;
+    const populationRows=(data.population_and_entry_by_origination_vintage_unweighted||[]).filter(row=>!years||(/^\d{4}$/.test(row.origination_year)&&Number(row.origination_year)>=years[0]&&Number(row.origination_year)<=years[1]));
+    $('first-entry-population-table').replaceChildren(table(['Origination year','PUF mortgages','Entered C/1/2','Entry share of vintage','Pre-entry 90+','Pre-entry 7–9','Pre-entry non-observation','Closed before entry','Closed same month','No post-open baseline','Other exclusions'],populationRows.map(row=>{
+      const excluded=row.pre_entry_exclusions||{},nonobs=Object.entries(excluded).filter(([key])=>key.startsWith('pre_entry_nonobservation_')||key.startsWith('pre_entry_unknown_')).reduce((sum,[,value])=>sum+Number(value),0),competing=Object.entries(excluded).filter(([key])=>key.startsWith('pre_entry_competing_')).reduce((sum,[,value])=>sum+Number(value),0),admin=Number(excluded.administratively_no_post_open_quarter||0)+Number(excluded.administratively_no_baseline||0),closed=Number(excluded.termination_before_entry||0),sameMonth=Number(excluded.termination_same_month_before_entry||0),event=Number(excluded.pre_entry_observed_90plus||0),known=nonobs+competing+admin+closed+sameMonth+event,allExcluded=Object.values(excluded).reduce((sum,value)=>sum+Number(value),0);
+      return [row.origination_year,n(row.puf_mortgages),n(row.entered_risk_set),pct(Number(row.entered_risk_set)/Number(row.puf_mortgages)),n(event),n(competing),n(nonobs),n(closed),n(sameMonth),n(admin),n(allExcluded-known)];
+    }),[1,2,3,4,5,6,7,8,9,10]));
+    $('first-entry-missing-table').replaceChildren(table(['Origination year','K · not reported by servicer','M · archive-history gap','S · suppressed','Other non-observation'],populationRows.map(row=>{
+      const excluded=row.pre_entry_exclusions||{},other=Object.entries(excluded).filter(([key])=>(key.startsWith('pre_entry_nonobservation_')&&!['pre_entry_nonobservation_K','pre_entry_nonobservation_M','pre_entry_nonobservation_S'].includes(key))||key.startsWith('pre_entry_unknown_')).reduce((sum,[,value])=>sum+Number(value),0);
+      return [row.origination_year,n(excluded.pre_entry_nonobservation_K||0),n(excluded.pre_entry_nonobservation_M||0),n(excluded.pre_entry_nonobservation_S||0),n(other)];
+    }),[1,2,3,4]));
     const rows=data.by_origination_vintage_and_entry_state_unweighted.filter(row=>(!years||(Number(row.origination_year)>=years[0]&&Number(row.origination_year)<=years[1]))&&(entry==='all'||row.entry_state===entry));
     const entered=rows.reduce((sum,row)=>sum+Number(row.mortgages_entered),0),intervals=rows.reduce((sum,row)=>sum+Number(row.at_risk_quarter_intervals),0);
     const exits={};rows.forEach(row=>Object.entries(row.first_exit_by_class||{}).forEach(([key,value])=>exits[key]=(exits[key]||0)+Number(value||0)));

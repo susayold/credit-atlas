@@ -878,6 +878,40 @@ class NsmoViews:
                 or sum(exits.values()) != sum(entries.values()) or set(interval_totals) - set(entries)):
             raise ValueError("NSMO first-entry risk-set summary does not reconcile")
 
+        population_source = receipt.get("population_and_entry_by_origination_vintage_unweighted")
+        if not isinstance(population_source, list) or not population_source:
+            raise ValueError("NSMO first-entry vintage population groups are missing")
+        population_rows, population_years = [], set()
+        population_total = entered_total = 0
+        exclusion_totals: Counter[str] = Counter()
+        population_exit_totals: Counter[str] = Counter()
+        for item in population_source:
+            year = str(item.get("origination_year", ""))
+            if (year != "unknown" and (not year.isdigit() or not 2013 <= int(year) <= 2024)) or year in population_years:
+                raise ValueError("NSMO first-entry vintage population key is invalid")
+            population_years.add(year)
+            population_n = int(item.get("puf_mortgages", -1))
+            entered_n = int(item.get("entered_risk_set", -1))
+            exclusions = counts(item.get("pre_entry_exclusions"), set(partition) - {"entered_risk_set"}, row_count)
+            vintage_exits = counts(item.get("first_exit_after_entry"), set(exits), row_count)
+            if (population_n < 1 or entered_n < 0 or entered_n > population_n
+                    or entered_n + sum(exclusions.values()) != population_n
+                    or sum(vintage_exits.values()) != entered_n):
+                raise ValueError("NSMO first-entry vintage population counts do not reconcile")
+            population_total += population_n
+            entered_total += entered_n
+            exclusion_totals.update(exclusions)
+            population_exit_totals.update(vintage_exits)
+            population_rows.append({"origination_year": year, "puf_mortgages": population_n,
+                                    "entered_risk_set": entered_n,
+                                    "pre_entry_exclusions": exclusions,
+                                    "first_exit_after_entry": vintage_exits})
+        if (population_total != row_count or entered_total != partition.get("entered_risk_set")
+                or dict(exclusion_totals) != {key: value for key, value in partition.items()
+                                             if key != "entered_risk_set"}
+                or dict(population_exit_totals) != exits):
+            raise ValueError("NSMO first-entry vintage population totals do not reconcile")
+
         source_rows = receipt.get("by_origination_vintage_and_entry_state_unweighted")
         if not isinstance(source_rows, list) or not source_rows:
             raise ValueError("NSMO first-entry risk-set vintage rows are missing")
@@ -914,6 +948,7 @@ class NsmoViews:
             "definition": definition, "population_partition_unweighted": partition,
             "risk_set_entry_by_state_unweighted": entries, "first_exit_after_entry_unweighted": exits,
             "at_risk_quarter_intervals_by_start_state_unweighted": interval_totals,
+            "population_and_entry_by_origination_vintage_unweighted": population_rows,
             "by_origination_vintage_and_entry_state_unweighted": clean_rows,
             "limitations": receipt.get("limitations", []),
         }

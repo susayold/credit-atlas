@@ -135,6 +135,11 @@
           <div class="controls"><label>Trạng thái tại entry<select id="risk-entry-state"><option value="all">C/1/2 — tất cả</option><option value="C">C — current</option><option value="1">1 — 30–59 ngày</option><option value="2">2 — 60–89 ngày</option></select></label></div>
           <div id="first-entry-risk-set-metrics" class="metric-grid" aria-label="First-entry risk set feasibility"></div>
           <div id="first-entry-risk-set-note" class="target-note"></div>
+          <h3>Entry selection by origination vintage</h3>
+          <p class="footnote">Entry share chia số mortgage vào được risk set cho toàn bộ PUF mortgages cùng vintage; đây là mô tả selection vào mẫu, không phải event rate.</p>
+          <div id="first-entry-population-table" class="table-wrap"></div>
+          <h3>Pre-entry non-observation by codebook class</h3>
+          <div id="first-entry-missing-table" class="table-wrap"></div>
           <h3>Entry, exposure intervals và first exit theo vintage/state gốc</h3>
           <div id="first-entry-risk-set-table" class="table-wrap"></div>
           <p class="footnote">Đây là một chẩn đoán dynamic-monitoring có delayed entry, không phải origination PD. Các khoản có event 90+ hoặc missing trước entry bị loại; việc sống tới entry có thể tạo selection. Snapshot 3–6 là trạng thái quan sát, không có ngày event; close cùng tháng vẫn ambiguous. Không có weights, rate, target label hoặc model matrix.</p>

@@ -68,7 +68,7 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 94 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON, SEC rules/schedule/maturity/coverage/trend GET attachments with outage handling, and HMDA/FDIC Bank GET export failures with no fake downloads are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-028 | Partial | 94 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON, SEC rules/schedule/maturity/coverage/trend GET attachments with outage handling, HMDA/FDIC Bank GET export failures with no fake downloads are checked. Separate current UI acceptance covers 13 SEC and 10 ABS tasks plus 503 handling for Retail dossier, SBA report, ABS report, World Bank and sovereign reports; remaining task-specific Retail/export routes still need scoped checks |
 | M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 94/94 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
@@ -108,7 +108,7 @@ format/resource profiling and model-use qualification remain unverified.
 
 ## Next source-independent implementation
 
-1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market, HMDA, FDIC Bank and independent mortgage-source pages now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, scoped report exports, and their failure handling. Continue auditing remaining Retail, Business, ABS and country report/export routes.
+1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market, HMDA, FDIC Bank and independent mortgage-source pages now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, scoped report exports, and their failure handling. Business, ABS and country main-report failures are covered; continue with remaining Retail sub-workspace exports, ABS source/benchmark attachments and other route-specific cases.
 2. Keep M01-029 and R2/R3 open for authorized multi-vintage data; the descriptive report, UI, and no-fit gate are now reproduced, but empirical model qualification is data-gated.
 3. Continue source-independent audit and documentation cleanup without changing model claims or completion counts.
 
@@ -298,3 +298,18 @@ occurred and the Retail holdout access ledger digest was unchanged. Receipt and
 private screenshots: `artifacts/private/remaining-domains-qa-904024f23f91/`.
 This refreshes UX/task coverage; it does not change the D01 26/50 count, add
 loan-performance vintages, or qualify any model.
+
+## 2026-10-15 cross-workspace export failure continuation
+
+Extended the live-app acceptance to inject HTTP 503 only after each verified
+workspace had loaded. Retail model-dossier JSON, SBA aggregate report, ABS period
+report, World Bank country report, and sovereign-default report each showed the
+server error and produced no download. The receipt records the existing task
+checks plus these five delivery checks: 16/16 grouped checks passed with no
+JavaScript errors and the Retail holdout access ledger unchanged. Receipt and
+private screenshots: `artifacts/private/remaining-domains-qa-7f475e378476/`.
+The source-level NSMO review remains current: FHFA's 2026 PUF contains quarterly
+performance through 2025Q3 but requires acknowledgement of its monitoring notice
+and terms before download; Freddie/Fannie loan-level sources remain account or
+registration gated. No unrelated application/aggregate table is promoted to a
+mortgage-performance vintage. D01 stays at 26/50 and M01-028 remains Partial.

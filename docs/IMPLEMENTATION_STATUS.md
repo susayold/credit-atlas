@@ -81,6 +81,14 @@ chapter 47 of the consolidated research plan.
 - Latest after NSMO CSV-streaming extension: 1,577/1,577 passed via
   `scripts/test.ps1` in 341.4 seconds; receipt:
   `artifacts/private/test-suite-direct-20261015-nsmo-stream/receipt.json`.
+- Latest after FHFA NSMO v7.0 PUF audit, lowercase-header parser regression
+  coverage, and D02 documentation: full app/vendor suite **1,601/1,601 passed**
+  via `scripts/test.ps1` in 365.46 seconds. Receipt:
+  private local test receipt (omitted from this public release).
+  Actual PUF validation separately streamed **3,180,309** quarterly rows; the
+  aggregate-only profile and download hashes are private under
+  private local data-audit receipts (omitted from this public release). D01 remains at 26/50; NSMO is not a
+  Freddie vintage and no PD target/model was created.
 - M01-022 descriptive export is verified across five real-case scopes. The
   wrapper/report schemas, case/run/method digests, empty-year behavior,
   deterministic repeat, 50,000-ID scan and fail-closed unsupported metric

@@ -122,7 +122,10 @@ def wide_performance_to_long(
     Blank/missing status values remain explicit non-observations. The returned
     rows contain no synthesized outcome, PD, or competing-risk label.
     """
-    if id_column not in record or _empty(record[id_column]):
+    id_key = next(
+        (key for key in record if key.casefold() == id_column.casefold()), None
+    )
+    if id_key is None or _empty(record[id_key]):
         raise ValueError(f"Missing public-use loan identifier column {id_column!r}")
     columns = sorted(
         (column for column in record if _PERFORMANCE_COLUMN.fullmatch(column)),
@@ -131,7 +134,7 @@ def wide_performance_to_long(
     if not columns:
         raise ValueError("No quarterly NSMO Perf_Status_MMYY fields found")
 
-    loan_id = str(record[id_column]).strip()
+    loan_id = str(record[id_key]).strip()
     observations = []
     for column in columns:
         observations.append(
@@ -160,9 +163,13 @@ def iter_nsmo_performance_csv(
     with Path(path).open("r", encoding=encoding, newline="") as handle:
         reader = csv.DictReader(handle)
         headers = reader.fieldnames or []
-        if len(headers) != len(set(headers)):
+        if len({column.casefold() for column in headers}) != len(headers):
             raise ValueError("Duplicate NSMO CSV column names")
-        if id_column not in headers:
+        id_key = next(
+            (column for column in headers if column.casefold() == id_column.casefold()),
+            None,
+        )
+        if id_key is None:
             raise ValueError(f"Missing public-use loan identifier column {id_column!r}")
         performance_columns = sorted(
             (column for column in headers if _PERFORMANCE_COLUMN.fullmatch(column)),
@@ -173,7 +180,7 @@ def iter_nsmo_performance_csv(
 
         seen_ids: set[str] = set()
         for row_number, record in enumerate(reader, start=2):
-            loan_id = record.get(id_column)
+            loan_id = record.get(id_key)
             if _empty(loan_id):
                 raise ValueError(f"Missing {id_column} at CSV row {row_number}")
             loan_id = str(loan_id).strip()

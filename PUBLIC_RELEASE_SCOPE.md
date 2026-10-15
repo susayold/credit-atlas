@@ -26,6 +26,15 @@ included as software/documentation. The production loan-level payload is not
 included; the user must first accept the publisher's current Terms of Use and
 acquire the data privately.
 
+The FHFA/CFPB NSMO v7.0 source review, codebook-grounded status parser, and
+aggregate-only audit script are included. The actual PUF was acquired privately
+after the project owner authorized the FHFA Notice of Monitoring and NMDB Terms
+gate; no NSMO ZIP/CSV, identifiers, row-level extracts, cookies, or private
+receipts are part of this public repository. Anyone reproducing the research
+must obtain the current PUF directly from FHFA and accept its current notice and
+terms themselves. The associated analysis note includes FHFA's required
+disclaimer and does not imply agency endorsement.
+
 
 ## Host-provided Excel builder dependency
 

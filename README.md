@@ -194,6 +194,19 @@ The current status and execution evidence are in `docs/IMPLEMENTATION_STATUS.md`
 The application is for local/private research. It does not make credit approvals,
 claim production/regulatory validation or present D3 event risk as accounting ECL.
 
+FHFA/CFPB NSMO is documented as a separate quarterly mortgage-performance case
+in [`docs/NSMO_D02_CASE_BUILD_PLAN_VI.md`](docs/NSMO_D02_CASE_BUILD_PLAN_VI.md).
+Its public-use file is not included. Obtain the current PUF directly from FHFA
+and accept FHFA's current notice and terms yourself; then run the aggregate-only
+profile, for example:
+
+    python scripts/audit_nsmo_puf.py <private-nsmo.csv> --output <private-audit.json>
+
+The script checks schema/IDs/status codes/weights and writes aggregate counts;
+it does not expose rows, identify individuals, define a PD target, or fit a
+model. Keep both input and output in private storage. See the source review for
+the FHFA-required analysis disclaimer.
+
 ## Run locally
 
 From the cloned repository directory in PowerShell:

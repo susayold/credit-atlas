@@ -110,3 +110,26 @@ def test_csv_stream_requires_unique_columns_and_performance_fields(tmp_path):
     path.write_text("NSMOID,Score_Orig_R\na,700\n", encoding="utf-8")
     with pytest.raises(ValueError, match="No quarterly"):
         list(iter_nsmo_performance_csv(path))
+
+
+def test_csv_stream_matches_fhfa_puf_lowercase_headers(tmp_path):
+    path = tmp_path / "nsmo-lowercase.csv"
+    path.write_text(
+        "nsmoid,perf_status_0313,perf_status_0613\nloan-a,P,C\n",
+        encoding="utf-8",
+    )
+    rows = list(iter_nsmo_performance_csv(path))
+    assert len(rows) == 2
+    assert rows[0]["nsmoid"] == "loan-a"
+    assert rows[0]["status_family"] == "pre_open"
+    assert rows[1]["status_family"] == "current"
+
+
+def test_csv_stream_rejects_case_insensitive_duplicate_headers(tmp_path):
+    path = tmp_path / "nsmo-duplicate-case.csv"
+    path.write_text(
+        "NSMOID,nsmoid,Perf_Status_0325\na,b,C\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="Duplicate NSMO CSV column"):
+        list(iter_nsmo_performance_csv(path))

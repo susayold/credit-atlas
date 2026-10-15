@@ -1,5 +1,24 @@
 # Verification toàn repository — 15/10/2026
 
+## Latest run after NSMO v7.0 private PUF acquisition and parser audit
+
+After adding lowercase-header support and focused regressions, `scripts/test.ps1`
+ran the full application and vendored-engine suite.
+
+| Kết quả | Số lượng |
+|---|---:|
+| Collected/executed | 1,601 |
+| Passed | 1,601 |
+| Failures/errors/skips | 0 / 0 / 0 |
+| Elapsed | 365.46 seconds |
+| Receipt | private local test receipt (omitted from this public release) |
+
+The source-specific NSMO unit file passes 11/11, including lowercase FHFA PUF
+headers and case-insensitive duplicate-header rejection. Separately, the actual
+private PUF parser streamed 3,180,309 status observations through 51 quarter
+columns without an unknown code; aggregate-only data checks are in
+private local data-audit receipts (omitted from this public release). This does not qualify a target or model.
+
 ## Latest run after Ginnie LoanPerf audit gate and parser
 
 `scripts/test.ps1` ran the full app and vendor suite after adding the Ginnie Mae

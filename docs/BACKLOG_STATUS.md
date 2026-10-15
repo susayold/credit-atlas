@@ -4,12 +4,13 @@ Checkpoint: 2026-10-15. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
-that is not available. An alternative FHFA/CFPB NSMO public-use mortgage sample
-was identified (2013–2024 originations; quarterly performance through 2025 Q3);
-its official documentation/codebook were acquired and reviewed. Its source-level
-monitoring/terms acknowledgement is pending user authorization, and the data
-payload has not been downloaded. NSMO must remain a separate source, not a new
-Freddie vintage. Three public macro series and retrospective context were
+that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample
+(2013–2024 originations; quarterly performance through 2025 Q3) was downloaded
+after explicit project authorization and completion of the official monitoring/terms gate.
+The 62,359-row, 587-column file passed structural, identifier, weight and
+performance-code-domain checks. It is held privately and remains a distinct
+source, not a new Freddie vintage; D02 target/state/censoring and field-level
+codebook audits remain. Three public macro series and retrospective context were
 acquired separately; they do not qualify the loan-level study. The Release 47
 public example/layout audit confirms field widths but finds disjoint loan IDs;
 no new Freddie annual vintage was added. A Ginnie Mae loan-performance quarterly/
@@ -44,7 +45,7 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-001 | Partial | Pinned 164-file engine and actual local source found; complete capability-gap audit still needed |
 | M01-002 | Verified for 2012 | Fresh eight-stage rebuild; 50,000 loans / 4,510,559 months; resource receipt |
 | M01-003 | Verified for supplied 2012 corpus | Release-47 trace audit covers 17 field sentinels, 20 categorical fields, 6 date fields, HARP flags, percentage-point casts, and 4,510,559 state/terminal mappings; see `docs/D01_CANONICAL_SEMANTIC_AUDIT_VI.md` and `artifacts/private/d01-canonical-semantics-e2fe2cdc8cbf/receipt.json`. Cross-vintage semantic compatibility remains open |
-| M01-004 | Partial | Runtime lock 19/19, 164 pinned engine hashes, D: storage and 0/969 private Git candidates verified; current 15-asset bundle scanned against 50,000 source IDs; latest full suite passes 1,577/1,577 after NSMO CSV-streaming parser. Earlier 1,568 run also passed in 21 fresh sequential batches. License metadata/engine redistribution rights and concurrent/full-model resource sign-off remain; see `docs/D01_RELEASE_READINESS_VI.md` and `docs/TEST_SUITE_2026-10-15_VI.md` |
+| M01-004 | Partial | Runtime lock 19/19, 164 pinned engine hashes, D: storage and 0/969 private Git candidates verified; current 15-asset bundle scanned against 50,000 source IDs; latest full suite passes 1,601/1,601 after lowercase NSMO PUF headers/parser regression checks. License metadata/engine redistribution rights and concurrent/full-model resource sign-off remain; see `docs/D01_RELEASE_READINESS_VI.md` and `docs/TEST_SUITE_2026-10-15_VI.md` |
 | M01-005 | Authentication blocked; code implemented | HTTP downloader + local import/atomic registration; official check confirms Freddie Clarity and Fannie Data Dynamics account gates; no new annual ZIP downloaded; public macro context completed separately; see `docs/D01_DATA_ACCESS_CHECK_2026-10-15_VI.md` |
 | M01-006 | Unmet | Multi-vintage canonical and layout comparison require additional qualified data |
 | M01-007 | Partial | 2012 segment support visible; multi-vintage qualification memo absent |
@@ -94,7 +95,7 @@ format/resource profiling and model-use qualification remain unverified.
 - Reproduction audit: docs/D01_REPRODUCTION_AUDIT_VI.md; foundation receipt at artifacts/private/d01-a24484b21a21/reproduction-pipeline-0415306845cd.json; final descriptive receipt at artifacts/private/d01-final-reproduction-qa42-20261015/receipt.json.
 - Case study: docs/D01_CASE_STUDY_VI.md (descriptive checkpoint; model claims explicitly gated).
 - Data access check: docs/D01_DATA_ACCESS_CHECK_2026-10-15_VI.md (official sources; no equivalent unauthenticated mortgage-performance panel found).
-- NSMO alternative source review: docs/D01_NSMO_SOURCE_REVIEW_VI.md; official source docs under data/private/mortgage/nsmo-2026-05-27/source_docs; agreement gate pending, no PUF payload downloaded.
+- NSMO source review and private PUF audit: docs/D01_NSMO_SOURCE_REVIEW_VI.md; official documentation and raw CSV are kept in local private storage; detailed receipts are omitted from this public release. D02 is not model-qualified and must stay separate from D01.
 - Analyst findings: docs/D01_ANALYST_FINDINGS_VI.md; artifacts/private/d01-analyst-findings-a9579df23a87/receipt.json.
 - Episode denominator audit: docs/D01_EPISODE_DENOMINATORS_VI.md; artifacts/private/d01-episode-denominators-a3a3093f04b8/receipt.json; 24/24 follow-up status partitions reconcile.
 - Transition denominators: docs/D01_TRANSITION_DENOMINATORS_VI.md; docs/P2_TRANSITION_ACCEPTANCE_VI.md; artifacts/private/transition-acceptance-be68432843fc/receipt.json.
@@ -135,13 +136,15 @@ vendor suite has 1,581 passing tests; see
 `artifacts/private/test-suite-direct-20261015-nmdb-export/receipt.json`.
 
 Data audit: the next eligible D01 source is still not an unauthenticated Freddie
-annual sample. FHFA/CFPB NSMO is a distinct quarterly public-use sample, but the
-publisher requires an affirmative monitoring/terms acknowledgement before the
-microdata download; this run did not submit that acknowledgement or fetch the
-payload. Existing official codebook and parser remain ready for a separately
-authorized NSMO case. Freddie/Fannie account-gated loan-level files are still
-unavailable without an authenticated session. No extra dataset is being relabeled
-as a Freddie vintage. Multi-vintage model qualification remains data-gated.
+annual sample. FHFA/CFPB NSMO was downloaded after explicit project authorization and completion of the
+monitoring/terms acknowledgement. Its separate PUF audit found 62,359 unique
+sample mortgages, 587 columns, 51 consecutive quarterly status fields through
+2025Q3, valid positive analysis weights, and no malformed rows or unknown status
+codes. It is not interchangeable with the Freddie monthly panel and is not
+pooled or counted as a Freddie vintage. D02 needs codebook reconciliation,
+quarterly state/censoring rules, target protocol and a separate app workspace.
+Freddie/Fannie account-gated loan-level files are still unavailable without an
+authenticated session. Multi-vintage model qualification remains data-gated.
 
 The public FHFA NMDB aggregate mortgage-performance package was acquired and
 profiled separately: 261,856 unique rows, 13 columns, four performance series,
@@ -351,11 +354,12 @@ no model fit or qualification gate changed. The next engineering pass starts
 with Portfolio workbook/import/review deliveries and continues across other
 workspace-specific routes.
 
+
 ## 2026-10-15 Portfolio export failure acceptance
 
-P4 acceptance now covers inventory JSON and movement bridge exports end to end. It verifies downloaded JSON against the API response using explicit UTF-8 decoding, checks that missing risk inputs remain null and that cross-currency totals are not manufactured, and injects HTTP 503 into both export routes to confirm a visible error with no fake attachment. The expanded focused acceptance passes 11/11 grouped checks at `artifacts/private/p4-acceptance-qa-58361d0d2a27`; scenario, ECL, tail-risk, and convergence exports also match their API payloads and reject HTTP 503 without fake attachments.
+P4 acceptance passes 11/11 grouped checks at `artifacts/private/p4-acceptance-qa-58361d0d2a27`. Inventory and movement JSON match their API payloads with explicit UTF-8 decoding; missing risk stays null, cross-currency totals are not manufactured, and HTTP 503 creates no fake attachment. Scenario, ECL, tail-risk, and convergence exports also match their API payloads and show errors without downloads on HTTP 503.
 
-The combined Portfolio/Retail workbench acceptance also passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`: source-bound Portfolio summary and concentration, review drafts, native-currency Excel export and HTTP 503 behavior, on-demand movement/scenario tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroups, and client explanation export. An expected browser console error from the synthetic 503 is accounted for explicitly. This closes the tested P4 attachment paths; it does not close the full M01-028 route inventory. D01 remains 26/50, and no additional gated loan-performance data or model qualification gate changed.
+The combined Portfolio/Retail workbench acceptance passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`, covering Portfolio summary/concentration, review drafts, native-currency Excel, workbook failure behavior, on-demand tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroup and client-explanation flows. D01 remains 26/50; no additional gated mortgage-performance data or model qualification gate changed. M01-028 remains Partial pending the full route inventory.
 
 
 ## 2026-10-15 data refresh and new-source access check

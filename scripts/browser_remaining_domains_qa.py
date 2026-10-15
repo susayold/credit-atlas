@@ -31,14 +31,23 @@ def run():
         page.set_viewport_size({'width':390,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');page.screenshot(path=str(out/'business-mobile.png'),full_page=True)
         checks.append('390px Business status explorer and task strip do not overflow page')
         page.set_viewport_size({'width':1440,'height':1000});page.goto(base+'/?view=sec',wait_until='domcontentloaded')
-        expect(page.locator('#sec-ratios')).to_be_visible();assert page.get_by_role('tab').count()==4
+        expect(page.locator('#sec-ratios')).to_be_visible();assert page.get_by_role('tab').count()==13
+        sec_tasks=[('Payment rules','#sec-note-rules'),('Note cashflows','#sec-note-schedule'),('Utility DSCR','#utility-debt'),('Facilities & covenant','#sec-facilities'),('Issuer filings','#sec-events'),('Debt maturities','#sec-debt'),('Interest coverage','#sec-coverage'),('Corporate memo','#corporate-memos'),('Annual trends','#sec-trend'),('Financial statements','#sec-financial-fields'),('Concept evidence','.sec-evidence'),('Source quality','#sec-quality')]
+        for label,selector in sec_tasks:
+            page.get_by_role('tab',name=label,exact=True).click();expect(page.locator(selector).first).to_be_visible()
         page.get_by_role('tab',name='Financial statements',exact=True).click();expect(page.locator('#sec-financial-fields table')).to_be_visible()
         page.get_by_role('tab',name='Concept evidence',exact=True).click();expect(page.locator('.sec-evidence details').first).to_be_visible()
         page.locator('.sec-evidence summary').first.click();expect(page.locator('.sec-evidence details').first.locator('table')).to_be_visible()
         page.get_by_role('tab',name='Source quality',exact=True).click();expect(page.locator('#sec-quality')).to_contain_text('SEC API facts')
-        page.reload(wait_until='domcontentloaded');expect(page.locator('#sec-quality')).to_be_visible()
-        checks.append('SEC issuer/ratios, four tasks, exact concept evidence, quality and task/source reload')
-        page.goto(base+'/?view=abs',wait_until='domcontentloaded');expect(page.locator('#abs-period-metrics')).to_be_visible();assert page.get_by_role('tab').count()==5
+        page.set_viewport_size({'width':390,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');page.screenshot(path=str(out/'sec-quality-mobile.png'),full_page=True)
+        checks.append('SEC 13 tasks, issuer ratios, payment/cashflow rules, utility DSCR, facilities, filings, debt, coverage, memo, annual trends, statement/concept evidence and source quality render')
+        checks.append('390px SEC task strip and source-quality tables do not overflow')
+        page.set_viewport_size({'width':1440,'height':1000});page.reload(wait_until='domcontentloaded');expect(page.locator('#sec-quality')).to_be_visible()
+        checks.append('SEC selected task and source snapshot survive reload')
+        page.goto(base+'/?view=abs',wait_until='domcontentloaded');expect(page.locator('#abs-period-metrics')).to_be_visible();assert page.get_by_role('tab').count()==10
+        abs_tasks=[('Tổng quan','#abs-panel-overview'),('Waterfall','#abs-step-explorer'),('Tranches','#abs-tranche-detail'),('Đối chiếu','#abs-source-checks'),('Static pool','#abs-panel-pool-history'),('Managed pool','#abs-panel-managed-pool'),('ABS-EE coverage','#abs-panel-absee-profile'),('Định nghĩa ABS-EE','#abs-panel-absee-dictionary'),('SOFR nguồn','#abs-benchmark'),('Terms & giới hạn','#abs-qualification')]
+        for label,selector in abs_tasks:
+            page.get_by_role('tab',name=label,exact=True).click();expect(page.locator(selector).first).to_be_visible()
         page.get_by_role('tab',name='Waterfall',exact=True).click();expect(page.locator('.cashflow-step').first).to_be_visible()
         params={k:v[0] for k,v in parse_qs(urlparse(page.url).query).items()};report=get('/api/abs-period',{'view_id':params['abs_view_id'],'period':params['abs_period']})
         row=report['period']['result']['ledger'][1];page.locator('.cashflow-step').nth(1).click();expect(page.locator('#abs-step-detail')).to_contain_text(row['name'])
@@ -51,7 +60,8 @@ def run():
         page.get_by_role('tab',name='Waterfall',exact=True).click();page.get_by_label('ABS collection period').select_option(index=0);expect(page.locator('.cashflow-step').first).to_be_visible()
         assert 'workspace_tab=waterfall' in page.url
         page.reload(wait_until='domcontentloaded');expect(page.locator('#abs-step-explorer')).to_be_visible()
-        checks.append('ABS five tasks, selected priority exact paid/cash, tranche detail, checks/terms and period/task reload')
+        checks.append('ABS ten tasks render: reported waterfall, tranches, source checks, static/managed pools, ABS-EE profile/dictionary, SOFR and terms')
+        checks.append('ABS selected priority exact paid/cash, tranche detail and period/task reload')
         page.set_viewport_size({'width':390,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');page.screenshot(path=str(out/'abs-waterfall-mobile.png'),full_page=True)
         checks.append('390px ABS priority explorer and detail without page overflow')
         page.set_viewport_size({'width':1440,'height':1000});page.goto(base+'/?view=overview',wait_until='domcontentloaded');expect(page.locator('.mortgage-task-link')).to_have_count(9)

@@ -108,7 +108,7 @@ format/resource profiling and model-use qualification remain unverified.
 
 ## Next source-independent implementation
 
-1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market, HMDA, FDIC Bank and independent mortgage-source pages now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, scoped report exports, and their failure handling.
+1. Broaden M01-028 transport/error coverage to remaining relevant workspace APIs and delivery flows; D01 plus Market, HMDA, FDIC Bank and independent mortgage-source pages now check transition, episode-follow-up, monitoring, loan-search, timeline, provenance, prepared studies, loss diagnostics, findings/history/save, scoped report exports, and their failure handling. Continue auditing remaining Retail, Business, ABS and country report/export routes.
 2. Keep M01-029 and R2/R3 open for authorized multi-vintage data; the descriptive report, UI, and no-fit gate are now reproduced, but empirical model qualification is data-gated.
 3. Continue source-independent audit and documentation cleanup without changing model claims or completion counts.
 
@@ -281,3 +281,20 @@ UI reports the error without a fake download. Combined verified-case browser
 acceptance passes 92/92 at
 `artifacts/private/browser-qa-ed3b90bff36c/receipt.json`. M01-028 remains Partial
 because other workspace routes still require scoped checks.
+
+## 2026-10-15 cross-domain task acceptance refresh
+
+Re-ran `scripts/browser_remaining_domains_qa.py` against the live local app and
+actual registered sources. Its prior exact-count checks were stale: SEC now has
+13 tasks and ABS has 10. Updated the acceptance to visit every current SEC pane
+(issuer ratios, payment rules, note schedule, utility DSCR, facilities, filing
+timeline, maturities, coverage, corporate memo, annual trends, statement fields,
+concept evidence and source quality) and all ABS panes (overview, waterfall,
+tranches, source checks, static/managed pools, ABS-EE coverage/dictionary, SOFR
+and terms). The refreshed acceptance passed all 10 grouped checks: SBA's
+2,190,504-record explorer and dictionary, all SEC and ABS tasks, Mortgage
+transition/lifecycle details, reload state, and 390px layouts. No browser errors
+occurred and the Retail holdout access ledger digest was unchanged. Receipt and
+private screenshots: `artifacts/private/remaining-domains-qa-904024f23f91/`.
+This refreshes UX/task coverage; it does not change the D01 26/50 count, add
+loan-performance vintages, or qualify any model.

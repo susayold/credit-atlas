@@ -76,7 +76,7 @@ Latest successful acquisition:
 - CSV SHA-256: `e9a4181a75779dce90f933a2ed8fdf8b0bec24f83ba37d2c2a752184cb69a1da`
 - Rows / columns / unique keys: 261,856 / 13 / 261,856
 - National time series: 98 quarters, 2002Q1–2026Q2
-- Verification: acquisition profile tests 4/4 pass; latest D01 browser acceptance 51/51 pass, including aggregate charts, source caveats, JSON export/hash verification, and export-failure handling. The public source-only suite passes 1,392 tests; 195 tests requiring excluded local data/evidence are skipped by the explicit skip list.
+- Verification: acquisition profile tests 4/4 pass; latest D01 browser acceptance 51/51 pass, including aggregate charts, source caveats, JSON export/hash verification, and export-failure handling; local full-data suite 1,581/1,581 pass; public source-only suite 1,403 passed, with 196 tests skipped because their private data or machine-local evidence is excluded.
 
 The page and source metadata use the official [NMDB aggregate statistics page](https://www.fhfa.gov/data/nmdb)
 and the [FHFA data dictionary and technical notes dated 26 June 2026](https://www.fhfa.gov/document/d/nmdb/nmdb-aggregate-statistics-data-dictionary-technical-notes-2026q1.pdf).

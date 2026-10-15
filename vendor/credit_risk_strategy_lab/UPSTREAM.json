@@ -1,5 +1,5 @@
 {
-  "repository": "user-owned private upstream repository; source commit is pinned below",
+  "repository": "https://github.com/susayold/credit-risk-strategy-lab",
   "commit": "8d9994cfcb91fe871d66a4238c3f56053d71e920",
   "pinned_at": "2026-10-08T11:47:32.485526+00:00",
   "method": "selective_git_blob_copy",

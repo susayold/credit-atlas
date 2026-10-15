@@ -31,6 +31,7 @@ const sources = [
     assessment: "Đánh giá / giới hạn trend",
   }],
   ["Do nhay horizon", "NSMO_HORIZON_SENSITIVITY_2026-10-16.csv", {
+    scope: "Phạm vi", origination_year: "Năm giải ngân",
     horizon_quarters: "Kỳ hạn (quý)", horizon_months: "Kỳ hạn xấp xỉ (tháng)",
     c_baseline_snapshots_with_full_horizon: "Baseline C snapshots đủ follow-up",
     unique_mortgages_with_c_baseline: "Mortgage unique baseline",
@@ -48,11 +49,11 @@ const guideRows = [
   ["CreditAtlas · NSMO v7.0 research workbook", ""],
   ["Mục đích", "Tra cứu codebook, category, coverage/wording theo wave và so sánh support quan sát được theo horizon; không chứa hồ sơ khoản vay."],
   ["Nguồn", "Bốn bảng metadata trong docs/data và một bảng aggregate-only trong docs; PUF gốc được giữ riêng, receipt private ràng buộc SHA-256."],
-  ["Cách dùng", "Năm sheet dữ liệu là Excel Table có bộ lọc. Bảng horizon giữ snapshot counts và mortgage unique thành cột số để phân tích."],
+  ["Cách dùng", "Năm sheet dữ liệu là Excel Table có bộ lọc. Bảng horizon có tổng PUF và breakdown theo năm giải ngân; count và mortgage unique là cột số để phân tích."],
   ["Mã category", "Giữ nguyên mã SAS/CSV, gồm -2 và -3; không tự gộp missing, not asked hoặc not applicable."],
   ["Coverage", "Phản ánh availability/mã quan sát theo wave; không tự chứng minh cùng cách đo hoặc đủ điều kiện làm predictor."],
   ["So sánh item", "Wording được rà trên questionnaire packages; đọc cột đánh giá trước khi so sánh trend giữa wave."],
-  ["Horizon sensitivity", "So sánh 6/12/24 tháng từ baseline C; cohort không lồng nhau. Đây là support/censoring, không phải event rate hoặc PD."],
+  ["Horizon sensitivity", "So sánh 6/12/24 tháng từ baseline C theo tổng PUF và năm giải ngân; cohort không lồng nhau. Đây là support/censoring, không phải event rate hoặc PD."],
   ["Làm mới", "Cập nhật CSV metadata/aggregate đã review, rồi chạy scripts/build_nsmo_reference_workbook.mjs với root project và output .xlsx."],
 ];
 guide.getRange(`A1:B${guideRows.length}`).values = guideRows;
@@ -97,13 +98,13 @@ for (let i = 0; i < sources.length; i += 1) {
     verticalAlignment: "top", wrapText: true,
   };
   if (sheetName === "Do nhay horizon") {
-    sheet.getRange(`A2:D${rows.length + 1}`).format.numberFormat = "#,##0";
-    sheet.getRange(`G2:H${rows.length + 1}`).format.numberFormat = "#,##0";
-    for (const [column, width] of [["A", 16], ["B", 19], ["C", 32], ["D", 24],
-                                   ["E", 24], ["F", 62], ["G", 24], ["H", 28]]) {
+    sheet.getRange(`C2:F${rows.length + 1}`).format.numberFormat = "#,##0";
+    sheet.getRange(`I2:J${rows.length + 1}`).format.numberFormat = "#,##0";
+    for (const [column, width] of [["A", 20], ["B", 18], ["C", 16], ["D", 20],
+                                   ["E", 32], ["F", 25], ["G", 22], ["H", 62], ["I", 24], ["J", 29]]) {
       sheet.getRange(`${column}:${column}`).format.columnWidth = width;
     }
-    sheet.getRange(`A2:H${rows.length + 1}`).format.rowHeight = 42;
+    sheet.getRange(`A2:J${rows.length + 1}`).format.rowHeight = 42;
   }
   sheet.getRangeByIndexes(0, 0, 1, headers.length).format.rowHeight = 42;
   const table = sheet.tables.add(`A1:${columnName(headers.length)}${rows.length + 1}`, true, `NSMOReference${i + 1}`);

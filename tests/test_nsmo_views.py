@@ -298,6 +298,19 @@ def _write_horizon_sensitivity_receipt(root: Path, source_sha: str) -> None:
                 "observed_90plus_event": 1,
                 f"observed_no_90plus_within_{quarters}_quarters": 1,
             },
+            "by_origination_year": [{
+                "origination_year": "2013",
+                "c_baseline_snapshots_with_full_horizon_unweighted": 2,
+                "unique_mortgages_with_at_least_one_c_baseline": 2,
+                "snapshot_outcomes_unweighted": {
+                    "observed_90plus_event": 1,
+                    f"observed_no_90plus_within_{quarters}_quarters": 1,
+                },
+                "unique_mortgages_by_outcome_nonexclusive": {
+                    "observed_90plus_event": 1,
+                    f"observed_no_90plus_within_{quarters}_quarters": 1,
+                },
+            }],
         })
     target.write_text(json.dumps({
         "status": "PASS", "target_created": False,
@@ -507,6 +520,7 @@ def test_nsmo_horizon_sensitivity_is_hash_bound_and_aggregate_only(tmp_path):
     assert result["schema_version"] == "nsmo-horizon-sensitivity-v1"
     assert [row["approx_months"] for row in result["horizon_results"]] == [6, 12, 24]
     assert result["horizon_results"][1]["snapshot_outcomes_unweighted"]["observed_90plus_event"] == 1
+    assert result["horizon_results"][1]["by_origination_year"][0]["origination_year"] == "2013"
     assert "private-a" not in json.dumps(result)
 
 
@@ -522,6 +536,17 @@ def test_nsmo_horizon_sensitivity_rejects_stale_and_nonreconciling_receipts(tmp_
     receipt["horizon_results"][1]["snapshot_outcomes_unweighted"]["observed_90plus_event"] = 2
     target.write_text(json.dumps(receipt), encoding="utf-8")
     with pytest.raises(ValueError, match="outcomes do not reconcile"):
+        NsmoViews(tmp_path).horizon_sensitivity()
+
+
+def test_nsmo_horizon_sensitivity_rejects_nonreconciling_vintage_totals(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_horizon_sensitivity_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    target = tmp_path / "artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json"
+    receipt = json.loads(target.read_text(encoding="utf-8"))
+    receipt["horizon_results"][1]["by_origination_year"][0]["snapshot_outcomes_unweighted"]["observed_90plus_event"] = 2
+    target.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ValueError, match="vintage outcomes do not reconcile"):
         NsmoViews(tmp_path).horizon_sensitivity()
 
 
@@ -576,6 +601,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
             assert "Độ dài cửa sổ và support quan sát được" in html
+            assert "horizon-sensitivity-vintage-table" in html
             assert "Chuyển trạng thái kề quý vào 90+" in html
             assert "Kênh phản hồi thay đổi theo wave" in html
             assert "usable-responses-table" in html

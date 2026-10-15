@@ -432,6 +432,22 @@ function renderHorizonSensitivity(data){
     return [`${row.approx_months} months`,n(row.c_baseline_snapshots_with_full_horizon_unweighted),n(row.unique_mortgages_with_at_least_one_c_baseline),n(outcomes.observed_90plus_event||0),n(unique.observed_90plus_event||0),n(outcomes[`observed_no_90plus_within_${row.horizon_quarters}_quarters`]||0),n(competing),n(ambiguous),n(missing),n(adverse)];
   });
   $('horizon-sensitivity-table').replaceChildren(table(['Horizon','C baseline snapshots','Mortgages · baseline','90+ snapshots','Mortgages · 90+','No 90+ observed','Closed before next','Same-month ambiguous','Observation censor','Other adverse 7–9'],tableRows,[1,2,3,4,5,6,7,8,9]));
+  const band=$('target-vintage-band');
+  const yearsForBand=year=>{
+    if(String(year).length!==4||!Number.isFinite(Number(year)))return band.value==='all';
+    const y=Number(year);
+    if(band.value==='all')return true;
+    const [from,to]=band.value.split('-').map(Number);
+    return y>=from&&y<=to;
+  };
+  const vintageRows=[];
+  rows.forEach(row=>(row.by_origination_year||[]).filter(v=>yearsForBand(v.origination_year)).forEach(v=>{
+    const c=v.snapshot_outcomes_unweighted||{},missing=Object.entries(c).filter(([key])=>key.startsWith('observation_censor_')).reduce((sum,[,value])=>sum+Number(value),0);
+    const adverse=Number(c.observed_other_adverse_state_7||0)+Number(c.observed_other_adverse_state_8||0)+Number(c.observed_other_adverse_state_9||0);
+    vintageRows.push([`${row.approx_months}m`,v.origination_year,n(v.c_baseline_snapshots_with_full_horizon_unweighted),n(v.unique_mortgages_with_at_least_one_c_baseline),n(c.observed_90plus_event||0),n(v.unique_mortgages_by_outcome_nonexclusive?.observed_90plus_event||0),n(c[`observed_no_90plus_within_${row.horizon_quarters}_quarters`]||0),n(c.termination_competing_censor||0),n(c.termination_same_month_ambiguous||0),n(missing),n(adverse)]);
+  }));
+  $('horizon-sensitivity-vintage-table').replaceChildren(table(['Horizon','Origination year','C baseline snapshots','Mortgages · baseline','90+ snapshots','Mortgages · 90+','No 90+ observed','Closed before next','Same-month ambiguous','Observation censor','Other adverse 7–9'],vintageRows,[2,3,4,5,6,7,8,9,10]));
+  if(!band.dataset.horizonVintageBound){band.addEventListener('change',()=>renderHorizonSensitivity(data));band.dataset.horizonVintageBound='true';}
 }
 function loadDictionary(){
   fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});

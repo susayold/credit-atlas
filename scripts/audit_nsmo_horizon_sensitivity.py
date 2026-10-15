@@ -64,6 +64,7 @@ def audit(path: Path) -> dict:
             raise ValueError("NSMOID column is required for unique-mortgage support counts")
         close_status_i = positions["close_status_0925"]
         close_year_i, close_month_i = positions["close_year"], positions["close_month"]
+        open_year_i = positions["open_year"]
         status_indices = [positions[name.casefold()] for name in status_cols]
 
         counts: dict[int, Counter] = {horizon: Counter() for horizon in HORIZONS}
@@ -71,6 +72,15 @@ def audit(path: Path) -> dict:
             horizon: defaultdict(set) for horizon in HORIZONS
         }
         unique_eligible: dict[int, set[str]] = {horizon: set() for horizon in HORIZONS}
+        vintage_counts: dict[int, dict[str, Counter]] = {
+            horizon: defaultdict(Counter) for horizon in HORIZONS
+        }
+        vintage_eligible: dict[int, dict[str, set[str]]] = {
+            horizon: defaultdict(set) for horizon in HORIZONS
+        }
+        vintage_unique_outcomes: dict[int, dict[str, dict[str, set[str]]]] = {
+            horizon: defaultdict(lambda: defaultdict(set)) for horizon in HORIZONS
+        }
         seen_ids: set[str] = set()
         rows = width_errors = missing_ids = duplicate_ids = 0
         for row in reader:
@@ -87,6 +97,9 @@ def audit(path: Path) -> dict:
             else:
                 seen_ids.add(loan_id)
             close_status = row[close_status_i].strip()
+            origination_year = row[open_year_i].strip()
+            if not (origination_year.isdigit() and 1900 <= int(origination_year) <= 2100):
+                origination_year = "unknown"
             close = (
                 _close_ordinal(row[close_year_i].strip(), row[close_month_i].strip())
                 if close_status in {"2", "3", "4"} else None
@@ -104,6 +117,10 @@ def audit(path: Path) -> dict:
                     counts[horizon][outcome] += 1
                     unique_eligible[horizon].add(loan_id)
                     unique_outcomes[horizon][outcome].add(loan_id)
+                    vintage_counts[horizon][origination_year]["full_horizon_c_baseline_snapshots"] += 1
+                    vintage_counts[horizon][origination_year][outcome] += 1
+                    vintage_eligible[horizon][origination_year].add(loan_id)
+                    vintage_unique_outcomes[horizon][origination_year][outcome].add(loan_id)
 
     outcomes = []
     for horizon in HORIZONS:
@@ -120,6 +137,21 @@ def audit(path: Path) -> dict:
             "unique_mortgages_by_outcome_nonexclusive": {
                 key: len(ids) for key, ids in sorted(unique_outcomes[horizon].items())
             },
+                "by_origination_year": [
+                    {
+                        "origination_year": year,
+                        "c_baseline_snapshots_with_full_horizon_unweighted": year_counts["full_horizon_c_baseline_snapshots"],
+                        "unique_mortgages_with_at_least_one_c_baseline": len(vintage_eligible[horizon][year]),
+                        "snapshot_outcomes_unweighted": {
+                            key: value for key, value in sorted(year_counts.items())
+                            if key != "full_horizon_c_baseline_snapshots"
+                        },
+                        "unique_mortgages_by_outcome_nonexclusive": {
+                            key: len(ids) for key, ids in sorted(vintage_unique_outcomes[horizon][year].items())
+                        },
+                    }
+                    for year, year_counts in sorted(vintage_counts[horizon].items())
+                ],
         })
     passed = rows == 62359 and not (width_errors or missing_ids or duplicate_ids)
     return {

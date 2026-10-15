@@ -1017,6 +1017,61 @@ class NsmoViews:
                 raise ValueError("NSMO horizon-sensitivity outcomes do not reconcile to baseline support")
             if set(unique_counts) != set(counts):
                 raise ValueError("NSMO horizon-sensitivity unique support is incomplete")
+            vintage_source = item.get("by_origination_year")
+            if not isinstance(vintage_source, list) or not vintage_source:
+                raise ValueError("NSMO horizon-sensitivity vintage support is missing")
+            vintage_rows = []
+            vintage_snapshot_totals: dict[str, int] = {}
+            vintage_unique_totals: dict[str, int] = {}
+            prior_year = None
+            for vintage in vintage_source:
+                year = str(vintage.get("origination_year", ""))
+                if year != "unknown" and (not year.isdigit() or len(year) != 4):
+                    raise ValueError("NSMO horizon-sensitivity vintage year is invalid")
+                if prior_year is not None and year <= prior_year:
+                    raise ValueError("NSMO horizon-sensitivity vintage years must be unique and sorted")
+                prior_year = year
+                vintage_baseline = int(vintage.get("c_baseline_snapshots_with_full_horizon_unweighted", -1))
+                vintage_mortgages = int(vintage.get("unique_mortgages_with_at_least_one_c_baseline", -1))
+                vintage_counts_source = vintage.get("snapshot_outcomes_unweighted", {})
+                vintage_unique_source = vintage.get("unique_mortgages_by_outcome_nonexclusive", {})
+                if (vintage_baseline < 0 or vintage_mortgages < 0 or vintage_mortgages > vintage_baseline
+                        or not isinstance(vintage_counts_source, dict)
+                        or not isinstance(vintage_unique_source, dict)):
+                    raise ValueError("NSMO horizon-sensitivity vintage denominator is invalid")
+                vintage_counts_clean: dict[str, int] = {}
+                vintage_unique_clean: dict[str, int] = {}
+                for code, value in vintage_counts_source.items():
+                    if code not in counts:
+                        raise ValueError("NSMO horizon-sensitivity vintage outcome is invalid")
+                    count = int(value)
+                    if count < 0:
+                        raise ValueError("NSMO horizon-sensitivity vintage counts cannot be negative")
+                    vintage_counts_clean[code] = count
+                    vintage_snapshot_totals[code] = vintage_snapshot_totals.get(code, 0) + count
+                for code, value in vintage_unique_source.items():
+                    if code not in vintage_counts_clean:
+                        raise ValueError("NSMO vintage unique support lacks a matching snapshot outcome")
+                    count = int(value)
+                    if count < 0 or count > vintage_mortgages:
+                        raise ValueError("NSMO horizon-sensitivity vintage unique support is invalid")
+                    vintage_unique_clean[code] = count
+                    vintage_unique_totals[code] = vintage_unique_totals.get(code, 0) + count
+                if (sum(vintage_counts_clean.values()) != vintage_baseline
+                        or set(vintage_unique_clean) != set(vintage_counts_clean)):
+                    raise ValueError("NSMO horizon-sensitivity vintage outcomes do not reconcile")
+                vintage_rows.append({
+                    "origination_year": year,
+                    "c_baseline_snapshots_with_full_horizon_unweighted": vintage_baseline,
+                    "unique_mortgages_with_at_least_one_c_baseline": vintage_mortgages,
+                    "snapshot_outcomes_unweighted": vintage_counts_clean,
+                    "unique_mortgages_by_outcome_nonexclusive": vintage_unique_clean,
+                })
+            if (sum(int(row["c_baseline_snapshots_with_full_horizon_unweighted"]) for row in vintage_rows) != baseline_count
+                    or vintage_snapshot_totals != counts
+                    or sum(int(row["unique_mortgages_with_at_least_one_c_baseline"]) for row in vintage_rows) != mortgage_count
+                    or vintage_unique_totals != unique_counts):
+                raise ValueError("NSMO horizon-sensitivity vintage totals do not reconcile")
             clean_rows.append({
                 "horizon_quarters": quarters,
                 "approx_months": months,
@@ -1024,6 +1079,7 @@ class NsmoViews:
                 "unique_mortgages_with_at_least_one_c_baseline": mortgage_count,
                 "snapshot_outcomes_unweighted": counts,
                 "unique_mortgages_by_outcome_nonexclusive": unique_counts,
+                "by_origination_year": vintage_rows,
             })
         return {
             "schema_version": "nsmo-horizon-sensitivity-v1",

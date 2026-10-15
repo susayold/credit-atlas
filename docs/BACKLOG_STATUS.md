@@ -89,6 +89,20 @@ and the matching private receipt remain on D:. Focused API, app contract and
 workbook tests pass. This remains D02-5 feasibility evidence only; no target,
 rate, PD or model is created, and the estimand/censoring protocol remains open.
 
+### D02 continuation — origination-vintage horizon support, 2026-10-16
+
+Extended the verified 6/12/24-month feasibility audit to `Open_Year`, with
+snapshot and unique-mortgage outcomes reconciled back to each PUF-wide horizon.
+The app's existing vintage selector filters the added year table; the NSMO
+reference workbook's filterable horizon sheet now includes both full-population
+and year-level aggregate rows. `docs/NSMO_HORIZON_BY_VINTAGE_VI.md` records the
+interpretation and all 12 vintage summaries. The 2024 vintage has no eligible
+24-month baseline and the 2023 24-month support is 2,487 repeated snapshots
+from 1,773 loans. This demonstrates why row/snapshot volume cannot stand in for
+independent positives or PD feasibility. D02-5 estimand, censoring, competing
+event, and design choices remain open; D02-6 remains unstarted. PUF rows and
+identifiers remain private.
+
 | ID | Current status | Evidence / remaining requirement |
 |---|---|---|
 | M01-001 | Partial | Pinned 164-file engine and actual local source found; complete capability-gap audit still needed |

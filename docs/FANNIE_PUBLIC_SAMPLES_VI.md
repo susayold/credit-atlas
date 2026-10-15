@@ -37,6 +37,22 @@ Vào **Mortgage → Chất lượng**, dưới quality monitoring của Freddie 
 
 GET `/api/fannie-samples?family=all|single-family|multifamily`; GET `/api/fannie-samples-report` cùng filter xuất private JSON. Request verify profile, acquisition receipt và cả bảy file hashes. Export không chứa source loan IDs/record-level panel. Outage xóa result/export cũ ở source card; frozen Freddie quality vẫn giữ scope riêng.
 
+## Excel reference cho layout
+
+Workbook tra cứu schema được tạo tại private D:\\:
+`data/private/mortgage/fannie-public-samples-4d84128d3cb6/reference/CreditAtlas-Fannie-Layout-Reference.xlsx`.
+Workbook có 5 sheet: **Start here**, **SF performance** (114 field positions),
+**MF performance** (62 positions), **MF annual DSCR** (3 positions trong layout
+riêng) và **Categories** (45 enumeration blocks nguyên văn). Các sheet dữ liệu
+có filter, freeze header và cột mô tả/availability/notes theo layout PDF.
+
+Đây là workbook metadata để tra cứu schema và code khi thiết kế parser; nó
+không chứa loan-level sample hay production rows, không mở quyền Data Dynamics,
+không tạo crosswalk chuẩn hóa và không chứng minh compatibility giữa sample cũ
+với layout mới. Luôn giữ Single-Family, Multifamily và annual DSCR tách riêng.
+SHA-256, nguồn PDF và kết quả kiểm tra XLSX nằm trong private receipt
+`artifacts/private/fannie-excel-reference-20261016/receipt.json`.
+
 ## Evidence
 
 - Source `data/private/mortgage/fannie-public-samples-4d84128d3cb6/acquisition-complete.json`, SHA `860dcf9ea0bc879977dc854f23d424c869e2783fd30dc9f36695939533429124`.

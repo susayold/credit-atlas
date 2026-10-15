@@ -35,7 +35,7 @@ def main() -> None:
             if response is None or response.status != 200:
                 raise RuntimeError("NSMO page did not return HTTP 200")
             state = page.locator("#hud-fha-state")
-            state.get_by_text("HUD August 2026 report transcription loaded", exact=False).wait_for(timeout=15_000)
+            state.get_by_text("HUD August 2026 report loaded", exact=False).wait_for(timeout=15_000)
             checks.append("HUD aggregate API and benchmark card load")
             source_link = page.get_by_role("link", name="HUD report · Aug 2026")
             if source_link.get_attribute("href") != "https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf":
@@ -65,14 +65,28 @@ def main() -> None:
                 raise AssertionError("All Table 3 subgroup rows are not exposed")
             checks.append("credit-score subgroup renders; eight Table 3 panels remain selectable")
 
+            reason_rows = page.locator("#hud-new-90plus-reasons tbody tr").all_inner_texts()
+            foreclosure_rows = page.locator("#hud-foreclosure-statistics tbody tr").all_inner_texts()
+            recovery_rows = page.locator("#hud-reo-recovery tbody tr").all_inner_texts()
+            loss_rows = page.locator("#hud-reo-loss-components tbody tr").all_inner_texts()
+            if len(reason_rows) != 22 or "Partial" not in reason_rows[-1] or "51,483" not in page.locator("#hud-reason-metrics").inner_text():
+                raise AssertionError("HUD Table 2 reason coverage or latest partial-period summary is wrong")
+            if len(foreclosure_rows) != 37 or "0.28%" not in page.locator("#hud-foreclosure-metrics").inner_text():
+                raise AssertionError("HUD Table 4 foreclosure pipeline does not match August 2026")
+            if len(recovery_rows) != 50 or "50.5%" not in page.locator("#hud-recovery-metrics").inner_text() or "-3.7 pp" not in page.locator("#hud-recovery-metrics").inner_text():
+                raise AssertionError("HUD Table 5 national REO recovery does not match July 2026")
+            if len(loss_rows) != 13 or "49.48%" not in page.locator("#hud-loss-metrics").inner_text() or "$101,498" not in page.locator("#hud-loss-metrics").inner_text():
+                raise AssertionError("HUD Table 6 REO loss detail does not match July 2026")
+            checks.append("HUD Tables 2, 4, 5 and 6 render all source rows with scoped KPI summaries")
+
             with page.expect_download() as download_info:
-                page.get_by_role("link", name="Tải bảng HUD FHA Excel").click()
+                page.get_by_role("link", name="Tải Excel HUD FHA · đủ 6 bảng").click()
             download = download_info.value
             if download.suggested_filename != "CreditAtlas-HUD-FHA-Performance.xlsx":
                 raise AssertionError("HUD benchmark Excel filename is wrong")
             if download.path().read_bytes()[:2] != b"PK":
                 raise AssertionError("HUD benchmark Excel download is not an XLSX package")
-            checks.append("three-sheet HUD benchmark workbook downloads from the app")
+            checks.append("six-table HUD benchmark workbook downloads from the app")
 
             page.set_viewport_size({"width": 390, "height": 844})
             dimensions = page.evaluate("({w:document.querySelector('.hud-context-panel').clientWidth,s:document.querySelector('.hud-context-panel').scrollWidth,cols:getComputedStyle(document.querySelector('#hud-fha-metrics')).gridTemplateColumns.split(' ').length})")

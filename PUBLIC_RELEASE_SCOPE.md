@@ -55,8 +55,10 @@ performance, portfolio subgroups, new-90+ reported reasons, foreclosure
 statistics, REO recovery by geography, and REO loss components. It contains no
 FHA loan-level records, is not merged with NSMO/Freddie, and documents that the
 report PDF binary was not saved after direct retrieval returned HTTP 403. The
-D02 workbook includes every public CSV dataset as an Excel Table, with source
-definitions and scope notes; CSV remains the app's canonical input format.
+local NSMO context page renders all six source tables with separate KPI and
+denominator notes. The D02 workbook includes every public CSV dataset as an
+Excel Table, with source definitions and scope notes; CSV remains the app's
+canonical input format.
 
 The D02 Excel reference workbook also includes aggregate-only extractions of
 FHFA NSMO Technical Report v7.0 Tables 3–6: response counts by mail/online mode,

@@ -86,7 +86,7 @@ D01 panel.
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
 | D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587-row Excel feature-gate inventory and 319-row field/question/routing crosswalk; 587/587 header match, SAS labels/formats, Appendix D weighted-cell check, 319×46 wave coverage, questionnaire scale review and FHFA Tables 3–6 reconciliation | Structural coverage complete; routing inventory resolves 58 conditional rows to 12 gate fields, leaves 12 retired gateways unnamed, and identifies 249 rows without codebook conditions. Seven omitted question refs reconcile to applicable questionnaire items; x17g_1 remains flagged for a wording variant. Exact wave/mode path graph remains open; response-mode equivalence is not identifiable. Predictor allowlist remains closed; target/risk-set, as-of and governance reviews remain open. See `NSMO_RESPONSE_MODE_REVIEW_VI.md`, `NSMO_PREDICTOR_TIMING_REVIEW_VI.md` and `NSMO_ROUTING_REVIEW_VI.md`. |
 | D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete, including all 50 adjacent-quarter observed transition matrices. Candidate C/1/2 snapshots screened for a four-quarter horizon; unique-loan support and censoring by origination vintage are quantified. The first-entry audit partitions all 62,359 PUF loans by pre-entry reason and 2013–2024 vintage, then reconciles entry and exits; observed vintage entry share varies 83.64%–96.39%, mostly with pre-entry non-observation. This demonstrates nonuniform screen inclusion, not risk differences. Tied-month audit finds only code A (C: 42,236; 1: 126; 2: 21), but exact within-month ordering, differential censoring, and risk-set protocol remain open. |
-| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary with 319 survey-field wave coverage and nine item comparability notes. X94A detail surfaces its wording-version split. Target-feasibility panel compares one-landmark vs repeated-C support, an origination-month-aligned feasibility screen, distinct/repeated adjacent-to-90+ support by vintage, tied-month status counts, and first-entry population-selection reconciliation by vintage; all label unweighted counts and no-PD limitations and verify receipts against the PUF SHA. A separate FHFA NMDB aggregate benchmark adds 2002Q1–2026Q2 market-performance context through its own hash-checked API, selectable trend panel and 1,568-row Excel workbook; it does not change NSMO outcomes. A new Table 3 panel shows response mode counts; a Table 4–6 panel reconciles returns, usable responses and release scope, labels waves 47–48 outside the PUF, and makes the no-record-linkage limitation explicit. Other domain extensions remain open. |
+| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary with 319 survey-field wave coverage and nine item comparability notes. X94A detail surfaces its wording-version split. Target-feasibility panel compares one-landmark vs repeated-C support, an origination-month-aligned feasibility screen, distinct/repeated adjacent-to-90+ support by vintage, tied-month status counts, and first-entry population-selection reconciliation by vintage; all label unweighted counts and no-PD limitations and verify receipts against the PUF SHA. A separate FHFA NMDB aggregate benchmark adds 2002Q1–2026Q2 market-performance context through its own hash-checked API, selectable trend panel and 1,568-row Excel workbook; it does not change NSMO outcomes. A new Table 3 panel shows response mode counts; a Table 4–6 panel reconciles returns, usable responses and release scope, labels waves 47–48 outside the PUF, and makes the no-record-linkage limitation explicit. HUD FHA Tables 1–6 now render separately as aggregate-only context: monthly performance, 90+ reason mix, subgroup rates, foreclosure flow/stock/claims, geographic REO recovery and loss components, with source-specific denominators and caveats. HUD raw PDF and Portfolio Snapshot binary downloads remain blocked (HTTP 403); no loan-level HUD payload is claimed. Other eligible domain extensions remain open. |
 | D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Feasibility screens cover repeated/current-state C landmarks, earliest eligible C per loan, origination-aligned snapshots, adjacent-to-90+ transitions, and one-time dynamic entry after origination. The dynamic screen contains 57,311 entries, 695 first observed 90+ exits, and 887,861 unweighted loan-quarter intervals; entry share differs across vintages and is dominated by pre-entry missingness. These are distinct descriptive supports, not rates or incidence. None is frozen; population/estimand, competing risks, censoring/selection correction, predictor timing, and design variance remain unresolved. No target/PD/model outputs. See `NSMO_TARGET_FEASIBILITY_VI.md` and `NSMO_ORIGINATION_FEASIBILITY_VI.md`. |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started; current origination-aligned support (65 observed 90+ statuses) is insufficient to justify a multi-predictor model. Revisit only after target/estimand and additional validated outcome data are available. |
 
@@ -122,10 +122,10 @@ filterable Excel Tables with frozen headers/first column. The local download is
 `/downloads/nsmo-reference.xlsx`; details and refresh steps are in
 `NSMO_EXCEL_REFERENCE_VI.md`. Focused workbook/API tests pass 16/16 and the
 dictionary browser acceptance passes 7/7 with no page errors. At this checkpoint
-the long-running listener on port 8770 still serves the prior server version and
-returns 404 for the new download route; the route becomes available after the
-service reloads. The workbook itself is present in the workspace and public
-repository.
+the original listener on port 8770 served the prior server version. The local
+service has since been restarted with the public code version and now returns
+the Excel download routes from the private D: runtime root. Workbook and route
+changes are recorded in later continuation checkpoints.
 
 ### First-observed transition support — 16/10/2026
 
@@ -227,3 +227,25 @@ before returning `/api/nsmo-domains`.
 - [May 2026 weighted tabulations, Appendix D](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-d-v70.pdf)
 - [Official SAS labels](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_labels.sas) and [SAS formats](https://www.fhfa.gov/document/d/nsmo/nsmo_v70_formats.sas)
 - Detailed review: `D01_NSMO_SOURCE_REVIEW_VI.md`
+
+### HUD FHA Table 1–6 context extension — 16/10/2026
+
+The HUD benchmark now renders its remaining report tables in the app: Table 2
+new-90+ reason distributions (22 rows), Table 4 foreclosure flow/stock/claims
+(37), Table 5 geographic REO recovery (50), and Table 6 REO loss/disposition
+detail (13), in addition to the existing Table 1 monthly trend and 60 Table 3
+subgroups. The API validates the source schema/coverage and returns aggregate
+rows only. KPI cards identify partial reason periods, separate foreclosure
+flows from stock and annualized rate, show REO percentage-point changes, and
+state that Table 6 components do not sum to net loss. These HUD rows remain a
+separate program benchmark: they do not increase NSMO/Freddie loan support or
+change D02-5 target feasibility. HUD's direct PDF and XLSX downloads still
+return HTTP 403; no binary source acquisition is claimed.
+
+The HUD browser acceptance passes 7/7 grouped checks with no page errors,
+including all six table row counts, latest report KPI examples, Excel download
+and 390px mobile layout. Receipt is stored privately at
+`artifacts/private/hud-tables-browser-qa-20261016/receipt.json`. The D02 Excel
+bundle includes all 16 public source CSV tables across NSMO, NMDB and HUD, with
+19 total workbook sheets including guides/definitions. Four HUD detail-table
+CSV fixtures and workbook contracts are covered by the focused public tests.

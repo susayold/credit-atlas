@@ -23,12 +23,29 @@ contract tests pass 6/6, but no production file has been checked yet.
 On 2026-10-16, reviewed HUD's monthly FHA Single-Family Loan Performance Trends
 reports as a possible government-backed performance benchmark. The August 2026
 report supplies monthly delinquency/foreclosure, credit-score and cohort
-segments, and REO recovery/loss KPIs, but only as aggregate tables, not a
-loan-level target. Its companion Portfolio Snapshot contains different
-loan-level origination attributes and no performance history. Direct HTTP
-download probes for the current HUD PDF/XLSX returned 403, so neither payload
-was acquired and neither is counted as integrated data. See
+segments, new-90+ reason mix, foreclosure pipeline and REO recovery/loss KPIs,
+but only as aggregate tables, not a loan-level target. Tables 1–6 have now been
+transcribed from the official report text and integrated into six public CSVs,
+the HUD/D02 Excel workbooks and the NSMO context page. The companion Portfolio
+Snapshot contains different loan-level origination attributes and no
+performance history. Direct HTTP download probes for the current HUD PDF/XLSX
+returned 403, so the raw payloads remain unavailable and the text-derived
+aggregate is not represented as a binary-source acquisition. See
 `docs/HUD_FHA_SINGLE_FAMILY_PERFORMANCE_REVIEW_VI.md`.
+
+### D02 continuation — HUD tables surfaced in the app, 2026-10-16
+
+Completed the HUD Tables 2/4/5/6 extension in the separate NSMO-context page.
+The API and UI now expose new-90+ reason shares, foreclosure starts/stock/
+claims, state/territory REO recovery, and REO loss components beside existing
+Tables 1 and 3. Four KPI summaries carry table-specific denominator and
+interpretation caveats. Browser acceptance passed 7/7 grouped checks with no
+page errors; exact source-row coverage (22/37/50/13), July/August partial-period
+reason handling, latest national HUD KPIs, six-table Excel download and mobile
+layout were checked. Private evidence: `artifacts/private/hud-tables-browser-qa-20261016/receipt.json`.
+This improves D02-4 descriptive context only. It does not alter the D01 26/50
+completion count, qualify a Freddie vintage, or resolve D02-5/6. HUD PDF and
+Portfolio Snapshot binaries remain unavailable through ordinary HTTP (403).
 
 ## 2026-10-15 — Ginnie Mae separate-source preparation
 

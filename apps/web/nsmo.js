@@ -64,6 +64,8 @@ async function loadHudFhaBenchmark(){
     const adjustment=$('hud-adjustment');
     const dimension=$('hud-subgroup-dimension');
     const dimensionNames={loan_purpose:'Loan purpose',refinance:'Refinance',credit_score:'Origination credit score',fiscal_year_cohort:'Fiscal-year cohort',origination_loan_amount:'Loan amount at origination',property_type:'Property type',purchase_loan_type:'Purchase loan type',down_payment_assistance:'Down payment assistance'};
+    const reasonNames={reduction_income_pct:'Income reduction',unemployed_pct:'Unemployed',excessive_obligations_pct:'Excessive obligations',death_illness_pct:'Death / illness',marital_difficulties_pct:'Marital difficulties',no_contact_pct:'Unable to contact',national_emergency_pct:'National emergency',other_pct:'Other'};
+    const val=x=>x==null?'—':dec(x);
     const render=()=>{
       const latest=data.latest[adjustment.value];
       $('hud-fha-metrics').replaceChildren(
@@ -90,7 +92,63 @@ async function loadHudFhaBenchmark(){
       $('hud-fha-subgroups').replaceChildren(table(['Dimension','Parent','Category','IIF count','IIF share','Share basis','All past due','30 day','60 day','90+','Foreclosure','Bankruptcy','Serious delinquency','Source'],subgroups,[3,4,6,7,8,9,10,11,12]));
     };
     adjustment.addEventListener('change',render);dimension.addEventListener('change',render);render();
-    state.className='domain-state ok';state.textContent='HUD August 2026 report transcription loaded · 13 monthly observations × NSA/SA · 60 Table 3 rows across eight panels · aggregate only.';
+    const latestReason=data.new_90plus_reasons.at(-1);
+    const reasonKeys=Object.keys(reasonNames);
+    const topReason=reasonKeys.map(key=>({key,value:latestReason[key]})).sort((a,b)=>b.value-a.value)[0];
+    $('hud-reason-metrics').replaceChildren(
+      metric('Latest reported period',latestReason.fiscal_period,latestReason.partial_period?'Partial fiscal-quarter reporting':'Reported period'),
+      metric('Newly 90+ loans',n(latestReason.new_90plus_count),'HUD-reported Table 2 count'),
+      metric('Largest reported share',reasonNames[topReason.key],`${dec(topReason.value)}% · descriptive reason mix`)
+    );
+    const reasonRows=data.new_90plus_reasons.map(row=>[
+      row.fiscal_period,n(row.new_90plus_count),...reasonKeys.map(key=>dec(row[key])+'%'),
+      row.partial_period?'Partial':'Full',`p. ${row.source_page}`
+    ]);
+    $('hud-new-90plus-reasons').replaceChildren(table(['Fiscal period','New 90+','Income reduction','Unemployed','Excessive obligations','Death / illness','Marital difficulties','No contact','National emergency','Other','Period','Source'],reasonRows,[1,2,3,4,5,6,7,8,9]));
+
+    const latestForeclosure=data.foreclosure_statistics.at(-1);
+    $('hud-foreclosure-metrics').replaceChildren(
+      metric('Active FHA loans · beginning IIF',n(latestForeclosure.active_iif_count),`${latestForeclosure.month} ${latestForeclosure.fiscal_year}`),
+      metric('Monthly foreclosure starts',n(latestForeclosure.foreclosure_starts),'Flow during month'),
+      metric('Loans in foreclosure',n(latestForeclosure.in_foreclosure_count),'Portfolio stock'),
+      metric('Annualized claims rate',dec(latestForeclosure.annualized_foreclosure_rate_pct)+'%','Claims / beginning IIF, annualized')
+    );
+    const foreclosureRows=data.foreclosure_statistics.map(row=>[
+      `FY${row.fiscal_year}`,row.month,n(row.active_iif_count),n(row.foreclosure_starts),n(row.in_foreclosure_count),
+      n(row.foreclosure_claims_paid),n(row.foreclosure_starts_6m_moving_avg),dec(row.annualized_foreclosure_rate_pct)+'%',
+      `p. ${row.source_page}`
+    ]);
+    $('hud-foreclosure-statistics').replaceChildren(table(['Fiscal year','Month','Active IIF','Starts','In foreclosure','Claims paid','6-month starts avg','Annualized rate','Source'],foreclosureRows,[2,3,4,5,6,7]));
+
+    const nationalRecovery=data.reo_recovery.find(row=>row.state_or_territory==='US');
+    $('hud-recovery-metrics').replaceChildren(
+      metric('United States recovery',val(nationalRecovery.recovery_jul2026_pct)+'%','Jul 2026 · % of UPB at default'),
+      metric('Disposition count',n(nationalRecovery.dispositions_jul2026),'United States · Jul 2026'),
+      metric('Change vs June 2026',val(nationalRecovery.change_from_jun2026_pp)+' pp','Percentage-point change'),
+      metric('Change vs July 2025',val(nationalRecovery.change_from_jul2025_pp)+' pp','Percentage-point change')
+    );
+    const recoveryRows=data.reo_recovery.map(row=>[
+      row.state_or_territory,n(row.dispositions_jul2026),val(row.recovery_jul2026_pct)+'%',
+      val(row.recovery_jun2026_pct)+'%',val(row.recovery_jul2025_pct)+'%',
+      val(row.change_from_jun2026_pp),val(row.change_from_jul2025_pp),`p. ${row.source_page}`
+    ]);
+    $('hud-reo-recovery').replaceChildren(table(['State / territory','Dispositions · Jul 2026','Recovery · Jul 2026','Recovery · Jun 2026','Recovery · Jul 2025','Change vs Jun · pp','Change vs Jul 2025 · pp','Source'],recoveryRows,[1,2,3,4,5,6]));
+
+    const latestLoss=data.reo_loss_components[0];
+    $('hud-loss-metrics').replaceChildren(
+      metric('Net loss rate',dec(latestLoss.net_loss_rate_pct)+'%',`${latestLoss.disposition_month} · Table 6`),
+      metric('Average dollar loss','$'+n(latestLoss.average_dollar_loss),'Per reported disposition'),
+      metric('Average unpaid balance','$'+n(latestLoss.average_unpaid_balance),'Per reported disposition'),
+      metric('Dispositions',n(latestLoss.dispositions),`${latestLoss.discounts} reported discounts`)
+    );
+    const lossRows=data.reo_loss_components.map(row=>[
+      row.disposition_month,...['claim_expenses_pct','holding_costs_pct','loss_on_collateral_pct','sales_expense_pct','program_discounts_pct','net_loss_rate_pct'].map(key=>dec(row[key])+'%'),
+      '$'+n(row.average_dollar_loss),'$'+n(row.average_unpaid_balance),n(row.dispositions),n(row.discounts),
+      ...['delinquency_stage_months','foreclosure_stage_months','deed_transfer_stage_months','reo_stage_months','all_stages_months'].map(key=>dec(row[key])),
+      `p. ${row.source_page}`
+    ]);
+    $('hud-reo-loss-components').replaceChildren(table(['Disposition month','Claim expenses','Holding costs','Collateral loss','Sales expense','Program discounts','Net loss rate','Avg dollar loss','Avg unpaid balance','Dispositions','Discounts','Delinquency · mo','Foreclosure · mo','Deed transfer · mo','REO · mo','All stages · mo','Source'],lossRows,[1,2,3,4,5,6,7,8,9,10,11,12,13,14]));
+    state.className='domain-state ok';state.textContent='HUD August 2026 report loaded · Tables 1–6 · 13 monthly observations × NSA/SA · 60 subgroup rows · reason, foreclosure and REO detail · aggregate only.';
   }catch(error){state.className='domain-state error';state.textContent=`HUD FHA benchmark unavailable: ${error.message}`;}
 }
 async function loadNmdbContext(){

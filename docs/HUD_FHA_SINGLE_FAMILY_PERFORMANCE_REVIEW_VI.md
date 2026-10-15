@@ -89,12 +89,12 @@ The August 2026 PDF and monthly snapshot are linked from public HUD pages, but
 ordinary direct `HEAD` requests from this workspace returned HTTP 403 for both
 the XLSX snapshot and PDF report. The report text was reviewed through the
 available public web document view; no binary payload was acquired or access
-restriction bypassed. Table 1 and all 60 Table 3 rows were transcribed into a
-separate curated aggregate reference with source table/page, denominator
-definitions, an Excel workbook and an NSMO-page context panel; see
+restriction bypassed. Tables 1–6, including all 60 Table 3 rows, are now
+transcribed into six curated aggregate CSVs with source table/page and scope
+definitions, and shown in the app and Excel workbook; see
 `HUD_FHA_PERFORMANCE_BENCHMARK_VI.md`. There is still no local PDF hash or
-binary parser receipt. The aggregate capture is **integrated from public report
-text; raw PDF and portfolio snapshot download remain pending**.
+binary parser receipt. Aggregate report-text integration is complete for these
+six tables; raw PDF and portfolio snapshot acquisition remain pending.
 
 ## Official references
 

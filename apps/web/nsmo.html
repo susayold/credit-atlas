@@ -41,6 +41,32 @@
         </select></label></div>
         <div id="hud-fha-subgroups" class="table-wrap"></div>
         <p class="footnote">Table 1: 90-day category excludes loans in foreclosure/bankruptcy processing; serious delinquency = 90+ + foreclosure + bankruptcy. Table 3 uses active-loan denominators. HUD warns reporting methods may not reconcile across FHA reporting areas. Subgroup rates are descriptive and unadjusted.</p>
+        <div class="hud-detail-grid">
+          <section class="hud-detail-card">
+            <h3>New 90+ delinquency · reported reason mix</h3>
+            <p>HUD Table 2 counts new entries into 90+ and reports the distribution of coded reasons. Shares add to 100%; they are not borrower-level predictors or causal attributions. The latest July/August 2026 fiscal-quarter rows are partial.</p>
+            <div id="hud-reason-metrics" class="metric-grid" aria-label="HUD newly 90-day delinquency reasons summary"></div>
+            <div id="hud-new-90plus-reasons" class="table-wrap"></div>
+          </section>
+          <section class="hud-detail-card">
+            <h3>Foreclosure pipeline · flow, stock and claims</h3>
+            <p>HUD Table 4 separates monthly starts, loans currently in foreclosure, claims paid and the annualized claims rate. The rate is not the same as the portfolio share in foreclosure.</p>
+            <div id="hud-foreclosure-metrics" class="metric-grid" aria-label="HUD foreclosure pipeline summary"></div>
+            <div id="hud-foreclosure-statistics" class="table-wrap"></div>
+          </section>
+          <section class="hud-detail-card">
+            <h3>REO recovery by state or territory</h3>
+            <p>HUD Table 5 compares recovery against unpaid principal balance at default. Rates can exceed 100%; small disposition counts make local values volatile. Changes are percentage points.</p>
+            <div id="hud-recovery-metrics" class="metric-grid" aria-label="HUD REO recovery summary"></div>
+            <div id="hud-reo-recovery" class="table-wrap"></div>
+          </section>
+          <section class="hud-detail-card">
+            <h3>REO loss and disposition detail</h3>
+            <p>HUD Table 6 reports cost/loss components, average dollar amounts, disposition counts and time in each stage. The listed components are incomplete and do not sum to the net loss rate.</p>
+            <div id="hud-loss-metrics" class="metric-grid" aria-label="HUD REO loss summary"></div>
+            <div id="hud-reo-loss-components" class="table-wrap"></div>
+          </section>
+        </div>
       </section>
       <section class="panel nmdb-context-panel">
         <div class="section-head"><div><div class="eyebrow">SEPARATE NATIONAL BENCHMARK · FHFA NMDB</div><h2>Residential mortgage performance, 2002Q1–2026Q2</h2><p>Chuỗi aggregate cấp quốc gia theo quý, lấy từ mẫu NMDB 5%; dùng để đọc bối cảnh chu kỳ và khác biệt market, không ghép vào NSMO loan rows.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/nmdb-performance.xlsx">Tải workbook Excel · 1.568 dòng</a><a class="button secondary" href="https://www.fhfa.gov/data/nmdb" target="_blank" rel="noopener noreferrer">FHFA NMDB source ↗</a></div></div>

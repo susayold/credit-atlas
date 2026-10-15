@@ -99,10 +99,14 @@ def _write_public_dictionary(root: Path) -> None:
     data.mkdir(parents=True, exist_ok=True)
     fields = ["codebook_order,csv_column,codebook_name,codebook_part,survey_wave_ranges,survey_question_refs,codebook_condition,wave_variant_flags,quarter,pdf_page,printed_page,field_family,timing_class,predictor_use,sas_length,sas_format,sas_label"]
     for index in range(587):
-        fields.append(f"{index+1},field_{index},Field {index},A,,,,,,,,metadata,unknown,REVIEW,8,FMT,Label {index}")
+        family = "survey_response" if index == 0 else "metadata"
+        fields.append(f"{index+1},field_{index},Field {index},A,,,,,,,,{family},unknown,REVIEW,8,FMT,Label {index}")
     (data / "nsmo-v70-field-dictionary.csv").write_text("\n".join(fields) + "\n", encoding="utf-8")
     (data / "nsmo-v70-value-labels.csv").write_text(
         "format_name,format_value,format_label\nFMT,1,One\n", encoding="utf-8")
+    (data / "nsmo-v70-wave-coverage.csv").write_text(
+        "csv_column,observed_response_waves,entirely_not_asked_waves,partially_not_asked_waves,not_applicable_waves\n"
+        "field_0,1-46,,-,\n", encoding="utf-8")
 
 
 def _write_domain_receipts(root: Path, source_sha: str) -> None:
@@ -162,8 +166,10 @@ def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
 
     assert result["field_count"] == 587
     assert result["value_label_count"] == 1
+    assert result["wave_coverage_count"] == 1
     assert result["fields"][0]["csv_column"] == "field_0"
     assert result["value_labels"][0]["format_label"] == "One"
+    assert result["wave_coverage"][0]["observed_response_waves"] == "1-46"
 
 
 def test_nsmo_dictionary_rejects_incomplete_crosswalk(tmp_path):

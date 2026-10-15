@@ -21,6 +21,13 @@ D01 panel.
   and SAS label file; the sanitized dictionary records question/wave metadata,
   PDF location, timing class, and conservative predictor-use gates. The app now
   has a searchable dictionary and value labels from SAS formats.
+- Twenty-two deduplicated official questionnaire packages covering waves 1–46
+  are archived privately with source hashes. A PUF/SAS wave-coverage audit
+  reconciles 319 survey fields × 46 waves (14,674/14,674 field-wave cells) with
+  zero unmapped values; a sanitized 319-row coverage index is now shown in the
+  dictionary. It distinguishes observed response, all-row not-asked, partial
+  not-asked, and not-applicable waves. PDF question-number/text extraction is a
+  locator only; manual item/scale equivalence review remains open.
 - Appendix D Table 1 weighted tabulations were independently recomputed for
   seven survey fields × 11 origination years × purchase/refinance × three
   response categories: 462/462 cells match the published rounded percentages.
@@ -48,9 +55,9 @@ D01 panel.
 |---|---|---|---|
 | D02-0 — access and storage | Review FHFA gate/terms, download official v7.0, preserve source hashes, keep PUF private | Official URL, release, ZIP/CSV hashes, user authorization record, no secrets | Complete |
 | D02-1 — structural profile | Check schema, keys, row widths, vintages, quarterly fields, weight domains and code domain | Aggregate-only audit receipt; parser reconciles the actual PUF | Complete |
-| D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587/587 header match, 587 SAS labels, 59 formats / 377 value labels, timing gates and Appendix D 462/462 selected weighted-cell check | Core mapping and benchmark complete; questionnaire-variant interpretation and predictor allowlist still need review |
+| D02-2 — codebook reconciliation | Map every physical field to the 322 survey and 265 supplemental entries; distinguish wave variants, as-of timing, termination/forbearance/MTM-LTV and score series | Versioned 587-field dictionary, 587/587 header match, 587 SAS labels, 59 formats / 377 value labels, timing gates, Appendix D 462/462 selected weighted-cell check, and 319×46 SAS-coded wave coverage | Structural wave coverage complete and served in dictionary; item-level wording/routing/scale crosswalk and predictor allowlist still need manual review |
 | D02-3 — state and observation-risk audit | Produce per-quarter weighted/unweighted status distributions, transition counts, entry/exit and censoring profiles; reconcile `A/B/K/M/P/Q/S` semantics to FHFA documentation | Reconciled state matrix with denominators and a documented choice of valid observed risk set | Descriptive state/censoring audit complete, including all 50 adjacent-quarter observed transition matrices; formal risk-set/target protocol remains open |
-| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary; Edge QA passes against verified local PUF. Some analytical domain extensions remain open |
+| D02-4 — descriptive workspace | Add a separate UI/API with cohort, survey wave, borrower/mortgage mix, credit-score availability, delinquency-state snapshots, forbearance and termination views | Browser/API acceptance; every metric shows grain, numerator, denominator, weights and source caveat; no IDs | Aggregate dashboard covers origination year and 46 waves; 30 mortgage/borrower fields; five origination scores and 51 respondent quarterly-score snapshots; 23 forbearance quarters; termination and 50 transition pairs; searchable 587-field dictionary with 319 survey-field wave coverage; Edge QA passes against verified local PUF. Some analytical domain extensions remain open |
 | D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Not started; do not report PD/rates until frozen |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started |
 
@@ -105,6 +112,11 @@ python scripts\audit_nsmo_domain_aggregates.py `
 python scripts\audit_nsmo_weighted_tabulations.py `
   --puf-csv $puf --weighted-pdf "$docs\nsmo-appendix-d-v70.pdf" `
   --output artifacts\private\nsmo-weighted-tabulations\receipt.json
+python scripts\audit_nsmo_wave_response_coverage.py `
+  --puf-csv $puf --field-dictionary docs\data\nsmo-v70-field-dictionary.csv `
+  --value-labels docs\data\nsmo-v70-value-labels.csv `
+  --output artifacts\private\nsmo-wave-response-coverage\receipt.json `
+  --public-coverage-csv docs\data\nsmo-v70-wave-coverage.csv
 ```
 
 The live app verifies that the private aggregate receipts match the local PUF

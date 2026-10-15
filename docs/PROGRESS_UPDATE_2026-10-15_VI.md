@@ -1,5 +1,32 @@
 # Cập nhật tiến độ Credit Atlas — 15/10/2026
 
+## D02 tiếp tục — questionnaire và wave comparability
+
+Đã tải riêng **22 questionnaire package FHFA** cho wave 1–46, lưu source hashes
+và private receipts ngoài Git. Audit actual PUF×SAS đạt **14.674/14.674 ô**
+(319 survey variables × 46 waves), **0 unmapped values**. **130/319** trường có
+ít nhất một wave toàn bộ là mã `-3` not-asked; **188/319** có giá trị được gán
+trong cả 46 wave; **76/319** có mã `-2` not-applicable. Coverage theo field được
+thêm vào dictionary của `/nsmo`; đây là presence/missingness evidence, không
+phải bằng chứng measurement invariance.
+
+Đã phát hiện thang khác nhau rõ ở `x14a` / `x14a_1` (Important/Not important vs
+Very/Somewhat/Not at all) nên không được gộp mã 1/2. `x20j` thể hiện giá trị của
+đối chiếu PUF/SAS: câu trả lời xuất hiện ở waves 13–24, còn parser-derived range
+trong field map có thể gán nhầm. 22 questionnaire PDF đã được lấy; phép tách
+question-number tự động chỉ là locator vì numbering và PDF hai cột gây nhiễu.
+Review wording, routing, respondent role và scales bằng tay vẫn còn mở.
+
+Focused NSMO regressions: **15/15 PASS**. Full app/vendor suite sau thay đổi:
+**1.633/1.633 PASS** trong 331,96 giây. Chưa định nghĩa target/PD hay chốt risk
+set/variance; NSMO tiếp tục là D02 riêng, không ghép Freddie D01. Chi tiết:
+[wave comparability audit](NSMO_WAVE_COMPARABILITY_AUDIT_VI.md).
+Edge browser acceptance cho phần coverage mới đạt **4/4 PASS**, không có lỗi
+JavaScript; xác nhận trường `x20j`, `x14a` và `x14a_1` hiển thị đúng observed /
+not-asked ranges trong dictionary (`artifacts/private/nsmo-wave-coverage-browser-qa-20261015/receipt.json`).
+Public mirror suite: **1.437 passed, 196 skipped** (private-data gates). Raw
+questionnaire PDFs and exact count receipt remain private.
+
 ## D02 tiếp tục — domain analytics và field dictionary
 
 Đã hoàn thành crosswalk chính thức **587/587** cột PUF ↔ Appendix C/SAS labels,

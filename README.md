@@ -218,7 +218,11 @@ parsers with `python -m pip install -e ".[research]"`. Obtain the current FHFA
 PUF and review/accept its Notice of Monitoring and Terms directly with FHFA;
 keep the PUF and resulting private audit receipts outside Git. See the
 [NSMO D02 plan](docs/NSMO_D02_CASE_BUILD_PLAN_VI.md) for commands, scope, and
-the state/weighting limitations.
+the state/weighting limitations. The separate
+[wave-comparability audit](docs/NSMO_WAVE_COMPARABILITY_AUDIT_VI.md) documents
+the official questionnaire inventory, SAS-coded wave coverage index, and the
+remaining manual item/scale review. Questionnaire PDFs, raw PUF rows, and exact
+private receipts stay outside this repository.
 
 To download authorized annual sample URLs through HTTP:
 

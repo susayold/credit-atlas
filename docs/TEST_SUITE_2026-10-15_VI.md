@@ -1,5 +1,34 @@
 # Verification toàn repository — 15/10/2026
 
+## Latest run after NSMO questionnaire and wave-coverage audit
+
+After adding the official 22-package questionnaire inventory, SAS-coded
+response coverage across 319 fields and 46 waves, dictionary/API surfacing, and
+regressions, `scripts/test.ps1` ran the full app and vendored-engine suite.
+
+| Kết quả | Số lượng |
+|---|---:|
+| Collected/executed | 1,633 |
+| Passed | 1,633 |
+| Failures/errors/skips | 0 / 0 / 0 |
+| Elapsed | 331.96 seconds |
+| Focused NSMO tests | 15/15 passed |
+| JS syntax check | PASS: `apps/web/nsmo.js` |
+| Receipt | `artifacts/private/test-suite-direct-20261015-nsmo-wave-coverage/receipt.json` |
+
+The wave audit reconciles all 14,674 field-wave cells to official SAS domains;
+questionnaire PDFs and exact aggregate receipts remain in private storage.
+Automated text extraction is only a locator: wording/scale equivalence and the
+formal target/weighting protocol remain open.
+
+The isolated public mirror also passed **1,437 tests**, with **196 explicitly
+skipped** for excluded private data or machine-local receipts. The coverage CSV
+was added by its exact path to the public index; no `data/private/` payload was
+staged. Public mirror test receipt (kept locally):
+`artifacts/private/public-mirror-tests-20261015-nsmo-wave-coverage/receipt.json`.
+
+## Previous full-suite run after NSMO field dictionary integration
+
 ## Latest run after NSMO field dictionary integration
 
 `scripts/test.ps1` ran the entire app and vendored-engine suite after adding the

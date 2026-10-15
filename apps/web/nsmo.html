@@ -52,6 +52,19 @@
           <div><h3>Forbearance theo quý</h3><p class="footnote">Tỷ lệ chính chia số “In forbearance” cho các câu trả lời 1/2; Not applicable, Missing và blank không nằm trong mẫu số.</p><div id="forbearance-table" class="table-wrap"></div></div>
         </div>
       </section>
+      <section class="panel target-feasibility-panel">
+        <div class="section-head"><div><div class="eyebrow">TARGET PROTOCOL LAB · EXPLORATORY ONLY</div><h2>Endpoint support, landmark và censoring</h2><p>So sánh một mốc cho mỗi mortgage với các mốc C lặp theo quý; mọi bảng giữ nguyên mã 90+, adverse, termination và mất quan sát.</p></div></div>
+        <div id="target-feasibility-state" class="domain-state" role="status">Đang xác minh target-feasibility receipt…</div>
+        <div class="controls">
+          <label>Thiết kế landmark<select id="target-anchor-choice"><option value="single">Một C landmark / mortgage</option><option value="repeated">Mọi C landmark theo quý</option></select></label>
+          <label>Vintage origination<select id="target-vintage-band"><option value="all">Tất cả vintage</option><option value="2013-2016">2013–2016</option><option value="2017-2019">2017–2019</option><option value="2020-2021">2020–2021</option><option value="2022-2024">2022–2024</option></select></label>
+        </div>
+        <div id="target-feasibility-metrics" class="metric-grid" aria-label="Target feasibility metrics"></div>
+        <div id="target-feasibility-note" class="target-note"></div>
+        <h3>Outcome / censoring theo vintage</h3><div id="target-vintage-table" class="table-wrap"></div>
+        <h3>Support theo quý landmark</h3><div id="target-quarter-table" class="table-wrap"></div>
+        <p class="footnote">Mã 3–6 chỉ cho biết 90+ ngày trễ được quan sát tại một snapshot quý. “No 90+” yêu cầu đủ bốn snapshot quan sát được. Landmark lặp không độc lập; support theo outcome ở chế độ lặp không loại trừ nhau ở cấp khoản vay. Snapshot/loan counts là mô tả, không phải PD, incidence hoặc tỷ lệ default; trọng số và sai số lấy mẫu chưa được dùng.</p>
+      </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTER-TO-QUARTER · DESCRIPTIVE</div><h2>Ma trận chuyển trạng thái quan sát</h2><p>Mỗi ô là số chuyển tiếp loan-quarter giữa hai snapshot kề nhau, chỉ trong cặp có cả trạng thái nguồn và đích thuộc C/1–9.</p></div></div>
         <div class="controls"><label>Cặp quý<select id="transition-pair-choice"></select></label><label>Measure<select id="transition-basis"><option value="count">Mortgage transitions</option><option value="weight">Analysis-weight total</option></select></label></div>

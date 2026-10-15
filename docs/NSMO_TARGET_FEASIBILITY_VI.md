@@ -161,7 +161,10 @@ Trình tự khuyến nghị trước khi model:
 Hiện trạng D02-5: **preliminary candidate assessed; protocol not frozen; no
 target labels/model/PD created**. Audit code là
 `scripts/audit_nsmo_target_feasibility.py`; synthetic edge tests là
-`tests/test_nsmo_target_feasibility.py`.
+`tests/test_nsmo_target_feasibility.py`. Phần aggregate-only được phục vụ qua
+`GET /api/nsmo-target-feasibility`, hash-bound với cùng PUF SHA-256 như profile;
+trang `/nsmo` so sánh anchor, lọc vintage, xem support theo quý và giữ warning
+không diễn giải thành PD.
 
 ## Hạn chế nguồn
 

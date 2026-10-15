@@ -13,6 +13,7 @@ _ROOT = "data/private/mortgage/nsmo-2026-05-27"
 _RECEIPTS = "artifacts/private/nsmo-puf-20261015"
 _STATE_AUDIT = "artifacts/private/nsmo-performance-state-audit-20261015/receipt.json"
 _DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.json"
+_TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -273,4 +274,160 @@ class NsmoViews:
             "quarterly_forbearance": forbearance,
             "observed_state_transitions": transitions,
             "limitations": domains["limitations"] + state["limitations"],
+        }
+
+    def target_feasibility(self) -> dict:
+        """Serve source-bound exploratory target-support aggregates, never labels."""
+        profile = self.report()
+        receipt = read_json(contained(self.root, _TARGET_FEASIBILITY_AUDIT))
+        source_sha = profile["source"]["source_sha256"]
+        row_count = int(profile["sample"]["mortgages"])
+        schema = receipt.get("schema", {})
+        if (receipt.get("status") != "PASS"
+                or receipt.get("target_created") is not False
+                or receipt.get("source", {}).get("sha256") != source_sha
+                or int(schema.get("rows", -1)) != row_count
+                or int(schema.get("columns", -1)) != 587
+                or int(schema.get("quarterly_status_columns", -1)) != 51):
+            raise ValueError("NSMO target feasibility receipt is stale or does not match the verified PUF")
+
+        quarter_source = receipt.get("baseline_quarter_state_aggregates", [])
+        vintage_source = receipt.get("origination_vintage_baseline_aggregates", [])
+        anchor = receipt.get("one_landmark_per_mortgage_support", {})
+        anchor_vintages_source = anchor.get("outcomes_by_origination_vintage", [])
+        anchor_quarters_source = anchor.get("outcomes_by_landmark_quarter_and_vintage", [])
+        if not quarter_source or not vintage_source or not anchor_vintages_source:
+            raise ValueError("NSMO target feasibility aggregates are incomplete")
+        allowed_results = {
+            "four_quarters_observed_no_event", "observed_90plus_event",
+            "observed_other_adverse_state_7", "observed_other_adverse_state_8",
+            "observed_other_adverse_state_9", "termination_competing_censor",
+            "termination_same_month_ambiguous", "observation_censor_M",
+            "observation_censor_S", "administratively_short_followup",
+            "not_open_at_baseline",
+        }
+
+        def safe_counts(values: dict) -> dict[str, int]:
+            if not isinstance(values, dict) or set(values) - allowed_results:
+                raise ValueError("NSMO target feasibility result codes are invalid")
+            result = {str(key): int(value) for key, value in values.items()}
+            if any(value < 0 for value in result.values()):
+                raise ValueError("NSMO target feasibility counts cannot be negative")
+            return result
+
+        quarter_rows = []
+        quarter_totals: dict[str, dict[str, int]] = {}
+        for item in quarter_source:
+            state = str(item.get("baseline_state", ""))
+            quarter = str(item.get("baseline_quarter", ""))
+            if state not in {"C", "1", "2"} or not quarter:
+                raise ValueError("NSMO target feasibility quarter group is invalid")
+            raw_counts = dict(item.get("outcomes_unweighted", {}))
+            baseline_snapshot_count = int(raw_counts.pop("eligible_snapshot", -1))
+            if baseline_snapshot_count < 0:
+                raise ValueError("NSMO target feasibility baseline denominator is invalid")
+            counts = safe_counts(raw_counts)
+            quarter_rows.append({
+                "baseline_quarter": quarter,
+                "baseline_state": state,
+                "full_12m_snapshot_horizon_available": bool(item.get("full_12m_snapshot_horizon_available")),
+                "baseline_snapshot_count": baseline_snapshot_count,
+                "outcomes_unweighted": counts,
+            })
+            if item.get("full_12m_snapshot_horizon_available"):
+                totals = quarter_totals.setdefault(state, {})
+                for code, count in counts.items():
+                    totals[code] = totals.get(code, 0) + count
+
+        vintage_rows = []
+        vintage_totals: dict[str, dict[str, int]] = {}
+        c_unique = 0
+        c_unique_outcomes: dict[str, int] = {}
+        for item in vintage_source:
+            state = str(item.get("baseline_state", ""))
+            year = str(item.get("origination_year", ""))
+            if state not in {"C", "1", "2"} or not year:
+                raise ValueError("NSMO target feasibility vintage group is invalid")
+            counts = safe_counts(item.get("full_horizon_baseline_snapshots_unweighted", {}))
+            support = safe_counts(item.get("unique_mortgages_by_snapshot_outcome_class_nonexclusive", {}))
+            unique_n = int(item.get("unique_mortgages_with_at_least_one_full_horizon_baseline", -1))
+            if unique_n < 0 or unique_n > row_count or any(value > unique_n for value in support.values()):
+                raise ValueError("NSMO target feasibility unique-loan support is invalid")
+            vintage_rows.append({
+                "origination_year": year,
+                "baseline_state": state,
+                "full_horizon_baseline_snapshots_unweighted": counts,
+                "unique_mortgages_with_at_least_one_full_horizon_baseline": unique_n,
+                "unique_mortgages_by_snapshot_outcome_class_nonexclusive": support,
+            })
+            totals = vintage_totals.setdefault(state, {})
+            for code, count in counts.items():
+                totals[code] = totals.get(code, 0) + count
+            if state == "C":
+                c_unique += unique_n
+                for code, count in support.items():
+                    c_unique_outcomes[code] = c_unique_outcomes.get(code, 0) + count
+        if quarter_totals != vintage_totals:
+            raise ValueError("NSMO target feasibility quarter and vintage totals do not reconcile")
+
+        anchor_vintages = []
+        anchor_totals: dict[str, int] = {}
+        anchor_loan_count = 0
+        for item in anchor_vintages_source:
+            year = str(item.get("origination_year", ""))
+            count = int(item.get("unique_mortgage_count", -1))
+            outcomes = safe_counts(item.get("first_eligible_c_landmark_outcomes_unweighted", {}))
+            if not year or count < 0 or sum(outcomes.values()) != count or count > row_count:
+                raise ValueError("NSMO one-landmark support is invalid")
+            anchor_vintages.append({"origination_year": year, "unique_mortgage_count": count,
+                                    "outcomes_unweighted": outcomes})
+            anchor_loan_count += count
+            for code, value in outcomes.items():
+                anchor_totals[code] = anchor_totals.get(code, 0) + value
+        if anchor_loan_count != c_unique:
+            raise ValueError("NSMO one-landmark cohort does not reconcile to unique C-landmark support")
+
+        anchor_quarters = []
+        anchor_quarter_totals: dict[str, int] = {}
+        for item in anchor_quarters_source:
+            year = str(item.get("origination_year", ""))
+            quarter = str(item.get("landmark_quarter", ""))
+            count = int(item.get("unique_mortgage_count", -1))
+            outcomes = safe_counts(item.get("outcomes_unweighted", {}))
+            if not year or not quarter or count < 0 or sum(outcomes.values()) != count:
+                raise ValueError("NSMO one-landmark quarter group is invalid")
+            anchor_quarters.append({"origination_year": year, "landmark_quarter": quarter,
+                                    "unique_mortgage_count": count, "outcomes_unweighted": outcomes})
+            for code, value in outcomes.items():
+                anchor_quarter_totals[code] = anchor_quarter_totals.get(code, 0) + value
+        if anchor_quarter_totals != anchor_totals:
+            raise ValueError("NSMO one-landmark quarter and vintage totals do not reconcile")
+
+        return {
+            "schema_version": "nsmo-target-feasibility-v1",
+            "status": "AVAILABLE",
+            "source_sha256": source_sha,
+            "target_created": False,
+            "candidate_definition": receipt.get("candidate_definition_for_feasibility_only", {}),
+            "repeated_landmarks": {
+                "quarter_state_rows": quarter_rows,
+                "origination_vintage_rows": vintage_rows,
+                "c_state_summary": {
+                    "unique_mortgages_with_at_least_one_full_horizon_baseline": c_unique,
+                    "unique_mortgages_by_snapshot_outcome_class_nonexclusive": c_unique_outcomes,
+                },
+            },
+            "one_landmark_per_mortgage": {
+                "selection_rule": anchor.get("selection_rule", ""),
+                "origination_vintage_rows": anchor_vintages,
+                "landmark_quarter_vintage_rows": anchor_quarters,
+                "summary": {"unique_mortgages": anchor_loan_count, "outcomes_unweighted": anchor_totals},
+            },
+            "limitations": [
+                "Exploratory feasibility counts only; this API creates no target labels, rates, PD, or model matrix.",
+                "Repeated quarterly landmarks are not independent; unique-outcome supports may overlap between classes.",
+                "Code 3–6 means 90+ days past due observed at a quarterly snapshot, not a dated default event.",
+                "Same-month closure ordering is unknown; termination and M/S gaps are retained as distinct outcomes/censoring.",
+                "Analysis weights are not used to compute rates or uncertainty; no survey variance method is specified.",
+            ],
         }

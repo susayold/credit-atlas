@@ -48,6 +48,7 @@ function render(profile){
   $('disclaimer').textContent=profile.required_fhfa_analysis_disclaimer;
   $('dashboard').hidden=false;$('state').hidden=true;
   loadDomainAnalysis();
+  loadTargetFeasibility();
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}
@@ -69,6 +70,53 @@ function renderDomains(data){
   const pairs=data.observed_state_transitions,pairChoice=$('transition-pair-choice'),basis=$('transition-basis');pairChoice.replaceChildren(...pairs.map((p,i)=>{const o=node('option','',`${p.from_quarter_end} → ${p.to_quarter_end}`);o.value=String(i);return o;}));
   const states=['C','1','2','3','4','5','6','7','8','9'];const drawMatrix=()=>{const p=pairs[Number(pairChoice.value)],weighted=basis.value==='weight',value=x=>weighted?x.weight_sum_descriptive_only:x.n,fromTotals=new Map();for(const x of p.transitions)fromTotals.set(x.from,(fromTotals.get(x.from)||0)+value(x));const byKey=new Map(p.transitions.map(x=>[`${x.from}>${x.to}`,x])),rows=states.map(from=>{const vals=states.map(to=>{const x=byKey.get(`${from}>${to}`);return x?`${weighted?dec(value(x)):n(value(x))} (${pct(value(x)/(fromTotals.get(from)||1))})`:'—';});return [from,...vals,weighted?dec(fromTotals.get(from)||0):n(fromTotals.get(from)||0)];});$('transition-meta').textContent=`${weighted?dec(p.transitions.reduce((a,x)=>a+value(x),0)):n(p.observed_to_observed_n)} observed→observed loan-quarter transitions; administrative/gap transitions are tallied separately (${Object.entries(p.all_pair_observation_classes).map(([k,v])=>`${k}: ${n(v)}`).join(' · ')}). ${weighted?'Analysis-weight sum; descriptive only.':'Unweighted count.'}`;const t=table(['From ↓ / To →',...states,weighted?'Weight total':'Row total'],rows,[...Array(11).keys()].slice(1));t.classList.add('transition-matrix');$('transition-matrix').replaceChildren(t);};pairChoice.addEventListener('change',drawMatrix);basis.addEventListener('change',drawMatrix);drawMatrix();
   $('limits').replaceChildren(...[...document.querySelectorAll('#limits li')].map(x=>x.cloneNode(true)),...data.limitations.map(x=>node('li','',x)));
+}
+async function loadTargetFeasibility(){
+  const state=$('target-feasibility-state');
+  try{const r=await fetch('/api/nsmo-target-feasibility',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderTargetFeasibility(body);state.className='domain-state ok';state.textContent='Receipt verified against this PUF SHA-256 · aggregate-only · no target labels produced.';}
+  catch(error){state.className='domain-state error';state.textContent=`Target-feasibility view unavailable: ${error.message}`;}
+}
+function renderTargetFeasibility(data){
+  const mode=$('target-anchor-choice'),band=$('target-vintage-band');
+  const results=['observed_90plus_event','four_quarters_observed_no_event','observed_other_adverse_state_7','observed_other_adverse_state_8','observed_other_adverse_state_9','termination_competing_censor','termination_same_month_ambiguous','observation_censor_M','observation_censor_S','administratively_short_followup','not_open_at_baseline'];
+  const labels={'observed_90plus_event':'Observed 90+','four_quarters_observed_no_event':'No 90+ · four observed quarters','observed_other_adverse_state_7':'Bankruptcy 13','observed_other_adverse_state_8':'Foreclosure / surrender','observed_other_adverse_state_9':'Other adverse disposition','termination_competing_censor':'Termination before next snapshot','termination_same_month_ambiguous':'Termination same-month ambiguity','observation_censor_M':'Archive gap (M)','observation_censor_S':'Suppressed (S)','administratively_short_followup':'Short administrative horizon','not_open_at_baseline':'Closed by baseline'};
+  const zero=()=>Object.fromEntries(results.map(k=>[k,0]));
+  const merge=(target,source)=>{for(const [key,value] of Object.entries(source||{}))target[key]=(target[key]||0)+Number(value||0);return target;};
+  const bandYears=value=>{if(value==='all')return null;const [a,b]=value.split('-').map(Number);return year=>Number(year)>=a&&Number(year)<=b;};
+  const numberOf=counts=>Object.values(counts||{}).reduce((a,b)=>a+Number(b||0),0);
+  function draw(){
+    const one=mode.value==='single',years=bandYears(band.value),rows=one?data.one_landmark_per_mortgage.origination_vintage_rows:data.repeated_landmarks.origination_vintage_rows.filter(x=>x.baseline_state==='C');
+    const selected=rows.filter(x=>!years||years(x.origination_year));let totals=zero(),basisTotal=0,uniquePositive=0,uniqueBaseline=0;
+    selected.forEach(x=>{const counts=one?x.outcomes_unweighted:x.full_horizon_baseline_snapshots_unweighted;merge(totals,counts);basisTotal+=one?Number(x.unique_mortgage_count):numberOf(counts);if(one)uniquePositive+=Number(counts.observed_90plus_event||0);else{uniqueBaseline+=Number(x.unique_mortgages_with_at_least_one_full_horizon_baseline||0);uniquePositive+=Number(x.unique_mortgages_by_snapshot_outcome_class_nonexclusive?.observed_90plus_event||0);}});
+    const censored=totals.termination_competing_censor+totals.termination_same_month_ambiguous+totals.observation_censor_M+totals.observation_censor_S;
+    $('target-feasibility-metrics').replaceChildren(
+      metric(one?'Unique mortgages · one landmark':'Full-horizon C snapshots',n(basisTotal),one?'One earliest eligible C snapshot per mortgage':'Each quarterly C snapshot is a separate baseline'),
+      metric(one?'90+ outcomes · unique mortgages':'90+ outcomes · snapshots',n(totals.observed_90plus_event),one?'One outcome per mortgage in this sizing diagnostic':'Primary observed endpoint candidate · codes 3–6'),
+      metric('Four observed quarters · no 90+',n(totals.four_quarters_observed_no_event),'Complete observed window; not a population negative rate'),
+      metric('Censored / ambiguous',n(censored),'Termination, same-month ordering, M and S')
+    );
+    $('target-feasibility-note').textContent=one
+      ?`One C landmark per mortgage: earliest C snapshot with four future quarterly snapshots and no known closure by baseline. This avoids repeated rows but is not an origination-date model. ${n(uniquePositive)} observed 90+ outcomes in the selected vintage scope; this is sample support, not PD.`
+      :`Repeated C landmarks: ${n(uniqueBaseline)} unique mortgages contribute at least one full-horizon snapshot, with ${n(uniquePositive)} distinct mortgages ever positive across their C landmarks. A loan may be positive at one landmark and negative/censored at another; these supports overlap and are not independent.`;
+    const vintageRows=selected.map(x=>{
+      const counts=one?x.outcomes_unweighted:x.full_horizon_baseline_snapshots_unweighted;
+      const row=[x.origination_year,n(one?x.unique_mortgage_count:numberOf(counts)),n(counts.observed_90plus_event||0),n(counts.four_quarters_observed_no_event||0),n(counts.observed_other_adverse_state_7||0),n(counts.observed_other_adverse_state_8||0),n(counts.observed_other_adverse_state_9||0),n(counts.termination_competing_censor||0),n(counts.termination_same_month_ambiguous||0),n(counts.observation_censor_M||0),n(counts.observation_censor_S||0)];
+      if(!one)row.push(n(x.unique_mortgages_with_at_least_one_full_horizon_baseline),n(x.unique_mortgages_by_snapshot_outcome_class_nonexclusive?.observed_90plus_event||0));
+      return row;
+    });
+    const headers=['Origination vintage',one?'Unique mortgages':'Baseline snapshots','Observed 90+','No 90+ · complete 4Q','Code 7','Code 8','Code 9','Terminated before snapshot','Same-month ambiguous','Gap M','Suppressed S'];
+    if(!one)headers.push('Unique loans with C baseline','Unique loans ever positive*');
+    $('target-vintage-table').replaceChildren(table(headers,vintageRows,[...Array(headers.length-1).keys()].slice(1)));
+    if(!one){
+      const quarterRows=data.repeated_landmarks.quarter_state_rows.filter(x=>x.baseline_state==='C').map(x=>{const c=x.outcomes_unweighted;return [x.baseline_quarter,x.full_12m_snapshot_horizon_available?'4Q available':'short horizon',n(numberOf(c)),n(c.observed_90plus_event||0),n(c.four_quarters_observed_no_event||0),n(c.termination_competing_censor||0),n(c.termination_same_month_ambiguous||0),n((c.observation_censor_M||0)+(c.observation_censor_S||0)),n(c.administratively_short_followup||0)];});
+      $('target-quarter-table').replaceChildren(table(['C baseline quarter','Follow-up support','Snapshots','90+','No 90+ complete','Termination','Same-month ambiguous','M/S','Short horizon'],quarterRows,[2,3,4,5,6,7,8]));
+    }else{
+      const grouped=new Map();for(const x of data.one_landmark_per_mortgage.landmark_quarter_vintage_rows){if(years&&!years(x.origination_year))continue;const g=grouped.get(x.landmark_quarter)||{n:0,counts:zero()};g.n+=Number(x.unique_mortgage_count);merge(g.counts,x.outcomes_unweighted);grouped.set(x.landmark_quarter,g);}
+      const quarterRows=[...grouped.entries()].sort((a,b)=>a[0].localeCompare(b[0])).map(([q,g])=>[q,n(g.n),n(g.counts.observed_90plus_event||0),n(g.counts.four_quarters_observed_no_event||0),n(g.counts.termination_competing_censor||0),n(g.counts.termination_same_month_ambiguous||0),n((g.counts.observation_censor_M||0)+(g.counts.observation_censor_S||0))]);
+      $('target-quarter-table').replaceChildren(table(['Earliest eligible C quarter','Unique mortgages','90+','No 90+ complete','Termination','Same-month ambiguous','M/S'],quarterRows,[1,2,3,4,5,6]));
+    }
+  }
+  mode.addEventListener('change',draw);band.addEventListener('change',draw);draw();
 }
 function loadDictionary(){
   fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});

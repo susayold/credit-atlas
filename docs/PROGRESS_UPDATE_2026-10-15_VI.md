@@ -2,11 +2,22 @@
 
 ## Cập nhật tiếp theo — 16/10/2026
 
-Public mirror đã nhận source-only feasibility screen D02-3/5 và docs protocol.
-Public regression trên mirror sau khi thêm single-anchor diagnostic đạt **1.448
-passed, 196 skipped** trong 540,90 giây; skips yêu cầu private payload/evidence
-theo public skiplist. `node --check`
-cho app cũng pass. Script target có synthetic tests riêng, không cần PUF để chạy.
+### Target-feasibility panel trong app D02
+
+Đã bổ sung API `/api/nsmo-target-feasibility` và panel trên `/nsmo`: chọn một C
+landmark/khoản vay hoặc mọi C landmark theo quý, lọc vintage, xem outcome/censor
+theo vintage và support theo quý. Endpoint chỉ phục vụ aggregate receipts đã xác
+minh đúng SHA-256 PUF; không xuất ID, loan rows hay target labels. Warning giải
+thích distinct support không phải PD, nhất là khi landmark lặp.
+
+QA: **1.646/1.646 local tests PASS**, Edge headless **6/6 PASS** (desktop/mobile,
+không có page errors); API route và hash mismatch được test. Private browser receipt:
+`artifacts/private/nsmo-target-feasibility-browser-qa-20261016/receipt.json`.
+
+Public mirror có source-only feasibility audit, API/UI và docs protocol.
+Regression chạy trên bản mirror mới đạt **1.450 passed, 196 skipped** trong
+284,84 giây; skip là các test cần private payload/evidence theo public skiplist.
+`node --check` cho `app.js` và `nsmo.js` đều pass.
 
 Đối chiếu Technical Documentation v7.0 mục 8–9: `Analysis_Weight` kết hợp
 sampling weight với non-response adjustment; FHFA cảnh báo simple-random-sample

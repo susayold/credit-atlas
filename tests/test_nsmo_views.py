@@ -160,6 +160,40 @@ def _write_domain_receipts(root: Path, source_sha: str) -> None:
     domain_path.write_text(json.dumps(domain), encoding="utf-8")
 
 
+def _write_target_feasibility_receipt(root: Path, source_sha: str) -> None:
+    target = root / "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    outcomes = {"observed_90plus_event": 1, "four_quarters_observed_no_event": 1}
+    target.write_text(json.dumps({
+        "status": "PASS", "target_created": False,
+        "source": {"sha256": source_sha},
+        "schema": {"rows": 2, "columns": 587, "quarterly_status_columns": 51},
+        "candidate_definition_for_feasibility_only": {"horizon": "four quarterly snapshots"},
+        "baseline_quarter_state_aggregates": [{
+            "baseline_quarter": "2013-03-31", "baseline_state": "C",
+            "full_12m_snapshot_horizon_available": True,
+            "outcomes_unweighted": {"eligible_snapshot": 2, **outcomes},
+        }],
+        "origination_vintage_baseline_aggregates": [{
+            "origination_year": "2013", "baseline_state": "C",
+            "full_horizon_baseline_snapshots_unweighted": outcomes,
+            "unique_mortgages_with_at_least_one_full_horizon_baseline": 2,
+            "unique_mortgages_by_snapshot_outcome_class_nonexclusive": outcomes,
+        }],
+        "one_landmark_per_mortgage_support": {
+            "selection_rule": "earliest eligible C",
+            "outcomes_by_origination_vintage": [{
+                "origination_year": "2013", "unique_mortgage_count": 2,
+                "first_eligible_c_landmark_outcomes_unweighted": outcomes,
+            }],
+            "outcomes_by_landmark_quarter_and_vintage": [{
+                "landmark_quarter": "2013-03-31", "origination_year": "2013",
+                "unique_mortgage_count": 2, "outcomes_unweighted": outcomes,
+            }],
+        },
+    }), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -208,11 +242,33 @@ def test_nsmo_domain_profile_rejects_audit_for_another_source(tmp_path):
         NsmoViews(tmp_path).domains()
 
 
+def test_nsmo_target_feasibility_is_hash_bound_and_reconciles_anchors(tmp_path):
+    csv = _workspace(tmp_path)
+    digest = hashlib.sha256(csv.read_bytes()).hexdigest()
+    _write_target_feasibility_receipt(tmp_path, digest)
+
+    result = NsmoViews(tmp_path).target_feasibility()
+
+    assert result["schema_version"] == "nsmo-target-feasibility-v1"
+    assert result["repeated_landmarks"]["c_state_summary"]["unique_mortgages_with_at_least_one_full_horizon_baseline"] == 2
+    assert result["one_landmark_per_mortgage"]["summary"]["outcomes_unweighted"]["observed_90plus_event"] == 1
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_target_feasibility_rejects_a_receipt_for_another_puf(tmp_path):
+    _workspace(tmp_path)
+    _write_target_feasibility_receipt(tmp_path, "0" * 64)
+
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).target_feasibility()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
     csv = tmp_path / "data/private/mortgage/nsmo-2026-05-27/puf/nsmo_v70_1324_puf.csv"
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    _write_target_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     source_web = Path(__file__).parents[1] / "apps" / "web"
     target_web = tmp_path / "apps" / "web"
     target_web.mkdir(parents=True)
@@ -228,6 +284,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             html = response.read().decode("utf-8")
             assert response.status == 200
             assert "D02 · SEPARATE NSMO CASE" in html
+            assert "Endpoint support, landmark và censoring" in html
         with urlopen(base + "/api/nsmo-profile", timeout=5) as response:
             payload = json.loads(response.read())
             assert response.status == 200
@@ -242,8 +299,16 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             domains = json.loads(response.read())
             assert response.status == 200
             assert len(domains["observed_state_transitions"]) == 50
+        with urlopen(base + "/api/nsmo-target-feasibility", timeout=5) as response:
+            feasibility = json.loads(response.read())
+            assert response.status == 200
+            assert feasibility["status"] == "AVAILABLE"
+            assert "private-a" not in json.dumps(feasibility)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-target-feasibility?run=unexpected", timeout=5)
         assert error.value.code == 400
     finally:
         server.shutdown()

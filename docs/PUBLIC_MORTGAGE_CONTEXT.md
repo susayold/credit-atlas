@@ -56,3 +56,21 @@ Each attempt creates a new private directory and preserves its success or
 failure receipt. Two earlier Python HTTP attempts timed out; they are retained
 as failed attempts rather than presented as successful downloads. Native curl
 completed the actual successful acquisition. Failed downloads are not used.
+
+## Refresh — 2026-10-16
+
+Re-fetched the three official FRED CSVs without credentials. The verified run is
+`data/private/public-context/fred-11216f1a2e33/run-complete.json`: 4,050 native
+observations and 171 case-aligned months. `MORTGAGE30US` now has 2,899 weekly
+observations through 2026-10-15 (one more than the 2026-10-08 snapshot);
+`UNRATE` remains through 2026-09-01 and quarterly `USSTHPI` through
+2026-04-01. SHA-256 checks are recorded in the private run receipt.
+
+The local D01 **Sources** view now serves verified latest values and the
+case-aligned 2012-01–2026-03 monthly series through `/api/mortgage-macro-context`.
+It shows unemployment, the within-month mean of native weekly mortgage-rate
+observations, and HPI at its native quarterly grain. The API verifies all
+receipt output hashes and does not silently fall back to an older successful
+run if the newest run is corrupt. These are latest-revised retrospective
+context, not historical point-in-time predictors, and they do not add a loan
+performance vintage or open the D01 model gate.

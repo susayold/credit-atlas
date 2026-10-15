@@ -169,6 +169,18 @@ Latest evidence:
   pending qualified multi-vintage model/calibration/final-OOT evidence; see
   D01_REPRODUCTION_AUDIT_VI.md and its private receipt.
 
+## 2026-10-16 continuation — refreshed mortgage macro context
+
+Re-fetched the official FRED unemployment, HPI and 30-year mortgage-rate
+series. The private receipt records 4,050 native observations; the Freddie Mac
+weekly mortgage series now runs through 2026-10-15, one week beyond the prior
+capture. Added a digest-verified `/api/mortgage-macro-context` endpoint and a
+D01 Sources panel with case-aligned monthly rate/unemployment history and
+native-quarter HPI. Tests fail closed on altered source bytes, corrupted newer
+runs, malformed coverage and unsupported query filters. This refresh adds no
+loan-performance vintage and does not qualify macro data as a point-in-time
+predictor; R2/R3 remain data-gated.
+
 ## 2026-10-16 continuation — NSMO origination-aligned support
 
 The current FHFA NSMO v7.0 PUF was already present in the private workspace, so

@@ -203,6 +203,12 @@ def handler_for(service: ResearchService):
                     from .hud_fha_performance import hud_fha_performance_report
                     self.send(200, hud_fha_performance_report(service.root), head=head)
                     return
+                if url.path == "/api/mortgage-macro-context":
+                    if query:
+                        raise ValueError("Mortgage macro context accepts no filters")
+                    from .mortgage_macro_context import report
+                    self.send(200, report(service.root), head=head)
+                    return
                 if url.path == "/api/nsmo-profile":
                     if query:
                         raise ValueError("NSMO profile accepts no filters")

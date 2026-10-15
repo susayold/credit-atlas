@@ -107,13 +107,13 @@ function selectedVintage(horizon=12){return state.data.snapshot.vintage_evidence
 function selectedMonths(){const d=state.data;return(state.segment==="all"?d.snapshot.monthly:d.monthly_by_segment[state.segment]||[]).filter(r=>(!state.from||date(r.period)>=state.from)&&(!state.to||date(r.period)<=state.to));}
 function selectedSupport(){if(state.segment!=="all")return state.data.observed_support.find(r=>r.segment===state.segment);const v=selectedVintage(12);return {source_loans:state.data.snapshot.loans,eligible_loans:v?.eligible_loans,positive:state.data.snapshot.outcomes.find(r=>r.outcome==="d3_event")?.loans};}
 function section(container,node){node.classList.add("section-space");container.append(node);}
-function lineChart(points,series,{percentage=false,label="",height=235}={}){
+function lineChart(points,series,{percentage=false,label="",height=235,suffix=""}={}){
   if(!points.length)return empty("Không có observations trong phạm vi đã chọn.");
   const width=680,pad={l:49,r:13,t:15,b:35},canvas=svg("svg",{viewBox:"0 0 "+width+" "+height,class:"chart",role:"img","aria-label":label});
   const values=series.flatMap(s=>points.map(p=>num(p[s.key]))).filter(v=>v!==null);
   if(!values.length)return empty("Metric unavailable; không hiển thị như zero.");
   const low=Math.min(...values,0),high=Math.max(...values,percentage ? 0.001 : 1),span=(high-low)||1,min=low<0?low*1.08:0,max=high>0?high*1.13:0,x=i=>pad.l+i/Math.max(1,points.length-1)*(width-pad.l-pad.r),y=v=>height-pad.b-(v-min)/(max-min)*(height-pad.t-pad.b);
-  for(let tick=0;tick<=4;tick++){const value=min+(max-min)*tick/4;canvas.append(svg("line",{x1:pad.l,y1:y(value),x2:width-pad.r,y2:y(value),class:"axis"}));svgText(canvas,pad.l-8,y(value)+3,percentage?percent(value,1):compact(value),{"text-anchor":"end"});}
+  for(let tick=0;tick<=4;tick++){const value=min+(max-min)*tick/4;canvas.append(svg("line",{x1:pad.l,y1:y(value),x2:width-pad.r,y2:y(value),class:"axis"}));svgText(canvas,pad.l-8,y(value)+3,percentage?percent(value,1):compact(value)+suffix,{"text-anchor":"end"});}
   [...new Set([0,Math.floor(points.length*.25),Math.floor(points.length*.5),Math.floor(points.length*.75),points.length-1])].forEach(i=>svgText(canvas,x(i),height-10,date(points[i].period),{"text-anchor":i===0?"start":i===points.length-1?"end":"middle"}));
   series.forEach(s=>{let path="",open=false;points.forEach((p,i)=>{const value=num(p[s.key]);if(value===null){open=false;return;}path+=(open?" L":" M")+x(i)+","+y(value);open=true;});canvas.append(svg("path",{d:path,class:"line-"+s.color}));});
   return canvas;
@@ -153,6 +153,7 @@ async function sources(container,generation){
   await cfpbMortgageTrendsPane(container,generation);
   await fhfaPudbPane(container,generation);
   await hudFhaIifPane(container,generation);
+  await mortgageMacroContextPane(container,generation);
   mortgageExcelLibraryPane(container);
 }
 function mortgageExcelLibraryPane(container){
@@ -164,6 +165,24 @@ function mortgageExcelLibraryPane(container){
   ['/downloads/ginnie-layout-reference.xlsx','Ginnie Mae · layout, codes & QA','Field definitions, categories và aggregate-only sample QA; không có row records.','CreditAtlas-Ginnie-LoanPerf-Reference.xlsx'],
  ];
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Các workbook chỉ giúp xem/lọc sample và codebook. Freddie Release 47 examples không làm tăng annual vintages; Fannie, Ginnie, NSMO, HMDA và Freddie giữ source/population riêng.',true));container.append(box);
+}
+async function mortgageMacroContextPane(container,generation){
+ const box=card('Mortgage macro context · US national','FRED latest-revised snapshot · context for D01, not point-in-time features');box.id='mortgage-macro-context';container.append(box);
+ try{
+  const d=await api('/api/mortgage-macro-context');if(generation!==renderGeneration)return;
+  if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Mortgage macro context unavailable.'));return;}
+  const byId=Object.fromEntries(d.series.map(s=>[s.series_id,s])),u=byId.UNRATE,m=byId.MORTGAGE30US,h=byId.USSTHPI;
+  const metrics=grid('three');append(metrics,
+   metric('Unemployment · '+u.last_known_reference_date,decimal(u.last_known_value,2)+'%','BLS monthly · seasonally adjusted'),
+   metric('30-year mortgage · '+m.last_known_reference_date,decimal(m.last_known_value,2)+'%','Freddie Mac weekly observation'),
+   metric('U.S. house price index · '+h.last_known_reference_date,decimal(h.last_known_value,1),'FHFA quarterly · 1980 Q1 = 100'));
+  const history=d.monthly_history,chart=card('Case-aligned monthly context',d.case_alignment.first_month+' → '+d.case_alignment.last_month+' · '+number(d.case_alignment.monthly_rows)+' months');
+  chart.append(lineChart(history,[{key:'unemployment_percent',color:'primary'},{key:'mortgage30_monthly_mean_percent',color:'secondary'}],{label:'Unemployment and 30-year mortgage rates in percent, case-aligned',suffix:'%'}),legend([['Unemployment · latest revised','primary'],['30-year mortgage · within-month weekly mean','secondary']]));
+  chart.append(table(['Month',{label:'Unemployment %',number:true},{label:'30-year mortgage monthly mean %',number:true},{label:'Weekly observations',number:true}],history.slice(-12).map(r=>[r.period.slice(0,7),decimal(r.unemployment_percent,2),decimal(r.mortgage30_monthly_mean_percent,2),number(r.mortgage30_observation_count)])));
+  const hpiRows=d.quarterly_hpi.slice(-8),hpiTable=card('FHFA house price index · native quarterly grain','No monthly interpolation · last '+number(d.case_alignment.hpi_quarters)+' quarters aligned to D01');
+  hpiTable.append(table(['Quarter',{label:'Index · 1980 Q1 = 100',number:true}],hpiRows.map(r=>[r.period.slice(0,7),decimal(r.index_1980_q1_100,1)])));
+  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Source','Frequency','Latest reference date',{label:'Observations',number:true}],d.series.map(s=>[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count)])));
+ }catch(error){if(generation===renderGeneration)box.append(empty('Không tải được macro context: '+error.message));}
 }
 async function cfpbMortgageTrendsPane(container,generation){
  const box=card('CFPB · Monthly mortgage delinquency by geography','County/state context · 2008–2025 · same NMDB sample family; not loan-level or independent validation');box.id='cfpb-mortgage-trends';container.append(box);

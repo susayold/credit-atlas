@@ -68,8 +68,8 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 80 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI/SEC workbook plus affordability JSON success and 503/HTTP-200-HTML rejection are checked. Other workspace API/delivery routes still need scoped checks |
-| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 80/80 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
+| M01-028 | Partial | 83 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON success and 503/HTTP-200-HTML rejection are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 83/83 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
 ## Evidence references
@@ -209,12 +209,12 @@ and no Fannie performance payload or D01 model gate changed.
 The direct-attachment handler did not cover three POST-based exports. Consolidated
 response validation for KPI Monitor, SEC and affordability downloads: API errors
 are parsed safely, HTML or unexpected MIME responses are rejected, and empty
-payloads do not create files. Real KPI and SEC XLSX downloads pass ZIP integrity
-and contain `xl/workbook.xml`; the affordability JSON keeps private scope and has
+payloads do not create files. Real KPI, SEC maturity and SEC interest-coverage XLSX
+downloads pass ZIP integrity and contain `xl/workbook.xml`; affordability JSON keeps private scope and has
 no credit decision. Injected HTTP 503 JSON and HTTP 200 HTML responses surface in
 the UI without creating fake files for all three flows. The fresh verified-case
-browser acceptance passes 80/80 at
-`artifacts/private/browser-qa-a950476234cd/receipt.json`; focused workbook and
+browser acceptance passes 83/83 at
+`artifacts/private/browser-qa-2d436bad58fc/receipt.json`; focused workbook and
 affordability backend tests pass 56/56. M01-028 remains Partial because other
 workspace APIs and delivery routes still require scoped acceptance. D01 data and
 model gates are unchanged.

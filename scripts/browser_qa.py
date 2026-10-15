@@ -431,6 +431,45 @@ def run(root: Path):
             sec_page.unroute("**/api/sec-debt-workbook")
             sec_page.close()
 
+            sec_standard_page = context.new_page()
+            sec_standard_downloads = []
+            sec_standard_page.on("download", lambda download: sec_standard_downloads.append(download.suggested_filename))
+            sec_standard_page.goto(base + "/?view=sec&workspace_tab=coverage", wait_until="networkidle")
+            sec_standard_button = sec_standard_page.get_by_role("button", name="Xuất SEC Excel", exact=True)
+            expect(sec_standard_button).to_be_visible(timeout=60000)
+            with sec_standard_page.expect_download(timeout=120000) as sec_standard_info:
+                sec_standard_button.click()
+            sec_standard_download = sec_standard_info.value
+            sec_standard_path = output / "sec-standard-workbook.xlsx"
+            sec_standard_download.save_as(str(sec_standard_path))
+            assert sec_standard_download.suggested_filename == "CreditAtlas-SEC-0000320193.xlsx"
+            with zipfile.ZipFile(sec_standard_path) as workbook:
+                assert workbook.testzip() is None
+                assert "xl/workbook.xml" in workbook.namelist()
+            assert sec_standard_downloads == ["CreditAtlas-SEC-0000320193.xlsx"]
+            checks.append("real SEC interest-coverage POST export downloads a readable XLSX workbook")
+            sec_standard_page.route("**/api/sec-workbook", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic SEC standard workbook outage"}))
+                if route.request.method == "POST" else route.continue_())
+            sec_standard_button.click()
+            expect(sec_standard_page.locator("#content .callout")).to_contain_text(
+                "Synthetic SEC standard workbook outage")
+            assert sec_standard_downloads == ["CreditAtlas-SEC-0000320193.xlsx"]
+            checks.append("HTTP 503 SEC standard workbook POST reports failure without creating a fake file")
+            sec_standard_page.unroute("**/api/sec-workbook")
+            sec_standard_page.locator("#content .callout").last.evaluate("e=>e.remove()")
+            sec_standard_page.route("**/api/sec-workbook", lambda route: route.fulfill(
+                status=200, content_type="text/html", body="<html>upstream login page</html>")
+                if route.request.method == "POST" else route.continue_())
+            sec_standard_button.click()
+            expect(sec_standard_page.locator("#content .callout")).to_contain_text(
+                "Research API returned an HTML page instead of a downloadable report")
+            assert sec_standard_downloads == ["CreditAtlas-SEC-0000320193.xlsx"]
+            checks.append("HTTP 200 HTML masquerading as SEC standard Excel is rejected without a fake file")
+            sec_standard_page.unroute("**/api/sec-workbook")
+            sec_standard_page.close()
+
             affordability_page = context.new_page()
             affordability_downloads = []
             affordability_page.on("download", lambda download: affordability_downloads.append(download.suggested_filename))

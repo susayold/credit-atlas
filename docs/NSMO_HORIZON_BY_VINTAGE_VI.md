@@ -73,12 +73,29 @@ landmark yields 156 unique mortgages with an observed 90+ status among 59,703
 loans. Reusing all eligible C landmarks yields 753 unique mortgages ever
 positive across those landmarks, but the outcome support overlaps by loan and
 landmarks from one loan are dependent. These are not alternate estimates of one
-common PD. A separate origination-month-aligned screen finds only 65 observed
-90+ statuses among the full PUF, so it cannot support an application-time
-underwriting claim. The dynamic first-entry screen has 57,311 entries and 695
-first observed 90+ exits over 887,861 loan-quarter intervals, but conditions on
-surviving and remaining observable until first entry; it answers a servicing
-monitoring question and has delayed-entry/selection concerns.
+common PD. The same contrast appears at other horizons:
+
+| Horizon | One earliest C landmark: eligible mortgages | One landmark: observed 90+ mortgages | Repeated C landmarks: full-horizon snapshots | Repeated landmarks: unique mortgages ever 90+ |
+|---|---:|---:|---:|---:|
+| 6 months | 61,645 | 41 | 926,331 | 623 |
+| 12 months | 59,703 | 156 | 872,888 | 753 |
+| 24 months | 55,701 | 302 | 770,257 | 735 |
+
+The one-landmark rule chooses the earliest C quarter with enough administrative
+follow-up, excluding loans known closed by that baseline. The repeated measure
+allows multiple C landmarks for the same loan; its unique-positive figure means
+at least one landmark was classified 90+, while its snapshot count is much
+larger and repeated. More repeated chances to observe an event increase the
+ever-positive support; this does not make it comparable to a single fixed
+landmark. Horizon cohorts also differ because recent landmarks lack long
+follow-up.
+
+A separate origination-month-aligned screen finds only 65 observed 90+ statuses
+among the full PUF, so it cannot support an application-time underwriting claim.
+The dynamic first-entry screen has 57,311 entries and 695 first observed 90+
+exits over 887,861 loan-quarter intervals, but conditions on surviving and
+remaining observable until first entry; it answers a servicing-monitoring
+question and has delayed-entry/selection concerns.
 
 Recommended next decision is to keep two scopes separate: (1) mark an
 origination-time PD/model as unsupported by this PUF; (2) if a model-development
@@ -93,7 +110,7 @@ This is a recommendation for the next D02-5 review, not a frozen target.
 
 - Full aggregate-by-outcome export: `NSMO_HORIZON_SENSITIVITY_2026-10-16.csv`.
 - Filterable Excel sheet: `apps/excel/templates/CreditAtlas-NSMO-Reference.xlsx`,
-  sheet `Do nhay horizon` (filter `Phạm vi` to `origination_year`).
+  sheet `Do nhay horizon` (filter `Cách chọn landmark` and `Phạm vi`).
 - Interactive view: `/nsmo`, “Độ dài cửa sổ và support quan sát được”; the
   existing vintage filter applies to the new year-by-year table.
 - Private receipt and PUF remain on D: and are bound by SHA-256; no loan IDs or

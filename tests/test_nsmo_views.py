@@ -311,6 +311,30 @@ def _write_horizon_sensitivity_receipt(root: Path, source_sha: str) -> None:
                     f"observed_no_90plus_within_{quarters}_quarters": 1,
                 },
             }],
+            "one_landmark_per_mortgage": {
+                "selection_rule": "earliest eligible C",
+                "mortgages_with_eligible_landmark": 2,
+                "outcomes_unweighted": {
+                    "observed_90plus_event": 1,
+                    f"observed_no_90plus_within_{quarters}_quarters": 1,
+                },
+                "unique_mortgages_by_outcome": {
+                    "observed_90plus_event": 1,
+                    f"observed_no_90plus_within_{quarters}_quarters": 1,
+                },
+                "by_origination_year": [{
+                    "origination_year": "2013",
+                    "mortgages_with_eligible_landmark": 2,
+                    "outcomes_unweighted": {
+                        "observed_90plus_event": 1,
+                        f"observed_no_90plus_within_{quarters}_quarters": 1,
+                    },
+                    "unique_mortgages_by_outcome": {
+                        "observed_90plus_event": 1,
+                        f"observed_no_90plus_within_{quarters}_quarters": 1,
+                    },
+                }],
+            },
         })
     target.write_text(json.dumps({
         "status": "PASS", "target_created": False,
@@ -521,6 +545,7 @@ def test_nsmo_horizon_sensitivity_is_hash_bound_and_aggregate_only(tmp_path):
     assert [row["approx_months"] for row in result["horizon_results"]] == [6, 12, 24]
     assert result["horizon_results"][1]["snapshot_outcomes_unweighted"]["observed_90plus_event"] == 1
     assert result["horizon_results"][1]["by_origination_year"][0]["origination_year"] == "2013"
+    assert result["horizon_results"][1]["one_landmark_per_mortgage"]["outcomes_unweighted"]["observed_90plus_event"] == 1
     assert "private-a" not in json.dumps(result)
 
 
@@ -708,6 +733,8 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             sensitivity = json.loads(response.read())
             assert response.status == 200
             assert [row["approx_months"] for row in sensitivity["horizon_results"]] == [6, 12, 24]
+            assert sensitivity["horizon_results"][0]["one_landmark_per_mortgage"]["mortgages_with_eligible_landmark"] == 2
+            assert sensitivity["horizon_results"][0]["by_origination_year"][0]["origination_year"] == "2013"
             assert "private-a" not in json.dumps(sensitivity)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)

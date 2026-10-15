@@ -25,42 +25,52 @@ def export(receipt_path: Path, output_path: Path, interpretation_path: Path) -> 
                            for row in csv.DictReader(stream)}
     interpretations.setdefault("CENSOR_OTHER", "Censor quan sát: mã thiếu/không quan sát khác M/S")
     interpretations.setdefault("NOT_OPEN", "Không còn mở tại baseline; không thuộc risk set")
-    headers = ["scope", "origination_year", "horizon_quarters", "horizon_months",
+    headers = ["landmark_basis", "scope", "origination_year", "horizon_quarters", "horizon_months",
                "c_baseline_snapshots_with_full_horizon", "unique_mortgages_with_c_baseline",
                "outcome_class", "outcome_interpretation", "snapshot_count",
                "unique_mortgage_count_nonexclusive"]
     rows = []
     for horizon in receipt["horizon_results"]:
-        groups = [("all", "", horizon)]
-        groups.extend(("origination_year", vintage["origination_year"], vintage)
-                      for vintage in horizon["by_origination_year"])
-        for scope, year, group in groups:
-            outcomes = group["snapshot_outcomes_unweighted"]
-            unique = group["unique_mortgages_by_outcome_nonexclusive"]
-            for outcome, snapshot_count in sorted(outcomes.items()):
-                label = CLASS_MAP.get(outcome)
-                if outcome.startswith("observed_no_90plus_within_"):
-                    label = "NO_90PLUS"
-                elif outcome.startswith("observation_censor_"):
-                    suffix = outcome.removeprefix("observation_censor_")
-                    label = "CENSOR_" + suffix if suffix in {"M", "S"} else "CENSOR_OTHER"
-                elif outcome == "not_open_at_baseline":
-                    label = "NOT_OPEN"
-                if label is None or label not in interpretations:
-                    raise ValueError(f"No reviewed public interpretation for {outcome}")
-                rows.append({
-                    "scope": scope, "origination_year": year,
-                    "horizon_quarters": horizon["horizon_quarters"],
-                    "horizon_months": horizon["approx_months"],
-                    "c_baseline_snapshots_with_full_horizon": group["c_baseline_snapshots_with_full_horizon_unweighted"],
-                    "unique_mortgages_with_c_baseline": group["unique_mortgages_with_at_least_one_c_baseline"],
-                    "outcome_class": label, "outcome_interpretation": interpretations[label],
-                    "snapshot_count": snapshot_count,
-                    "unique_mortgage_count_nonexclusive": unique.get(outcome, 0),
-                })
+        bases = [("repeated_c_landmarks", horizon, horizon["by_origination_year"],
+                  "c_baseline_snapshots_with_full_horizon_unweighted",
+                  "unique_mortgages_with_at_least_one_c_baseline",
+                  "snapshot_outcomes_unweighted", "unique_mortgages_by_outcome_nonexclusive")]
+        anchor = horizon["one_landmark_per_mortgage"]
+        bases.append(("one_earliest_c_per_mortgage", anchor, anchor["by_origination_year"],
+                      "mortgages_with_eligible_landmark", "mortgages_with_eligible_landmark",
+                      "outcomes_unweighted", "unique_mortgages_by_outcome"))
+        for basis, total, vintages, baseline_key, unique_key, outcomes_key, outcomes_unique_key in bases:
+            groups = [("all", "", total)]
+            groups.extend(("origination_year", vintage["origination_year"], vintage)
+                          for vintage in vintages)
+            for scope, year, group in groups:
+                outcomes = group[outcomes_key]
+                unique = group[outcomes_unique_key]
+                for outcome, snapshot_count in sorted(outcomes.items()):
+                    label = CLASS_MAP.get(outcome)
+                    if outcome.startswith("observed_no_90plus_within_"):
+                        label = "NO_90PLUS"
+                    elif outcome.startswith("observation_censor_"):
+                        suffix = outcome.removeprefix("observation_censor_")
+                        label = "CENSOR_" + suffix if suffix in {"M", "S"} else "CENSOR_OTHER"
+                    elif outcome == "not_open_at_baseline":
+                        label = "NOT_OPEN"
+                    if label is None or label not in interpretations:
+                        raise ValueError(f"No reviewed public interpretation for {outcome}")
+                    rows.append({
+                        "landmark_basis": basis, "scope": scope, "origination_year": year,
+                        "horizon_quarters": horizon["horizon_quarters"],
+                        "horizon_months": horizon["approx_months"],
+                        "c_baseline_snapshots_with_full_horizon": group[baseline_key],
+                        "unique_mortgages_with_c_baseline": group[unique_key],
+                        "outcome_class": label, "outcome_interpretation": interpretations[label],
+                        "snapshot_count": snapshot_count,
+                        "unique_mortgage_count_nonexclusive": unique.get(outcome, 0),
+                    })
     output_path.parent.mkdir(parents=True, exist_ok=True)
     class_order = {name: index for index, name in enumerate(interpretations)}
-    rows.sort(key=lambda row: (0 if row["scope"] == "all" else 1,
+    rows.sort(key=lambda row: (0 if row["landmark_basis"] == "repeated_c_landmarks" else 1,
+                               0 if row["scope"] == "all" else 1,
                                int(row["origination_year"] or 0),
                                int(row["horizon_quarters"]),
                                class_order.get(row["outcome_class"], len(class_order))))

@@ -1072,6 +1072,69 @@ class NsmoViews:
                     or sum(int(row["unique_mortgages_with_at_least_one_c_baseline"]) for row in vintage_rows) != mortgage_count
                     or vintage_unique_totals != unique_counts):
                 raise ValueError("NSMO horizon-sensitivity vintage totals do not reconcile")
+            anchor_source = item.get("one_landmark_per_mortgage")
+            if not isinstance(anchor_source, dict):
+                raise ValueError("NSMO single-landmark horizon support is missing")
+            anchor_total = int(anchor_source.get("mortgages_with_eligible_landmark", -1))
+            anchor_counts_source = anchor_source.get("outcomes_unweighted", {})
+            anchor_unique_source = anchor_source.get("unique_mortgages_by_outcome", {})
+            anchor_vintage_source = anchor_source.get("by_origination_year")
+            if (anchor_total < 0 or anchor_total > row_count
+                    or not isinstance(anchor_counts_source, dict)
+                    or not isinstance(anchor_unique_source, dict)
+                    or not isinstance(anchor_vintage_source, list) or not anchor_vintage_source):
+                raise ValueError("NSMO single-landmark horizon denominator is invalid")
+            anchor_counts: dict[str, int] = {}
+            for code, value in anchor_counts_source.items():
+                if (code not in counts or code == "not_open_at_baseline"):
+                    raise ValueError("NSMO single-landmark outcome code is invalid")
+                count = int(value)
+                if count < 0:
+                    raise ValueError("NSMO single-landmark counts cannot be negative")
+                anchor_counts[code] = count
+            anchor_unique = {str(code): int(value) for code, value in anchor_unique_source.items()}
+            if sum(anchor_counts.values()) != anchor_total or anchor_unique != anchor_counts:
+                raise ValueError("NSMO single-landmark outcomes do not reconcile to mortgage support")
+            anchor_vintage_rows = []
+            anchor_vintage_totals: dict[str, int] = {}
+            anchor_year_total = 0
+            prior_year = None
+            for vintage in anchor_vintage_source:
+                year = str(vintage.get("origination_year", ""))
+                if year != "unknown" and (not year.isdigit() or len(year) != 4):
+                    raise ValueError("NSMO single-landmark vintage year is invalid")
+                if prior_year is not None and year <= prior_year:
+                    raise ValueError("NSMO single-landmark vintage years must be unique and sorted")
+                prior_year = year
+                year_total = int(vintage.get("mortgages_with_eligible_landmark", -1))
+                year_counts_source = vintage.get("outcomes_unweighted", {})
+                year_unique_source = vintage.get("unique_mortgages_by_outcome", {})
+                if (year_total < 0 or not isinstance(year_counts_source, dict)
+                        or not isinstance(year_unique_source, dict)):
+                    raise ValueError("NSMO single-landmark vintage support is invalid")
+                year_counts = {str(code): int(value) for code, value in year_counts_source.items()}
+                year_unique = {str(code): int(value) for code, value in year_unique_source.items()}
+                if (any(code not in anchor_counts or value < 0 for code, value in year_counts.items())
+                        or year_unique != year_counts or sum(year_counts.values()) != year_total):
+                    raise ValueError("NSMO single-landmark vintage outcomes do not reconcile")
+                anchor_year_total += year_total
+                for code, value in year_counts.items():
+                    anchor_vintage_totals[code] = anchor_vintage_totals.get(code, 0) + value
+                anchor_vintage_rows.append({
+                    "origination_year": year,
+                    "mortgages_with_eligible_landmark": year_total,
+                    "outcomes_unweighted": year_counts,
+                    "unique_mortgages_by_outcome": year_unique,
+                })
+            if anchor_year_total != anchor_total or anchor_vintage_totals != anchor_counts:
+                raise ValueError("NSMO single-landmark vintage totals do not reconcile")
+            clean_anchor = {
+                "selection_rule": str(anchor_source.get("selection_rule", "")),
+                "mortgages_with_eligible_landmark": anchor_total,
+                "outcomes_unweighted": anchor_counts,
+                "unique_mortgages_by_outcome": anchor_unique,
+                "by_origination_year": anchor_vintage_rows,
+            }
             clean_rows.append({
                 "horizon_quarters": quarters,
                 "approx_months": months,
@@ -1080,6 +1143,7 @@ class NsmoViews:
                 "snapshot_outcomes_unweighted": counts,
                 "unique_mortgages_by_outcome_nonexclusive": unique_counts,
                 "by_origination_year": vintage_rows,
+                "one_landmark_per_mortgage": clean_anchor,
             })
         return {
             "schema_version": "nsmo-horizon-sensitivity-v1",

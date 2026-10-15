@@ -78,6 +78,13 @@ The focused Ginnie, NSMO workbook, D02 workbook and NSMO API/view suite passes
 34/34. Production acquisition, production integrity profiling and any model-use
 qualification remain open. Commits `2f7b37e` and `51c69fe` are on `main`.
 
+Follow-up auth-path review on 16/10/2026 checked the live official catalog
+client: it requires a `gm_up_token` session cookie and validates the user
+profile before invoking its official download route. Requests without the
+session return the app shell rather than the ZIP. The user can sign in and save
+a Netscape cookie file on D:, but the exact path has not yet been provided.
+Wait for that path; do not search for cookie files or print token contents.
+
 ### D02 continuation — horizon sensitivity in API, app and Excel, 2026-10-16
 
 The aggregate-only NSMO screen now compares C-state full-follow-up support at
@@ -91,8 +98,10 @@ rate, PD or model is created, and the estimand/censoring protocol remains open.
 
 ### D02 continuation — origination-vintage horizon support, 2026-10-16
 
-Extended the verified 6/12/24-month feasibility audit to `Open_Year`, with
-snapshot and unique-mortgage outcomes reconciled back to each PUF-wide horizon.
+Extended the verified 6/12/24-month feasibility audit to `Open_Year` and both
+anchor rules: repeated quarterly C landmarks and one earliest eligible C
+landmark per mortgage. Snapshot and unique-mortgage outcomes reconcile back to
+each PUF-wide horizon.
 The app's existing vintage selector filters the added year table; the NSMO
 reference workbook's filterable horizon sheet now includes both full-population
 and year-level aggregate rows. `docs/NSMO_HORIZON_BY_VINTAGE_VI.md` records the

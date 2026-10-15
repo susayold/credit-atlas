@@ -1,322 +1,595 @@
-scope,origination_year,horizon_quarters,horizon_months,c_baseline_snapshots_with_full_horizon,unique_mortgages_with_c_baseline,outcome_class,outcome_interpretation,snapshot_count,unique_mortgage_count_nonexclusive
-all,,2,6,926331,61645,CENSOR_M,Censor quan sát: gap lịch sử (M),661,394
-all,,2,6,926331,61645,CENSOR_S,Censor quan sát: servicer suppression (S),2776,1332
-all,,2,6,926331,61645,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),964,623
-all,,2,6,926331,61645,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,854164,58387
-all,,2,6,926331,61645,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),89,48
-all,,2,6,926331,61645,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),17,13
-all,,2,6,926331,61645,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),116,62
-all,,2,6,926331,61645,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,44695,22920
-all,,2,6,926331,61645,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,22849,11769
-all,,4,12,872888,59703,CENSOR_M,Censor quan sát: gap lịch sử (M),1067,387
-all,,4,12,872888,59703,CENSOR_S,Censor quan sát: servicer suppression (S),5129,1360
-all,,4,12,872888,59703,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2174,753
-all,,4,12,872888,59703,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,738773,52110
-all,,4,12,872888,59703,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),172,50
-all,,4,12,872888,59703,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),33,15
-all,,4,12,872888,59703,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),212,63
-all,,4,12,872888,59703,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,83092,22843
-all,,4,12,872888,59703,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,42236,11749
-all,,8,24,770257,55701,CENSOR_M,Censor quan sát: gap lịch sử (M),1476,360
-all,,8,24,770257,55701,CENSOR_S,Censor quan sát: servicer suppression (S),8461,1331
-all,,8,24,770257,55701,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),3683,735
-all,,8,24,770257,55701,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,544419,41635
-all,,8,24,770257,55701,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),284,50
-all,,8,24,770257,55701,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),62,16
-all,,8,24,770257,55701,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),363,62
-all,,8,24,770257,55701,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,140280,22324
-all,,8,24,770257,55701,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,71229,11514
-origination_year,2013,2,6,150742,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),98,55
-origination_year,2013,2,6,150742,6030,CENSOR_S,Censor quan sát: servicer suppression (S),324,150
-origination_year,2013,2,6,150742,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),137,86
-origination_year,2013,2,6,150742,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,140799,5916
-origination_year,2013,2,6,150742,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),19,10
-origination_year,2013,2,6,150742,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
-origination_year,2013,2,6,150742,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),29,16
-origination_year,2013,2,6,150742,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6084,3075
-origination_year,2013,2,6,150742,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3251,1645
-origination_year,2013,4,12,148248,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),177,56
-origination_year,2013,4,12,148248,6030,CENSOR_S,Censor quan sát: servicer suppression (S),611,152
-origination_year,2013,4,12,148248,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),345,107
-origination_year,2013,4,12,148248,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,128721,5708
-origination_year,2013,4,12,148248,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),38,10
-origination_year,2013,4,12,148248,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
-origination_year,2013,4,12,148248,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),54,17
-origination_year,2013,4,12,148248,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11942,3078
-origination_year,2013,4,12,148248,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6359,1648
-origination_year,2013,8,24,142875,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),278,56
-origination_year,2013,8,24,142875,6030,CENSOR_S,Censor quan sát: servicer suppression (S),1098,152
-origination_year,2013,8,24,142875,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),722,109
-origination_year,2013,8,24,142875,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,106293,5097
-origination_year,2013,8,24,142875,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),69,10
-origination_year,2013,8,24,142875,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
-origination_year,2013,8,24,142875,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),103,17
-origination_year,2013,8,24,142875,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,22443,3078
-origination_year,2013,8,24,142875,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11868,1648
-origination_year,2014,2,6,122848,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),103,56
-origination_year,2014,2,6,122848,6180,CENSOR_S,Censor quan sát: servicer suppression (S),293,139
-origination_year,2014,2,6,122848,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),127,74
-origination_year,2014,2,6,122848,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,112441,5768
-origination_year,2014,2,6,122848,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),11,6
-origination_year,2014,2,6,122848,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),18,10
-origination_year,2014,2,6,122848,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6579,3358
-origination_year,2014,2,6,122848,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3276,1682
-origination_year,2014,4,12,120722,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),177,56
-origination_year,2014,4,12,120722,6180,CENSOR_S,Censor quan sát: servicer suppression (S),553,140
-origination_year,2014,4,12,120722,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),307,97
-origination_year,2014,4,12,120722,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,100890,5348
-origination_year,2014,4,12,120722,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),22,8
-origination_year,2014,4,12,120722,6180,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
-origination_year,2014,4,12,120722,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),34,11
-origination_year,2014,4,12,120722,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,12532,3360
-origination_year,2014,4,12,120722,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6205,1684
-origination_year,2014,8,24,116014,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),269,56
-origination_year,2014,8,24,116014,6180,CENSOR_S,Censor quan sát: servicer suppression (S),985,141
-origination_year,2014,8,24,116014,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),595,103
-origination_year,2014,8,24,116014,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,80519,4429
-origination_year,2014,8,24,116014,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),41,8
-origination_year,2014,8,24,116014,6180,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,1
-origination_year,2014,8,24,116014,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),61,11
-origination_year,2014,8,24,116014,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,22434,3361
-origination_year,2014,8,24,116014,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11106,1684
-origination_year,2015,2,6,125435,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),61,35
-origination_year,2015,2,6,125435,6121,CENSOR_S,Censor quan sát: servicer suppression (S),379,179
-origination_year,2015,2,6,125435,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),101,70
-origination_year,2015,2,6,125435,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,115553,5878
-origination_year,2015,2,6,125435,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),22,12
-origination_year,2015,2,6,125435,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,4
-origination_year,2015,2,6,125435,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),20,10
-origination_year,2015,2,6,125435,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6117,3107
-origination_year,2015,2,6,125435,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3178,1622
-origination_year,2015,4,12,122697,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),109,35
-origination_year,2015,4,12,122697,6121,CENSOR_S,Censor quan sát: servicer suppression (S),740,182
-origination_year,2015,4,12,122697,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),258,89
-origination_year,2015,4,12,122697,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,103615,5520
-origination_year,2015,4,12,122697,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),43,12
-origination_year,2015,4,12,122697,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,5
-origination_year,2015,4,12,122697,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),39,10
-origination_year,2015,4,12,122697,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11788,3112
-origination_year,2015,4,12,122697,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6095,1626
-origination_year,2015,8,24,116828,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),178,34
-origination_year,2015,8,24,116828,6121,CENSOR_S,Censor quan sát: servicer suppression (S),1384,182
-origination_year,2015,8,24,116828,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),468,91
-origination_year,2015,8,24,116828,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,82034,4892
-origination_year,2015,8,24,116828,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),71,12
-origination_year,2015,8,24,116828,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),22,5
-origination_year,2015,8,24,116828,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),65,10
-origination_year,2015,8,24,116828,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,21470,3112
-origination_year,2015,8,24,116828,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11136,1626
-origination_year,2016,2,6,122996,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),44,24
-origination_year,2016,2,6,122996,6193,CENSOR_S,Censor quan sát: servicer suppression (S),360,171
-origination_year,2016,2,6,122996,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),112,73
-origination_year,2016,2,6,122996,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,113728,5960
-origination_year,2016,2,6,122996,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),15,8
-origination_year,2016,2,6,122996,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
-origination_year,2016,2,6,122996,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),21,10
-origination_year,2016,2,6,122996,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,5772,2940
-origination_year,2016,2,6,122996,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2941,1499
-origination_year,2016,4,12,119551,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),73,25
-origination_year,2016,4,12,119551,6193,CENSOR_S,Censor quan sát: servicer suppression (S),693,179
-origination_year,2016,4,12,119551,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),268,84
-origination_year,2016,4,12,119551,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,101651,5714
-origination_year,2016,4,12,119551,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),27,8
-origination_year,2016,4,12,119551,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),6,2
-origination_year,2016,4,12,119551,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),41,10
-origination_year,2016,4,12,119551,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11118,2942
-origination_year,2016,4,12,119551,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,5674,1500
-origination_year,2016,8,24,112259,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),119,24
-origination_year,2016,8,24,112259,6193,CENSOR_S,Censor quan sát: servicer suppression (S),1250,180
-origination_year,2016,8,24,112259,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),502,88
-origination_year,2016,8,24,112259,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,79136,5213
-origination_year,2016,8,24,112259,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),49,8
-origination_year,2016,8,24,112259,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,2
-origination_year,2016,8,24,112259,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),76,10
-origination_year,2016,8,24,112259,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,20650,2945
-origination_year,2016,8,24,112259,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,10467,1499
-origination_year,2017,2,6,84097,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),37,24
-origination_year,2017,2,6,84097,5105,CENSOR_S,Censor quan sát: servicer suppression (S),353,171
-origination_year,2017,2,6,84097,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),105,64
-origination_year,2017,2,6,84097,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,76203,4921
-origination_year,2017,2,6,84097,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),13,7
-origination_year,2017,2,6,84097,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,2
-origination_year,2017,2,6,84097,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),13,7
-origination_year,2017,2,6,84097,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4873,2464
-origination_year,2017,2,6,84097,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2498,1271
-origination_year,2017,4,12,81484,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),64,25
-origination_year,2017,4,12,81484,5105,CENSOR_S,Censor quan sát: servicer suppression (S),682,175
-origination_year,2017,4,12,81484,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),243,76
-origination_year,2017,4,12,81484,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,66205,4743
-origination_year,2017,4,12,81484,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),27,7
-origination_year,2017,4,12,81484,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
-origination_year,2017,4,12,81484,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),22,7
-origination_year,2017,4,12,81484,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,9417,2464
-origination_year,2017,4,12,81484,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,4821,1271
-origination_year,2017,8,24,75893,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),98,25
-origination_year,2017,8,24,75893,5105,CENSOR_S,Censor quan sát: servicer suppression (S),1280,176
-origination_year,2017,8,24,75893,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),405,77
-origination_year,2017,8,24,75893,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,47688,4139
-origination_year,2017,8,24,75893,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),35,7
-origination_year,2017,8,24,75893,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),7,3
-origination_year,2017,8,24,75893,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),32,7
-origination_year,2017,8,24,75893,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,17478,2463
-origination_year,2017,8,24,75893,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,8870,1271
-origination_year,2018,2,6,53832,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),30,19
-origination_year,2018,2,6,53832,4637,CENSOR_S,Censor quan sát: servicer suppression (S),290,143
-origination_year,2018,2,6,53832,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),76,50
-origination_year,2018,2,6,53832,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,46112,4363
-origination_year,2018,2,6,53832,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
-origination_year,2018,2,6,53832,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,1
-origination_year,2018,2,6,53832,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4816,2444
-origination_year,2018,2,6,53832,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2505,1277
-origination_year,2018,4,12,52047,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),49,19
-origination_year,2018,4,12,52047,4637,CENSOR_S,Censor quan sát: servicer suppression (S),556,144
-origination_year,2018,4,12,52047,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),168,63
-origination_year,2018,4,12,52047,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,37515,3724
-origination_year,2018,4,12,52047,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
-origination_year,2018,4,12,52047,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,1
-origination_year,2018,4,12,52047,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,9077,2446
-origination_year,2018,4,12,52047,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,4677,1278
-origination_year,2018,8,24,48151,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),72,19
-origination_year,2018,8,24,48151,4637,CENSOR_S,Censor quan sát: servicer suppression (S),966,143
-origination_year,2018,8,24,48151,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),278,62
-origination_year,2018,8,24,48151,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,24492,2334
-origination_year,2018,8,24,48151,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
-origination_year,2018,8,24,48151,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),5,1
-origination_year,2018,8,24,48151,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,14798,2444
-origination_year,2018,8,24,48151,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,7539,1278
-origination_year,2019,2,6,51892,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),34,23
-origination_year,2019,2,6,51892,4931,CENSOR_S,Censor quan sát: servicer suppression (S),300,145
-origination_year,2019,2,6,51892,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),48,33
-origination_year,2019,2,6,51892,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,44844,4284
-origination_year,2019,2,6,51892,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
-origination_year,2019,2,6,51892,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
-origination_year,2019,2,6,51892,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,2
-origination_year,2019,2,6,51892,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4385,2251
-origination_year,2019,2,6,51892,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2272,1182
-origination_year,2019,4,12,48957,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),51,23
-origination_year,2019,4,12,48957,4931,CENSOR_S,Censor quan sát: servicer suppression (S),471,147
-origination_year,2019,4,12,48957,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),106,41
-origination_year,2019,4,12,48957,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,36718,3254
-origination_year,2019,4,12,48957,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
-origination_year,2019,4,12,48957,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),5,2
-origination_year,2019,4,12,48957,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),7,2
-origination_year,2019,4,12,48957,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,7704,2250
-origination_year,2019,4,12,48957,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3892,1184
-origination_year,2019,8,24,42744,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),64,23
-origination_year,2019,8,24,42744,4931,CENSOR_S,Censor quan sát: servicer suppression (S),598,147
-origination_year,2019,8,24,42744,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),193,42
-origination_year,2019,8,24,42744,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,25739,2072
-origination_year,2019,8,24,42744,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
-origination_year,2019,8,24,42744,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,2
-origination_year,2019,8,24,42744,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),11,2
-origination_year,2019,8,24,42744,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,10809,2249
-origination_year,2019,8,24,42744,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,5317,1183
-origination_year,2020,2,6,75797,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),67,39
-origination_year,2020,2,6,75797,5594,CENSOR_S,Censor quan sát: servicer suppression (S),183,83
-origination_year,2020,2,6,75797,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),50,34
-origination_year,2020,2,6,75797,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,71462,5132
-origination_year,2020,2,6,75797,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
-origination_year,2020,2,6,75797,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
-origination_year,2020,2,6,75797,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,2657,1385
-origination_year,2020,2,6,75797,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,1374,729
-origination_year,2020,4,12,68708,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),115,39
-origination_year,2020,4,12,68708,5594,CENSOR_S,Censor quan sát: servicer suppression (S),319,85
-origination_year,2020,4,12,68708,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),90,33
-origination_year,2020,4,12,68708,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,61426,4522
-origination_year,2020,4,12,68708,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),4,1
-origination_year,2020,4,12,68708,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,1
-origination_year,2020,4,12,68708,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4510,1386
-origination_year,2020,4,12,68708,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2240,729
-origination_year,2020,8,24,53947,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),169,39
-origination_year,2020,8,24,53947,5594,CENSOR_S,Censor quan sát: servicer suppression (S),431,85
-origination_year,2020,8,24,53947,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),147,35
-origination_year,2020,8,24,53947,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,44307,3985
-origination_year,2020,8,24,53947,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),7,1
-origination_year,2020,8,24,53947,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),6,1
-origination_year,2020,8,24,53947,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,5949,1385
-origination_year,2020,8,24,53947,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2931,729
-origination_year,2021,2,6,70078,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),62,37
-origination_year,2021,2,6,70078,5327,CENSOR_S,Censor quan sát: servicer suppression (S),123,60
-origination_year,2021,2,6,70078,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),65,43
-origination_year,2021,2,6,70078,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,68111,5160
-origination_year,2021,2,6,70078,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
-origination_year,2021,2,6,70078,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
-origination_year,2021,2,6,70078,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1158,627
-origination_year,2021,2,6,70078,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,554,292
-origination_year,2021,4,12,61129,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),96,37
-origination_year,2021,4,12,61129,5327,CENSOR_S,Censor quan sát: servicer suppression (S),224,63
-origination_year,2021,4,12,61129,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),125,44
-origination_year,2021,4,12,61129,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,57809,5017
-origination_year,2021,4,12,61129,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),4,1
-origination_year,2021,4,12,61129,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
-origination_year,2021,4,12,61129,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1932,627
-origination_year,2021,4,12,61129,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,936,291
-origination_year,2021,8,24,42448,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),115,37
-origination_year,2021,8,24,42448,5327,CENSOR_S,Censor quan sát: servicer suppression (S),287,61
-origination_year,2021,8,24,42448,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),179,45
-origination_year,2021,8,24,42448,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,38111,4781
-origination_year,2021,8,24,42448,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),5,1
-origination_year,2021,8,24,42448,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
-origination_year,2021,8,24,42448,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,2525,625
-origination_year,2021,8,24,42448,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,1223,291
-origination_year,2022,2,6,36758,3813,CENSOR_M,Censor quan sát: gap lịch sử (M),59,34
-origination_year,2022,2,6,36758,3813,CENSOR_S,Censor quan sát: servicer suppression (S),91,46
-origination_year,2022,2,6,36758,3813,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),81,53
-origination_year,2022,2,6,36758,3813,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,35284,3718
-origination_year,2022,2,6,36758,3813,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
-origination_year,2022,2,6,36758,3813,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
-origination_year,2022,2,6,36758,3813,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,1
-origination_year,2022,2,6,36758,3813,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,851,453
-origination_year,2022,2,6,36758,3813,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,386,210
-origination_year,2022,4,12,30367,3812,CENSOR_M,Censor quan sát: gap lịch sử (M),90,34
-origination_year,2022,4,12,30367,3812,CENSOR_S,Censor quan sát: servicer suppression (S),165,48
-origination_year,2022,4,12,30367,3812,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),161,64
-origination_year,2022,4,12,30367,3812,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,27899,3593
-origination_year,2022,4,12,30367,3812,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
-origination_year,2022,4,12,30367,3812,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
-origination_year,2022,4,12,30367,3812,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,1
-origination_year,2022,4,12,30367,3812,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1415,455
-origination_year,2022,4,12,30367,3812,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,628,210
-origination_year,2022,8,24,16611,3810,CENSOR_M,Censor quan sát: gap lịch sử (M),98,34
-origination_year,2022,8,24,16611,3810,CENSOR_S,Censor quan sát: servicer suppression (S),158,48
-origination_year,2022,8,24,16611,3810,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),167,62
-origination_year,2022,8,24,16611,3810,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,14076,3256
-origination_year,2022,8,24,16611,3810,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
-origination_year,2022,8,24,16611,3810,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
-origination_year,2022,8,24,16611,3810,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),6,1
-origination_year,2022,8,24,16611,3810,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1455,456
-origination_year,2022,8,24,16611,3810,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,646,210
-origination_year,2023,2,6,22581,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),40,27
-origination_year,2023,2,6,22581,3844,CENSOR_S,Censor quan sát: servicer suppression (S),62,34
-origination_year,2023,2,6,22581,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),49,33
-origination_year,2023,2,6,22581,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,21002,3651
-origination_year,2023,2,6,22581,3844,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
-origination_year,2023,2,6,22581,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1007,555
-origination_year,2023,2,6,22581,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,418,232
-origination_year,2023,4,12,16158,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),54,27
-origination_year,2023,4,12,16158,3844,CENSOR_S,Censor quan sát: servicer suppression (S),98,35
-origination_year,2023,4,12,16158,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),84,41
-origination_year,2023,4,12,16158,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,13912,3317
-origination_year,2023,4,12,16158,3844,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,2
-origination_year,2023,4,12,16158,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1425,552
-origination_year,2023,4,12,16158,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,581,233
-origination_year,2023,8,24,2487,1773,CENSOR_M,Censor quan sát: gap lịch sử (M),16,13
-origination_year,2023,8,24,2487,1773,CENSOR_S,Censor quan sát: servicer suppression (S),24,16
-origination_year,2023,8,24,2487,1773,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),27,21
-origination_year,2023,8,24,2487,1773,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2024,1437
-origination_year,2023,8,24,2487,1773,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
-origination_year,2023,8,24,2487,1773,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,269,206
-origination_year,2023,8,24,2487,1773,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,126,95
-origination_year,2024,2,6,9275,3870,CENSOR_M,Censor quan sát: gap lịch sử (M),26,21
-origination_year,2024,2,6,9275,3870,CENSOR_S,Censor quan sát: servicer suppression (S),18,11
-origination_year,2024,2,6,9275,3870,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),13,10
-origination_year,2024,2,6,9275,3870,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,8625,3636
-origination_year,2024,2,6,9275,3870,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
-origination_year,2024,2,6,9275,3870,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,396,261
-origination_year,2024,2,6,9275,3870,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,196,128
-origination_year,2024,4,12,2820,1929,CENSOR_M,Censor quan sát: gap lịch sử (M),12,11
-origination_year,2024,4,12,2820,1929,CENSOR_S,Censor quan sát: servicer suppression (S),17,10
-origination_year,2024,4,12,2820,1929,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),19,14
-origination_year,2024,4,12,2820,1929,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2412,1650
-origination_year,2024,4,12,2820,1929,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,232,171
-origination_year,2024,4,12,2820,1929,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,128,95
+landmark_basis,scope,origination_year,horizon_quarters,horizon_months,c_baseline_snapshots_with_full_horizon,unique_mortgages_with_c_baseline,outcome_class,outcome_interpretation,snapshot_count,unique_mortgage_count_nonexclusive
+repeated_c_landmarks,all,,2,6,926331,61645,CENSOR_M,Censor quan sát: gap lịch sử (M),661,394
+repeated_c_landmarks,all,,2,6,926331,61645,CENSOR_S,Censor quan sát: servicer suppression (S),2776,1332
+repeated_c_landmarks,all,,2,6,926331,61645,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),964,623
+repeated_c_landmarks,all,,2,6,926331,61645,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,854164,58387
+repeated_c_landmarks,all,,2,6,926331,61645,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),89,48
+repeated_c_landmarks,all,,2,6,926331,61645,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),17,13
+repeated_c_landmarks,all,,2,6,926331,61645,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),116,62
+repeated_c_landmarks,all,,2,6,926331,61645,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,44695,22920
+repeated_c_landmarks,all,,2,6,926331,61645,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,22849,11769
+repeated_c_landmarks,all,,4,12,872888,59703,CENSOR_M,Censor quan sát: gap lịch sử (M),1067,387
+repeated_c_landmarks,all,,4,12,872888,59703,CENSOR_S,Censor quan sát: servicer suppression (S),5129,1360
+repeated_c_landmarks,all,,4,12,872888,59703,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2174,753
+repeated_c_landmarks,all,,4,12,872888,59703,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,738773,52110
+repeated_c_landmarks,all,,4,12,872888,59703,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),172,50
+repeated_c_landmarks,all,,4,12,872888,59703,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),33,15
+repeated_c_landmarks,all,,4,12,872888,59703,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),212,63
+repeated_c_landmarks,all,,4,12,872888,59703,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,83092,22843
+repeated_c_landmarks,all,,4,12,872888,59703,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,42236,11749
+repeated_c_landmarks,all,,8,24,770257,55701,CENSOR_M,Censor quan sát: gap lịch sử (M),1476,360
+repeated_c_landmarks,all,,8,24,770257,55701,CENSOR_S,Censor quan sát: servicer suppression (S),8461,1331
+repeated_c_landmarks,all,,8,24,770257,55701,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),3683,735
+repeated_c_landmarks,all,,8,24,770257,55701,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,544419,41635
+repeated_c_landmarks,all,,8,24,770257,55701,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),284,50
+repeated_c_landmarks,all,,8,24,770257,55701,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),62,16
+repeated_c_landmarks,all,,8,24,770257,55701,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),363,62
+repeated_c_landmarks,all,,8,24,770257,55701,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,140280,22324
+repeated_c_landmarks,all,,8,24,770257,55701,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,71229,11514
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),98,55
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,CENSOR_S,Censor quan sát: servicer suppression (S),324,150
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),137,86
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,140799,5916
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),19,10
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),29,16
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6084,3075
+repeated_c_landmarks,origination_year,2013,2,6,150742,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3251,1645
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),177,56
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,CENSOR_S,Censor quan sát: servicer suppression (S),611,152
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),345,107
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,128721,5708
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),38,10
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),54,17
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11942,3078
+repeated_c_landmarks,origination_year,2013,4,12,148248,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6359,1648
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),278,56
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,CENSOR_S,Censor quan sát: servicer suppression (S),1098,152
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),722,109
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,106293,5097
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),69,10
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),103,17
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,22443,3078
+repeated_c_landmarks,origination_year,2013,8,24,142875,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11868,1648
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),103,56
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,CENSOR_S,Censor quan sát: servicer suppression (S),293,139
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),127,74
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,112441,5768
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),11,6
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),18,10
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6579,3358
+repeated_c_landmarks,origination_year,2014,2,6,122848,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3276,1682
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),177,56
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,CENSOR_S,Censor quan sát: servicer suppression (S),553,140
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),307,97
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,100890,5348
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),22,8
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),34,11
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,12532,3360
+repeated_c_landmarks,origination_year,2014,4,12,120722,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6205,1684
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),269,56
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,CENSOR_S,Censor quan sát: servicer suppression (S),985,141
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),595,103
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,80519,4429
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),41,8
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,1
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),61,11
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,22434,3361
+repeated_c_landmarks,origination_year,2014,8,24,116014,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11106,1684
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),61,35
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,CENSOR_S,Censor quan sát: servicer suppression (S),379,179
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),101,70
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,115553,5878
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),22,12
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,4
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),20,10
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,6117,3107
+repeated_c_landmarks,origination_year,2015,2,6,125435,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3178,1622
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),109,35
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,CENSOR_S,Censor quan sát: servicer suppression (S),740,182
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),258,89
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,103615,5520
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),43,12
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,5
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),39,10
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11788,3112
+repeated_c_landmarks,origination_year,2015,4,12,122697,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,6095,1626
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),178,34
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,CENSOR_S,Censor quan sát: servicer suppression (S),1384,182
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),468,91
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,82034,4892
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),71,12
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),22,5
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),65,10
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,21470,3112
+repeated_c_landmarks,origination_year,2015,8,24,116828,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,11136,1626
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),44,24
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,CENSOR_S,Censor quan sát: servicer suppression (S),360,171
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),112,73
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,113728,5960
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),15,8
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),21,10
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,5772,2940
+repeated_c_landmarks,origination_year,2016,2,6,122996,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2941,1499
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),73,25
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,CENSOR_S,Censor quan sát: servicer suppression (S),693,179
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),268,84
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,101651,5714
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),27,8
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),6,2
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),41,10
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,11118,2942
+repeated_c_landmarks,origination_year,2016,4,12,119551,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,5674,1500
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),119,24
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,CENSOR_S,Censor quan sát: servicer suppression (S),1250,180
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),502,88
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,79136,5213
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),49,8
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,2
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),76,10
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,20650,2945
+repeated_c_landmarks,origination_year,2016,8,24,112259,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,10467,1499
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),37,24
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,CENSOR_S,Censor quan sát: servicer suppression (S),353,171
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),105,64
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,76203,4921
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),13,7
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,2
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),13,7
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4873,2464
+repeated_c_landmarks,origination_year,2017,2,6,84097,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2498,1271
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),64,25
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,CENSOR_S,Censor quan sát: servicer suppression (S),682,175
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),243,76
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,66205,4743
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),27,7
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),22,7
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,9417,2464
+repeated_c_landmarks,origination_year,2017,4,12,81484,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,4821,1271
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),98,25
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,CENSOR_S,Censor quan sát: servicer suppression (S),1280,176
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),405,77
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,47688,4139
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),35,7
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),7,3
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),32,7
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,17478,2463
+repeated_c_landmarks,origination_year,2017,8,24,75893,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,8870,1271
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),30,19
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,CENSOR_S,Censor quan sát: servicer suppression (S),290,143
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),76,50
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,46112,4363
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,1
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4816,2444
+repeated_c_landmarks,origination_year,2018,2,6,53832,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2505,1277
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),49,19
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,CENSOR_S,Censor quan sát: servicer suppression (S),556,144
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),168,63
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,37515,3724
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,1
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,9077,2446
+repeated_c_landmarks,origination_year,2018,4,12,52047,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,4677,1278
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),72,19
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,CENSOR_S,Censor quan sát: servicer suppression (S),966,143
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),278,62
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,24492,2334
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),5,1
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,14798,2444
+repeated_c_landmarks,origination_year,2018,8,24,48151,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,7539,1278
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),34,23
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,CENSOR_S,Censor quan sát: servicer suppression (S),300,145
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),48,33
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,44844,4284
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),3,2
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,2
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4385,2251
+repeated_c_landmarks,origination_year,2019,2,6,51892,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2272,1182
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),51,23
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,CENSOR_S,Censor quan sát: servicer suppression (S),471,147
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),106,41
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,36718,3254
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),5,2
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),7,2
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,7704,2250
+repeated_c_landmarks,origination_year,2019,4,12,48957,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,3892,1184
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),64,23
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,CENSOR_S,Censor quan sát: servicer suppression (S),598,147
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),193,42
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,25739,2072
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),10,2
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),11,2
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,10809,2249
+repeated_c_landmarks,origination_year,2019,8,24,42744,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,5317,1183
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),67,39
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,CENSOR_S,Censor quan sát: servicer suppression (S),183,83
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),50,34
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,71462,5132
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,2657,1385
+repeated_c_landmarks,origination_year,2020,2,6,75797,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,1374,729
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),115,39
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,CENSOR_S,Censor quan sát: servicer suppression (S),319,85
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),90,33
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,61426,4522
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),4,1
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),4,1
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4510,1386
+repeated_c_landmarks,origination_year,2020,4,12,68708,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2240,729
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),169,39
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,CENSOR_S,Censor quan sát: servicer suppression (S),431,85
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),147,35
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,44307,3985
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),7,1
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),6,1
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,5949,1385
+repeated_c_landmarks,origination_year,2020,8,24,53947,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2931,729
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),62,37
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,CENSOR_S,Censor quan sát: servicer suppression (S),123,60
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),65,43
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,68111,5160
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1158,627
+repeated_c_landmarks,origination_year,2021,2,6,70078,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,554,292
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),96,37
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,CENSOR_S,Censor quan sát: servicer suppression (S),224,63
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),125,44
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,57809,5017
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),4,1
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1932,627
+repeated_c_landmarks,origination_year,2021,4,12,61129,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,936,291
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),115,37
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,CENSOR_S,Censor quan sát: servicer suppression (S),287,61
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),179,45
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,38111,4781
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),5,1
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,2525,625
+repeated_c_landmarks,origination_year,2021,8,24,42448,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,1223,291
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,CENSOR_M,Censor quan sát: gap lịch sử (M),59,34
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,CENSOR_S,Censor quan sát: servicer suppression (S),91,46
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),81,53
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,35284,3718
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,1
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,1
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,851,453
+repeated_c_landmarks,origination_year,2022,2,6,36758,3813,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,386,210
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,CENSOR_M,Censor quan sát: gap lịch sử (M),90,34
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,CENSOR_S,Censor quan sát: servicer suppression (S),165,48
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),161,64
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,27899,3593
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,1
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1415,455
+repeated_c_landmarks,origination_year,2022,4,12,30367,3812,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,628,210
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,CENSOR_M,Censor quan sát: gap lịch sử (M),98,34
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,CENSOR_S,Censor quan sát: servicer suppression (S),158,48
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),167,62
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,14076,3256
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,1
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),2,1
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),6,1
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1455,456
+repeated_c_landmarks,origination_year,2022,8,24,16611,3810,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,646,210
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),40,27
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,CENSOR_S,Censor quan sát: servicer suppression (S),62,34
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),49,33
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,21002,3651
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,2
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1007,555
+repeated_c_landmarks,origination_year,2023,2,6,22581,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,418,232
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),54,27
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,CENSOR_S,Censor quan sát: servicer suppression (S),98,35
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),84,41
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,13912,3317
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,2
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1425,552
+repeated_c_landmarks,origination_year,2023,4,12,16158,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,581,233
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,CENSOR_M,Censor quan sát: gap lịch sử (M),16,13
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,CENSOR_S,Censor quan sát: servicer suppression (S),24,16
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),27,21
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2024,1437
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,269,206
+repeated_c_landmarks,origination_year,2023,8,24,2487,1773,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,126,95
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,CENSOR_M,Censor quan sát: gap lịch sử (M),26,21
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,CENSOR_S,Censor quan sát: servicer suppression (S),18,11
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),13,10
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,8625,3636
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,396,261
+repeated_c_landmarks,origination_year,2024,2,6,9275,3870,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,196,128
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,CENSOR_M,Censor quan sát: gap lịch sử (M),12,11
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,CENSOR_S,Censor quan sát: servicer suppression (S),17,10
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),19,14
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2412,1650
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,232,171
+repeated_c_landmarks,origination_year,2024,4,12,2820,1929,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,128,95
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,CENSOR_M,Censor quan sát: gap lịch sử (M),63,63
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,CENSOR_S,Censor quan sát: servicer suppression (S),146,146
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),41,41
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,58232,58232
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),5,5
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1921,1921
+one_earliest_c_per_mortgage,all,,2,6,61645,61645,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,1236,1236
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,CENSOR_M,Censor quan sát: gap lịch sử (M),106,106
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,CENSOR_S,Censor quan sát: servicer suppression (S),251,251
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),156,156
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,51836,51836
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),9,9
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),14,14
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,4674,4674
+one_earliest_c_per_mortgage,all,,4,12,59703,59703,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,2656,2656
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,CENSOR_M,Censor quan sát: gap lịch sử (M),169,169
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,CENSOR_S,Censor quan sát: servicer suppression (S),449,449
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),302,302
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,41240,41240
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),22,22
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),30,30
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,8748,8748
+one_earliest_c_per_mortgage,all,,8,24,55701,55701,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,4740,4740
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),8,8
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,CENSOR_S,Censor quan sát: servicer suppression (S),6,6
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2,2
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5905,5905
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,66,66
+one_earliest_c_per_mortgage,origination_year,2013,2,6,6030,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,43,43
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),18,18
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,CENSOR_S,Censor quan sát: servicer suppression (S),13,13
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),10,10
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5680,5680
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,3
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,180,180
+one_earliest_c_per_mortgage,origination_year,2013,4,12,6030,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,125,125
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,CENSOR_M,Censor quan sát: gap lịch sử (M),28,28
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,CENSOR_S,Censor quan sát: servicer suppression (S),20,20
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),32,32
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5049,5049
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,3
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),7,7
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,546,546
+one_earliest_c_per_mortgage,origination_year,2013,8,24,6030,6030,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,345,345
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),7,7
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,CENSOR_S,Censor quan sát: servicer suppression (S),9,9
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),3,3
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5754,5754
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,240,240
+one_earliest_c_per_mortgage,origination_year,2014,2,6,6180,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,166,166
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),16,16
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,CENSOR_S,Censor quan sát: servicer suppression (S),12,12
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),15,15
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5322,5322
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,2
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,2
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,521,521
+one_earliest_c_per_mortgage,origination_year,2014,4,12,6180,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,290,290
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,CENSOR_M,Censor quan sát: gap lịch sử (M),26,26
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,CENSOR_S,Censor quan sát: servicer suppression (S),22,22
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),36,36
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4390,4390
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,3
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),6,6
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1113,1113
+one_earliest_c_per_mortgage,origination_year,2014,8,24,6180,6180,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,584,584
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),5,5
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,CENSOR_S,Censor quan sát: servicer suppression (S),3,3
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),4,4
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5872,5872
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,137,137
+one_earliest_c_per_mortgage,origination_year,2015,2,6,6121,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,100,100
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),8,8
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,CENSOR_S,Censor quan sát: servicer suppression (S),4,4
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),16,16
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5507,5507
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,2
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,2
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,359,359
+one_earliest_c_per_mortgage,origination_year,2015,4,12,6121,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,223,223
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,CENSOR_M,Censor quan sát: gap lịch sử (M),16,16
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,CENSOR_S,Censor quan sát: servicer suppression (S),18,18
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),36,36
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4858,4858
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),5,5
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,3
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,770,770
+one_earliest_c_per_mortgage,origination_year,2015,8,24,6121,6121,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,415,415
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),8,8
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,CENSOR_S,Censor quan sát: servicer suppression (S),6,6
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),5,5
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5947,5947
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,150,150
+one_earliest_c_per_mortgage,origination_year,2016,2,6,6193,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,75,75
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),9,9
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,CENSOR_S,Censor quan sát: servicer suppression (S),13,13
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),19,19
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5688,5688
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,2
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,301,301
+one_earliest_c_per_mortgage,origination_year,2016,4,12,6193,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,159,159
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,CENSOR_M,Censor quan sát: gap lịch sử (M),14,14
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,CENSOR_S,Censor quan sát: servicer suppression (S),26,26
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),46,46
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5173,5173
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),3,3
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,OTHER_8,Trạng thái cạnh tranh: foreclosure/distressed (8),1,1
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,4
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,611,611
+one_earliest_c_per_mortgage,origination_year,2016,8,24,6193,6193,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,315,315
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),3,3
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,CENSOR_S,Censor quan sát: servicer suppression (S),7,7
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),4,4
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4911,4911
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,113,113
+one_earliest_c_per_mortgage,origination_year,2017,2,6,5105,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,66,66
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),4,4
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,CENSOR_S,Censor quan sát: servicer suppression (S),10,10
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),13,13
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4723,4723
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),2,2
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),3,3
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,212,212
+one_earliest_c_per_mortgage,origination_year,2017,4,12,5105,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,138,138
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,CENSOR_M,Censor quan sát: gap lịch sử (M),6,6
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,CENSOR_S,Censor quan sát: servicer suppression (S),19,19
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),31,31
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4107,4107
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),5,5
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),4,4
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,574,574
+one_earliest_c_per_mortgage,origination_year,2017,8,24,5105,5105,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,359,359
+one_earliest_c_per_mortgage,origination_year,2018,2,6,4637,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),3,3
+one_earliest_c_per_mortgage,origination_year,2018,2,6,4637,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),4,4
+one_earliest_c_per_mortgage,origination_year,2018,2,6,4637,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4360,4360
+one_earliest_c_per_mortgage,origination_year,2018,2,6,4637,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,154,154
+one_earliest_c_per_mortgage,origination_year,2018,2,6,4637,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,116,116
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),6,6
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,CENSOR_S,Censor quan sát: servicer suppression (S),2,2
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),15,15
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3712,3712
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,582,582
+one_earliest_c_per_mortgage,origination_year,2018,4,12,4637,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,320,320
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,CENSOR_M,Censor quan sát: gap lịch sử (M),10,10
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,CENSOR_S,Censor quan sát: servicer suppression (S),84,84
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),24,24
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2291,2291
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1441,1441
+one_earliest_c_per_mortgage,origination_year,2018,8,24,4637,4637,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,786,786
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),7,7
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,CENSOR_S,Censor quan sát: servicer suppression (S),59,59
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2,2
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4242,4242
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,369,369
+one_earliest_c_per_mortgage,origination_year,2019,2,6,4931,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,252,252
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),9,9
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,CENSOR_S,Censor quan sát: servicer suppression (S),100,100
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),6,6
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3191,3191
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1022,1022
+one_earliest_c_per_mortgage,origination_year,2019,4,12,4931,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,602,602
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,CENSOR_M,Censor quan sát: gap lịch sử (M),11,11
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,CENSOR_S,Censor quan sát: servicer suppression (S),121,121
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),12,12
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,2003,2003
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),2,2
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1807,1807
+one_earliest_c_per_mortgage,origination_year,2019,8,24,4931,4931,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,975,975
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),2,2
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,CENSOR_S,Censor quan sát: servicer suppression (S),21,21
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),2,2
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5115,5115
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,251,251
+one_earliest_c_per_mortgage,origination_year,2020,2,6,5594,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,203,203
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),8,8
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,CENSOR_S,Censor quan sát: servicer suppression (S),31,31
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),5,5
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4491,4491
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,659,659
+one_earliest_c_per_mortgage,origination_year,2020,4,12,5594,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,400,400
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,CENSOR_M,Censor quan sát: gap lịch sử (M),18,18
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,CENSOR_S,Censor quan sát: servicer suppression (S),49,49
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),8,8
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3936,3936
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,1029,1029
+one_earliest_c_per_mortgage,origination_year,2020,8,24,5594,5594,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,553,553
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),4,4
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,CENSOR_S,Censor quan sát: servicer suppression (S),8,8
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),1,1
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,5146,5146
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,120,120
+one_earliest_c_per_mortgage,origination_year,2021,2,6,5327,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,47,47
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),8,8
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,CENSOR_S,Censor quan sát: servicer suppression (S),15,15
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),4,4
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4990,4990
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,209,209
+one_earliest_c_per_mortgage,origination_year,2021,4,12,5327,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,100,100
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,CENSOR_M,Censor quan sát: gap lịch sử (M),16,16
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,CENSOR_S,Censor quan sát: servicer suppression (S),38,38
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),16,16
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,4742,4742
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,342,342
+one_earliest_c_per_mortgage,origination_year,2021,8,24,5327,5327,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,171,171
+one_earliest_c_per_mortgage,origination_year,2022,2,6,3813,3813,CENSOR_S,Censor quan sát: servicer suppression (S),11,11
+one_earliest_c_per_mortgage,origination_year,2022,2,6,3813,3813,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),5,5
+one_earliest_c_per_mortgage,origination_year,2022,2,6,3813,3813,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3708,3708
+one_earliest_c_per_mortgage,origination_year,2022,2,6,3813,3813,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,57,57
+one_earliest_c_per_mortgage,origination_year,2022,2,6,3813,3813,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,32,32
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,CENSOR_M,Censor quan sát: gap lịch sử (M),2,2
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,CENSOR_S,Censor quan sát: servicer suppression (S),21,21
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),20,20
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3569,3569
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,135,135
+one_earliest_c_per_mortgage,origination_year,2022,4,12,3812,3812,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,64,64
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,CENSOR_M,Censor quan sát: gap lịch sử (M),12,12
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,CENSOR_S,Censor quan sát: servicer suppression (S),36,36
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),41,41
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3254,3254
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,OTHER_7,Trạng thái cạnh tranh: bankruptcy (7),1,1
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,321,321
+one_earliest_c_per_mortgage,origination_year,2022,8,24,3810,3810,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,144,144
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),3,3
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,CENSOR_S,Censor quan sát: servicer suppression (S),7,7
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),5,5
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3644,3644
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,121,121
+one_earliest_c_per_mortgage,origination_year,2023,2,6,3844,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,64,64
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,CENSOR_M,Censor quan sát: gap lịch sử (M),9,9
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,CENSOR_S,Censor quan sát: servicer suppression (S),20,20
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),21,21
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3313,3313
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,336,336
+one_earliest_c_per_mortgage,origination_year,2023,4,12,3844,3844,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,145,145
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,CENSOR_M,Censor quan sát: gap lịch sử (M),12,12
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,CENSOR_S,Censor quan sát: servicer suppression (S),16,16
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),20,20
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,1437,1437
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,194,194
+one_earliest_c_per_mortgage,origination_year,2023,8,24,1773,1773,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,93,93
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,CENSOR_M,Censor quan sát: gap lịch sử (M),13,13
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,CENSOR_S,Censor quan sát: servicer suppression (S),9,9
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),4,4
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,3628,3628
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,OTHER_9,Trạng thái cạnh tranh: giải quyết/charge-off khác (9),1,1
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,143,143
+one_earliest_c_per_mortgage,origination_year,2024,2,6,3870,3870,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,72,72
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,CENSOR_M,Censor quan sát: gap lịch sử (M),9,9
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,CENSOR_S,Censor quan sát: servicer suppression (S),10,10
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,90PLUS,Quan sát 90+ ngày trễ (mã 3–6),12,12
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,NO_90PLUS,Không quan sát 90+ trong các snapshot kỳ hạn này; không chứng minh lịch sử hoàn toàn không có event,1650,1650
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,CLOSE_PRE,Kết thúc trước snapshot kế tiếp; nguyên nhân không rõ,158,158
+one_earliest_c_per_mortgage,origination_year,2024,4,12,1929,1929,CLOSE_TIED,Đóng cùng tháng snapshot; thứ tự không xác định,90,90

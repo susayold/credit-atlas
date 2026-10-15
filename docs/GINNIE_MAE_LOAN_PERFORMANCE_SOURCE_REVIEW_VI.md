@@ -34,14 +34,20 @@ Không nối borrower/loan identities giữa Ginnie, Freddie, Fannie, HMDA, NSMO
 
 ## Điều khoản và quyền truy cập
 
-Ginnie Mae nêu rõ single-family loan-level data chỉ dành cho phân tích Ginnie Mae MBS; cấm cố nhận diện cá nhân hoặc liên kết dữ liệu với thông tin khác nhằm suy ra danh tính. Thông cáo gốc nêu người dùng cần đồng ý Terms of Use trước khi sử dụng loan-level files. Vì xác nhận này thể hiện cam kết thay cho người chấp nhận, Codex không gửi xác nhận và chưa tải production data.
+Ginnie Mae nêu rõ single-family loan-level data chỉ dành cho phân tích Ginnie Mae MBS; cấm cố nhận diện cá nhân hoặc liên kết dữ liệu với thông tin khác nhằm suy ra danh tính. Thông cáo gốc nêu người dùng cần đồng ý Terms of Use trước khi sử dụng loan-level files. Người dùng đã xác nhận trong chat rằng họ đã đọc và chấp nhận Terms of Use. Xác nhận này không tạo ra hay thay thế một phiên đăng nhập; chưa tải production data.
 
 Sau khi chủ tài khoản/người dùng xác nhận điều khoản trực tiếp, pilot hợp lý là một quarterly performance file nhỏ hơn annual file (catalog hiện liệt kê gần 783 MB nén), cùng liquidation file ở kỳ phù hợp nếu được phép. Trước khi tải toàn bộ history 2.3 GB/year cần pilot định dạng, tỷ lệ nén, row counts, memory/disk, schema và duplicate keys. Giữ nguyên raw package private ở D:, receipt có URL/timestamp/hash/source release, không đưa raw data hoặc source-derived loan rows lên GitHub.
 
-## Kế hoạch tiếp tục sau khi có quyền truy cập
+## Trạng thái truy cập production — 16/10/2026
 
-1. Người dùng tự đọc và xác nhận Terms of Use trên trang Ginnie Mae; không gửi mật khẩu/cookies ở chat.
-2. Chọn `LoanPerf_YYYYMM` quarterly làm pilot đầu tiên; giữ nguyên ZIP và ghi hash trước khi đọc.
+Catalog production vẫn liệt kê `LoanPerf_202606.zip` khoảng 783 MB. Recheck giao diện Angular công khai của `https://bulk.ginniemae.gov/` cho thấy luồng download yêu cầu cookie phiên `gm_up_token`, gọi profile endpoint để xác thực token rồi chuyển đến download route của Disclosure WCF. Các URL ZIP trực tiếp và endpoint thử không kèm phiên chỉ trả HTML app shell, không phải payload. Vì thế 401 trước đó là auth gate; không dùng URL đoán, cookie giả hay cách bỏ qua đăng nhập.
+
+User nói có thể tự đăng nhập và lưu cookie trên D:, nhưng chưa gửi đường dẫn file. Chỉ cần cung cấp **đường dẫn** Netscape cookie file; không gửi nội dung cookie/mật khẩu trong chat. Cookie sẽ được đọc tại chỗ cho request production, không được in log hay ghi vào receipt. Nếu phiên Ginnie không dùng cookie Netscape tương thích hoặc cookie hết hạn, dừng và yêu cầu người dùng xuất lại phiên qua giao diện chính thức.
+
+## Kế hoạch tiếp tục sau khi có phiên đã đăng nhập
+
+1. User đã xác nhận đọc và chấp nhận Terms of Use; chỉ truyền file cookie path, không đưa bí mật vào chat.
+2. Dùng giao diện/route production chính thức `LoanPerf_202606.zip` cho quarterly pilot; giữ ZIP private và ghi hash/size trước khi đọc.
 3. Lấy file layout/dictionary chính thức tương ứng, xác nhận file version, record widths/delimiters, HH/LP/TT totals và period coverage.
 4. Stream parse theo record, chỉ ghi canonical source-specific tables; kiểm tra key/period uniqueness, row totals, date ranges, legal status codes, LTV/DTI/FICO bounds, UPB logic và missingness.
 5. Profile active-survivor bias và exit coverage bằng liquidation/performance records; không gán non-event cho loan biến mất.

@@ -47,6 +47,20 @@ def _classify(statuses: list[str], close_ordinal: int | None,
     return outcome
 
 
+def _first_eligible_c_landmark(statuses: list[str], close_ordinal: int | None,
+                               horizon: int) -> str | None:
+    """Return one earliest full-follow-up C outcome for support diagnostics."""
+    for baseline_index, status in enumerate(statuses):
+        if status != "C":
+            continue
+        if baseline_index + horizon >= len(statuses):
+            break
+        if close_ordinal is not None and close_ordinal <= _quarter_ordinal(baseline_index):
+            continue
+        return _classify(statuses, close_ordinal, baseline_index, horizon)
+    return None
+
+
 def audit(path: Path) -> dict:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.reader(stream)
@@ -81,6 +95,14 @@ def audit(path: Path) -> dict:
         vintage_unique_outcomes: dict[int, dict[str, dict[str, set[str]]]] = {
             horizon: defaultdict(lambda: defaultdict(set)) for horizon in HORIZONS
         }
+        first_anchor_counts: dict[int, Counter] = {horizon: Counter() for horizon in HORIZONS}
+        first_anchor_ids: dict[int, set[str]] = {horizon: set() for horizon in HORIZONS}
+        first_anchor_vintage_counts: dict[int, dict[str, Counter]] = {
+            horizon: defaultdict(Counter) for horizon in HORIZONS
+        }
+        first_anchor_vintage_ids: dict[int, dict[str, set[str]]] = {
+            horizon: defaultdict(set) for horizon in HORIZONS
+        }
         seen_ids: set[str] = set()
         rows = width_errors = missing_ids = duplicate_ids = 0
         for row in reader:
@@ -106,6 +128,7 @@ def audit(path: Path) -> dict:
             )
             statuses = [row[index].strip().upper() for index in status_indices]
             for horizon in HORIZONS:
+                first_anchor_outcome = _first_eligible_c_landmark(statuses, close, horizon)
                 for baseline_index, baseline_status in enumerate(statuses):
                     if baseline_status != "C" or baseline_index + horizon >= len(statuses):
                         continue
@@ -121,6 +144,13 @@ def audit(path: Path) -> dict:
                     vintage_counts[horizon][origination_year][outcome] += 1
                     vintage_eligible[horizon][origination_year].add(loan_id)
                     vintage_unique_outcomes[horizon][origination_year][outcome].add(loan_id)
+                if first_anchor_outcome is not None:
+                    # One earliest eligible C landmark per mortgage is a
+                    # separate anchor estimand; do not reuse repeated rows.
+                    first_anchor_counts[horizon][first_anchor_outcome] += 1
+                    first_anchor_ids[horizon].add(loan_id)
+                    first_anchor_vintage_counts[horizon][origination_year][first_anchor_outcome] += 1
+                    first_anchor_vintage_ids[horizon][origination_year].add(loan_id)
 
     outcomes = []
     for horizon in HORIZONS:
@@ -137,21 +167,36 @@ def audit(path: Path) -> dict:
             "unique_mortgages_by_outcome_nonexclusive": {
                 key: len(ids) for key, ids in sorted(unique_outcomes[horizon].items())
             },
+            "by_origination_year": [
+                {
+                    "origination_year": year,
+                    "c_baseline_snapshots_with_full_horizon_unweighted": year_counts["full_horizon_c_baseline_snapshots"],
+                    "unique_mortgages_with_at_least_one_c_baseline": len(vintage_eligible[horizon][year]),
+                    "snapshot_outcomes_unweighted": {
+                        key: value for key, value in sorted(year_counts.items())
+                        if key != "full_horizon_c_baseline_snapshots"
+                    },
+                    "unique_mortgages_by_outcome_nonexclusive": {
+                        key: len(ids) for key, ids in sorted(vintage_unique_outcomes[horizon][year].items())
+                    },
+                }
+                for year, year_counts in sorted(vintage_counts[horizon].items())
+            ],
+            "one_landmark_per_mortgage": {
+                "selection_rule": "earliest C snapshot with a full horizon, excluding known closed-by-baseline loans",
+                "mortgages_with_eligible_landmark": len(first_anchor_ids[horizon]),
+                "outcomes_unweighted": dict(sorted(first_anchor_counts[horizon].items())),
+                "unique_mortgages_by_outcome": dict(sorted(first_anchor_counts[horizon].items())),
                 "by_origination_year": [
                     {
                         "origination_year": year,
-                        "c_baseline_snapshots_with_full_horizon_unweighted": year_counts["full_horizon_c_baseline_snapshots"],
-                        "unique_mortgages_with_at_least_one_c_baseline": len(vintage_eligible[horizon][year]),
-                        "snapshot_outcomes_unweighted": {
-                            key: value for key, value in sorted(year_counts.items())
-                            if key != "full_horizon_c_baseline_snapshots"
-                        },
-                        "unique_mortgages_by_outcome_nonexclusive": {
-                            key: len(ids) for key, ids in sorted(vintage_unique_outcomes[horizon][year].items())
-                        },
+                        "mortgages_with_eligible_landmark": len(first_anchor_vintage_ids[horizon][year]),
+                        "outcomes_unweighted": dict(sorted(year_counts.items())),
+                        "unique_mortgages_by_outcome": dict(sorted(year_counts.items())),
                     }
-                    for year, year_counts in sorted(vintage_counts[horizon].items())
+                    for year, year_counts in sorted(first_anchor_vintage_counts[horizon].items())
                 ],
+            },
         })
     passed = rows == 62359 and not (width_errors or missing_ids or duplicate_ids)
     return {

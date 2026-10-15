@@ -112,6 +112,13 @@ auditors now cover the official sample formats. This remains a separate Ginnie
 MBS case and does not qualify a Freddie vintage. See
 `docs/GINNIE_MAE_CREDIT_PERFORMANCE_DATA_REVIEW_VI.md`.
 
+Follow-up on 16/10/2026: the live public catalog frontend validates its
+`gm_up_token` session cookie and user profile before using the official download
+route. Direct requests without that session return HTML app shell, not data. The
+user can sign in and save a Netscape cookie file on D:, but has not provided its
+path; production acquisition remains pending that path. Do not search for
+cookie files or expose token values.
+
 The CFPB Consumer Credit Trends dashboard refreshed on 15/10/2026, but its
 official all-products CSV and Excel codebook still returned HTTP 403 to direct
 file requests on 16/10. Keep this as a source-access limitation; do not infer

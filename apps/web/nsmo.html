@@ -176,9 +176,14 @@
           <div id="horizon-sensitivity-metrics" class="metric-grid" aria-label="Horizon sensitivity metrics"></div>
           <div id="horizon-sensitivity-note" class="target-note"></div>
           <div id="horizon-sensitivity-table" class="table-wrap"></div>
-          <h4>Support và censoring theo năm giải ngân</h4>
+          <h4>Repeated quarterly C landmarks theo năm giải ngân</h4>
           <p class="target-note">Dùng bộ lọc “Vintage origination” phía trên để xem từng nhóm năm. Mỗi hàng giữ nguyên số snapshot và số mortgage riêng; các hàng giữa horizon không phải cohort so sánh lồng nhau.</p>
           <div id="horizon-sensitivity-vintage-table" class="table-wrap"></div>
+          <h4>Một earliest eligible C landmark cho mỗi mortgage</h4>
+          <p class="target-note">Mỗi mortgage đóng góp tối đa một landmark C đủ horizon. Đây là lựa chọn anchor khác với repeated snapshots; số 90+ cũng chỉ là support quan sát được, không phải PD.</p>
+          <div id="horizon-sensitivity-single-table" class="table-wrap"></div>
+          <h4>Single-landmark outcomes theo năm giải ngân</h4>
+          <div id="horizon-sensitivity-single-vintage-table" class="table-wrap"></div>
           <p class="footnote">Cohort baseline của từng horizon không lồng nhau vì cửa sổ dài cần thêm các quý theo dõi ở cuối PUF. Vì vậy số unique có 90+ không phải risk rate và có thể không tăng đơn điệu. Mỗi mortgage có thể xuất hiện ở nhiều baseline quý. Chưa tạo target, PD hoặc model.</p>
         </div>
       </section>

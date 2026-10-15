@@ -1,4 +1,7 @@
-from scripts.audit_nsmo_horizon_sensitivity import _classify
+from scripts.audit_nsmo_horizon_sensitivity import (
+    _classify, _first_eligible_c_landmark,
+)
+from scripts.audit_nsmo_target_feasibility import _quarter_ordinal
 
 
 def test_horizon_sensitivity_uses_horizon_specific_no_event_label():
@@ -10,3 +13,11 @@ def test_horizon_sensitivity_uses_horizon_specific_no_event_label():
 
 def test_horizon_sensitivity_preserves_incomplete_followup_as_censored():
     assert _classify(["C", "C", "C"], None, 0, 4) == "administratively_short_followup"
+
+
+def test_one_landmark_sensitivity_uses_one_earliest_complete_c_anchor():
+    assert _first_eligible_c_landmark(["C", "1", "3", "A"], None, 2) == "observed_90plus_event"
+    assert _first_eligible_c_landmark(["C", "C"], None, 2) is None
+    assert _first_eligible_c_landmark(
+        ["C", "C", "C"], _quarter_ordinal(0), 2
+    ) is None

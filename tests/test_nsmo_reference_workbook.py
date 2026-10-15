@@ -37,9 +37,10 @@ def test_nsmo_reference_workbook_contains_all_reviewed_metadata():
     assert workbook["Bat dau"]["B4"].value.startswith("Năm sheet dữ liệu")
     sensitivity = workbook["Do nhay horizon"]
     assert sensitivity.max_row == row_count + 1
-    assert sensitivity["A2"].value == "all"
-    assert sensitivity["C2"].value == 2 and sensitivity["D2"].value == 6
-    assert sensitivity["I2"].value == 661
-    assert sensitivity["J2"].value == 394
-    assert sensitivity["G2"].value == "CENSOR_M"
-    assert any(sensitivity.cell(row, 1).value == "origination_year" for row in range(2, sensitivity.max_row + 1))
+    assert sensitivity["A2"].value == "repeated_c_landmarks"
+    assert sensitivity["B2"].value == "all"
+    assert sensitivity["D2"].value == 2 and sensitivity["E2"].value == 6
+    assert sensitivity["J2"].value == 661
+    assert sensitivity["K2"].value == 394
+    assert sensitivity["H2"].value == "CENSOR_M"
+    assert any(sensitivity.cell(row, 1).value == "one_earliest_c_per_mortgage" for row in range(2, sensitivity.max_row + 1))

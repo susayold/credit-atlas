@@ -223,3 +223,15 @@ dictionary/questionnaire tests pass 15/15; isolated Edge headless QA passes 5/5
 with no page errors. This narrows descriptive comparability only; routing,
 response mode/population equivalence, survey variance and predictor eligibility
 remain open. No target/model/PD was created.
+
+## 2026-10-16 continuation — NSMO Excel reference delivery
+
+Added a five-sheet Excel workbook and `/downloads/nsmo-reference.xlsx` route
+for the NSMO codebook/category material. The workbook contains 587 field rows,
+377 SAS category labels, 319 wave-coverage rows, and nine item-comparability
+notes, with filterable Excel Tables and frozen headers/first column. The four
+sanitized CSV tables remain the canonical API inputs. Workbook/API tests pass
+16/16 and browser acceptance passes 7/7 with no page errors. The live listener
+on port 8770 still runs the prior server code and returns 404 for the new
+download route; reload that service to activate it. The workbook is committed
+and published in the public repository.

@@ -80,6 +80,20 @@ D01 panel.
 | D02-5 — target protocol | Decide whether the evidence supports a quarterly snapshot outcome or an observed first-entry endpoint; specify horizon, event, competing termination, censoring, missing/suppressed rules and weight/variance method | Signed/frozen target and evaluation protocol before outcome-driven analysis | Feasibility screens now cover repeated/current-state C landmarks, earliest eligible C per loan, and an origination-month-aligned snapshot window. The origination-aligned diagnostic finds only 65 observed 90+ outcomes across 62,359 mortgages; the earliest fully followed C anchor yields 156 among 59,703, while repeated C landmarks yield 2,174 positive snapshots / ~750 distinct loans ever positive. These are different estimands and descriptive support counts, not rates. None is frozen; population/estimand, competing risks, censoring/selection, predictor timing, and design variance remain unresolved. No target/PD/model outputs. See `NSMO_ORIGINATION_FEASIBILITY_VI.md`. |
 | D02-6 — model study | Only if target support and temporal cohorts are adequate; use time-separated train/calibration/validation/test and report weighted plus unweighted diagnostics | Reproducible model card, calibration/threshold review and source-specific limitations | Not started; current origination-aligned support (65 observed 90+ statuses) is insufficient to justify a multi-predictor model. Revisit only after target/estimand and additional validated outcome data are available. |
 
+### Excel reference handoff — 16/10/2026
+
+D02-4 now offers a five-sheet Excel reference workbook for the four public
+metadata tables: the 587-field dictionary, 377 SAS value labels, 319 survey
+field-wave coverage rows, and nine item-comparability notes. The data sheets are
+filterable Excel Tables with frozen headers/first column. The local download is
+`/downloads/nsmo-reference.xlsx`; details and refresh steps are in
+`NSMO_EXCEL_REFERENCE_VI.md`. Focused workbook/API tests pass 16/16 and the
+dictionary browser acceptance passes 7/7 with no page errors. At this checkpoint
+the long-running listener on port 8770 still serves the prior server version and
+returns 404 for the new download route; the route becomes available after the
+service reloads. The workbook itself is present in the workspace and public
+repository.
+
 ## Intended metrics and guardrails
 
 The initial app is descriptive, not decisioning. Current views show origination

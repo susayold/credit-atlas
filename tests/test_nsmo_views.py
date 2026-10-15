@@ -496,7 +496,11 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
     shutil.copyfile(source_d02_workbook, target_workbook.parent / source_d02_workbook.name)
     target_data = tmp_path / "docs/data"
     target_data.mkdir(parents=True, exist_ok=True)
-    for name in ("hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv"):
+    for name in (
+        "hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv",
+        "hud-fha-new-90plus-reasons-2026-08.csv", "hud-fha-foreclosure-statistics-2026-08.csv",
+        "hud-fha-reo-recovery-2026-08.csv", "hud-fha-reo-loss-components-2026-08.csv",
+    ):
         shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
     for name in ("nmdb-performance-national-quarterly-2026q2.csv",
                  "nmdb-performance-national-quarterly-2026q2-receipt.json"):
@@ -548,6 +552,10 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert len(hud["monthly"]) == 26
             assert len(hud["subgroups"]) == 60
+            assert len(hud["new_90plus_reasons"]) == 22
+            assert len(hud["foreclosure_statistics"]) == 37
+            assert len(hud["reo_recovery"]) == 50
+            assert len(hud["reo_loss_components"]) == 13
             assert hud["latest"]["NSA"]["serious_delinquency_pct"] == 6.42
             assert hud["latest"]["SA"]["serious_delinquency_pct"] == 6.63
         with urlopen(base + "/downloads/nmdb-performance.xlsx", timeout=5) as response:

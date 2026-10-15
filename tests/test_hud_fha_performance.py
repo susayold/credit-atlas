@@ -12,6 +12,10 @@ def test_hud_fha_monthly_and_subgroup_aggregates_reconcile_to_august_report():
     assert report["status"] == "AVAILABLE"
     assert len(report["monthly"]) == 26
     assert len(report["subgroups"]) == 60
+    assert len(report["new_90plus_reasons"]) == 22
+    assert len(report["foreclosure_statistics"]) == 37
+    assert len(report["reo_recovery"]) == 50
+    assert len(report["reo_loss_components"]) == 13
     assert report["latest"]["NSA"]["active_iif_count"] == 8_416_639
     assert report["latest"]["NSA"]["serious_delinquency_pct"] == 6.42
     assert report["latest"]["SA"]["serious_delinquency_pct"] == 6.63
@@ -35,8 +39,14 @@ def test_hud_fha_rejects_missing_monthly_observation(tmp_path):
     root = Path(__file__).parents[1]
     (tmp_path / "docs/data").mkdir(parents=True)
     source = root / "docs/data"
-    shutil.copyfile(source / "hud-fha-performance-2026-08-subgroups.csv",
-                    tmp_path / "docs/data/hud-fha-performance-2026-08-subgroups.csv")
+    for name in (
+        "hud-fha-performance-2026-08-subgroups.csv",
+        "hud-fha-new-90plus-reasons-2026-08.csv",
+        "hud-fha-foreclosure-statistics-2026-08.csv",
+        "hud-fha-reo-recovery-2026-08.csv",
+        "hud-fha-reo-loss-components-2026-08.csv",
+    ):
+        shutil.copyfile(source / name, tmp_path / "docs/data" / name)
     text = (source / "hud-fha-performance-2026-08.csv").read_text(encoding="utf-8")
     lines = text.splitlines()
     (tmp_path / "docs/data/hud-fha-performance-2026-08.csv").write_text(

@@ -49,11 +49,14 @@ release.
 
 Blank input workbooks are included. Some workbook-generation scripts call the host-provided `@oai/artifact-tool` package; the package itself is not part of this public release. See `apps/excel/README.md`.
 
-The HUD August 2026 FHA monthly-performance snapshot is a separately attributed
-public aggregate transcription from the official report's Table 1 and Table 3.
-It contains no FHA loan-level records, is not merged with NSMO/Freddie, and
-documents that the report PDF binary was not saved after direct retrieval
-returned HTTP 403.
+The HUD August 2026 FHA performance workbook contains separately attributed
+public aggregate transcriptions from Tables 1–6 of the official report: monthly
+performance, portfolio subgroups, new-90+ reported reasons, foreclosure
+statistics, REO recovery by geography, and REO loss components. It contains no
+FHA loan-level records, is not merged with NSMO/Freddie, and documents that the
+report PDF binary was not saved after direct retrieval returned HTTP 403. The
+D02 workbook includes every public CSV dataset as an Excel Table, with source
+definitions and scope notes; CSV remains the app's canonical input format.
 
 The D02 Excel reference workbook also includes aggregate-only extractions of
 FHFA NSMO Technical Report v7.0 Tables 3–6: response counts by mail/online mode,

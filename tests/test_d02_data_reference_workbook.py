@@ -11,7 +11,8 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
         "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO question refs", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
-        "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
+        "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "HUD 90+ reasons",
+        "HUD foreclosure", "HUD REO recovery", "HUD REO loss", "NMDB definitions", "HUD definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
@@ -26,6 +27,10 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         "NMDB quarterly": "nmdb-performance-national-quarterly-2026q2.csv",
         "HUD monthly": "hud-fha-performance-2026-08.csv",
         "HUD subgroups": "hud-fha-performance-2026-08-subgroups.csv",
+        "HUD 90+ reasons": "hud-fha-new-90plus-reasons-2026-08.csv",
+        "HUD foreclosure": "hud-fha-foreclosure-statistics-2026-08.csv",
+        "HUD REO recovery": "hud-fha-reo-recovery-2026-08.csv",
+        "HUD REO loss": "hud-fha-reo-loss-components-2026-08.csv",
     }
     assert {path.name for path in (root / "docs/data").glob("*.csv")} == set(expected.values())
     for sheet_name, csv_name in expected.items():
@@ -69,3 +74,12 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert question_refs.max_row == 8
     assert question_refs.cell(3, 1).value == "x17g_1"
     assert question_refs.cell(3, 4).value == "WAVE_VARIANT_REVIEW"
+    assert workbook["HUD 90+ reasons"].max_row == 23
+    assert workbook["HUD 90+ reasons"].cell(2, 1).value == "2021 Q4"
+    assert workbook["HUD 90+ reasons"].cell(2, 13).value is False
+    assert workbook["HUD foreclosure"].max_row == 38
+    assert workbook["HUD foreclosure"].cell(38, 8).value == 0.28
+    assert workbook["HUD REO recovery"].max_row == 51
+    assert workbook["HUD REO recovery"].cell(2, 3).value == 50.5
+    assert workbook["HUD REO loss"].max_row == 14
+    assert workbook["HUD definitions"].max_row >= 9

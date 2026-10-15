@@ -92,6 +92,35 @@ const sources = [
     delinquency_90plus_pct: "90+ delinquency (%)", foreclosure_pct: "Foreclosure (%)", bankruptcy_pct: "Bankruptcy (%)",
     serious_delinquency_pct: "Serious delinquency (%)", source_table: "HUD source table", source_page: "Report page",
   }, numeric: new Set(["iif_count", "iif_share_pct", "all_past_due_pct", "delinquency_30d_pct", "delinquency_60d_pct", "delinquency_90plus_pct", "foreclosure_pct", "bankruptcy_pct", "serious_delinquency_pct"]) },
+  { sheet: "HUD 90+ reasons", file: "hud-fha-new-90plus-reasons-2026-08.csv", table: "Hud90PlusReasons", headers: {
+    fiscal_period: "Fiscal period", new_90plus_count: "New 90+ loans", reduction_income_pct: "Income reduction (%)",
+    unemployed_pct: "Unemployed (%)", excessive_obligations_pct: "Excessive obligations (%)",
+    death_illness_pct: "Death / illness (%)", marital_difficulties_pct: "Marital difficulties (%)",
+    no_contact_pct: "Unable to contact (%)", national_emergency_pct: "National emergency (%)",
+    other_pct: "Other reason (%)", source_table: "HUD source table", source_page: "Report page", partial_period: "Partial period",
+  }, numeric: new Set(["new_90plus_count", "reduction_income_pct", "unemployed_pct", "excessive_obligations_pct", "death_illness_pct", "marital_difficulties_pct", "no_contact_pct", "national_emergency_pct", "other_pct", "source_page"]), bool: new Set(["partial_period"]) },
+  { sheet: "HUD foreclosure", file: "hud-fha-foreclosure-statistics-2026-08.csv", table: "HudForeclosure", headers: {
+    fiscal_year: "Fiscal year", month: "Month", active_iif_count: "Active FHA-insured loans",
+    foreclosure_starts: "Foreclosure starts", in_foreclosure_count: "Loans in foreclosure",
+    foreclosure_claims_paid: "Foreclosure claims paid", foreclosure_starts_6m_moving_avg: "6-month starts average",
+    annualized_foreclosure_rate_pct: "Annualized foreclosure rate (%)", source_table: "HUD source table", source_page: "Report page",
+  }, numeric: new Set(["fiscal_year", "active_iif_count", "foreclosure_starts", "in_foreclosure_count", "foreclosure_claims_paid", "foreclosure_starts_6m_moving_avg", "annualized_foreclosure_rate_pct", "source_page"]) },
+  { sheet: "HUD REO recovery", file: "hud-fha-reo-recovery-2026-08.csv", table: "HudReoRecovery", headers: {
+    state_or_territory: "State / territory", dispositions_jul2026: "Dispositions · Jul 2026",
+    recovery_jul2026_pct: "Recovery · Jul 2026 (%)", recovery_jun2026_pct: "Recovery · Jun 2026 (%)",
+    recovery_jul2025_pct: "Recovery · Jul 2025 (%)", change_from_jun2026_pp: "Change vs Jun 2026 (pp)",
+    change_from_jul2025_pp: "Change vs Jul 2025 (pp)", source_table: "HUD source table", source_page: "Report page",
+  }, numeric: new Set(["dispositions_jul2026", "recovery_jul2026_pct", "recovery_jun2026_pct", "recovery_jul2025_pct", "change_from_jun2026_pp", "change_from_jul2025_pp", "source_page"]) },
+  { sheet: "HUD REO loss", file: "hud-fha-reo-loss-components-2026-08.csv", table: "HudReoLoss", headers: {
+    disposition_month: "Disposition month", claim_expenses_pct: "Claim expenses (%)", holding_costs_pct: "Holding costs (%)",
+    loss_on_collateral_pct: "Loss on collateral (%)", sales_expense_pct: "Sales expenses (%)",
+    program_discounts_pct: "Program discounts (%)", net_loss_rate_pct: "Net loss rate (%)",
+    average_dollar_loss: "Average dollar loss ($)", average_unpaid_balance: "Average unpaid balance ($)",
+    dispositions: "Dispositions", discounts: "Discounts", delinquency_stage_months: "Delinquency stage (months)",
+    foreclosure_stage_months: "Foreclosure stage (months)", deed_transfer_stage_months: "Deed transfer stage (months)",
+    reo_stage_months: "REO stage (months)", all_stages_months: "All stages (months)",
+    source_table: "HUD source table", source_page: "Report page",
+  }, numeric: new Set(["claim_expenses_pct", "holding_costs_pct", "loss_on_collateral_pct", "sales_expense_pct", "program_discounts_pct", "net_loss_rate_pct", "average_dollar_loss", "average_unpaid_balance", "dispositions", "discounts", "delinquency_stage_months", "foreclosure_stage_months", "deed_transfer_stage_months", "reo_stage_months", "all_stages_months", "source_page"]) },
 ];
 
 const wb = Workbook.create();
@@ -106,7 +135,8 @@ const guideRows = [
   ["Question references", "The reconciliation sheet preserves original references beside the questionnaire number and evidence; it does not claim full wave/mode routing is resolved."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
-  ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],
+  ["HUD FHA", "Monthly trend, subgroups, new-90+ reason shares, foreclosure pipeline, REO recovery by geography and REO loss components through August 2026. These are not NSMO loan records."],
+  ["HUD interpretation", "New-90+ reason shares sum to 100% and describe reported reasons, not predictive drivers. Foreclosure starts/claims/rates are separate measures. REO recovery percentages may exceed 100%; negative changes are percentage-point changes. Loss components are not exhaustive or additive."],
   ["Use", "Each data sheet has an Excel Table with filters. The top row and first identifier column remain fixed while scrolling."],
   ["Interpretation", "Keep the source population, denominator and metric definition with each dataset. Do not join these separate programs into NSMO mortgage rows."],
   ["Refresh", "The CSV files in docs/data remain the canonical app inputs. Rebuild this workbook after updating those source tables."],
@@ -166,6 +196,18 @@ for (const source of sources) {
       sheet.getRange(`${columnName(index + 1)}2:${columnName(index + 1)}${values.length + 1}`).format.numberFormat = '0.00"%"';
     }
   }
+  for (const name of header.filter((item) => item.includes("(%)"))) {
+    const index = header.indexOf(name);
+    sheet.getRange(`${columnName(index + 1)}2:${columnName(index + 1)}${values.length + 1}`).format.numberFormat = '0.00"%"';
+  }
+  for (const name of header.filter((item) => item.includes("(pp)"))) {
+    const index = header.indexOf(name);
+    sheet.getRange(`${columnName(index + 1)}2:${columnName(index + 1)}${values.length + 1}`).format.numberFormat = '0.00" pp"';
+  }
+  for (const name of header.filter((item) => /count|loans|starts|claims|dispositions|discounts|\(\$\)/i.test(item))) {
+    const index = header.indexOf(name);
+    sheet.getRange(`${columnName(index + 1)}2:${columnName(index + 1)}${values.length + 1}`).format.numberFormat = "#,##0";
+  }
 }
 
 const definitions = wb.worksheets.add("NMDB definitions");
@@ -193,6 +235,31 @@ definitions.getRange("B:B").format.columnWidth = 96;
 definitions.getRange("C:C").format.columnWidth = 72;
 definitions.getRange(`A2:C${definitionRows.length}`).format = { verticalAlignment: "top", wrapText: true };
 
+const hudDefinitions = wb.worksheets.add("HUD definitions");
+hudDefinitions.showGridLines = false;
+const hudRows = [
+  ["Topic", "Definition / use", "Interpretation boundary"],
+  ["New 90+ reasons", "Distribution of reported reasons among newly 90+ FHA loans; reason shares sum to 100%.", "Descriptive reason coding, not a predictor contribution or causal explanation. Q4 July/August 2026 are partial periods."],
+  ["Foreclosure starts", "New starts during the month; the 6-month moving average smooths monthly counts.", "A flow measure, distinct from the stock in foreclosure or paid claims."],
+  ["In foreclosure", "Count of active loans in the foreclosure process at the reporting date.", "A stock measure, not the monthly foreclosure-start rate."],
+  ["Annualized foreclosure rate", "HUD-reported monthly foreclosure claims divided by beginning insurance-in-force (IIF), annualized.", "Not directly comparable with the in-foreclosure portfolio share."],
+  ["REO recovery", "Proceeds/recovery as a percentage of unpaid principal balance at default, by state/territory.", "May exceed 100%; small disposition counts can make geography rates volatile. Blank means publisher did not report a value."],
+  ["REO recovery change", "Difference between reported recovery rates, in percentage points.", "Negative values indicate a lower recovery rate than the comparison period."],
+  ["Loss components", "HUD-reported loss/cost categories, average dollar amounts, counts and stage durations.", "Categories are not exhaustive and do not sum to the net loss rate."],
+  ["Scope", "HUD FHA Single-Family Loan Performance Trends, August 2026; aggregate portfolio evidence.", "Keep separate from NSMO loan-level records, targets and model-training samples."],
+  ["Source", "https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf", "Tables 1–6; report pages 2–8."],
+];
+hudDefinitions.getRangeByIndexes(0, 0, hudRows.length, 3).values = hudRows;
+hudDefinitions.freezePanes.freezeRows(1);
+hudDefinitions.freezePanes.freezeColumns(1);
+const hudTable = hudDefinitions.tables.add(`A1:C${hudRows.length}`, true, "HudDefinitions");
+hudTable.style = "TableStyleMedium2";
+hudDefinitions.getRange("A1:C1").format = { fill: "#243B53", font: { bold: true, color: "#FFFFFF" }, wrapText: true, rowHeight: 34 };
+hudDefinitions.getRange("A:A").format.columnWidth = 28;
+hudDefinitions.getRange("B:B").format.columnWidth = 90;
+hudDefinitions.getRange("C:C").format.columnWidth = 98;
+hudDefinitions.getRange(`A2:C${hudRows.length}`).format = { verticalAlignment: "top", wrapText: true };
+
 const inspection = await wb.inspect({ kind: "workbook,sheet,table", maxChars: 6000, tableMaxRows: 2, tableMaxCols: 5 });
 console.log(inspection.ndjson);
 if (previewPath) {
@@ -203,7 +270,7 @@ if (previewPath) {
 await fs.mkdir(path.dirname(output), { recursive: true });
 const xlsx = await SpreadsheetFile.exportXlsx(wb);
 await xlsx.save(output);
-console.log(JSON.stringify({ status: "exported", output, dataSheets: sources.length + 1 }));
+console.log(JSON.stringify({ status: "exported", output, workbookSheets: sources.length + 3 }));
 
 function columnName(index) {
   let result = "";

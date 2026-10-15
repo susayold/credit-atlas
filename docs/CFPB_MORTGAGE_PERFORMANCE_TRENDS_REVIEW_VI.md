@@ -55,15 +55,15 @@ does not provide the original vintage for each value.
 
 ## Intended module use
 
-Use as a separately attributed monthly geographic context series in Mortgage
-Sources. Allow National, State, and available County selection; preserve the
-source's percentage-point values and selected geography FIPS. Show both
-delinquency definitions with their denominators and suppression caveats. Keep
-this source separate from HUD tract exposure and from FHFA quarterly NMDB
-performance; do not interpolate quarterly values or merge the three sources
-into one time series. Do not join it to private Freddie loans, use it as a
-loan-level predictor, infer local default probability, or count it as a new
-loan-performance vintage.
+The Mortgage Sources workspace now presents this as a separately attributed
+monthly geography context series with National, State and available County
+selection. It preserves source percentage points and normalized geography FIPS,
+shows both delinquency definitions and denominator/suppression caveats, and
+exports only the selected aggregate series. It remains separate from HUD tract
+exposure and FHFA quarterly NMDB performance; the app does not interpolate
+quarterly values or merge these sources into one time series. Do not join this
+series to private Freddie loans, use it as a loan-level predictor, infer local
+default probability, or count it as a new loan-performance vintage.
 
 ## Verification record
 
@@ -73,7 +73,10 @@ loan-performance vintage.
   aggregation, minimum 1,000 mortgages for shown county/metro areas,
   imputation/reporting caveats, and the two delinquency definitions.
 - Four downloaded files passed header, row-count, 216-period, numeric-cell,
-  and percentage-range profile checks. Hashes are preserved in the private
-  receipt and are not published with loan-level or private data.
+  and percentage-range profile checks. The app reader rechecks raw hashes and
+  schema before serving; three parser/receipt tests pass. A real-data browser
+  acceptance verifies geography selection, FIPS normalization, all 216 months,
+  aggregate JSON export, and an injected export outage (86/86 total checks).
+  Hashes and raw files remain in private storage.
 - Source is acquired for a contextual UI extension only. No D01 model gate or
   acceptance percentage changes as a result.

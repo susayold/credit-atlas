@@ -517,6 +517,11 @@ def handler_for(service: ResearchService):
                     if url.path.endswith("-report"):
                         self.send(200, result, filename="FHFA-NMDB-public-aggregate-performance.json", head=head)
                         return
+                elif url.path in {"/api/cfpb-mortgage-trends", "/api/cfpb-mortgage-trends-report"}:
+                    result = service.cfpb_mortgage_trends(query)
+                    if url.path.endswith("-report"):
+                        self.send(200, result, filename="CFPB-Mortgage-Performance-Trends-private-context.json", head=head)
+                        return
                 elif url.path in {"/api/fhfa-pudb-profile", "/api/fhfa-pudb-profile-report"}:
                     if query:
                         raise ValueError("FHFA PUDB profile accepts no filters")

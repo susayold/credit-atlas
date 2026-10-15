@@ -149,8 +149,29 @@ async function sources(container,generation){
   const steps=el("ol","muted-text");monitoring.investigation_order.forEach(step=>steps.append(el("li","",step)));monitor.append(steps);section(container,monitor);
   await fannieSamplePane(container,generation);
   await fhfaNmdbPerformancePane(container,generation);
+  await cfpbMortgageTrendsPane(container,generation);
   await fhfaPudbPane(container,generation);
   await hudFhaIifPane(container,generation);
+}
+async function cfpbMortgageTrendsPane(container,generation){
+ const box=card('CFPB · Monthly mortgage delinquency by geography','County/state context · 2008–2025 · same NMDB sample family; not loan-level or independent validation');box.id='cfpb-mortgage-trends';container.append(box);
+ try{
+  const initial=await api('/api/cfpb-mortgage-trends');if(generation!==renderGeneration)return;
+  if(initial.status!=='AVAILABLE'){box.append(empty(initial.reason||'CFPB mortgage trends unavailable.'));return;}
+  const choose=el('select'),label=el('label','','Geography'),toolbar=el('div','toolbar'),body=el('div');choose.setAttribute('aria-label','CFPB mortgage performance geography');
+  initial.geographies.forEach(g=>{const o=el('option','',g.geography_type==='National'?'National · United States':g.geography_type==='State'?`State · ${g.name} (${g.geoid})`:`County · ${g.name}, ${g.state} (${g.geoid})`);o.value=g.geography_type+'|'+g.geoid;choose.append(o);});
+  const selectedKey=initial.selected_geography.geography_type+'|'+initial.selected_geography.geoid;choose.value=selectedKey;label.append(choose);toolbar.append(label);box.append(toolbar,body);
+  let request=0;
+  const draw=async(value)=>{const sequence=++request,[geography_type,geoid]=value.split('|');body.replaceChildren(para('Đang đọc CFPB geography…'));try{
+    const r=await api('/api/cfpb-mortgage-trends',{geography_type,geoid});if(generation!==renderGeneration||sequence!==request)return;
+    const g=r.selected_geography,series=r.rows.map(x=>({period:x.period,early:x.delinquent_30_89_percent/100,serious:x.delinquent_90plus_percent/100}));
+    body.replaceChildren();body.append(supportList([['Published','2026-08'],['Monthly coverage',r.first_period+' → '+r.last_period],['Geography',g.name+(g.state?', '+g.state:'')+' · '+g.geoid],['Counties available',number(r.quality.county_geographies)],['State/district rows',number(r.quality.state_geographies)]]));
+    const chart=card('Outstanding mortgage delinquency rates','Source percentage points · '+g.geography_type+' · '+g.name);chart.append(lineChart(series,[{key:'early',color:'primary'},{key:'serious',color:'secondary'}],{percentage:true,label:'CFPB monthly mortgage delinquency rates by selected geography'}),legend([['30–89 days delinquent','green'],['90+ days delinquent, excluding foreclosure','blue']]),note('Rates are percentages of outstanding mortgages, not account counts/UPB. Source suppresses smaller geographies and may impute reported-missing values; revisions and emergency reporting can affect history.'));body.append(chart);
+    r.limitations.forEach(text=>body.append(note(text)));
+    const q=new URLSearchParams({geography_type,geoid});body.append(button('Xuất CFPB geography JSON',()=>downloadJSON('/api/cfpb-mortgage-trends-report?'+q,'CFPB-Mortgage-Performance-Trends-private-context.json')));
+  }catch(error){if(generation===renderGeneration&&sequence===request)body.replaceChildren(callout(error.message));}};
+  choose.addEventListener('change',()=>draw(choose.value));await draw(selectedKey);
+ }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
 }
 async function fhfaNmdbPerformancePane(container,generation){
  const box=card('FHFA NMDB · U.S. mortgage performance context','Quarterly national aggregate · comparison context only; independent source population');box.id='fhfa-nmdb-performance';container.append(box);

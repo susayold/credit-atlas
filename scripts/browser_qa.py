@@ -99,6 +99,39 @@ def run(root: Path):
                     assert len(context_export["rows"]) == 98
                     assert context_export["quality"]["archive_sha256"] == "f13c2b3a09b3c4318d43bcf2ba1fcc1e79f9b9c5a1c5ac2f49553dc377787dca"
                     checks.append("FHFA NMDB standalone source export includes all quarters and the verified archive hash")
+                    cfpb = page.locator("#cfpb-mortgage-trends")
+                    expect(cfpb).to_contain_text("2008-01 → 2025-12", timeout=15000)
+                    expect(cfpb).to_contain_text("507", timeout=15000)
+                    assert cfpb.locator('svg[aria-label="CFPB monthly mortgage delinquency rates by selected geography"]').is_visible()
+                    checks.append("CFPB monthly aggregate context renders 2008–2025 coverage and geography options")
+                    cfpb.get_by_label("CFPB mortgage performance geography").select_option("County|01003")
+                    expect(cfpb).to_contain_text("Baldwin County, AL · 01003", timeout=15000)
+                    with page.expect_download() as captured:
+                        cfpb.get_by_role("button", name="Xuất CFPB geography JSON", exact=True).click()
+                    cfpb_download = captured.value
+                    cfpb_path = output / "cfpb-mortgage-trends-county-01003.json"
+                    cfpb_download.save_as(str(cfpb_path))
+                    cfpb_export = json.loads(cfpb_path.read_text(encoding="utf-8"))
+                    assert cfpb_export["selected_geography"]["geoid"] == "01003"
+                    assert cfpb_export["selected_geography"]["name"] == "Baldwin County"
+                    assert len(cfpb_export["rows"]) == 216
+                    assert cfpb_export["rows"][-1]["period"] == "2025-12"
+                    assert set(cfpb_export["quality"]["selected_source_hashes"]) == {"30_89", "90_plus"}
+                    checks.append("CFPB county selection and JSON export preserve normalized FIPS, 216 months and source hashes")
+                    cfpb_error_page = context.new_page()
+                    cfpb_error_page.goto(base + "?run=" + case_id + "&view=overview", wait_until="networkidle")
+                    navigate_workspace(cfpb_error_page, "sources")
+                    cfpb_error_page.locator("#cfpb-mortgage-trends").get_by_label(
+                        "CFPB mortgage performance geography").select_option("County|01003")
+                    cfpb_error_page.route("**/api/cfpb-mortgage-trends-report*", lambda route: route.fulfill(
+                        status=503, content_type="application/json",
+                        body=json.dumps({"error": "Synthetic CFPB aggregate export outage"})))
+                    cfpb_error_page.locator("#cfpb-mortgage-trends").get_by_role(
+                        "button", name="Xuất CFPB geography JSON", exact=True).click()
+                    expect(cfpb_error_page.locator("#notice.error")).to_contain_text("Synthetic CFPB aggregate export outage")
+                    checks.append("CFPB aggregate export outage is reported without a fake download")
+                    cfpb_error_page.unroute("**/api/cfpb-mortgage-trends-report*")
+                    cfpb_error_page.close()
                     pudb = page.locator("#fhfa-pudb-acquisition")
                     expect(pudb).to_contain_text("2,093,767", timeout=15000)
                     expect(pudb).to_contain_text("no monthly payment performance")

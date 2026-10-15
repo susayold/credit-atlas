@@ -14,6 +14,7 @@
     "tests/test_annual_debt_bridge.py::test_integer_bridges_and_selected_maturity",
     "tests/test_annual_debt_bridge.py::test_no_cross_scope_fallback",
     "tests/test_annual_debt_bridge.py::test_source_tampering_fails_closed",
+    "tests/test_cfpb_mortgage_trends.py::test_acquired_cfpb_series_profiles_and_returns_monthly_national_context",
     "tests/test_facilities.py::test_cutoff_selection_and_distinct_availability",
     "tests/test_facilities.py::test_evidence_mutation_rejected",
     "tests/test_facilities.py::test_exact_totals_missing_boundaries_and_cov",

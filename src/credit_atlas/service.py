@@ -182,6 +182,10 @@ class ResearchService:
         from .nmdb_aggregate import read
         return read(self.root)
 
+    def cfpb_mortgage_trends(self, query=None):
+        from .cfpb_mortgage_trends import read
+        return read(self.root, query)
+
     def fhfa_pudb_profile(self):
         from .fhfa_pudb import read
         return read(self.root)

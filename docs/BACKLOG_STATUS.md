@@ -68,8 +68,8 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 83 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA aggregate profile/export/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON success and 503/HTTP-200-HTML rejection are checked. Other workspace API/delivery routes still need scoped checks |
-| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 83/83 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
+| M01-028 | Partial | 86 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON success and 503/HTTP-200-HTML rejection are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 86/86 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
 ## Evidence references
@@ -246,5 +246,12 @@ the existing FHFA aggregate package; it is therefore a monthly geography view,
 not an independent validation sample, new Freddie vintage, loan-level panel,
 or model feature. Minimum geography sample thresholds, imputation, revisions
 and emergency-reporting limitations are documented in
-`docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`. D01 stays at 26/50; app
-integration is the next engineering step.
+`docs/CFPB_MORTGAGE_PERFORMANCE_TRENDS_REVIEW_VI.md`. The Mortgage Sources
+workspace now includes a National/State/County panel. The reader verifies each
+raw CSV against the private acquisition receipt before serving a selected
+216-month series; export contains only selected aggregate observations and
+source hashes. Three parser/receipt tests pass; the real-data browser acceptance
+passes 86/86 (`artifacts/private/browser-qa-64d976250c71/receipt.json`), including
+county FIPS normalization, export, and outage handling. The panel remains a
+separate NMDB context view, not a Freddie join or model feature. D01 stays at
+26/50.

@@ -36,10 +36,10 @@ disclaimer and does not imply agency endorsement.
 
 Aggregate-only target feasibility screens for four-quarter (about 12-month)
 performance snapshots are also included, with synthetic tests and a sanitized
-method note. The local NSMO app includes a SHA-bound aggregate API and UI to
-compare repeated quarterly landmarks with a one-landmark-per-mortgage sizing
-diagnostic, filter origination vintages, and inspect quarterly censoring. It
-shows no loan rows or IDs. The private receipts and all exact PUF-derived tables
+method note. The local NSMO app includes SHA-bound aggregate APIs and UI to
+compare repeated quarterly landmarks with one-landmark sizing and one-time
+dynamic risk-set diagnostics, filter origination vintages and entry states, and
+inspect quarterly censoring. It shows no loan rows or IDs. The private receipts and all exact PUF-derived tables
 stay outside Git. The note documents that the candidate protocol is not frozen
 and that no target labels, PD estimates, or model outputs are part of this
 release.

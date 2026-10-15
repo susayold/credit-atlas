@@ -10,13 +10,14 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert path.is_file()
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
-        "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
+        "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO question refs", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
         "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
         "NSMO feature gates": "nsmo-v70-predictor-gates.csv",
         "NSMO routing": "nsmo-v70-routing-review.csv",
+        "NSMO question refs": "nsmo-v70-question-reference-reconciliation.csv",
         "NSMO categories": "nsmo-v70-value-labels.csv",
         "NSMO wave coverage": "nsmo-v70-wave-coverage.csv",
         "NSMO item wording": "nsmo-v70-wave-item-comparability.csv",
@@ -26,6 +27,7 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         "HUD monthly": "hud-fha-performance-2026-08.csv",
         "HUD subgroups": "hud-fha-performance-2026-08-subgroups.csv",
     }
+    assert {path.name for path in (root / "docs/data").glob("*.csv")} == set(expected.values())
     for sheet_name, csv_name in expected.items():
         with (root / "docs/data" / csv_name).open(encoding="utf-8-sig", newline="") as stream:
             row_count = sum(1 for _ in csv.DictReader(stream))
@@ -63,3 +65,7 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert statuses.count("CONDITIONAL_ROUTING_DOCUMENTED") == 58
     assert statuses.count("LEGACY_GATEWAY_MAPPING_REQUIRED") == 12
     assert ref_statuses.count("RECONCILED_FROM_FIELD_ID_AND_QUESTIONNAIRE") == 7
+    question_refs = workbook["NSMO question refs"]
+    assert question_refs.max_row == 8
+    assert question_refs.cell(3, 1).value == "x17g_1"
+    assert question_refs.cell(3, 4).value == "WAVE_VARIANT_REVIEW"

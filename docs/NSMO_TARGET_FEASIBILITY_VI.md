@@ -218,6 +218,37 @@ python scripts\audit_nsmo_first_observed_transition_support.py `
   --output artifacts\private\nsmo-first-observed-transition-support\receipt.json
 ```
 
+## Dynamic risk-set: một lần vào đầu tiên sau origination
+
+Cập nhật 16/10/2026: thêm một feasibility audit riêng cho cách nhìn dynamic.
+Mỗi mortgage chỉ được vào risk set tại snapshot C/1/2 đầu tiên sau quý mở khoản
+vay; quý mở (Q) bị loại. Các quý tiếp theo chỉ đóng góp interval khi hai snapshot
+kề nhau đều quan sát được và khoản vay chưa thoát risk set. Audit trên 62.359
+mortgage cho thấy 57.311 đủ điều kiện vào; trạng thái entry là C: 57.233, 1: 69,
+2: 9. Tổng support là 887.861 loan-quarter intervals, không trọng số.
+
+Lần thoát đầu tiên sau entry gồm 695 snapshot 90+; 97 competing states 7–9;
+1.515 lần censor do mã M/S; 20.557 kết thúc trước snapshot kế tiếp; 10.645 đóng
+cùng tháng nên thứ tự đóng/snapshot không xác định; và 23.802 hết cửa sổ dữ liệu.
+Các nhóm cộng lại bằng 57.311 entry. Trước entry, 4.270 khoản bị loại do K,
+133 do M/S, 8 có competing state 7/9, 2 đã quan sát 90+, 413 đóng trước baseline
+và 222 đóng cùng tháng trước baseline. Các nhóm này là population accounting,
+không phải tỷ lệ sự kiện.
+
+Kết quả này làm rõ quy mô dữ liệu có thể hỗ trợ phân tích nhiều trạng thái với
+delayed entry, nhưng không giải quyết selection: khoản vay phải còn quan sát và
+chưa rơi vào các trạng thái loại trừ để sống tới entry. Quarterly status 3–6 chỉ
+là snapshot, không cho ngày bắt đầu quá hạn; close month không cho thứ tự chính
+xác. Vì vậy không diễn giải 695 là incidence/default rate hay PD, không dùng
+interval lặp như quan sát độc lập, và chưa có target/model. Cần phân tích
+selection/censoring theo vintage và entry state, xác nhận estimand cùng policy
+cho competing termination, và chốt survey design/variance trước khi cân nhắc
+đóng protocol.
+
+Workbook/API/UI chỉ cung cấp aggregate unweighted support; receipt source-bound
+với SHA-256 PUF và không chứa ID hoặc loan rows. Bảng này xuất hiện trong `/nsmo`
+như feasibility panel, với bộ lọc entry state và vintage.
+
 Receipt riêng tư hiện tại: `artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json`.
 API `/api/nsmo-first-observed-transition-support` xác minh receipt với SHA-256
 PUF trước khi trả aggregate cho `/nsmo`; browser acceptance mở rộng đạt 10/10

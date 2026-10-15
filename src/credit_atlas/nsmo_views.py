@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+from collections import Counter
 from pathlib import Path
 
 from .nsmo import _PERFORMANCE_CODES
@@ -16,6 +17,7 @@ _DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.
 _TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
 _ORIGINATION_FEASIBILITY_AUDIT = "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
 _FIRST_OBSERVED_TRANSITION_AUDIT = "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
+_FIRST_ENTRY_RISK_SET_AUDIT = "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
 _SURVEY_RETURNS_CSV = "docs/data/nsmo-v70-survey-returns.csv"
 _SURVEY_RETURNS_SHA256 = "d34d6c14ec0febb0a5c1d60c46c9dadc49e58e2121e0ed3b65140bb7c0da0811"
 _USABLE_RESPONSES_CSV = "docs/data/nsmo-v70-usable-responses.csv"
@@ -827,5 +829,91 @@ class NsmoViews:
                 "first_observed_90plus_event_by_prior_baseline_state": first_by_state,
             },
             "by_origination_vintage_and_source_state": clean_rows,
+            "limitations": receipt.get("limitations", []),
+        }
+
+    def first_entry_risk_set_feasibility(self) -> dict:
+        """Serve identity-free, source-bound first-entry risk-set support only."""
+        profile = self.report()
+        receipt = read_json(contained(self.root, _FIRST_ENTRY_RISK_SET_AUDIT))
+        source_sha = profile["source"]["source_sha256"]
+        row_count = int(profile["sample"]["mortgages"])
+        schema, checks, definition = receipt.get("schema", {}), receipt.get("checks", {}), receipt.get("definition", {})
+        if (receipt.get("status") != "PASS" or receipt.get("source", {}).get("sha256") != source_sha
+                or int(schema.get("rows", -1)) != row_count or int(schema.get("columns", -1)) != 587
+                or int(schema.get("quarterly_status_columns", -1)) != 51
+                or int(checks.get("partitioned_rows", -1)) != row_count
+                or any(int(checks.get(key, -1)) != 0 for key in ("row_width_errors", "empty_ids", "duplicate_ids"))
+                or definition.get("target_created") is not False
+                or definition.get("risk_set_is_model_ready") is not False
+                or definition.get("rates_or_weights_used") is not False):
+            raise ValueError("NSMO first-entry risk-set receipt is stale or does not match the verified PUF")
+
+        def counts(value: object, allowed: set[str], maximum: int | None = None) -> dict[str, int]:
+            if not isinstance(value, dict) or set(value) - allowed:
+                raise ValueError("NSMO first-entry risk-set codes are invalid")
+            result = {str(key): int(number) for key, number in value.items()}
+            if any(number < 0 or (maximum is not None and number > maximum) for number in result.values()):
+                raise ValueError("NSMO first-entry risk-set count is out of range")
+            return result
+
+        partition = counts(receipt.get("population_partition_unweighted"), {
+            "entered_risk_set", "pre_entry_competing_7", "pre_entry_competing_8", "pre_entry_competing_9",
+            "pre_entry_nonobservation_A", "pre_entry_nonobservation_B", "pre_entry_nonobservation_K",
+            "pre_entry_nonobservation_M", "pre_entry_nonobservation_P", "pre_entry_nonobservation_Q",
+            "pre_entry_nonobservation_S", "pre_entry_nonobservation_blank", "pre_entry_unknown_unknown",
+            "pre_entry_observed_90plus", "termination_before_entry", "termination_same_month_before_entry",
+            "administratively_no_post_open_quarter", "administratively_no_baseline", "invalid_origination_month",
+        }, row_count)
+        entries = counts(receipt.get("risk_set_entry_by_state_unweighted"), {"C", "1", "2"}, row_count)
+        exits = counts(receipt.get("first_exit_after_entry_unweighted"), {
+            "observed_90plus", "competing_adverse_7", "competing_adverse_8", "competing_adverse_9",
+            "termination_competing", "termination_same_month_ambiguous", "observation_censor_A",
+            "observation_censor_B", "observation_censor_K", "observation_censor_M", "observation_censor_P",
+            "observation_censor_Q", "observation_censor_S", "observation_censor_blank",
+            "observation_censor_unknown", "administrative_end",
+        }, row_count)
+        interval_totals = counts(receipt.get("at_risk_quarter_intervals_by_start_state_unweighted"), {"C", "1", "2"})
+        if (sum(partition.values()) != row_count or partition.get("entered_risk_set") != sum(entries.values())
+                or sum(exits.values()) != sum(entries.values()) or set(interval_totals) - set(entries)):
+            raise ValueError("NSMO first-entry risk-set summary does not reconcile")
+
+        source_rows = receipt.get("by_origination_vintage_and_entry_state_unweighted")
+        if not isinstance(source_rows, list) or not source_rows:
+            raise ValueError("NSMO first-entry risk-set vintage rows are missing")
+        clean_rows, seen = [], set()
+        entry_sums: Counter[str] = Counter()
+        interval_sums: Counter[str] = Counter()
+        exit_sums: Counter[str] = Counter()
+        for item in source_rows:
+            year, state = str(item.get("origination_year", "")), str(item.get("entry_state", ""))
+            key = year, state
+            if not year.isdigit() or state not in {"C", "1", "2"} or key in seen:
+                raise ValueError("NSMO first-entry risk-set vintage key is invalid")
+            seen.add(key)
+            loans = int(item.get("mortgages_entered", -1))
+            intervals = int(item.get("at_risk_quarter_intervals", -1))
+            if loans < 0 or intervals < loans:
+                raise ValueError("NSMO first-entry risk-set vintage counts are invalid")
+            interval_classes = counts(item.get("intervals_by_class"), {"C", "1", "2"})
+            exit_classes = counts(item.get("first_exit_by_class"), set(exits), row_count)
+            if sum(interval_classes.values()) != intervals or sum(exit_classes.values()) != loans:
+                raise ValueError("NSMO first-entry risk-set vintage groups do not reconcile")
+            entry_sums[state] += loans
+            interval_sums.update(interval_classes)
+            exit_sums.update(exit_classes)
+            clean_rows.append({"origination_year": year, "entry_state": state,
+                               "mortgages_entered": loans, "at_risk_quarter_intervals": intervals,
+                               "intervals_by_class": interval_classes, "first_exit_by_class": exit_classes})
+        if (dict(entry_sums) != entries or dict(interval_sums) != interval_totals
+                or dict(exit_sums) != exits):
+            raise ValueError("NSMO first-entry risk-set vintage totals do not reconcile")
+        return {
+            "schema_version": "nsmo-first-entry-risk-set-feasibility-v1",
+            "status": "AVAILABLE", "source_sha256": source_sha, "target_created": False,
+            "definition": definition, "population_partition_unweighted": partition,
+            "risk_set_entry_by_state_unweighted": entries, "first_exit_after_entry_unweighted": exits,
+            "at_risk_quarter_intervals_by_start_state_unweighted": interval_totals,
+            "by_origination_vintage_and_entry_state_unweighted": clean_rows,
             "limitations": receipt.get("limitations", []),
         }

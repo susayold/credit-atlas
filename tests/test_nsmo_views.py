@@ -255,6 +255,27 @@ def _write_first_observed_transition_receipt(root: Path, source_sha: str) -> Non
     }), encoding="utf-8")
 
 
+def _write_first_entry_risk_set_receipt(root: Path, source_sha: str) -> None:
+    target = root / "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps({
+        "status": "PASS", "source": {"sha256": source_sha},
+        "schema": {"rows": 2, "columns": 587, "quarterly_status_columns": 51},
+        "checks": {"row_width_errors": 0, "empty_ids": 0, "duplicate_ids": 0, "partitioned_rows": 2},
+        "definition": {"target_created": False, "risk_set_is_model_ready": False, "rates_or_weights_used": False},
+        "population_partition_unweighted": {"entered_risk_set": 2},
+        "risk_set_entry_by_state_unweighted": {"C": 2},
+        "first_exit_after_entry_unweighted": {"observed_90plus": 1, "administrative_end": 1},
+        "at_risk_quarter_intervals_by_start_state_unweighted": {"C": 3},
+        "by_origination_vintage_and_entry_state_unweighted": [{
+            "origination_year": "2013", "entry_state": "C", "mortgages_entered": 2,
+            "at_risk_quarter_intervals": 3, "intervals_by_class": {"C": 3},
+            "first_exit_by_class": {"observed_90plus": 1, "administrative_end": 1},
+        }],
+        "limitations": ["Aggregate-only; no risk target."],
+    }), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -405,10 +426,39 @@ def test_nsmo_first_observed_transition_support_rejects_nonreconciling_vintage(t
         NsmoViews(tmp_path).first_observed_transition_support()
 
 
+def test_nsmo_first_entry_risk_set_is_hash_bound_and_aggregate_only(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    result = NsmoViews(tmp_path).first_entry_risk_set_feasibility()
+    assert result["schema_version"] == "nsmo-first-entry-risk-set-feasibility-v1"
+    assert result["risk_set_entry_by_state_unweighted"] == {"C": 2}
+    assert result["first_exit_after_entry_unweighted"]["observed_90plus"] == 1
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_first_entry_risk_set_rejects_stale_puf(tmp_path):
+    _workspace(tmp_path)
+    _write_first_entry_risk_set_receipt(tmp_path, "0" * 64)
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).first_entry_risk_set_feasibility()
+
+
+def test_nsmo_first_entry_risk_set_rejects_nonreconciling_vintage(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    target = tmp_path / "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
+    receipt = json.loads(target.read_text(encoding="utf-8"))
+    receipt["by_origination_vintage_and_entry_state_unweighted"][0]["mortgages_entered"] = 3
+    target.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ValueError, match="vintage groups do not reconcile"):
+        NsmoViews(tmp_path).first_entry_risk_set_feasibility()
+
+
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     csv = _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
     _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_target_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
@@ -541,6 +591,11 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert transition["all_vintages"]["first_observed_90plus_event_count"] == 2
             assert "private-a" not in json.dumps(transition)
+        with urlopen(base + "/api/nsmo-first-entry-risk-set-feasibility", timeout=5) as response:
+            risk_set = json.loads(response.read())
+            assert response.status == 200
+            assert risk_set["risk_set_entry_by_state_unweighted"] == {"C": 2}
+            assert "private-a" not in json.dumps(risk_set)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400
@@ -555,6 +610,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-first-observed-transition-support?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-first-entry-risk-set-feasibility?run=unexpected", timeout=5)
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-survey-returns?run=unexpected", timeout=5)

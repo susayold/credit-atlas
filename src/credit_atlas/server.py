@@ -190,6 +190,11 @@ def handler_for(service: ResearchService):
                         raise ValueError("NSMO transition support accepts no filters")
                     self.send(200, nsmo_views.first_observed_transition_support(), head=head)
                     return
+                if url.path == "/api/nsmo-first-entry-risk-set-feasibility":
+                    if query:
+                        raise ValueError("NSMO first-entry risk-set accepts no filters")
+                    self.send(200, nsmo_views.first_entry_risk_set_feasibility(), head=head)
+                    return
                 if url.path in STATIC:
                     file = web / STATIC[url.path]
                     content = file.read_bytes()

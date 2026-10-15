@@ -23,7 +23,7 @@
       <section id="metrics" class="metric-grid" aria-label="NSMO sample summary"></section>
       <section class="panel source-panel">
         <div><div class="eyebrow">OFFICIAL SOURCE · v7.0</div><h2>National Survey of Mortgage Originations</h2><p>FHFA / CFPB · released 27 May 2026 · sample mortgages originated 2013–2024</p></div>
-        <div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel tổng hợp · NSMO, NMDB, HUD FHA</a><a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a></div>
+        <div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel dữ liệu D02 · 14 sheet</a><a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a></div>
       </section>
       <section class="panel hud-context-panel">
         <div class="section-head"><div><div class="eyebrow">SEPARATE PROGRAM BENCHMARK · FHA · HUD</div><h2>FHA portfolio performance context</h2><p>Benchmark aggregate từ HUD, độc lập với NSMO; không gộp sample, không dùng làm target hay nhãn train.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/hud-fha-performance.xlsx">Tải bảng HUD FHA Excel</a><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD report · Aug 2026 ↗</a></div></div>
@@ -129,6 +129,16 @@
           <div id="transition-support-table" class="table-wrap"></div>
           <p class="footnote">Đây là support đếm từ snapshot quý, không phải event incidence hay target đã freeze. Một mortgage có thể tạo nhiều chuyển tiếp; first observed 90+ không đảm bảo là lần đầu quá hạn thật vì PUF không ghi nhận diễn biến giữa các quý.</p>
         </div>
+        <div class="origination-feasibility">
+          <div class="section-head"><div><div class="eyebrow">DYNAMIC FIRST ENTRY · FEASIBILITY ONLY</div><h3>Risk-set một lần vào đầu tiên C/1/2</h3><p>Mỗi mortgage chỉ vào một lần tại snapshot C/1/2 đầu tiên sau quý mở khoản vay; tiếp tục theo các quý liền kề cho đến event snapshot, competing state, censor hoặc kết thúc dữ liệu.</p></div></div>
+          <div id="first-entry-risk-set-state" class="domain-state" role="status">Đang xác minh first-entry risk-set receipt…</div>
+          <div class="controls"><label>Trạng thái tại entry<select id="risk-entry-state"><option value="all">C/1/2 — tất cả</option><option value="C">C — current</option><option value="1">1 — 30–59 ngày</option><option value="2">2 — 60–89 ngày</option></select></label></div>
+          <div id="first-entry-risk-set-metrics" class="metric-grid" aria-label="First-entry risk set feasibility"></div>
+          <div id="first-entry-risk-set-note" class="target-note"></div>
+          <h3>Entry, exposure intervals và first exit theo vintage/state gốc</h3>
+          <div id="first-entry-risk-set-table" class="table-wrap"></div>
+          <p class="footnote">Đây là một chẩn đoán dynamic-monitoring có delayed entry, không phải origination PD. Các khoản có event 90+ hoặc missing trước entry bị loại; việc sống tới entry có thể tạo selection. Snapshot 3–6 là trạng thái quan sát, không có ngày event; close cùng tháng vẫn ambiguous. Không có weights, rate, target label hoặc model matrix.</p>
+        </div>
       </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTER-TO-QUARTER · DESCRIPTIVE</div><h2>Ma trận chuyển trạng thái quan sát</h2><p>Mỗi ô là số chuyển tiếp loan-quarter giữa hai snapshot kề nhau, chỉ trong cặp có cả trạng thái nguồn và đích thuộc C/1–9.</p></div></div>
@@ -142,7 +152,7 @@
     </div>
     <section class="panel dictionary-panel">
       <div class="section-head"><div><div class="eyebrow">FIELD MAP · OFFICIAL v7.0</div><h2>Tra từ điển 587 trường dữ liệu</h2><p>Tra nhãn SAS, câu hỏi/wave trong codebook, phạm vi trả lời quan sát thực tế theo wave, giá trị được gán “not asked/not applicable” và giới hạn sử dụng. Ghi chú version item nêu rõ các trường hợp không nên gộp trend đơn giản; coverage không tự chứng minh measurement invariance.</p></div><span class="dictionary-count" id="dictionary-count">Đang tải…</span></div>
-      <a class="excel-download" href="/downloads/nsmo-reference.xlsx">Tải workbook Excel · codebook, category, coverage & wording</a>
+      <a class="excel-download" href="/downloads/nsmo-reference.xlsx">Tải Excel tra cứu nhanh · codebook, category, coverage & wording</a>
       <label class="dictionary-search">Tìm field<input id="field-search" type="search" placeholder="Ví dụ: score_orig, forbearance, borrower…" autocomplete="off"></label>
       <div class="dictionary-layout"><div id="field-results" class="field-results" role="listbox" aria-label="Trường NSMO"></div><article id="field-detail" class="field-detail" aria-live="polite"><p>Chọn một trường để xem định nghĩa và quy tắc sử dụng.</p></article></div>
       <p class="footnote">“Candidate” trong use gate chỉ là khả năng nghiên cứu sau review point-in-time, missingness và vai trò người vay; không có nghĩa trường đã được duyệt vào mô hình.</p>

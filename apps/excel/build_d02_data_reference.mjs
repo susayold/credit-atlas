@@ -34,6 +34,11 @@ const sources = [
     route_review_status: "Routing review status", predictor_use: "Publisher predictor gate",
     routing_review_required: "Open routing check",
   }, numeric: new Set(["codebook_order"]) },
+  { sheet: "NSMO question refs", file: "nsmo-v70-question-reference-reconciliation.csv", table: "NsmoQuestionRefs", headers: {
+    csv_column: "CSV field name", question_ref: "Question ref", questionnaire_wave_coverage: "Questionnaire waves",
+    label_phrase_check: "Label phrase check", reference_basis: "Reference basis / evidence",
+    codebook_page: "Codebook PDF page", printed_page: "Printed codebook page",
+  } },
   { sheet: "NSMO categories", file: "nsmo-v70-value-labels.csv", table: "NsmoCategories", headers: {
     format_name: "SAS format", format_value: "Category code (preserved)", format_label: "Category label",
   } },
@@ -98,6 +103,7 @@ const guideRows = [
   ["NSMO", "Field dictionary, feature timing gates, a 319-field routing review, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
   ["Model gates", "The feature-gates sheet classifies all 587 fields by timing and scope. It is a review inventory, not an approved feature allowlist; no model feature is currently approved."],
   ["Item routing", "The routing sheet crosswalks all 319 survey-response fields to question references and codebook conditions. Seven previously missing references are reconciled to questionnaire question numbers; a historical wording variant remains flagged."],
+  ["Question references", "The reconciliation sheet preserves original references beside the questionnaire number and evidence; it does not claim full wave/mode routing is resolved."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],

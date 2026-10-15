@@ -115,6 +115,29 @@ def main() -> None:
             checks.append("shared vintage filter applies to transition support table")
             page.locator("#target-vintage-band").select_option("all")
 
+            risk_state = page.locator("#first-entry-risk-set-state")
+            risk_state.get_by_text("Receipt verified", exact=False).wait_for(timeout=15_000)
+            risk_metrics = page.locator("#first-entry-risk-set-metrics").inner_text()
+            if not all(value in risk_metrics for value in ("57,311", "695", "887,861", "31,202")):
+                raise AssertionError(f"first-entry risk-set metrics do not match the verified receipt: {risk_metrics}")
+            if page.locator("#first-entry-risk-set-table tbody tr").count() != 31:
+                raise AssertionError("first-entry risk-set table does not show all vintage/state groups")
+            risk_note = page.locator("#first-entry-risk-set-note").inner_text()
+            if "administrative end: 23,802" not in risk_note or "population entry partition is 57,311" not in risk_note:
+                raise AssertionError("first-entry risk-set censoring/support note is incomplete")
+            checks.append("first-entry dynamic risk-set support and exits render")
+
+            page.locator("#risk-entry-state").select_option("C")
+            risk_metrics = page.locator("#first-entry-risk-set-metrics").inner_text()
+            if "57,233" not in risk_metrics or page.locator("#first-entry-risk-set-table tbody tr").count() != 12:
+                raise AssertionError("entry-state filter does not isolate current-at-entry mortgages")
+            page.locator("#target-vintage-band").select_option("2017-2019")
+            if page.locator("#first-entry-risk-set-table tbody tr").count() != 3:
+                raise AssertionError("shared vintage filter does not narrow first-entry risk-set rows")
+            checks.append("first-entry state and shared vintage filters update the table")
+            page.locator("#risk-entry-state").select_option("all")
+            page.locator("#target-vintage-band").select_option("all")
+
             page.set_viewport_size({"width": 390, "height": 844})
             page.wait_for_timeout(150)
             dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth, transitionColumns: getComputedStyle(document.querySelector('#transition-support-metrics')).gridTemplateColumns.split(' ').length, transitionTableWidth: document.querySelector('#transition-support-table').clientWidth, transitionTableScroll: document.querySelector('#transition-support-table').scrollWidth, sameMonthColumns: getComputedStyle(document.querySelector('#same-month-ambiguity-metrics')).gridTemplateColumns.split(' ').length, sameMonthTableWidth: document.querySelector('#same-month-ambiguity-table').clientWidth, sameMonthTableScroll: document.querySelector('#same-month-ambiguity-table').scrollWidth})")

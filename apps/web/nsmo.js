@@ -51,6 +51,7 @@ function render(profile){
   loadTargetFeasibility();
   loadOriginationFeasibility();
   loadFirstObservedTransitionSupport();
+  loadFirstEntryRiskSetFeasibility();
   loadHudFhaBenchmark();
   loadNmdbContext();
   loadSurveyReturns();
@@ -318,6 +319,32 @@ function renderFirstObservedTransitionSupport(data){
     $('transition-support-note').textContent=`Trong toàn PUF có ${n(summary.first_observed_90plus_event_count)} mortgage với trạng thái 90+ được quan sát lần đầu trong chuỗi; ${n(summary.first_observed_90plus_event_with_baseline_source_state)} có snapshot trước đó là C/1/2, ${n(summary.first_observed_90plus_event_after_other_adverse_state)} theo sau 7–9, và ${n(summary.first_observed_90plus_event_without_observed_prior)} không có trạng thái quan sát ngay trước đó. Bộ lọc vintage tác động bảng và ba metric theo C/1/2; các tổng partition này luôn là toàn PUF.`;
   }
   band.addEventListener('change',draw);draw();
+}
+async function loadFirstEntryRiskSetFeasibility(){
+  const state=$('first-entry-risk-set-state');
+  try{const response=await fetch('/api/nsmo-first-entry-risk-set-feasibility',{cache:'no-store',headers:{Accept:'application/json'}});const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);renderFirstEntryRiskSetFeasibility(data);state.className='domain-state ok';state.textContent='Receipt verified against this PUF SHA-256 · aggregate-only · no target labels produced.';}
+  catch(error){state.className='domain-state error';state.textContent=`First-entry risk-set view unavailable: ${error.message}`;}
+}
+function renderFirstEntryRiskSetFeasibility(data){
+  const band=$('target-vintage-band'),entryChoice=$('risk-entry-state');
+  const outcomeLabels={observed_90plus:'Observed 90+',competing_adverse_7:'7',competing_adverse_8:'8',competing_adverse_9:'9',termination_competing:'Closed before next quarter',termination_same_month_ambiguous:'Same-month ambiguous',administrative_end:'Administrative end'};
+  function draw(){
+    const years=band.value==='all'?null:band.value.split('-').map(Number),entry=entryChoice.value;
+    const rows=data.by_origination_vintage_and_entry_state_unweighted.filter(row=>(!years||(Number(row.origination_year)>=years[0]&&Number(row.origination_year)<=years[1]))&&(entry==='all'||row.entry_state===entry));
+    const entered=rows.reduce((sum,row)=>sum+Number(row.mortgages_entered),0),intervals=rows.reduce((sum,row)=>sum+Number(row.at_risk_quarter_intervals),0);
+    const exits={};rows.forEach(row=>Object.entries(row.first_exit_by_class||{}).forEach(([key,value])=>exits[key]=(exits[key]||0)+Number(value||0)));
+    const close=Number(exits.termination_competing||0)+Number(exits.termination_same_month_ambiguous||0);
+    $('first-entry-risk-set-metrics').replaceChildren(
+      metric('Mortgages entering risk set',n(entered),'First eligible post-origination C/1/2 snapshot; one entry per loan'),
+      metric('First observed 90+ exits',n(exits.observed_90plus||0),'Observed code 3–6 at the next adjacent snapshot'),
+      metric('At-risk quarter intervals',n(intervals),'Unweighted exposure intervals; not independent loans'),
+      metric('Termination exits',n(close),'Earlier close plus same-month ambiguous ordering')
+    );
+    $('first-entry-risk-set-note').textContent=`Competing 7–9 exits: ${n(Number(exits.competing_adverse_7||0)+Number(exits.competing_adverse_8||0)+Number(exits.competing_adverse_9||0))}; administrative end: ${n(exits.administrative_end||0)}. Filtering does not change the definition; the aggregate population entry partition is ${n(data.population_partition_unweighted.entered_risk_set)}.`;
+    const tableRows=rows.map(row=>{const x=row.first_exit_by_class||{},other=Number(x.observation_censor_A||0)+Number(x.observation_censor_B||0)+Number(x.observation_censor_K||0)+Number(x.observation_censor_M||0)+Number(x.observation_censor_P||0)+Number(x.observation_censor_Q||0)+Number(x.observation_censor_S||0)+Number(x.observation_censor_blank||0)+Number(x.observation_censor_unknown||0);return [row.origination_year,row.entry_state,n(row.mortgages_entered),n(row.at_risk_quarter_intervals),n(x.observed_90plus||0),n(Number(x.competing_adverse_7||0)+Number(x.competing_adverse_8||0)+Number(x.competing_adverse_9||0)),n(x.termination_competing||0),n(x.termination_same_month_ambiguous||0),n(other),n(x.administrative_end||0)];});
+    $('first-entry-risk-set-table').replaceChildren(table(['Origination year','Entry state','Mortgages','Risk intervals','First 90+','Competing 7–9','Closed before next','Same-month ambiguous','Other censor','Admin end'],tableRows,[2,3,4,5,6,7,8,9]));
+  }
+  band.addEventListener('change',draw);entryChoice.addEventListener('change',draw);draw();
 }
 function loadDictionary(){
   fetch('/api/nsmo-dictionary',{cache:'no-store',headers:{Accept:'application/json'}}).then(async r=>{const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);renderDictionary(data);}).catch(error=>{$('dictionary-count').textContent=`Không tải được: ${error.message}`;});

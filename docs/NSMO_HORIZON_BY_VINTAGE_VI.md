@@ -67,6 +67,28 @@ Repeated C landmarks need loan-clustered resampling/splitting if retained;
 otherwise choose one prespecified landmark per loan and accept the narrower
 effective sample. Do not infer a minimum sample from the large snapshot count.
 
+The other feasibility receipts show why the anchor rule is a substantive
+estimand choice. For the 12-month C screen, the earliest eligible full-horizon
+landmark yields 156 unique mortgages with an observed 90+ status among 59,703
+loans. Reusing all eligible C landmarks yields 753 unique mortgages ever
+positive across those landmarks, but the outcome support overlaps by loan and
+landmarks from one loan are dependent. These are not alternate estimates of one
+common PD. A separate origination-month-aligned screen finds only 65 observed
+90+ statuses among the full PUF, so it cannot support an application-time
+underwriting claim. The dynamic first-entry screen has 57,311 entries and 695
+first observed 90+ exits over 887,861 loan-quarter intervals, but conditions on
+surviving and remaining observable until first entry; it answers a servicing
+monitoring question and has delayed-entry/selection concerns.
+
+Recommended next decision is to keep two scopes separate: (1) mark an
+origination-time PD/model as unsupported by this PUF; (2) if a model-development
+demonstration is still desired, first write and review a separate dynamic
+servicing-monitoring estimand, with delayed entry, discrete quarterly
+transitions, 7–9 as competing outcomes, and M/S/termination/tied-month as
+distinct censoring or competing states. Continue descriptive-only reporting
+until the survey-design variance limitation and predictor timing are addressed.
+This is a recommendation for the next D02-5 review, not a frozen target.
+
 ## Artifacts and reproducibility
 
 - Full aggregate-by-outcome export: `NSMO_HORIZON_SENSITIVITY_2026-10-16.csv`.

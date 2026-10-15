@@ -83,15 +83,37 @@ def main() -> None:
             if len(origin_rows) != 3 or not all(year in " ".join(origin_rows) for year in ("2017", "2018", "2019")):
                 raise AssertionError("origination vintage filter does not narrow to 2017–2019")
             checks.append("shared vintage filter applies to origination support table")
+            page.locator("#target-vintage-band").select_option("all")
+
+            transition_state = page.locator("#transition-support-state")
+            transition_state.get_by_text("Receipt verified", exact=False).wait_for(timeout=15_000)
+            transition_metrics = page.locator("#transition-support-metrics").inner_text()
+            if not all(value in transition_metrics for value in ("322 / 296", "363 / 322", "393 / 330")):
+                raise AssertionError(f"distinct/repeated transition support does not match the verified receipt: {transition_metrics}")
+            if page.locator("#transition-support-table tbody tr").count() != 36:
+                raise AssertionError("transition support table does not show all vintage/state groups")
+            transition_note = page.locator("#transition-support-note").inner_text()
+            if not all(value in transition_note for value in ("859", "805", "50", "4")):
+                raise AssertionError("first-observed event partition is not fully visible")
+            checks.append("first-observed 90+ support reconciles by state and vintage")
+
+            page.locator("#target-vintage-band").select_option("2017-2019")
+            transition_rows = page.locator("#transition-support-table tbody tr").all_inner_texts()
+            if len(transition_rows) != 9 or not all(year in " ".join(transition_rows) for year in ("2017", "2018", "2019")):
+                raise AssertionError("transition support vintage filter does not return 2017–2019 groups")
+            checks.append("shared vintage filter applies to transition support table")
+            page.locator("#target-vintage-band").select_option("all")
 
             page.set_viewport_size({"width": 390, "height": 844})
             page.wait_for_timeout(150)
-            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth})")
+            dimensions = page.evaluate("({width: document.querySelector('.target-feasibility-panel').clientWidth, scrollWidth: document.querySelector('.target-feasibility-panel').scrollWidth, columns: getComputedStyle(document.querySelector('#target-feasibility-metrics')).gridTemplateColumns.split(' ').length, origColumns: getComputedStyle(document.querySelector('#origination-feasibility-metrics')).gridTemplateColumns.split(' ').length, origTableWidth: document.querySelector('#origination-feasibility-table').clientWidth, origTableScroll: document.querySelector('#origination-feasibility-table').scrollWidth, transitionColumns: getComputedStyle(document.querySelector('#transition-support-metrics')).gridTemplateColumns.split(' ').length, transitionTableWidth: document.querySelector('#transition-support-table').clientWidth, transitionTableScroll: document.querySelector('#transition-support-table').scrollWidth})")
             if dimensions["scrollWidth"] > dimensions["width"] or dimensions["columns"] != 2:
                 raise AssertionError(f"target panel overflows or fails mobile KPI layout: {dimensions}")
             if dimensions["origColumns"] != 2 or dimensions["origTableScroll"] <= dimensions["origTableWidth"]:
                 raise AssertionError(f"origination panel mobile layout or table scroller is incorrect: {dimensions}")
-            checks.append("mobile target panel fits viewport with two KPI columns")
+            if dimensions["transitionColumns"] != 2 or dimensions["transitionTableScroll"] <= dimensions["transitionTableWidth"]:
+                raise AssertionError(f"transition support mobile layout or table scroller is incorrect: {dimensions}")
+            checks.append("mobile feasibility panels fit viewport and tables scroll horizontally")
             if errors:
                 raise AssertionError(f"Browser JavaScript errors: {errors}")
             browser.close()
@@ -101,7 +123,7 @@ def main() -> None:
         worker.join(timeout=5)
 
     receipt = {
-        "schema_version": "nsmo-target-feasibility-browser-qa-v1",
+        "schema_version": "nsmo-target-feasibility-browser-qa-v2",
         "status": "PASS",
         "built_at": datetime.now(timezone.utc).isoformat(),
         "browser": "Microsoft Edge headless via Playwright",

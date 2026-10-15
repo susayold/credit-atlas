@@ -50,6 +50,7 @@ function render(profile){
   loadDomainAnalysis();
   loadTargetFeasibility();
   loadOriginationFeasibility();
+  loadFirstObservedTransitionSupport();
   loadHudFhaBenchmark();
   loadNmdbContext();
 }
@@ -238,6 +239,25 @@ function renderOriginationFeasibility(data){
     $('origination-feasibility-note').textContent=`Other adverse states 7–9 remain separate (${n(adverse)}). This sizes observable support only; monthly opening date and quarterly snapshots cannot establish event dates, incidence or PD.`;
     const rows=selected.map(row=>{const c=row.outcomes_unweighted||{};return [row.origination_year,n(total(c)),n(c.observed_90plus||0),n(c.all_in_window_snapshots_observed_no_90plus||0),n(c.observation_censor_K||0),n(c.observation_censor_M||0),n(c.observation_censor_S||0),n(c.termination_competing_censor||0),n(c.termination_same_month_ambiguous||0),n((c.observed_other_adverse_state_7||0)+(c.observed_other_adverse_state_8||0)+(c.observed_other_adverse_state_9||0)),n(c.administratively_short_followup||0)];});
     $('origination-feasibility-table').replaceChildren(table(['Origination year','Mortgages','Observed 90+','No 90+ · observed','K','M','S','Closed before next','Same-month ambiguous','Other adverse 7–9','Short follow-up'],rows,[1,2,3,4,5,6,7,8,9,10]));
+  }
+  band.addEventListener('change',draw);draw();
+}
+async function loadFirstObservedTransitionSupport(){
+  const state=$('transition-support-state');
+  try{const response=await fetch('/api/nsmo-first-observed-transition-support',{cache:'no-store',headers:{Accept:'application/json'}});const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);renderFirstObservedTransitionSupport(data);state.className='domain-state ok';state.textContent='Receipt verified against this PUF SHA-256 · aggregate-only · no target labels produced.';}
+  catch(error){state.className='domain-state error';state.textContent=`Transition-support view unavailable: ${error.message}`;}
+}
+function renderFirstObservedTransitionSupport(data){
+  const band=$('target-vintage-band'),summary=data.all_vintages,states=['C','1','2'];
+  const labels={C:'Current (C)',1:'30–59 days (1)',2:'60–89 days (2)'};
+  function draw(){
+    const years=band.value==='all'?null:band.value.split('-').map(Number);
+    const rows=data.by_origination_vintage_and_source_state.filter(row=>!years||(Number(row.origination_year)>=years[0]&&Number(row.origination_year)<=years[1]));
+    const totals=Object.fromEntries(states.map(code=>[code,{repeated:0,unique:0,first:0}]));
+    rows.forEach(row=>{const t=totals[row.source_state];t.repeated+=Number(row.repeated_90plus_transition_count);t.unique+=Number(row.unique_mortgages_with_any_90plus_transition);t.first+=Number(row.first_observed_90plus_event_count);});
+    $('transition-support-metrics').replaceChildren(...states.map(code=>metric(`${labels[code]} → 90+`,`${n(totals[code].repeated)} / ${n(totals[code].unique)}`,`Transitions lặp / mortgage duy nhất · ${n(totals[code].first)} là first-observed 90+ từ trạng thái này`)));
+    $('transition-support-table').replaceChildren(table(['Origination year','State đầu quý','Repeated → 90+','Mortgage duy nhất','First observed 90+'],rows.map(row=>[row.origination_year,labels[row.source_state],n(row.repeated_90plus_transition_count),n(row.unique_mortgages_with_any_90plus_transition),n(row.first_observed_90plus_event_count)]),[2,3,4]));
+    $('transition-support-note').textContent=`Trong toàn PUF có ${n(summary.first_observed_90plus_event_count)} mortgage với trạng thái 90+ được quan sát lần đầu trong chuỗi; ${n(summary.first_observed_90plus_event_with_baseline_source_state)} có snapshot trước đó là C/1/2, ${n(summary.first_observed_90plus_event_after_other_adverse_state)} theo sau 7–9, và ${n(summary.first_observed_90plus_event_without_observed_prior)} không có trạng thái quan sát ngay trước đó. Bộ lọc vintage tác động bảng và ba metric theo C/1/2; các tổng partition này luôn là toàn PUF.`;
   }
   band.addEventListener('change',draw);draw();
 }

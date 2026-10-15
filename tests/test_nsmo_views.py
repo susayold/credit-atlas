@@ -215,6 +215,36 @@ def _write_origination_feasibility_receipt(root: Path, source_sha: str) -> None:
     }), encoding="utf-8")
 
 
+def _write_first_observed_transition_receipt(root: Path, source_sha: str) -> None:
+    target = root / "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps({
+        "status": "PASS",
+        "source": {"sha256": source_sha},
+        "schema": {"rows": 2, "columns": 587, "quarterly_status_columns": 51},
+        "checks": {"unique_mortgage_ids": 2, "width_errors": 0,
+                   "empty_mortgage_ids": 0, "duplicate_mortgage_ids": 0},
+        "definition": {"target_or_label_created": False, "risk_set_or_event_incidence": False},
+        "all_vintages": {
+            "repeated_90plus_transition_count_by_source_state": {"C": 2},
+            "unique_mortgages_with_any_90plus_transition_by_source_state": {"C": 1},
+            "first_observed_90plus_event_count": 2,
+            "first_observed_90plus_event_with_baseline_source_state": 1,
+            "first_observed_90plus_event_without_observed_prior": 1,
+            "first_observed_90plus_event_after_other_adverse_state": 0,
+            "first_observed_90plus_event_by_prior_baseline_state": {"C": 1},
+            "first_event_partition_reconciles": True,
+        },
+        "by_origination_vintage_and_source_state": [{
+            "origination_year": "2013", "source_state": "C",
+            "repeated_90plus_transition_count": 2,
+            "unique_mortgages_with_any_90plus_transition": 1,
+            "first_observed_90plus_event_count": 1,
+        }],
+        "limitations": ["Aggregate-only; no target."],
+    }), encoding="utf-8")
+
+
 def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     _write_public_dictionary(tmp_path)
     result = NsmoViews(tmp_path).dictionary()
@@ -319,10 +349,38 @@ def test_nsmo_origination_feasibility_rejects_nonreconciling_vintage_totals(tmp_
         NsmoViews(tmp_path).origination_feasibility()
 
 
-def test_nsmo_profile_http_and_standalone_page(tmp_path):
+def test_nsmo_first_observed_transition_support_is_hash_bound_and_aggregate_only(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    result = NsmoViews(tmp_path).first_observed_transition_support()
+    assert result["schema_version"] == "nsmo-first-observed-transition-support-v1"
+    assert result["all_vintages"]["repeated_90plus_transition_count_by_source_state"] == {"C": 2}
+    assert result["all_vintages"]["unique_mortgages_with_any_90plus_transition_by_source_state"] == {"C": 1}
+    assert "private-a" not in json.dumps(result)
+
+
+def test_nsmo_first_observed_transition_support_rejects_stale_puf(tmp_path):
     _workspace(tmp_path)
+    _write_first_observed_transition_receipt(tmp_path, "0" * 64)
+    with pytest.raises(ValueError, match="stale or does not match"):
+        NsmoViews(tmp_path).first_observed_transition_support()
+
+
+def test_nsmo_first_observed_transition_support_rejects_nonreconciling_vintage(tmp_path):
+    csv = _workspace(tmp_path)
+    _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
+    target = tmp_path / "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
+    receipt = json.loads(target.read_text(encoding="utf-8"))
+    receipt["by_origination_vintage_and_source_state"][0]["repeated_90plus_transition_count"] = 3
+    target.write_text(json.dumps(receipt), encoding="utf-8")
+    with pytest.raises(ValueError, match="totals do not reconcile"):
+        NsmoViews(tmp_path).first_observed_transition_support()
+
+
+def test_nsmo_profile_http_and_standalone_page(tmp_path):
+    csv = _workspace(tmp_path)
     _write_public_dictionary(tmp_path)
-    csv = tmp_path / "data/private/mortgage/nsmo-2026-05-27/puf/nsmo_v70_1324_puf.csv"
+    _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_target_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_origination_feasibility_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
@@ -357,6 +415,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert "D02 · SEPARATE NSMO CASE" in html
             assert "Endpoint support, landmark và censoring" in html
+            assert "Chuyển trạng thái kề quý vào 90+" in html
             assert "/downloads/nsmo-reference.xlsx" in html
             assert "/downloads/hud-fha-performance.xlsx" in html
             assert "/downloads/nmdb-performance.xlsx" in html
@@ -418,6 +477,11 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert response.status == 200
             assert feasibility["outcomes_unweighted"]["observed_90plus"] == 1
             assert "private-a" not in json.dumps(feasibility)
+        with urlopen(base + "/api/nsmo-first-observed-transition-support", timeout=5) as response:
+            transition = json.loads(response.read())
+            assert response.status == 200
+            assert transition["all_vintages"]["first_observed_90plus_event_count"] == 2
+            assert "private-a" not in json.dumps(transition)
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-profile?run=unexpected", timeout=5)
         assert error.value.code == 400
@@ -429,6 +493,9 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
         assert error.value.code == 400
         with pytest.raises(HTTPError) as error:
             urlopen(base + "/api/nsmo-origination-feasibility?run=unexpected", timeout=5)
+        assert error.value.code == 400
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/nsmo-first-observed-transition-support?run=unexpected", timeout=5)
         assert error.value.code == 400
     finally:
         server.shutdown()

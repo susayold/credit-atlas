@@ -15,6 +15,7 @@ _STATE_AUDIT = "artifacts/private/nsmo-performance-state-audit-20261015/receipt.
 _DOMAIN_AUDIT = "artifacts/private/nsmo-domain-aggregate-audit-20261015/receipt.json"
 _TARGET_FEASIBILITY_AUDIT = "artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json"
 _ORIGINATION_FEASIBILITY_AUDIT = "artifacts/private/nsmo-origination-feasibility-20261016/receipt.json"
+_FIRST_OBSERVED_TRANSITION_AUDIT = "artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json"
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -520,4 +521,95 @@ class NsmoViews:
                 "Termination cause is unknown and same-month snapshot ordering is ambiguous.",
                 "Counts are unweighted; no design-based variance or population rate is available.",
             ],
+        }
+
+    def first_observed_transition_support(self) -> dict:
+        """Serve identity-free transition support bound to the verified PUF."""
+        profile = self.report()
+        receipt = read_json(contained(self.root, _FIRST_OBSERVED_TRANSITION_AUDIT))
+        source_sha = profile["source"]["source_sha256"]
+        row_count = int(profile["sample"]["mortgages"])
+        schema = receipt.get("schema", {})
+        checks = receipt.get("checks", {})
+        summary = receipt.get("all_vintages", {})
+        if (receipt.get("status") != "PASS"
+                or receipt.get("definition", {}).get("target_or_label_created") is not False
+                or receipt.get("definition", {}).get("risk_set_or_event_incidence") is not False
+                or receipt.get("source", {}).get("sha256") != source_sha
+                or int(schema.get("rows", -1)) != row_count
+                or int(schema.get("columns", -1)) != 587
+                or int(schema.get("quarterly_status_columns", -1)) != 51
+                or int(checks.get("unique_mortgage_ids", -1)) != row_count
+                or any(int(checks.get(key, -1)) != 0 for key in
+                       ("width_errors", "empty_mortgage_ids", "duplicate_mortgage_ids"))
+                or summary.get("first_event_partition_reconciles") is not True):
+            raise ValueError("NSMO first-observed transition receipt is stale or does not match the verified PUF")
+
+        def state_counts(name: str, *, unique: bool = False) -> dict[str, int]:
+            value = summary.get(name)
+            if not isinstance(value, dict) or set(value) - {"C", "1", "2"}:
+                raise ValueError("NSMO transition source-state aggregates are invalid")
+            counts = {str(state): int(count) for state, count in value.items()}
+            if any(count < 0 or count > row_count for count in counts.values()):
+                raise ValueError("NSMO transition support count is out of range")
+            return counts
+
+        repeated = state_counts("repeated_90plus_transition_count_by_source_state")
+        unique = state_counts("unique_mortgages_with_any_90plus_transition_by_source_state", unique=True)
+        first_by_state = state_counts("first_observed_90plus_event_by_prior_baseline_state", unique=True)
+        if set(repeated) != set(unique) or set(unique) != set(first_by_state):
+            raise ValueError("NSMO transition support states do not reconcile")
+
+        rows = receipt.get("by_origination_vintage_and_source_state")
+        if not isinstance(rows, list) or not rows:
+            raise ValueError("NSMO transition support vintage groups are missing")
+        clean_rows = []
+        seen: set[tuple[str, str]] = set()
+        repeated_totals: dict[str, int] = {}
+        unique_totals: dict[str, int] = {}
+        first_totals: dict[str, int] = {}
+        for item in rows:
+            year, state = str(item.get("origination_year", "")), str(item.get("source_state", ""))
+            key = (year, state)
+            if not year.isdigit() or state not in {"C", "1", "2"} or key in seen:
+                raise ValueError("NSMO transition support vintage key is invalid")
+            seen.add(key)
+            repeated_n = int(item.get("repeated_90plus_transition_count", -1))
+            unique_n = int(item.get("unique_mortgages_with_any_90plus_transition", -1))
+            first_n = int(item.get("first_observed_90plus_event_count", -1))
+            if min(repeated_n, unique_n, first_n) < 0 or unique_n > repeated_n or first_n > unique_n:
+                raise ValueError("NSMO transition support vintage counts are invalid")
+            clean_rows.append({"origination_year": year, "source_state": state,
+                               "repeated_90plus_transition_count": repeated_n,
+                               "unique_mortgages_with_any_90plus_transition": unique_n,
+                               "first_observed_90plus_event_count": first_n})
+            repeated_totals[state] = repeated_totals.get(state, 0) + repeated_n
+            unique_totals[state] = unique_totals.get(state, 0) + unique_n
+            first_totals[state] = first_totals.get(state, 0) + first_n
+
+        if (repeated_totals != repeated or unique_totals != unique or first_totals != first_by_state
+                or sum(first_by_state.values()) != int(summary.get("first_observed_90plus_event_with_baseline_source_state", -1))
+                or (int(summary.get("first_observed_90plus_event_count", -1)) !=
+                    int(summary.get("first_observed_90plus_event_with_baseline_source_state", -1))
+                    + int(summary.get("first_observed_90plus_event_without_observed_prior", -1))
+                    + int(summary.get("first_observed_90plus_event_after_other_adverse_state", -1)))):
+            raise ValueError("NSMO transition support totals do not reconcile")
+
+        return {
+            "schema_version": "nsmo-first-observed-transition-support-v1",
+            "status": "AVAILABLE",
+            "source_sha256": source_sha,
+            "target_created": False,
+            "definition": receipt["definition"],
+            "all_vintages": {
+                "repeated_90plus_transition_count_by_source_state": repeated,
+                "unique_mortgages_with_any_90plus_transition_by_source_state": unique,
+                "first_observed_90plus_event_count": int(summary["first_observed_90plus_event_count"]),
+                "first_observed_90plus_event_with_baseline_source_state": int(summary["first_observed_90plus_event_with_baseline_source_state"]),
+                "first_observed_90plus_event_without_observed_prior": int(summary["first_observed_90plus_event_without_observed_prior"]),
+                "first_observed_90plus_event_after_other_adverse_state": int(summary["first_observed_90plus_event_after_other_adverse_state"]),
+                "first_observed_90plus_event_by_prior_baseline_state": first_by_state,
+            },
+            "by_origination_vintage_and_source_state": clean_rows,
+            "limitations": receipt.get("limitations", []),
         }

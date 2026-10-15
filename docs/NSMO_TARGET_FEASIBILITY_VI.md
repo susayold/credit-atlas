@@ -166,6 +166,48 @@ target labels/model/PD created**. Audit code là
 trang `/nsmo` so sánh anchor, lọc vintage, xem support theo quý và giữ warning
 không diễn giải thành PD.
 
+## Đối chiếu chuyển tiếp kề quý và lần đầu quan sát 90+
+
+Cập nhật 16/10/2026: một audit độc lập đếm mọi chuyển tiếp kề snapshot từ C/1/2
+sang mã 3–6, rồi đối chiếu với số mortgage duy nhất và trạng thái ngay trước
+lần đầu tiên 3–6 xuất hiện trong chuỗi. Audit xác nhận 62.359 `NSMOID` không
+trùng, 0 dòng sai độ rộng, trên cùng PUF SHA-256. ID chỉ tồn tại trong bộ nhớ
+để kiểm tra uniqueness/deduplicate; receipt không ghi ID hoặc dòng dữ liệu.
+
+| Trạng thái ngay trước snapshot 90+ | Số chuyển tiếp kề quý (có lặp) | Mortgage duy nhất có ≥1 chuyển tiếp | First-observed 90+ ngay sau trạng thái này |
+|---|---:|---:|---:|
+| `C` hiện hành | 322 | 296 | 252 |
+| `1` trễ 30–59 ngày | 363 | 322 | 275 |
+| `2` trễ 60–89 ngày | 393 | 330 | 278 |
+
+Trong 859 mortgage có lần đầu **được quan sát** ở trạng thái 3–6 trong chuỗi,
+805 có quý ngay trước đó ở C/1/2; 4 có trạng thái 7–9 trước đó; 50 không có
+trạng thái quan sát liền trước (bao gồm history bắt đầu tại 90+ hoặc khoảng trống
+trước đó). Phân hoạch 805 + 4 + 50 = 859 được kiểm tra trong receipt. Các tổng
+theo vintage và từng trạng thái nguồn nằm trong bảng lọc trên `/nsmo`.
+
+Đây là một mô tả bổ sung, không thay đổi kết luận về support: nhiều chuyển tiếp
+của cùng mortgage phụ thuộc nhau; first-observed 90+ không khẳng định ngày/lần
+quá hạn đầu tiên thật vì quarterly snapshots bỏ qua diễn biến giữa kỳ. Audit
+chưa lọc competing termination hoặc xác lập risk set, chưa xử lý survey variance,
+không tính rate/PD và không tạo target. Vì vậy D02-5 vẫn chưa đóng băng và D02-6
+vẫn chưa được bắt đầu.
+
+Audit tái lập:
+
+```powershell
+$env:PYTHONPATH = 'src'
+python scripts\audit_nsmo_first_observed_transition_support.py `
+  --puf-csv data\private\mortgage\nsmo-2026-05-27\puf\nsmo_v70_1324_puf.csv `
+  --output artifacts\private\nsmo-first-observed-transition-support\receipt.json
+```
+
+Receipt riêng tư hiện tại: `artifacts/private/nsmo-first-observed-transition-support-20261016/receipt.json`.
+API `/api/nsmo-first-observed-transition-support` xác minh receipt với SHA-256
+PUF trước khi trả aggregate cho `/nsmo`; browser acceptance mở rộng đạt 10/10
+checks, gồm totals, bộ lọc vintage, bảng 36 vintage/state groups và cuộn bảng
+trên màn hình mobile. Focused API/view/audit tests đạt 19/19.
+
 ## Hạn chế nguồn
 
 Mã trạng thái lấy từ SAS formats chính thức trong gói FHFA v7.0; các mô tả từ

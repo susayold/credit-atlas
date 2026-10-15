@@ -169,6 +169,11 @@ def handler_for(service: ResearchService):
                         raise ValueError("NSMO origination feasibility accepts no filters")
                     self.send(200, nsmo_views.origination_feasibility(), head=head)
                     return
+                if url.path == "/api/nsmo-first-observed-transition-support":
+                    if query:
+                        raise ValueError("NSMO transition support accepts no filters")
+                    self.send(200, nsmo_views.first_observed_transition_support(), head=head)
+                    return
                 if url.path in STATIC:
                     file = web / STATIC[url.path]
                     content = file.read_bytes()

@@ -22,6 +22,16 @@ const sources = [
     eligibility_bucket: "CreditAtlas use boundary", intended_scope: "Intended scope", decision_status: "Current approval status",
     required_review: "Open review before use", sas_label: "Variable label",
   }, numeric: new Set(["codebook_order"]) },
+  { sheet: "NSMO routing", file: "nsmo-v70-routing-review.csv", table: "NsmoRoutingReview", headers: {
+    codebook_order: "Codebook order", csv_column: "CSV field name", codebook_name: "Codebook name",
+    survey_question_refs: "Original codebook question reference", resolved_question_refs: "Reconciled question number",
+    question_reference_status: "Question-reference reconciliation", reference_evidence: "Reference evidence",
+    questionnaire_wave_coverage: "Questionnaire package wave coverage", label_phrase_check: "Label phrase check",
+    survey_wave_ranges: "Codebook wave range",
+    codebook_condition: "Codebook routing condition", wave_variant_flags: "Wave variation flags",
+    route_review_status: "Routing review status", predictor_use: "Publisher predictor gate",
+    routing_review_required: "Open routing check",
+  }, numeric: new Set(["codebook_order"]) },
   { sheet: "NSMO categories", file: "nsmo-v70-value-labels.csv", table: "NsmoCategories", headers: {
     format_name: "SAS format", format_value: "Category code (preserved)", format_label: "Category label",
   } },
@@ -83,8 +93,9 @@ guide.showGridLines = false;
 const guideRows = [
   ["CreditAtlas · D02 data reference workbook", ""],
   ["Purpose", "Excel copy of the D02 reference tables and public aggregate datasets, arranged by source for filtering and review."],
-  ["NSMO", "Field dictionary, feature timing gates, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
+  ["NSMO", "Field dictionary, feature timing gates, a 319-field routing review, category labels, wave coverage, item wording, response mode and usable-response disposition by wave. Values -2 and -3 remain distinct source codes."],
   ["Model gates", "The feature-gates sheet classifies all 587 fields by timing and scope. It is a review inventory, not an approved feature allowlist; no model feature is currently approved."],
+  ["Item routing", "The routing sheet crosswalks all 319 survey-response fields to question references and codebook conditions. Seven previously missing references are reconciled to questionnaire question numbers; a historical wording variant remains flagged."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["HUD FHA", "Monthly portfolio trend and published subgroup aggregates through August 2026. These are not NSMO loan records."],

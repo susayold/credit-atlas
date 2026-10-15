@@ -10,12 +10,13 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert path.is_file()
     workbook = load_workbook(path, read_only=False, data_only=True)
     assert workbook.sheetnames == [
-        "Start here", "NSMO fields", "NSMO feature gates", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
+        "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
         "NSMO returns", "NSMO usability", "NMDB quarterly", "HUD monthly", "HUD subgroups", "NMDB definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
         "NSMO feature gates": "nsmo-v70-predictor-gates.csv",
+        "NSMO routing": "nsmo-v70-routing-review.csv",
         "NSMO categories": "nsmo-v70-value-labels.csv",
         "NSMO wave coverage": "nsmo-v70-wave-coverage.csv",
         "NSMO item wording": "nsmo-v70-wave-item-comparability.csv",
@@ -55,3 +56,10 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert gates.cell(2, 7).value == "IDENTIFIER_EXCLUDE"
     assert all(not str(gates.cell(row, 9).value).startswith("APPROVED") for row in range(2, gates.max_row + 1))
     assert workbook["Start here"]["B4"].value.startswith("The feature-gates sheet")
+    routing = workbook["NSMO routing"]
+    assert routing.max_row == 320
+    statuses = [routing.cell(row, 13).value for row in range(2, routing.max_row + 1)]
+    ref_statuses = [routing.cell(row, 6).value for row in range(2, routing.max_row + 1)]
+    assert statuses.count("CONDITIONAL_ROUTING_DOCUMENTED") == 58
+    assert statuses.count("LEGACY_GATEWAY_MAPPING_REQUIRED") == 12
+    assert ref_statuses.count("RECONCILED_FROM_FIELD_ID_AND_QUESTIONNAIRE") == 7

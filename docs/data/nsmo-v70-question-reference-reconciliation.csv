@@ -1,0 +1,8 @@
+csv_column,question_ref,questionnaire_wave_coverage,label_phrase_check,reference_basis,codebook_page,printed_page
+x14d_1,Q14,1-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X14D_1 plus question 14 found in applicable official questionnaire packages,18,C-16
+x17g_1,Q17,1-46,WAVE_VARIANT_REVIEW,Variable identifier X17G_1 plus question 17 found; questionnaire says “A term of 30 years” while the codebook note describes an earlier-wave variant,27,C-25
+x20j,Q20,1-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X20J plus question 20 found in applicable official questionnaire packages,33,C-31
+x37f_1,Q37,7-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X37F_1 plus question 37 found in applicable official questionnaire packages,62,C-60
+x53b_1,Q53,7-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X53B_1 plus question 53 found in applicable official questionnaire packages,85,C-83
+x53d1_1,Q53,7-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X53D1_1 plus question 53 found in applicable official questionnaire packages,87,C-85
+x80s_1,Q80,1-46,MATCHED_IN_QUESTIONNAIRE_TEXT,Variable identifier X80S_1 plus question 80 found in applicable official questionnaire packages,112,C-110

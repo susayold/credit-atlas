@@ -503,6 +503,49 @@ def run(root: Path):
             sec_standard_page.unroute("**/api/sec-workbook")
             sec_standard_page.close()
 
+            sec_get_page = context.new_page()
+            sec_get_page.goto(base + "/?view=sec&workspace_tab=note-rules", wait_until="networkidle")
+            sec_get_cases = [
+                ("Payment rules", "Xuất note rules JSON", "CreditAtlas-private-note-rules.json",
+                 "sec-note-rules-report", "rules", 5),
+                ("Note cashflows", "Xuất note schedule JSON", "CreditAtlas-private-note-schedule.json",
+                 "sec-note-schedule-report", "rows", 42),
+                ("Debt maturities", "Xuất maturity JSON", "CreditAtlas-private-SEC-maturities.json",
+                 "sec-debt-report", "buckets", 6),
+                ("Interest coverage", "Xuất SEC coverage JSON", "CreditAtlas-private-SEC-coverage.json",
+                 "sec-coverage-report", "periods", 5),
+                ("Annual trends", "Xuất SEC trend JSON", "CreditAtlas-private-SEC-trend.json",
+                 "sec-trend-report", "periods", 5),
+            ]
+            for task_label, export_label, filename, _, rows_key, expected_rows in sec_get_cases:
+                if task_label != "Payment rules":
+                    sec_get_page.get_by_role("tab", name=task_label, exact=True).click()
+                export_link = sec_get_page.get_by_role("link", name=export_label, exact=True)
+                expect(export_link).to_be_visible(timeout=60000)
+                with sec_get_page.expect_download(timeout=60000) as sec_json_info:
+                    export_link.click()
+                sec_json_download = sec_json_info.value
+                assert sec_json_download.suggested_filename == filename
+                sec_json_path = output / filename
+                sec_json_download.save_as(str(sec_json_path))
+                sec_json = json.loads(sec_json_path.read_text(encoding="utf-8"))
+                assert len(sec_json[rows_key]) == expected_rows
+                checks.append("SEC " + task_label.lower() + " GET export returns valid JSON with the server filename")
+            sec_get_downloads = []
+            sec_get_page.on("download", lambda download: sec_get_downloads.append(download.suggested_filename))
+            sec_get_page.get_by_role("tab", name="Interest coverage", exact=True).click()
+            coverage_link = sec_get_page.get_by_role("link", name="Xuất SEC coverage JSON", exact=True)
+            expect(coverage_link).to_be_visible(timeout=60000)
+            sec_get_page.route("**/api/sec-coverage-report*", lambda route: route.fulfill(
+                status=503, content_type="application/json",
+                body=json.dumps({"error": "Synthetic SEC coverage export outage"})))
+            coverage_link.click()
+            expect(sec_get_page.locator("#notice.error")).to_contain_text("Synthetic SEC coverage export outage")
+            assert sec_get_downloads == []
+            checks.append("HTTP 503 SEC GET attachment reports failure without creating a fake JSON download")
+            sec_get_page.unroute("**/api/sec-coverage-report*")
+            sec_get_page.close()
+
             affordability_page = context.new_page()
             affordability_downloads = []
             affordability_page.on("download", lambda download: affordability_downloads.append(download.suggested_filename))

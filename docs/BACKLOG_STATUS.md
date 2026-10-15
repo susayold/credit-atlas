@@ -68,8 +68,8 @@ format/resource profiling and model-use qualification remain unverified.
 | M01-025 | Implemented local | Findings, case/filter refs, optimistic revisions and append-only history tested |
 | M01-026 | Partial | Frozen integrity/missingness/support monitoring and investigation order; validated-model monitoring remains unavailable |
 | M01-027 | Unmet | Frozen validated mortgage scoring interface awaits R3 |
-| M01-028 | Partial | 86 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, and real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON success and 503/HTTP-200-HTML rejection are checked. Other workspace API/delivery routes still need scoped checks |
-| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 86/86 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
+| M01-028 | Partial | 92 real-data browser checks pass on a fresh verified case; five key views fit 390px; sparse/gated/unavailable, stale-evidence 503, missing-run 404, unlisted run, connection abort, malformed JSON, HTTP 500/502/503, D01 transition/episode/monitoring/loan/timeline/provenance/study/loss/findings/history/save failures, report export success/failure, standalone NMDB export/hash, FHFA PUDB/HUD FHA and CFPB aggregate profiles/exports/privacy, Market series/bond JSON export success plus 503/502 failure handling, shared attachment delivery through Excel/Fannie JSON, real POST KPI/SEC maturity/SEC standard workbooks plus affordability JSON, and SEC rules/schedule/maturity/coverage/trend GET attachments with outage handling are checked. Other workspace API/delivery routes still need scoped checks |
+| M01-029 | Partial | Fresh eight-stage source-manifest reproduction plus new valid private case: final report is byte-identical, snapshot JSON matches after case-ID normalization, model study/feature audit reproduce BLOCKED_BEFORE_FIT without fitting, and the latest standalone browser acceptance on the verified case passes 92/92 checks. Qualified multi-vintage fit/calibration/final OOT remains data-gated |
 | M01-030 | Partial | Descriptive case study now ties question, data/target, KPI denominators, results, limitations and evidence links; final qualified model card/demo remain blocked by missing vintages and R3 |
 
 ## Evidence references
@@ -255,3 +255,14 @@ passes 86/86 (`artifacts/private/browser-qa-64d976250c71/receipt.json`), includi
 county FIPS normalization, export, and outage handling. The panel remains a
 separate NMDB context view, not a Freddie join or model feature. D01 stays at
 26/50.
+
+## 2026-10-15 SEC attachment flow acceptance
+
+Extended the real-data browser acceptance across five SEC GET attachments:
+payment rules, note schedule, maturity schedule, interest coverage and annual
+trend. The test checks server filenames and validates returned JSON row/period
+counts, then injects an HTTP 503 into the coverage attachment and confirms the
+UI reports the error without a fake download. Combined verified-case browser
+acceptance passes 92/92 at
+`artifacts/private/browser-qa-ed3b90bff36c/receipt.json`. M01-028 remains Partial
+because other workspace routes still require scoped checks.

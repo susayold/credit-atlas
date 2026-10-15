@@ -11,7 +11,7 @@ def run():
     root=app_root();os.environ['TEMP']=os.environ['TMP']=str(root/'.tmp')
     out=root/'artifacts/private'/('product-workbench-qa-'+uuid.uuid4().hex[:12]);out.mkdir()
     ledger=root/'artifacts/private/retail-holdout-access.sqlite';before=sha256(ledger)
-    base='http://127.0.0.1:8770';errors=[];requests=[];checks=[]
+    base='http://127.0.0.1:8770';errors=[];requests=[];checks=[];downloads=[]
     with urlopen(base+'/api/exposure-aggregates?import_id=exposure-import-57b88e00bedb&currency=USD&dimension=region') as response: source=json.load(response)
     with urlopen(base+'/api/suite-view?view_id=suite-view-74e07524f6d0') as response: retail_source=json.load(response)['retail']
     top=max(source['concentrations'],key=lambda r:float(r['amount_share']))
@@ -20,6 +20,7 @@ def run():
         page=browser.new_page(viewport={'width':1440,'height':1000},accept_downloads=True)
         page.set_default_timeout(240000);expect.set_options(timeout=240000)
         page.on('pageerror',lambda e:errors.append(str(e)))
+        page.on('download',lambda d:downloads.append(d.suggested_filename))
         page.on('console',lambda m:errors.append(m.text) if m.type=='error' else None)
         page.on('request',lambda r:requests.append(r.url))
         url=base+'/?view=exposure&exposure_import_id=exposure-import-57b88e00bedb&exposure_currency=USD'
@@ -62,6 +63,11 @@ def run():
             page.locator('#exposure-excel').get_by_role('link',name='Xuất portfolio Excel').click()
         downloaded.value.save_as(str(out/'portfolio-review.xlsx'))
         checks.append('Source/contract remains separate; private native-currency Excel export works in dedicated task')
+        page.route('**/api/exposure-excel-report*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic Portfolio Excel outage"}'))
+        page.get_by_role('link',name='Xuất portfolio Excel',exact=True).click();expect(page.locator('#notice.error')).to_contain_text('Synthetic Portfolio Excel outage');assert len(downloads)==1,downloads
+        expected_503='Failed to load resource: the server responded with a status of 503 (Service Unavailable)'
+        assert expected_503 in errors,errors;errors.remove(expected_503)
+        page.unroute('**/api/exposure-excel-report*');checks.append('Portfolio Excel HTTP 503 is visible and creates no fake workbook')
         page.get_by_role('tab',name='Biến động',exact=True).click()
         page.get_by_role('tab',name='Biến động',exact=True).click()
         page.get_by_role('tab',name='Biến động',exact=True).click()
@@ -104,13 +110,13 @@ def run():
             assert abs(float(points.nth(i).get_attribute('cx'))-(42+b['mean_probability']*336))<1e-10
             assert abs(float(points.nth(i).get_attribute('cy'))-(238-b['observed_rate']*196))<1e-10
         assert not any('/api/retail-explanations' in u or '/api/retail-cohort-explanations' in u for u in requests[start:])
-        assert page.get_by_role('tab').count()==5
+        assert page.get_by_role('tab').count()==8
         page.screenshot(path=str(out/'retail-overview-desktop.png'),full_page=True)
         page.get_by_role('tab',name='Validation',exact=True).click()
         expect(page.locator('#retail-panel-validation')).to_contain_text('Paired validation uncertainty')
         page.get_by_role('tab',name='Model & evidence',exact=True).click()
         expect(page.locator('#retail-panel-evidence')).to_contain_text('Model đã chốt')
-        checks.append('Retail saved model KPIs/calibration, five tasks, deferred explanations, validation and model evidence')
+        checks.append('Retail saved model KPIs/calibration, eight tasks, deferred explanations, validation and model evidence')
         page.get_by_role('tab',name='Policy & subgroup',exact=True).click()
         expect(page.locator('#retail-policy table').first).to_be_visible()
         expect(page.locator('#retail-subgroups table').first).to_be_visible()

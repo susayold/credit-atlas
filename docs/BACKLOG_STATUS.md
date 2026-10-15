@@ -350,3 +350,9 @@ additional Freddie/Fannie/NSMO/Ginnie loan-performance vintage was acquired, and
 no model fit or qualification gate changed. The next engineering pass starts
 with Portfolio workbook/import/review deliveries and continues across other
 workspace-specific routes.
+
+## 2026-10-15 Portfolio export failure acceptance
+
+P4 acceptance now covers inventory JSON and movement bridge exports end to end. It verifies downloaded JSON against the API response using explicit UTF-8 decoding, checks that missing risk inputs remain null and that cross-currency totals are not manufactured, and injects HTTP 503 into both export routes to confirm a visible error with no fake attachment. The focused acceptance passes at `artifacts/private/p4-acceptance-qa-800a1cce5fdf`.
+
+The combined Portfolio/Retail workbench acceptance also passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`: source-bound Portfolio summary and concentration, review drafts, native-currency Excel export and HTTP 503 behavior, on-demand movement/scenario tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroups, and client explanation export. An expected browser console error from the synthetic 503 is accounted for explicitly. This closes the tested P4 attachment paths; it does not close the full M01-028 route inventory. D01 remains 26/50, and no additional gated loan-performance data or model qualification gate changed.

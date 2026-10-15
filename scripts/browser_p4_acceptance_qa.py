@@ -1,6 +1,7 @@
 """P4 intake/reconciliation/bridge acceptance; isolates review database."""
 import json,threading,uuid,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from http.server import ThreadingHTTPServer
 from urllib.request import urlopen
 from urllib.parse import urlencode
@@ -23,7 +24,7 @@ print('Saved evidence verified; browser checks starting',flush=True)
 server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service));thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
 server.daemon_threads=True
 base='http://127.0.0.1:'+str(server.server_port);identifier='exposure-import-57b88e00bedb'
-errors=[];checks=[];ledger=root/'artifacts/private/retail-holdout-access.sqlite';before=sha256(ledger)
+errors=[];checks=[];downloads=[];ledger=root/'artifacts/private/retail-holdout-access.sqlite';before=sha256(ledger)
 def api(path,q):
     with urlopen(base+path+'?'+urlencode(q)) as r:
         assert r.headers['Cache-Control']=='no-store';return json.load(r)
@@ -32,6 +33,7 @@ try:
         browser=p.chromium.launch(channel='msedge',headless=True)
         page=browser.new_page(viewport={'width':1450,'height':1000},accept_downloads=True)
         page.on('pageerror',lambda e:errors.append(str(e)))
+        page.on('download',lambda d:downloads.append(d.suggested_filename))
         page.goto(base+'/?view=exposure&exposure_import_id='+identifier)
         select_task(page,'Tổng quan');expect(page.locator('#exposure-summary')).to_contain_text('9,698',timeout=180000)
         expect(page.locator('#exposure-bucket-detail')).to_contain_text('không phải borrower identity')
@@ -43,19 +45,27 @@ try:
         with page.expect_download() as dl:page.locator('#export-report').click()
         dl.value.save_as(out/'inventory.json')
         q={'import_id':identifier,'currency':'all','dimension':'region'}
-        r=api('/api/exposure-report',q);assert json.loads((out/'inventory.json').read_text())==r
+        r=api('/api/exposure-report',q);downloaded=json.loads((out/'inventory.json').read_text(encoding='utf-8'))
+        assert downloaded==r
         assert r['global_cross_currency_total'] is None and not r['contract']['amount_is_ead']
         assert r['currencies'][0]['research_el_major_exact'] is None
         checks.append('Private inventory export/API parity; missing risk stays null; no FX total; reported amount not EAD')
+        assert len(downloads)==1,downloads
+        page.route('**/api/exposure-report*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic P4 inventory report outage"}'))
+        page.locator('#export-report').click();expect(page.locator('#notice.error')).to_contain_text('Synthetic P4 inventory report outage');assert len(downloads)==1,downloads
+        page.unroute('**/api/exposure-report*');checks.append('P4 inventory HTTP 503 is visible and creates no fake download')
         select_task(page,'Biến động');expect(page.locator('#exposure-movement')).to_contain_text('106 opening-only',timeout=180000)
         expect(page.locator('#exposure-movement')).to_contain_text('không phải FX P&L')
         with page.expect_download() as dl:page.get_by_role('link',name='Xuất movement bridge',exact=True).click()
         dl.value.save_as(out/'movement.json')
         q={'movement_id':'exposure-movement-dbd1ecad612e','closing_import_id':identifier,'dimension':'region','currency':'all'}
-        r=api('/api/exposure-movement-report',q);assert json.loads((out/'movement.json').read_text())==r
+        r=api('/api/exposure-movement-report',q);assert json.loads((out/'movement.json').read_text(encoding='utf-8'))==r
         assert not r['contract']['exit_reason_inferred'] and all(x['residual']=='0.00' or float(x['residual'])==0 for x in r['groups'])
         page.locator('#exposure-movement').screenshot(path=str(out/'movement-desktop.png'))
         checks.append('Source bridge/UI/API/export: explicit no inferred payoff/default, native-currency migration and retained residual')
+        page.route('**/api/exposure-movement-report*',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"Synthetic P4 movement export outage"}'))
+        page.get_by_role('link',name='Xuất movement bridge',exact=True).click();expect(page.locator('#notice.error')).to_contain_text('Synthetic P4 movement export outage');assert len(downloads)==2,downloads
+        page.unroute('**/api/exposure-movement-report*');assert len(downloads)==2,downloads;checks.append('P4 movement export HTTP 503 is visible and creates no fake download')
         select_task(page,'Excel')
         invalid=out/'unsafe-numeric.xlsx'
         invalid.write_bytes(mutated('G2',lambda c:setattr(c.find('s:v',NS),'text','100000000000000.000000000000001')))

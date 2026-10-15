@@ -55,6 +55,24 @@ def classify_followup(statuses: list[str], close_ordinal: int | None,
     return "four_quarters_observed_no_event"
 
 
+def first_eligible_c_landmark(statuses: list[str], close_ordinal: int | None,
+                              horizon: int = 4) -> tuple[int, str] | None:
+    """Choose one earliest fully-followed C landmark per mortgage for support checks.
+
+    This is a diagnostic anchor only. It does not freeze cohort eligibility or
+    create a target label.
+    """
+    for baseline_index, status in enumerate(statuses):
+        if status != "C":
+            continue
+        if baseline_index + horizon >= len(statuses):
+            break
+        if close_ordinal is not None and close_ordinal <= _quarter_ordinal(baseline_index):
+            continue
+        return baseline_index, classify_followup(statuses, close_ordinal, baseline_index, horizon)
+    return None
+
+
 def _quarter_ordinal(index: int) -> int:
     # Performance columns are ordered from March 2013, then June, September,
     # December. Index 0 therefore maps to YYYY=2013, MM=3.
@@ -73,6 +91,16 @@ def _close_ordinal(year_text: str, month_text: str) -> int | None:
     return year * 12 + month
 
 
+def _commit_unique_vintage_support(row_outcomes: set[tuple[tuple[str, str], str]],
+                                   unique_baselines: Counter,
+                                   unique_outcomes: dict[tuple[str, str], Counter]) -> None:
+    """Count each mortgage once per vintage/state and observed outcome class."""
+    for key in {group for group, _ in row_outcomes}:
+        unique_baselines[key] += 1
+    for key, outcome in row_outcomes:
+        unique_outcomes[key][outcome] += 1
+
+
 def audit(path: Path) -> dict:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.reader(stream)
@@ -85,9 +113,17 @@ def audit(path: Path) -> dict:
         close_status_i = pos["close_status_0925"]
         close_year_i, close_month_i = pos["close_year"], pos["close_month"]
         weight_i = pos["analysis_weight"]
+        vintage_i = pos["open_year"]
         quarter_ends = [parse_performance_column(c).isoformat() for c in status_cols]
         counts: dict[tuple[int, str], Counter] = defaultdict(Counter)
         weight_sums: dict[tuple[int, str], Counter] = defaultdict(Counter)
+        vintage_counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
+        vintage_weight_sums: dict[tuple[str, str], Counter] = defaultdict(Counter)
+        vintage_unique_baselines: Counter[tuple[str, str]] = Counter()
+        vintage_unique_outcomes: dict[tuple[str, str], Counter] = defaultdict(Counter)
+        first_c_landmark_by_vintage: dict[str, Counter] = defaultdict(Counter)
+        first_c_landmark_by_quarter: dict[tuple[str, str], Counter] = defaultdict(Counter)
+        first_c_landmark_weights: dict[str, Counter] = defaultdict(Counter)
         rows = width_errors = 0
         for row in reader:
             rows += 1
@@ -102,7 +138,17 @@ def audit(path: Path) -> dict:
                 weight = 0.0
             close_status = row[close_status_i].strip()
             close = _close_ordinal(row[close_year_i].strip(), row[close_month_i].strip()) if close_status in {"2", "3", "4"} else None
+            vintage = row[vintage_i].strip()
+            if not vintage.isdigit() or not 2013 <= int(vintage) <= 2024:
+                vintage = "unknown"
             states = [row[i].strip().upper() for i in indices]
+            first_landmark = first_eligible_c_landmark(states, close)
+            if first_landmark is not None:
+                baseline_index, first_result = first_landmark
+                first_c_landmark_by_vintage[vintage][first_result] += 1
+                first_c_landmark_by_quarter[(quarter_ends[baseline_index], vintage)][first_result] += 1
+                first_c_landmark_weights[vintage][first_result] += weight
+            unique_baseline_outcomes: set[tuple[tuple[str, str], str]] = set()
             for baseline_i, baseline_status in enumerate(states):
                 if baseline_status not in BASELINES:
                     continue
@@ -117,6 +163,19 @@ def audit(path: Path) -> dict:
                     result = classify_followup(states, close, baseline_i)
                 counts[key][result] += 1
                 weight_sums[key][result] += weight
+                # The distinct-loan support screen uses only baselines with a
+                # complete four-quarter window in the PUF. The same loan may
+                # contribute multiple snapshots, so unique outcomes are
+                # de-duplicated within loan × vintage × baseline state × class.
+                if baseline_i + 4 < len(status_cols):
+                    vintage_key = (vintage, baseline_status)
+                    vintage_counts[vintage_key][result] += 1
+                    vintage_weight_sums[vintage_key][result] += weight
+                    unique_baseline_outcomes.add((vintage_key, result))
+            _commit_unique_vintage_support(
+                unique_baseline_outcomes, vintage_unique_baselines,
+                vintage_unique_outcomes,
+            )
         out = []
         for (i, state), counter in sorted(counts.items()):
             outcome_weight_sums = {
@@ -133,6 +192,40 @@ def audit(path: Path) -> dict:
                 "outcome_weight_sums_descriptive_only": outcome_weight_sums,
                 "baseline_weight_sum_descriptive_only": round(weight_sums[(i, state)]["eligible_snapshot"], 2),
             })
+        vintage_out = []
+        for (vintage, state), counter in sorted(vintage_counts.items()):
+            key = (vintage, state)
+            vintage_out.append({
+                "origination_year": vintage,
+                "baseline_state": state,
+                "full_horizon_baseline_snapshots_unweighted": dict(sorted(counter.items())),
+                "unique_mortgages_with_at_least_one_full_horizon_baseline": vintage_unique_baselines[key],
+                "unique_mortgages_by_snapshot_outcome_class_nonexclusive": dict(sorted(vintage_unique_outcomes[key].items())),
+                "snapshot_outcome_weight_sums_descriptive_only": {
+                    name: round(value, 2)
+                    for name, value in sorted(vintage_weight_sums[key].items())
+                },
+            })
+        first_c_vintage_out = []
+        for vintage, counter in sorted(first_c_landmark_by_vintage.items()):
+            first_c_vintage_out.append({
+                "origination_year": vintage,
+                "unique_mortgage_count": sum(counter.values()),
+                "first_eligible_c_landmark_outcomes_unweighted": dict(sorted(counter.items())),
+                "outcome_weight_sums_descriptive_only": {
+                    name: round(value, 2)
+                    for name, value in sorted(first_c_landmark_weights[vintage].items())
+                },
+            })
+        first_c_quarter_out = [
+            {
+                "landmark_quarter": quarter,
+                "origination_year": vintage,
+                "unique_mortgage_count": sum(counter.values()),
+                "outcomes_unweighted": dict(sorted(counter.items())),
+            }
+            for (quarter, vintage), counter in sorted(first_c_landmark_by_quarter.items())
+        ]
     return {
         "schema_version": "nsmo-target-feasibility-v1",
         "status": "PASS" if rows == 62359 and not width_errors else "FAIL",
@@ -149,6 +242,13 @@ def audit(path: Path) -> dict:
         },
         "width_errors": width_errors,
         "baseline_quarter_state_aggregates": out,
+        "origination_vintage_baseline_aggregates": vintage_out,
+        "one_landmark_per_mortgage_support": {
+            "selection_rule": "earliest C snapshot per mortgage with a full four-quarter horizon, excluding known closed-by-baseline loans",
+            "target_created": False,
+            "outcomes_by_origination_vintage": first_c_vintage_out,
+            "outcomes_by_landmark_quarter_and_vintage": first_c_quarter_out,
+        },
         "target_created": False,
         "limitations": [
             "Feasibility counts only; no row-level labels, rates, PD, model matrix, or target file is created.",

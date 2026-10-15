@@ -34,11 +34,13 @@ must obtain the current PUF directly from FHFA and accept its current notice and
 terms themselves. The associated analysis note includes FHFA's required
 disclaimer and does not imply agency endorsement.
 
-An aggregate-only target feasibility screen for four-quarter (about 12-month)
-performance snapshots is also included, with synthetic tests and a sanitized
-method note. Its private receipt and all PUF-derived exact aggregate tables stay
-outside Git. The note documents that the candidate protocol is not frozen and
-that no target labels, PD estimates, or model outputs are part of this release.
+Aggregate-only target feasibility screens for four-quarter (about 12-month)
+performance snapshots are also included, with synthetic tests and a sanitized
+method note. They compare repeated quarterly landmarks with a one-landmark-per-
+mortgage sizing diagnostic and show censoring by broad origination vintage. The
+private receipts and all exact PUF-derived tables stay outside Git. The note
+documents that the candidate protocol is not frozen and that no target labels,
+PD estimates, or model outputs are part of this release.
 
 
 ## Host-provided Excel builder dependency

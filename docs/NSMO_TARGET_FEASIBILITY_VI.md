@@ -31,8 +31,10 @@ kết thúc, không cho biết lý do nên không được diễn giải là tr�
 ## Kết quả audit trên PUF thật
 
 Audit streaming đọc 62.359 hồ sơ, 587 cột và 51 quý. Tất cả 147 tổ hợp quý × tầng
-gốc có mặt được xuất dưới dạng tổng hợp private; receipt ràng buộc SHA-256 của
-PUF tại `artifacts/private/nsmo-target-feasibility-20261015/receipt.json`.
+gốc có mặt được xuất dưới dạng tổng hợp private. Audit bổ sung group theo năm
+origination để đếm baseline snapshot và support khoản vay duy nhất; receipt
+ràng buộc SHA-256 của PUF tại
+`artifacts/private/nsmo-target-unique-vintage-20261016/receipt.json`.
 
 | Trạng thái gốc | Baseline snapshot có đủ 4 quý tiếp theo trong PUF | 90+ ngày quan sát được | Đủ 4 snapshot quan sát được, không thấy 90+ | Đóng cùng tháng, thứ tự không rõ | Kết thúc trước snapshot tiếp theo | Mất quan sát M/S |
 |---|---:|---:|---:|---:|---:|---:|
@@ -46,6 +48,51 @@ xuất hiện riêng trong receipt và không nằm trong cột 90+ ngày. Các 
 censor trên cũng không cộng thành một mẫu độc lập: mỗi snapshot nhận đúng kết
 quả đầu tiên theo quy tắc tuần tự. Hai quý gốc cuối (2025Q2–Q3) không có đủ cửa
 sổ quan sát; chúng được ghi thiếu theo dõi, không gán nhãn âm.
+
+## Support duy nhất và khác biệt theo vintage
+
+Đếm theo `open_year` cho thấy có khoảng **59,7 nghìn khoản vay duy nhất** có ít
+nhất một baseline C với đủ cửa sổ bốn quý; những khoản vay này tạo ra 872,9 nghìn
+snapshot C do lặp landmark qua thời gian. Khoảng **750 khoản vay duy nhất** có ít
+nhất một baseline C mà trong bốn snapshot sau xuất hiện mã 3–6. Đây là support
+cho thiết kế nhiều-landmark; cùng một khoản vay có thể được gán dương ở nhiều
+landmark và cũng có thể mang phân loại khác ở landmark khác. Nó không phải số
+default độc lập hay event rate.
+
+Để thấy tác động của anchor, audit còn thử đúng một lần cho mỗi khoản vay: lấy
+**C đầu tiên có đủ bốn quý theo dõi**. Quy tắc này cho 59.703 khoản vay, nhưng chỉ
+156 khoản vay được phân loại 90+ trong cửa sổ sau anchor đó. Mã `7/8/9`, đóng
+khoản vay, cùng-tháng và M/S được tách riêng; mỗi khoản vay chỉ có một kết quả
+trong phép thử này. Chênh lệch 156 so với khoảng 750 khoản vay “ever positive” ở
+mọi landmark cho thấy support phụ thuộc rất mạnh vào cách chọn thời điểm gốc.
+Đây không phải hai cách ước lượng cùng một risk; chúng tương ứng với estimand
+khác nhau. Anchor đầu tiên cũng không tương đương với ngày origination và không
+được chọn làm chuẩn chỉ để tạo mẫu dương lớn hơn.
+
+Vì vậy, trước modeling cần quyết định business question: (a) one-shot origination
+risk, với origination date/quarter làm landmark, hay (b) dynamic quarterly
+monitoring, với quy tắc landmark và lặp khoản vay được khai báo rõ. NSMO PUF có
+survey/performance series, nhưng target này chưa chứng minh được một outcome
+“default” chuẩn; trạng thái 90+ theo quý chỉ là proxy observed-delinquency. Với
+one-shot C-first diagnostic chỉ có 156 positive outcomes trước temporal split,
+không đủ căn cứ để hứa hẹn calibration ổn định hay mô hình nhiều biến.
+
+Tỷ trọng snapshot C bị censor/ambiguous thay đổi theo năm origination. Các số
+trong bảng được làm tròn; censor/ambiguous gộp khoản vay đóng trước snapshot kế
+tiếp, đóng cùng tháng chưa rõ thứ tự và mã M/S. Mỗi tỷ trọng dùng denominator là
+mọi full-horizon C baseline snapshots trong vintage band.
+
+| Vintage origination | Khoản vay duy nhất có ≥1 C baseline | Full-horizon C baseline snapshots | Censor/ambiguous snapshots |
+|---|---:|---:|---:|
+| 2013–2016 | ~24.5k | ~511k | ~15% |
+| 2017–2019 | ~14.7k | ~182k | ~23% |
+| 2020–2021 | ~10.9k | ~130k | ~8% |
+| 2022–2024 | ~9.6k | ~49k | ~10% |
+
+Đây là khác biệt quan sát, chưa xác định nguyên nhân: vintage, thời gian trên
+sổ, điều kiện thị trường và việc khoản vay đóng có thể cùng liên quan. Chênh lệch
+này làm complete-case training có rủi ro đổi thành phần mẫu theo vintage; không
+thể bỏ các khoản censored rồi diễn giải mẫu còn lại như ngẫu nhiên.
 
 `Analysis_Weight` được lưu dưới dạng tổng mô tả theo nhóm, không áp lên kết quả
 để tạo tỷ lệ. Không có thiết kế mẫu/replicate weights và variance method trong

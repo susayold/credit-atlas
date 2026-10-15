@@ -3,8 +3,9 @@
 ## Cập nhật tiếp theo — 16/10/2026
 
 Public mirror đã nhận source-only feasibility screen D02-3/5 và docs protocol.
-Public regression trên mirror đạt **1.445 passed, 196 skipped** trong 492,22
-giây; skips yêu cầu private payload/evidence theo public skiplist. `node --check`
+Public regression trên mirror sau khi thêm single-anchor diagnostic đạt **1.448
+passed, 196 skipped** trong 540,90 giây; skips yêu cầu private payload/evidence
+theo public skiplist. `node --check`
 cho app cũng pass. Script target có synthetic tests riêng, không cần PUF để chạy.
 
 Đối chiếu Technical Documentation v7.0 mục 8–9: `Analysis_Weight` kết hợp
@@ -17,22 +18,38 @@ thích hợp; không thể gọi là population PD hay suy luận thống kê.
 ## D02-3/5 — kiểm tra feasibility target 12 tháng
 
 Chạy audit aggregate-only trên toàn bộ PUF: 62.359 hồ sơ, 51 snapshot quý, tạo
-147 hàng nhóm quý × trạng thái gốc, không xuất record/ID và không tạo nhãn
-target. Thử định nghĩa bốn quý tiếp theo với cohort C chính, cohort trạng thái
+147 hàng nhóm quý × trạng thái gốc, cộng 36 nhóm vintage × baseline state, không
+xuất record/ID và không tạo nhãn target. Thử định nghĩa bốn quý tiếp theo với cohort C chính, cohort trạng thái
 1/2 tách riêng; mã 3–6 là 90+ ngày, còn 7/8/9 giữ riêng. Trong các snapshot C
 có đủ cửa sổ quý, 2.174 lần gặp trạng thái 90+ được quan sát, 738.773 snapshot
 có đủ bốn quý không gặp 90+, 42.236 có đóng khoản vay trong cùng tháng với
 snapshot nên thứ tự chưa biết, 83.092 bị cạnh tranh bởi khoản vay đóng trước
 snapshot kế tiếp và 6.196 gặp trạng thái M/S mất quan sát. Đây là baseline
 snapshots lặp lại theo một khoản vay, không phải số khoản vay độc lập hay tỷ lệ
-default/PD.
+default/PD. Khử trùng snapshot lặp cho thấy khoảng **59,7 nghìn khoản vay duy
+nhất** từng có baseline C và full horizon; khoảng **750 khoản vay** có ít nhất
+một C baseline cho kết quả 90+ trong bốn snapshot kế tiếp. Các kết quả theo class
+không loại trừ nhau giữa nhiều baseline của cùng loan.
+
+Tỷ trọng C baseline snapshot bị censor/ambiguous thay đổi theo vintage band:
+2013–16 khoảng **15%**, 2017–19 **23%**, 2020–21 **8%**, 2022–24 **10%**. Đây là
+tín hiệu selection/censoring khác nhau, chưa xác định nguyên nhân; complete-case
+training có thể làm đổi thành phần vintage. Feasibility synthetic tests: **10/10
+PASS**; private
+receipt: `artifacts/private/nsmo-target-unique-vintage-20261016/receipt.json`.
+
+Kiểm tra anchor một-dòng-mỗi-khoản-vay làm lộ độ nhạy của target: chọn C snapshot
+đầu tiên có đủ horizon cho 59.703 khoản vay, nhưng chỉ có **156** outcome 90+;
+dùng mọi C landmark tạo 2.174 positive snapshots và khoảng 750 distinct loans có
+ít nhất một positive window. Đây là hai estimand khác nhau. First C cũng không
+phải origination date/quarter, nên chỉ là sizing diagnostic; chưa tạo target.
+Receipt mở rộng: `artifacts/private/nsmo-target-anchor-vintage-20261016/receipt.json`.
 
 Kết luận: dữ liệu đủ để tiếp tục thiết kế một endpoint theo trạng thái snapshot,
 nhưng chưa đủ để freeze target cho modeling. Cần giải quyết competing risks,
 censoring/selection, cách xử lý cùng-tháng, và sample design/variance trước khi
-ước lượng. Synthetic boundary tests: **7/7 PASS**. Chi tiết và protocol còn mở:
-[target feasibility](NSMO_TARGET_FEASIBILITY_VI.md); private aggregate receipt:
-`artifacts/private/nsmo-target-feasibility-20261015/receipt.json`.
+ước lượng. Chi tiết và protocol còn mở:
+[target feasibility](NSMO_TARGET_FEASIBILITY_VI.md).
 
 ## D02 tiếp tục — questionnaire và wave comparability
 

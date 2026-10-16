@@ -131,6 +131,16 @@ end-of-period loans. Charge-off is annualized net charge-offs after recoveries
 divided by average loans; negative values are possible when recoveries exceed
 charge-offs.
 
+Compared with the same quarter one year earlier, mortgage delinquency rose
+0.08 percentage point while net charge-off was unchanged; credit-card
+delinquency and charge-off fell 0.19 pp and 0.37 pp; other-consumer delinquency
+fell 0.05 pp while charge-off rose 0.01 pp; both CRE measures fell 0.04 pp;
+business delinquency fell 0.02 pp and charge-off was unchanged. Within each
+series' own published history, other-consumer charge-off is at the 77th
+percentile; mortgage delinquency and charge-off are near the 20th percentile.
+These ranks are not cross-product scores or PDs and may shift when the publisher
+revises the history.
+
 The Sources view displays five separate product panels, latest rates, 4-quarter
 changes, history and definitions. The Excel workbook
 `CreditAtlas-Fed-Bank-Asset-Quality.xlsx` contains Overview, Quarterly History,

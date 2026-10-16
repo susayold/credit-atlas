@@ -136,6 +136,9 @@ def build(root: Path, output: Path) -> dict:
     overview.merge_cells(start_row=note_row + 2, start_column=1, end_row=note_row + 2, end_column=12)
     overview.cell(note_row + 2, 1).fill = PatternFill("solid", fgColor=YELLOW)
     overview.cell(note_row + 2, 1).alignment = Alignment(wrap_text=True)
+    overview.cell(note_row + 3, 1, "Historical percentile compares each latest rate only against its own full published series; it is not a bank peer rank, PD or cross-product risk score.")
+    overview.merge_cells(start_row=note_row + 3, start_column=1, end_row=note_row + 3, end_column=12)
+    overview.cell(note_row + 3, 1).alignment = Alignment(wrap_text=True)
     for col, width in enumerate([25, 16, 15, 18, 16, 18, 18, 15, 18, 16, 18, 32], 1):
         overview.column_dimensions[chr(64 + col)].width = width
     overview.freeze_panes = "A7"

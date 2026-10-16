@@ -128,6 +128,7 @@ def report(root: Path) -> dict:
             "These are aggregate rates for U.S. commercial banks, not borrower-level records or a complete census of all lenders.",
             "Delinquency is 30+ days past due and still accruing or nonaccrual, divided by end-of-period loans; charge-off is annualized net of recoveries divided by average loans.",
             "Not all product series begin on the same date; blank cells in earlier quarters mean the series was not yet published, not zero risk.",
+            "Historical percentiles rank the latest value within its own published series; they are not bank-size peer ranks, borrower PDs, or standardized cross-product risk scores.",
             "Commercial real estate measures exclude farmland; these product groups remain bank portfolios rather than homogeneous borrowers or loans.",
             "This is a latest-revised snapshot, not a point-in-time publication-vintage series or a qualified model predictor.",
         ],

@@ -115,6 +115,7 @@ def read(root: Path, query: dict[str, str] | None = None) -> dict:
         geography_options.extend(options["County"][key] for key in sorted(options["County"]))
         return {
             "status": "AVAILABLE", "dataset": "CFPB Mortgage Performance Trends",
+            "visibility": "private", "public_release_approved": False,
             "source_page": SOURCE_PAGE, "about_page": ABOUT_PAGE,
             "source_release_date": receipt.get("official_published_date"),
             "retrieved_at": receipt.get("retrieved_at"),

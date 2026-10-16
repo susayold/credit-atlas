@@ -20,6 +20,24 @@ are not additive. This is aggregate context, not loan-level history or a
 qualified predictor. Focused parser/API/download tests pass 18/18; live Edge
 smoke test passes for the updated panel with no browser errors.
 
+### M01-028 continuation — CFPB report contract and route inventory, 2026-10-16
+
+Refreshed the source-only route inventory: the current server has 176 distinct
+API path literals. Fifty lack a direct path string in a test file and 69 lack
+one in a browser-QA script; these counts are triage signals only because generic
+dispatch/helper coverage may not repeat the path. Added HTTP integration
+coverage for CFPB Mortgage Performance Trends: county selection and its 216
+monthly rows, report attachment filename, invalid query rejection, and a
+tampered-source checksum failure. The API now explicitly returns
+`visibility=private` and `public_release_approved=false`, matching the private
+export behavior. Focused mortgage-context suite passes 25/25 with one
+private-source production test skipped in the public checkout. The full
+real-data browser acceptance passes 94/94 on case `d01-202610150931`, including
+CFPB county export and export-outage handling, with no browser errors; receipt:
+`artifacts/private/browser-qa-c4f2a3a4e8a1/receipt.json`. Route inventory
+regenerated at `docs/M01_028_ROUTE_TEST_INVENTORY_VI.md`; M01-028 remains
+Partial pending the remaining route families and UI download failure coverage.
+
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample
 (2013–2024 originations; quarterly performance through 2025 Q3) was downloaded

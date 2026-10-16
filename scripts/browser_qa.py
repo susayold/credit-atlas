@@ -114,6 +114,8 @@ def run(root: Path):
                     cfpb_path = output / "cfpb-mortgage-trends-county-01003.json"
                     cfpb_download.save_as(str(cfpb_path))
                     cfpb_export = json.loads(cfpb_path.read_text(encoding="utf-8"))
+                    assert cfpb_export["visibility"] == "private"
+                    assert cfpb_export["public_release_approved"] is False
                     assert cfpb_export["selected_geography"]["geoid"] == "01003"
                     assert cfpb_export["selected_geography"]["name"] == "Baldwin County"
                     assert len(cfpb_export["rows"]) == 216

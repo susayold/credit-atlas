@@ -1,11 +1,18 @@
 import csv
 import hashlib
 import json
+import shutil
+import threading
+from http.server import ThreadingHTTPServer
 from pathlib import Path
+from types import SimpleNamespace
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
 import pytest
 
 from credit_atlas.cfpb_mortgage_trends import FILES, MONTHS, read
+from credit_atlas.server import handler_for
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,3 +89,51 @@ def test_unlisted_query_and_tampered_source_are_rejected(tmp_path):
     county.write_bytes(county.read_bytes() + b"\n")
     with pytest.raises(ValueError, match="hash differs from acquisition receipt"):
         read(tmp_path)
+
+
+def test_cfpb_mortgage_http_view_and_report_contract(tmp_path):
+    source = _fixture(tmp_path)
+    web = tmp_path / "apps" / "web"
+    web.mkdir(parents=True)
+    shutil.copyfile(ROOT / "apps" / "web" / "app.js", web / "app.js")
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(
+        root=tmp_path, cfpb_mortgage_trends=lambda query: read(tmp_path, query)
+    )))
+    server.daemon_threads = True
+    worker = threading.Thread(target=server.serve_forever, daemon=True)
+    worker.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        query = "?geography_type=County&geoid=01003"
+        with urlopen(base + "/api/cfpb-mortgage-trends" + query, timeout=5) as response:
+            view = json.loads(response.read())
+            assert response.status == 200
+            assert response.headers.get_content_type() == "application/json"
+        assert view["status"] == "AVAILABLE"
+        assert view["selected_geography"]["geoid"] == "01003"
+        assert len(view["rows"]) == 216
+        assert "Baldwin County" in json.dumps(view)
+
+        with urlopen(base + "/api/cfpb-mortgage-trends-report" + query, timeout=5) as response:
+            report_payload = json.loads(response.read())
+            assert response.status == 200
+            assert "CFPB-Mortgage-Performance-Trends-private-context.json" in response.headers[
+                "Content-Disposition"
+            ]
+        assert report_payload == view
+        assert report_payload["visibility"] == "private"
+        assert "private" not in json.dumps(report_payload.get("rows", []))
+
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/cfpb-mortgage-trends?metric=30_89", timeout=5)
+        assert error.value.code == 400
+
+        county = source / FILES["county"]["30_89"]
+        county.write_bytes(county.read_bytes() + b"\n")
+        with pytest.raises(HTTPError) as error:
+            urlopen(base + "/api/cfpb-mortgage-trends-report" + query, timeout=5)
+        assert error.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(timeout=2)

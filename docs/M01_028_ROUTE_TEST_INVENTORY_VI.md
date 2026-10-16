@@ -6,7 +6,7 @@ private. Danh sách cho biết nơi có chuỗi route trực tiếp, không ch�
 route đã được kiểm thử đầy đủ, đúng payload hay đã qua browser acceptance.
 
 - Root được quét: `credit-atlas-public`
-- Path literals trong server: **167**
+- Path literals trong server: **176**
 - `HTTP tests` và `Browser QA` là reference tĩnh; cần đọc evidence/receipt
   riêng trước khi xem là nghiệm thu.
 - Report alias thường được tải qua UI link; route base trong browser script
@@ -43,8 +43,8 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/business-archive` | `apps/web/app.js` | `tests/test_business_archive_http.py` | `scripts/browser_business_archive_qa.py` |
 | `/api/business-archive-report` | `apps/web/app.js` | `tests/test_business_archive_http.py` | — |
 | `/api/business-report` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_remaining_domains_qa.py`, `scripts/browser_sba_june_acceptance.py` |
-| `/api/cfpb-mortgage-trends` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
-| `/api/cfpb-mortgage-trends-report` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
+| `/api/cfpb-mortgage-trends` | `apps/web/app.js` | `tests/test_cfpb_mortgage_trends.py` | `scripts/browser_qa.py` |
+| `/api/cfpb-mortgage-trends-report` | `apps/web/app.js` | `tests/test_cfpb_mortgage_trends.py` | `scripts/browser_qa.py` |
 | `/api/corporate-memo` | `apps/web/corporate-memos.js` | `tests/test_http_boundary.py` | `scripts/browser_corporate_memo_qa.py` |
 | `/api/corporate-memo-report` | `apps/web/corporate-memos.js` | `tests/test_http_boundary.py` | — |
 | `/api/corporate-memos` | `apps/web/corporate-memos.js` | `tests/test_http_boundary.py` | `scripts/browser_corporate_memo_qa.py` |
@@ -76,6 +76,7 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/exposure-tail-studies` | `apps/web/app.js` | `tests/test_exposure_catalog_http.py` | — |
 | `/api/fannie-samples` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_fannie_samples_qa.py`, `scripts/browser_qa.py` |
 | `/api/fannie-samples-report` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_qa.py` |
+| `/api/fed-bank-mortgage-context` | `apps/web/app.js` | `tests/test_fed_bank_mortgage_context.py` | — |
 | `/api/fhfa-nmdb-performance` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
 | `/api/fhfa-nmdb-performance-report` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
 | `/api/fhfa-pudb-profile` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
@@ -97,6 +98,7 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/hmda-views` | `apps/web/app.js` | `tests/test_workspace_catalog_http.py` | — |
 | `/api/hud-fha-iif-profile` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
 | `/api/hud-fha-iif-profile-report` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
+| `/api/hud-fha-performance` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
 | `/api/kpi-workbook` | `apps/web/monitor.js` | `tests/test_http_boundary.py` | `scripts/browser_qa.py` |
 | `/api/lendingclub-full-source` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_lendingclub_full_source_qa.py` |
 | `/api/lendingclub-full-source-report` | `apps/web/app.js` | `tests/test_http_boundary.py` | — |
@@ -113,12 +115,19 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/monitor-review-report` | `apps/web/monitor-reviews.js` | `tests/test_monitor_reviews.py` | — |
 | `/api/monitor-reviews` | `apps/web/monitor-reviews.js` | `tests/test_monitor_reviews.py` | `scripts/browser_monitor_review_qa.py` |
 | `/api/monitoring` | `apps/web/app.js`, `apps/web/monitor.js` | — | `scripts/browser_panel_quality_acceptance.py`, `scripts/browser_qa.py` |
+| `/api/mortgage-macro-context` | `apps/web/app.js` | `tests/test_mortgage_macro_context.py` | — |
 | `/api/mortgage-provenance` | `apps/web/app.js` | — | `scripts/browser_mortgage_provenance.py`, `scripts/browser_qa.py` |
 | `/api/mortgage-provenance-report` | `apps/web/app.js` | — | — |
-| `/api/nsmo-dictionary` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nmdb-performance` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nmdb-state-performance` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nsmo-dictionary` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | `scripts/browser_nsmo_wave_coverage_qa.py` |
 | `/api/nsmo-domains` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nsmo-first-entry-risk-set-feasibility` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nsmo-first-observed-transition-support` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nsmo-horizon-sensitivity` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
 | `/api/nsmo-origination-feasibility` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
 | `/api/nsmo-profile` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
+| `/api/nsmo-survey-returns` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
 | `/api/nsmo-target-feasibility` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |
 | `/api/observed-loss-details` | `apps/web/app.js` | — | `scripts/browser_observed_loss_details.py`, `scripts/browser_qa.py` |
 | `/api/observed-loss-details-report` | `apps/web/app.js` | — | — |
@@ -184,7 +193,19 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 
 ## Evidence review — 16/10/2026
 
-The API serves 167 distinct path literals. P4 Portfolio catalog routes now
+The API serves 176 distinct path literals. A source-only reference count finds
+50 routes with no direct route string in a test file and 69 with no direct
+route string in a browser-QA script; these are triage signals, not proof of
+missing coverage, because generic dispatch or helper-based tests may cover
+routes without repeating their literal path.
+
+The CFPB Mortgage Performance Trends view and report now have direct HTTP
+contract coverage for selected-county payloads, the server attachment name,
+invalid query rejection, and tampered-source failure behavior in
+`tests/test_cfpb_mortgage_trends.py`. The response marks the aggregate report
+private and not approved for public release.
+
+P4 Portfolio catalog routes now
 have direct HTTP contract tests for `/api/exposure-imports`,
 `/api/exposure-convergence-studies`, `/api/exposure-tail-studies`,
 `/api/exposure-ecl-studies`, `/api/exposure-scenarios`, and

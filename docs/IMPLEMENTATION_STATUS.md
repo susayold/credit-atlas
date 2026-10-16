@@ -5,11 +5,41 @@ chapter 47 of the consolidated research plan.
 
 | Release | Status | Required evidence |
 |---|---|---|
-| R0 — foundation | In progress | Pinned engine/source, clean rebuild, checks and resource receipt |
-| R1 — descriptive app | Not complete | Verified panel/cohort/vintage/transitions/episodes/loss, saved findings and browser QA |
-| R2 — multi-vintage data | Not complete | Required annual vintages, label support and frozen temporal protocol |
-| R3 — model study | Not complete | Actual same-cohort fitting/calibration/validation/OOT and model card |
-| R4 — final handoff | Not complete | Full reproduction, export/browser/privacy checks and case study |
+| R0 — foundation | Partial | Pinned engine/source, 2012 rebuild and semantic trace verified; dependency/license/resource sign-off remains open |
+| R1 — descriptive app | Complete for the single-vintage 2012 descriptive release | Frozen 2012 views, reconciliation, chart support, findings, scoped export and latest real-data browser acceptance; this does not mean multi-vintage research or modeling is complete |
+| R2 — multi-vintage data | Blocked on authorized source access | No additional Freddie annual sample acquired; required vintages, label support and frozen temporal protocol remain open |
+| R3 — model study | Not complete; correctly blocked before fit | No actual mortgage model fit/calibration/validation/OOT or model card; source/support gates are unmet |
+| R4 — final handoff | Partial | Descriptive case study, reproduction, export/privacy and browser evidence exist; final research/model handoff awaits R2/R3 and remaining R0 sign-off |
+
+## Status update — 2026-10-16
+
+- CreditAtlas master plan ledger: **26/50 requirements complete (52%)**; 42/50
+  have at least some implementation or conditional coverage. This is a count of
+  requirements, not elapsed effort, model readiness, or a forecast of remaining
+  time. See `docs/BACKLOG_STATUS.md` for the requirement-by-requirement ledger.
+- D01's R1 descriptive release is accepted only for the frozen 2012 sample. The
+  latest public-code browser run on the private, verified real-data case passed
+  106 checks with no browser errors; it covers desktop/mobile views, data
+  support, findings and exports. Chart/support, export-contract and reproduction
+  audits are linked below. Private data and receipts stay outside this public
+  repository.
+- D01 still has **one** qualified Freddie annual vintage. Official public
+  references clarify Release 47 schema changes, but add zero vintages. No new
+  macro, rate, loss or credit-risk variable has been forecast or imputed by
+  CreditAtlas in this update.
+- The next data gate is authorized delivery/access: Freddie Clarity sign-in for
+  D01; Ginnie session cookie for a separate Ginnie case. Neither source is
+  replaced by aggregate or survey data. The Ginnie cookie folder on D: currently
+  contains no cookie file.
+- Before any future projection, document the target variable and information
+  cutoff; research and cite the source/forecast method; specify training window,
+  transformations and assumptions; run a time-ordered backtest against a naive
+  baseline; report error metrics, uncertainty, sensitivity and failure cases;
+  retain a separate, visibly labeled forecast artifact. Until that evidence
+  exists, the app reports observed data or unavailable values.
+
+See `docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md` for the detailed
+plan-to-evidence status and next acquisition order.
 
 ## Verified checkpoint — 2026-10-08
 

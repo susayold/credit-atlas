@@ -4,6 +4,26 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### D01/R1 acceptance and progress rebasing — 2026-10-16
+
+R1 is accepted for the **single frozen Freddie 2012 descriptive case** under
+§47.22: the common-run descriptive views and reconciliation, chart/support,
+unavailable-vs-zero behavior, saved findings, scoped export, reproduction, and
+real-data browser flow have evidence. The latest browser run on public code
+against private case `d01-202610150931` passed **106 checks** with no browser
+errors (`artifacts/private/browser-qa-b0f2574128dc/receipt.json`, private D:).
+This closes only the single-vintage descriptive release; it does not close
+multi-vintage comparison, mortgage modeling, or final D01 handoff.
+
+The master plan remains **26/50 complete (52%)**; 42/50 have at least some
+implementation or conditional coverage. Do not raise the numerator merely
+because a newer browser run adds evidence to already-partial multi-vintage/model
+requirements. Freddie annual vintage count remains one, with zero added at this
+checkpoint. Ginnie production remains blocked on a user-saved authenticated
+session file. No variables were forecast or imputed. Detailed release mapping
+and the data-first acquisition queue are in
+`docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md`.
+
 ## Latest continuation — Federal Reserve bank asset quality by product
 
 Extended the Federal Reserve CHGDEL benchmark to 30 official FRED series:

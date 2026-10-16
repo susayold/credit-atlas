@@ -51,7 +51,7 @@
       "id": "N03",
       "status": "In progress",
       "scope": "Seven provenance classes and fifteen concrete method cards with input/source IDs, target, method, stored validation, limitation and evidence reference.",
-      "remaining": "PUDB and HMDA denominator formula traces are documented; continue linking each remaining numeric app output to a method/input record, include all declared assumptions and publisher-versus-app imputation provenance."
+      "remaining": "PUDB, HMDA denominator, and NMDB New/Outstanding formula and weighting traces are documented; continue linking each remaining numeric app output to a method/input record, include all declared assumptions and publisher-versus-app imputation provenance."
     },
     {
       "id": "N05",
@@ -202,7 +202,7 @@
       "access": "Public FHFA aggregate release",
       "use": "Origination market mix and mortgage context; not individual loan performance",
       "next": "Review filters, chart and missingness in browser; open/recalculate query-scoped workbook in Excel desktop.",
-      "evidence": "docs/FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md",
+      "evidence": "docs/N03_NMDB_WEIGHTING_TRACE_2026-10-17_VI.md",
       "publisher": "https://www.fhfa.gov/data/nmdb",
       "rights_review": "Public aggregate release; preserve attribution and source definitions."
     },
@@ -216,7 +216,7 @@
       "access": "Public FHFA aggregate release",
       "use": "Outstanding stock / UPB context; not loan-level performance",
       "next": "Review quarter-end stock and weighting filters in browser/Excel; keep separate from origination flow and preserve suppressed/missing values.",
-      "evidence": "docs/FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md",
+      "evidence": "docs/N03_NMDB_WEIGHTING_TRACE_2026-10-17_VI.md",
       "publisher": "https://www.fhfa.gov/data/nmdb",
       "rights_review": "Public aggregate release; preserve attribution and source definitions."
     },
@@ -650,10 +650,10 @@
       ],
       "value_type": "reported + derived",
       "target": "Descriptive mortgage origination mix and quarter-end outstanding mortgage/UPB context",
-      "method": "Query source grain product × geography × mortgage market × series × period. Keep annual New flow and quarterly Outstanding stock separate. VALUE1 is loan-count weighted; VALUE2 is origination-amount weighted for New and quarter-end-UPB weighted for Outstanding. Apply Appendix B/C VALUE1-only restrictions by series. Preserve raw source strings, parsed numeric nulls, suppression, units, source release and mart digest; no cross-market summing, interpolation or forecast.",
-      "validation": "PASS acquisition receipts and source hashes bound; canonical mart reconciles 3,038,100 New + 535,464 Outstanding rows, 4,980 suppressed New rows, 135,084/337,292 New VALUE1/VALUE2 missing cells, 57,888 Outstanding VALUE2 missing cells and zero invalid numeric rows. National/all-mortgage workbook reference holds 1,680 annual + 1,998 quarterly rows. Runtime checks: New 28 years, Outstanding 54 quarters, VALUE2 rejected for VALUE1-only Outstanding TOT_UPB; selected-value chart references verified in XLSX exports.",
+      "method": "Query source grain product × geography × mortgage market × series × period. Keep annual New flow and quarterly Outstanding stock separate. VALUE1 is loan-count weighted; VALUE2 is origination-amount weighted for New and quarter-end-UPB weighted for Outstanding. Enforce Appendix B VALUE1-only New series TOT_ORIG, TOT_LOANAMT, AVE_LOANAMT, AVE_PAYMENT, AVE_PROPVAL and Appendix C VALUE1-only Outstanding series TOT_LOANS, PCT_LOANS, TOT_UPB, PCT_UPB, TOT_LOANAMT, AVE_PAYMENT. Preserve raw source strings, parsed numeric nulls, suppression, units, source release and mart digest; no cross-market summing, interpolation or forecast.",
+      "validation": "PASS acquisition receipts and source hashes bound; canonical mart reconciles 3,038,100 New + 535,464 Outstanding rows, 4,980 suppressed New rows, 135,084/337,292 New VALUE1/VALUE2 missing cells, 57,888 Outstanding VALUE2 missing cells and zero invalid numeric rows. National/all-mortgage workbook reference holds 1,680 annual + 1,998 quarterly rows. Runtime checks: New 28 years, Outstanding 54 quarters, VALUE2 rejected for VALUE1-only Outstanding TOT_UPB; selected-value chart references verified in XLSX exports. Six new synthetic service tests enforce all New VALUE1-only series even when raw VALUE2 is numeric and preserve VALUE2 selection for supported AVE_INTRATE.",
       "limits": "Aggregate sample context only; not loan-level PD/default, approval rate or Freddie vintage. Annual New flow and quarter-end Outstanding stock are separate products. Browser visual and Excel desktop acceptance remain open.",
-      "evidence": "docs/FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md",
+      "evidence": "docs/N03_NMDB_WEIGHTING_TRACE_2026-10-17_VI.md",
       "source_release_record_ids": [
         "fhfa-nmdb-new-annual-2026-09-30",
         "fhfa-nmdb-outstanding-quarterly-2026-09-30"

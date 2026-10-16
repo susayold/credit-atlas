@@ -151,7 +151,8 @@ SERIES = {
     "outstanding_quarterly": OUTSTANDING_SERIES,
 }
 VALUE1_ONLY = {
-    "new_annual": {"TOT_ORIG", "TOT_LOANAMT"},
+    # FHFA Appendix B: these New Residential Mortgage Statistics are VALUE1 only.
+    "new_annual": {"TOT_ORIG", "TOT_LOANAMT", "AVE_LOANAMT", "AVE_PAYMENT", "AVE_PROPVAL"},
     "outstanding_quarterly": {"TOT_LOANS", "PCT_LOANS", "TOT_UPB", "PCT_UPB", "TOT_LOANAMT", "AVE_PAYMENT"},
 }
 ALLOWED_QUERY = {"product", "geo_level", "geo_id", "market", "series_id", "measure", "from_year", "to_year"}

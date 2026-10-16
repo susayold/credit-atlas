@@ -32,6 +32,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Registry hiện có mười lăm method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA action-denominator và fixed-mix, P4 scenario/ECL, Toyota/Nissan/structured ABS và Bondora 12-MOB support.
 - Các giả định P4 hiển thị đúng scope illustrative: lịch bullet 36 tháng, monthly EIR 0,004, weights 0,7/0,3; source expected loss vẫn unavailable. Không tạo biến dự phóng mới.
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
+- Trace công thức PUDB, HMDA denominator và NMDB New/Outstanding đã được ghi riêng. Khi rà Appendix B/C cho NMDB, thêm các series New `AVE_LOANAMT`, `AVE_PAYMENT`, `AVE_PROPVAL` vào contract VALUE1-only; kiểm thử synthetic mart bảo đảm VALUE2 numeric thô không mở sai weighting.
 
 ### N05 — canonical FHFA NMDB aggregate mart
 

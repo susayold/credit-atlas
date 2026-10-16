@@ -29,6 +29,10 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     assert len(hmda_method["source_release_record_ids"]) == 9
     assert "n_1+n_2+n_3" in hmda_method["method"] and "n_3" in hmda_method["method"]
     assert (Path(__file__).resolve().parents[1] / hmda_method["evidence"]).is_file()
+    nmdb_method = next(row for row in result["method_cards"] if row["id"] == "nmdb-origination-stock-market-context")
+    assert len(nmdb_method["source_release_record_ids"]) == 2
+    assert "VALUE1" in nmdb_method["method"] and "VALUE2" in nmdb_method["method"]
+    assert (Path(__file__).resolve().parents[1] / nmdb_method["evidence"]).is_file()
 
 
 @pytest.mark.parametrize(

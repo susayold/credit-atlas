@@ -2015,7 +2015,7 @@
         }
       ],
       "scope_note": "Quarter-end stock, not origination flow. Not borrower PD or default outcome. Do not combine with New as one time series; preserve series-specific weighting.",
-      "missing_cell_count_basis": "58,888 missing cells are VALUE2 only; VALUE1 has no missing rows in source profile.",
+      "missing_cell_count_basis": "57,888 missing cells are VALUE2 only; VALUE1 has no missing rows in source profile.",
       "field_count": 14,
       "component_sha256_prefixes": {
         "csv_member": "172376993827"

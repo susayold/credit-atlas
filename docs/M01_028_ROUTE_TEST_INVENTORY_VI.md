@@ -205,6 +205,14 @@ invalid query rejection, and tampered-source failure behavior in
 `tests/test_cfpb_mortgage_trends.py`. The response marks the aggregate report
 private and not approved for public release.
 
+Mortgage Provenance and Observed Loss Details now have real-data browser
+acceptance in `scripts/browser_mortgage_provenance.py` and
+`scripts/browser_observed_loss_details.py`. The JSON attachments are checked
+against their API payloads across all four relief scopes; explicit private
+release flags, identifier exclusion, browser errors, responsive layout, and
+holdout-ledger immutability are verified. These receipts are stored under
+`artifacts/private/` in the private checkout, not in the public repository.
+
 P4 Portfolio catalog routes now
 have direct HTTP contract tests for `/api/exposure-imports`,
 `/api/exposure-convergence-studies`, `/api/exposure-tail-studies`,

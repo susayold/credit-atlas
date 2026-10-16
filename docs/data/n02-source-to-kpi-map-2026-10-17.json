@@ -795,8 +795,8 @@
       "publisher": "Federal Housing Finance Agency",
       "source_id": "fhfa-pudb-2025-sf-census-tract",
       "source_family": "FHFA PUDB 2025 single-family/census-tract acquisition ZIP",
-      "current_use_status": "Acquired profile input; category counts only, no performance target.",
-      "note": "2025 acquisition records, 2,093,767 × 66; 2020 census tracts; category display suppresses cells under 30."
+      "current_use_status": "Acquired and profiled; 16 one-dimensional category measures; local-private analyst workbook; no performance target.",
+      "note": "2025 acquisition records, 2,093,767 × 66; 2020 census tracts. Profile v4 counts blank cells in all 66 fields. App shows category count/share-of-file; private workbook adds nonblank-field shares and missingness; display suppresses counts below 30. See docs/N03_PUDB_FORMULA_TRACE_2026-10-17_VI.md."
     },
     {
       "source_release_record_id": "fhfa-pudb-2025-data-dictionary",

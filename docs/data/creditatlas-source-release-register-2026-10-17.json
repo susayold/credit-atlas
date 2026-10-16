@@ -1764,6 +1764,7 @@
       ],
       "consumer_trace": [
         "src/credit_atlas/fhfa_pudb.py → /api/fhfa-pudb-profile; mortgage workspace",
+        "apps/web/app.js → Mortgage workspace / FHFA PUDB acquisition pane",
         "apps/excel/build_fhfa_pudb_analyst_review.mjs → /downloads/fhfa-pudb-2025-analyst.xlsx (private output)"
       ],
       "kpi_or_output": "2025 acquisition-category counts/support by purpose, guarantee, DTI, score-model and geography. Category shares use the 2,093,767-row dataset denominator; cells below 30 are suppressed in display. A separate five-sheet analyst workbook provides category mix, all-field missingness, dictionary, and source/method context; categories under 30 are suppressed.",

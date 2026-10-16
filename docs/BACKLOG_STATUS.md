@@ -4,6 +4,23 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — official HMDA 2024 One-Year national file, 2026-10-16
+
+Acquired the complete official FFIEC/CFPB 2024 One-Year national LAR CSV to
+private D: storage: 12,259,199 rows, 99 columns, 4,926 LEIs, 4,636,615,274
+bytes. SHA-256 is
+`9f38ccda3b3eb88a22d7eb3c1745a0d418ae533486bd483d3bb7e5d3f6f8efe4`.
+All eight action counts match the official nationwide aggregation API exactly;
+wrong-year, invalid-action/state/loan-type/LEI/loan-amount checks each return 0.
+The descriptive action-3 share over actions 1–3 is 24.2844%, not PD/default.
+This One-Year release is distinct from the 2025 Snapshot release, contains no
+repayment performance labels and is not joinable as a borrower-level performance
+panel. It adds useful D08 application-level evidence, but does not alter D01's
+**26/50 complete (52%)** or **42/50 some/conditional coverage (84%)**; Freddie
+R2 and model R3 remain gated on authorized mortgage performance vintages. No
+forecast, imputation, or model fit was done. Raw rows and receipt remain private.
+See [`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).
+
 ### Data-first continuation — HMDA national 2025 snapshot and D08 integration, 2026-10-16
 
 Downloaded and audited the official 2025 national HMDA LAR (13,543,606 rows,

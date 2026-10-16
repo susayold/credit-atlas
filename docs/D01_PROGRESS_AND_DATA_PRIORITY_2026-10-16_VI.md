@@ -3,6 +3,12 @@
 **Checkpoint:** 16/10/2026. Đây là trạng thái theo bằng chứng có thể kiểm tra,
 không phải ước lượng thời gian đã bỏ ra.
 
+**Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
+One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại
+[`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).
+Đây là hồ sơ application/decision riêng cho D08, không phải payment/performance
+panel và không làm tăng % D01 bên dưới.
+
 ## Tiến độ tổng thể
 
 CreditAtlas hiện hoàn thành **26/50 yêu cầu = 52%** theo completion ledger;

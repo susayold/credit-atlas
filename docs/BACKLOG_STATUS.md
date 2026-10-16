@@ -4,6 +4,10 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — HMDA One-Year 2019, publisher vintage exception, 2026-10-16
+
+Found and acquired the official static 2019 One-Year national LAR (17,563,200 rows, 99 fields, 5,565 LEIs; CSV SHA-256 `f13d5b3aedba074921a7d114e0787d6220d10b2746a769eae135178b13b1673b`). All eight action counts reconcile to the fully profiled file; tested row-quality exceptions are zero. The official release page warns that 2019 contains more than 12 months of updates because of release timing. This is disclosed in the panel and adjacent-year comparison; do not treat 2019 as a standardized 12-month cutoff. Added a source-bound private aggregate view and the panel/API; D08 only, no Freddie vintage and no change to D01 26/50. No forecast, imputation or model fit. See [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
+
 ### Data-first continuation — HMDA One-Year 2021, correction to release research, 2026-10-16
 
 Rechecked the current official FFIEC vintage FAQ and corrected the prior claim

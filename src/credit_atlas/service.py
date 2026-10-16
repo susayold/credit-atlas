@@ -80,6 +80,8 @@ class ResearchService:
         self.hmda_national_views = HmdaNationalViews(self.root)
         from .hmda_one_year_views import HmdaOneYearViews
         self.hmda_one_year_views = HmdaOneYearViews(self.root)
+        from .hmda_one_year_2019_views import HmdaOneYear2019Views
+        self.hmda_one_year_2019_views = HmdaOneYear2019Views(self.root)
         from .hmda_one_year_2020_views import HmdaOneYear2020Views
         self.hmda_one_year_2020_views = HmdaOneYear2020Views(self.root)
         from .hmda_one_year_2021_views import HmdaOneYear2021Views

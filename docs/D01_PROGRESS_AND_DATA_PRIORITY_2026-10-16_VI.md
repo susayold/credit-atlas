@@ -26,11 +26,13 @@ kiểm CRC/hash, giải nén/audit 25.666.745 dòng và tích hợp aggregate vi
 panel cùng Excel 8 sheet. Chi tiết tại
 [`HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md).
 
+**Bổ sung HMDA One-Year 2019 (D08, không phải D01):** tìm thấy static release chính thức 2019, dù bảng FAQ hiện hành chỉ liệt kê One-Year 2020–2024 cho Data Browser. Đã tải và audit 17.563.200 dòng/99 trường/5.565 LEI; ZIP CRC, hash và các kiểm tra chất lượng pass. FFIEC cảnh báo release 2019 chứa hơn 12 tháng cập nhật; app/so sánh giữ caveat này và không coi đây là cutoff chuẩn 12 tháng. Đã thêm aggregate view và panel riêng, không dùng API Three-Year làm reconciliation. D01 vẫn 26/50 = 52%, HMDA không có performance labels nên không tăng vintage count. Chi tiết: [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
+
 **Sửa research + bổ sung HMDA One-Year 2021:** rà lại FAQ FFIEC cho thấy release
 2021 có thật (freeze 01/05/2023); phát biểu trước đó rằng release không tồn tại
 là sai. Đã tải ZIP 1.518.888.317 byte, CRC/hash pass, giải nén và kiểm đủ 26.227.364
 dòng/99 trường/4.368 LEI; 8 action counts và các kiểm tra DQ khớp receipt. Tích
-hợp aggregate view, panel, workbook Excel 8 sheet và chuỗi so sánh 2020–2024.
+hợp aggregate view, panel, workbook Excel 8 sheet và chuỗi so sánh 2019–2024 (với caveat >12 tháng cho vintage 2019).
 2021 có 18.620.312 hồ sơ trong denominator actions 1–3, gồm 2.922.414 denied,
 tỷ lệ mô tả 15,6948%; không phải PD/default. Không forecast hay impute. Chi tiết
 và hash tại [`HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md).
@@ -40,7 +42,7 @@ và hash tại [`HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YE
 Snapshot 2025 và One-Year 2024 **PASS, 8 checks, zero errors**, gồm breakdown,
 JSON/Excel download và mobile width; bằng chứng private tại
 `D:\data\Codex\credit-atlas\artifacts\private\hmda-national-browser-qa-6f761518ddc3\receipt.json`.
-Bộ HMDA One-Year hiện có đầy đủ 2020–2024, so sánh cùng action denominator.
+Bộ HMDA One-Year hiện có đầy đủ 2019–2024, so sánh cùng action denominator; 2019 có caveat >12 tháng cập nhật.
 Tỷ lệ D01 vẫn 26/50 vì HMDA
 không đáp ứng gate performance R2/R3. Ưu tiên dữ liệu tiếp theo cho D01 vẫn là
 Freddie Clarity performance samples; Ginnie Mae cần phiên tải đã xác thực và sẽ
@@ -78,7 +80,7 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   Freddie Release 47, có hash riêng. Chúng giúp xác định thay đổi code/sentinel,
   missing value, loss sign, cumulative modification cost, score field và layout.
   Đây là tài liệu schema, **không phải loan-performance rows**; thêm 0 vintage.
-- **HMDA mới cho D08, không tính vào D01:** One-Year National 2020–2024 đã được
+- **HMDA mới cho D08, không tính vào D01:** One-Year National 2019–2024 đã được
   tải, kiểm định theo vintage, tích hợp thành release-specific views và workbook
   Excel riêng; app so sánh cùng action denominator và ghi rõ freeze. Với 2020,
   2021 và 2022, không tuyên bố API

@@ -23,6 +23,7 @@ def _serve(tmp_path, service):
     [
         ("/api/hmda-views", "", "hmda_views", "catalog", ()),
         ("/api/hmda-one-year-views", "", "hmda_one_year_views", "catalog", ()),
+        ("/api/hmda-one-year-2019-views", "", "hmda_one_year_2019_views", "catalog", ()),
         ("/api/hmda-one-year-2020-views", "", "hmda_one_year_2020_views", "catalog", ()),
         ("/api/hmda-one-year-2021-views", "", "hmda_one_year_2021_views", "catalog", ()),
         ("/api/hmda-one-year-2022-views", "", "hmda_one_year_2022_views", "catalog", ()),
@@ -148,6 +149,7 @@ def test_hmda_2021_audit_workbook_download_is_bound_to_verified_private_source(t
 @pytest.mark.parametrize(
     ("route", "view_name"),
     [("/api/sec-view", "sec_views"), ("/api/market-view", "market_views"),
+     ("/api/hmda-one-year-2019-view", "hmda_one_year_2019_views"),
      ("/api/hmda-one-year-2020-view", "hmda_one_year_2020_views"),
      ("/api/hmda-one-year-2021-view", "hmda_one_year_2021_views"),
      ("/api/hmda-one-year-2022-view", "hmda_one_year_2022_views"),
@@ -181,6 +183,7 @@ def test_workspace_snapshot_http_routes_require_exact_view_id(tmp_path, route, v
     ("route", "query", "service_name", "method", "identifier", "attachment"),
     [
         ("/api/hmda-report", "view_id=hmda-view-x", "hmda_views", "report", "hmda-view-x", True),
+        ("/api/hmda-one-year-2019-report", "view_id=hmda-one-year-2019-view-123456789abc&dimension=state_code", "hmda_one_year_2019_views", "report", "hmda-one-year-2019-view-123456789abc", True),
         ("/api/hmda-one-year-2020-report", "view_id=hmda-one-year-2020-view-123456789abc&dimension=state_code", "hmda_one_year_2020_views", "report", "hmda-one-year-2020-view-123456789abc", True),
         ("/api/hmda-one-year-2021-report", "view_id=hmda-one-year-2021-view-123456789abc&dimension=state_code", "hmda_one_year_2021_views", "report", "hmda-one-year-2021-view-123456789abc", True),
         ("/api/hmda-one-year-report", "view_id=hmda-one-year-2024-view-123456789abc&dimension=state_code", "hmda_one_year_views", "report", "hmda-one-year-2024-view-123456789abc", True),

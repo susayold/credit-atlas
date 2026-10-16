@@ -850,7 +850,7 @@ not found”, but the official Data Browser API serves the Three-Year vintage
 documented action-code counts (15,138,510 rows) exactly reconcile to the
 official aggregation API. The CSV includes 1,961 additional rows with
 `action_taken=-1` and blank LEI/state; because the public LAR codebook only
-documents action values 1–8, these source rows are preserved and quarantined,
+documents action values 1–8 and the API rejects `-1` as an invalid filter, these source rows are preserved and quarantined,
 not silently mapped into a category. Audit status is
 `PASS_WITH_QUARANTINED_SOURCE_ROWS`; no app integration or KPI uses them pending
 source investigation. This is D08 application/decision data, not D01 loan

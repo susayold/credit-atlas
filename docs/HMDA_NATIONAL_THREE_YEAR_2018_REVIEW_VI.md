@@ -48,8 +48,11 @@ counts reconcile exactly to the official aggregation response:
 
 The extra **1,961 rows** have `action_taken=-1`, blank LEI and blank/malformed
 state code. Their loan amounts parse, but `-1` is not among the official
-public-LAR action values 1–8. All rows using documented action codes have a
-nonblank LEI and a two-character state code. The audit therefore records
+public-LAR action values 1–8. A separate request to the official aggregation
+API with `actions_taken=-1` returns HTTP 400 and explicitly reports that valid
+actions are 1–8; therefore the extra rows are outside the documented query
+domain, not a ninth outcome category. All rows using documented action codes
+have a nonblank LEI and a two-character state code. The audit therefore records
 `PASS_WITH_QUARANTINED_SOURCE_ROWS`: raw rows are preserved; the 1,961 rows are
 not silently recoded, treated as a ninth action, included in action KPIs, or
 discarded from the acquisition count. Do not integrate this vintage into app

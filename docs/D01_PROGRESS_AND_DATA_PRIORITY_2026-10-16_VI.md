@@ -19,7 +19,7 @@ theo từng release như sau:
 | R0 — foundation | Partial | Engine pin; rebuild 2012 50.000 loans / 4.510.559 loan-months; semantic audit trên corpus; reproduction, tests và runtime evidence | Dependency/resource sign-off cuối; license/distribution terms cho engine và package audit cuối |
 | R1 — descriptive | **Đạt cho frozen Freddie 2012 sample** | Source/DQ, portfolio/profile, timeline, transitions, episodes, competing outcomes, observed-loss bridge, denominators/support, findings save/reopen, scoped descriptive export, reproduction và real-data browser QA | Không bao gồm multi-vintage so sánh; không bao gồm PD/model, LGD/ECL hay dự báo; R2/R3 vẫn mở |
 | R2 — multi-vintage | **Chưa đạt; access-blocked** | Downloader/manifest/registration safeguards và schema-version research đã có | Đã có 1 Freddie vintage (2012), cần thêm authorized annual samples để test semantics/support/time split; số vintage bổ sung trong checkpoint này = **0** |
-| R3 — model study | **Chưa đạt; chưa fit (đúng gate)** | Pipeline/model engineering và synthetic integration coverage; model UI cho thấy blocker thật | Actual same-cohort fit, calibration, validation, OOT, uncertainty, selection freeze, model card; tất cả chờ R2 và protocol |
+| R3 — model study | **Chưa đạt; chưa fit (đúng gate)** | Pipeline/model engineering và synthetic integration coverage; latest real-data prepare-study ghi 43.327 train rows (100 positive), 0 calibration/validation/test, no model fit | Actual same-cohort fit, calibration, validation, OOT, uncertainty, selection freeze, model card; tất cả chờ R2 và protocol |
 | R4 — final handoff | Partial | Descriptive case study, reproduction, privacy/export/browser evidence | Research/model release đầy đủ chờ R0 sign-off cuối và R2/R3 |
 
 R1 được đánh dấu đạt theo scope mô tả một vintage vì Definition of Done tại
@@ -59,7 +59,8 @@ và [`FREDDIE_RELEASE47_CROSS_VINTAGE_IMPLICATIONS_VI.md`](FREDDIE_RELEASE47_CRO
 ## Ưu tiên làm tiếp
 
 1. **Mở Freddie Clarity access trước.** Sau khi có phiên hợp lệ, lấy đúng annual
-   sample theo manifest chính thức; tải một vintage pilot, ghi bytes/hash/release,
+   sample theo manifest chính thức; tải một vintage pilot (plan hiện nêu 2008 là
+   ứng viên train), ghi bytes/hash/release,
    kiểm ZIP/member/schema/domain/IDs/row grain và disk headroom. Chỉ sau khi audit
    mới đăng ký vintage vào canonical panel. Không chạy batch trước pilot.
 2. **Mở Ginnie pilot song song, nhưng giữ case riêng.** Dùng session cookie do
@@ -107,6 +108,8 @@ quan sát. Chi tiết phương pháp và kết quả nghiên cứu phải đư�
   lineage, determinism, unsupported metrics và privacy scan.
 - [`D01_CASE_STUDY_VI.md`](D01_CASE_STUDY_VI.md) — population, target, KPI,
   denominators, kết quả và limitations.
+- [`D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md`](D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md)
+  — current real-case split and train-feature availability; no model fit.
 - Latest private browser receipt:
   `D:\data\Codex\credit-atlas\artifacts\private\browser-qa-b0f2574128dc\receipt.json`.
   Source code used: public commit `ae94e77`; real-data case:

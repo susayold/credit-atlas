@@ -24,6 +24,15 @@ session file. No variables were forecast or imputed. Detailed release mapping
 and the data-first acquisition queue are in
 `docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md`.
 
+A current-case `prepare-study` / train-only `prepare-features` rerun now has
+private receipts `study-b71a0d76e11d` and `feature-audit-bbe0ad46de92`. It
+reconfirms 43,327 eligible train loans (100 positive / 43,227 negative), zero
+rows in the absent calibration/validation/test vintages, and 15,758/43,327
+train-cohort original-DTI values missing (36.37%). The five fit blockers remain;
+the command did not fit a model. See
+`docs/D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md` for lineage, cutoffs,
+feature coverage and interpretation.
+
 ## Latest continuation — Federal Reserve bank asset quality by product
 
 Extended the Federal Reserve CHGDEL benchmark to 30 official FRED series:

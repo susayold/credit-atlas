@@ -27,6 +27,13 @@ chapter 47 of the consolidated research plan.
   references clarify Release 47 schema changes, but add zero vintages. No new
   macro, rate, loss or credit-risk variable has been forecast or imputed by
   CreditAtlas in this update.
+- A fresh real-case study-preparation run on `d01-202610150931` returns
+  `PREPARED_NOT_FIT_READY`: 43,327 train loans (100 positive / 43,227 negative),
+  and zero calibration/validation/test rows because required vintages are absent.
+  It records five blockers and fits no model. The train-only feature audit shows
+  15,758/43,327 original-DTI values missing (36.37%); these remain missingness
+  counts, not imputed or projected values. See
+  `docs/D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md` and its private receipts.
 - The next data gate is authorized delivery/access: Freddie Clarity sign-in for
   D01; Ginnie session cookie for a separate Ginnie case. Neither source is
   replaced by aggregate or survey data. The Ginnie cookie folder on D: currently

@@ -1176,6 +1176,7 @@ const HMDA_TYPES={"1":"Conventional · 1","2":"FHA · 2","3":"VA · 3","4":"RHS/
 const HMDA_ACTION_LABELS={"1":"Loan originated","2":"Approved, not accepted","3":"Application denied","4":"Withdrawn","5":"Closed for incompleteness","6":"Purchased loan","7":"Preapproval denied","8":"Preapproval approved, not accepted"};
 const HMDA_NATIONAL_DIMENSIONS={state_code:"State / territory",county_code:"County FIPS",lei:"Reporting lender LEI",loan_type:"Loan type",loan_purpose:"Loan purpose",lien_status:"Lien status",occupancy_type:"Occupancy type",derived_dwelling_category:"Dwelling category",debt_to_income_ratio:"Public DTI category",derived_race:"Derived race",derived_ethnicity:"Derived ethnicity",derived_sex:"Derived sex",applicant_credit_score_type:"Applicant score-model type",denial_reason_1:"Primary denial reason · action 3"};
 let hmdaNationalDimension=new URLSearchParams(location.search).get("hmda_national_dimension")||"state_code";
+let hmdaOneYearDimension=new URLSearchParams(location.search).get("hmda_one_year_dimension")||"state_code";
 function hmdaQuery(){const query={...hmdaState};if(!query.reference_id)delete query.reference_id;return query;}
 function updateHmdaURL(){updateURL();const q=new URLSearchParams(location.search);Object.entries(hmdaState).forEach(([key,value])=>q.set("hmda_"+key,value));Object.entries(hmdaComparisonState).forEach(([key,value])=>q.set("hmda_comparison_"+key,value));history.replaceState(null,"","?"+q);}
 async function renderHmdaNational(container,generation){
@@ -1211,9 +1212,44 @@ async function renderHmdaNational(container,generation){
     const scope=card("Định nghĩa và giới hạn","HMDA national snapshot · source-verified aggregates only");scope.id="hmda-national-scope";scope.append(para(snapshot.scope),para("Denominator: "+snapshot.denominator_contract.meaning));snapshot.limitations.forEach(text=>scope.append(para(text)));const link=el("a","source-link","Official FFIEC 2025 snapshot ↗");link.href=snapshot.source_url;link.target="_blank";link.rel="noopener noreferrer";const workbook=el("a","source-link","Tải Excel · codebook + KPI + source audit ↓");workbook.href="/downloads/hmda-national-2025-audit.xlsx";scope.append(link,workbook);body.append(scope);await draw();
   }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
 }
+async function renderHmdaOneYear(container,generation){
+  const panel=card("HMDA · Toàn quốc · One-Year 2024","Hồ sơ application/underwriting · release One-Year đóng băng 02/06/2026 · phân tích riêng với Snapshot 2025");panel.id="hmda-one-year-2024";section(container,panel);
+  try{
+    const catalog=await api("/api/hmda-one-year-views");if(generation!==renderGeneration)return;
+    const valid=catalog.views.filter(row=>row.status==="verified");
+    if(!valid.length){panel.append(note("Chưa có aggregate view One-Year 2024 đã xác minh. Dữ liệu thô vẫn nằm trong kho riêng tư."));return;}
+    const selected=valid[0].view_id,snapshot=await api("/api/hmda-one-year-view",{view_id:selected});if(generation!==renderGeneration)return;
+    const body=el("div");panel.append(body);let requestId=0;
+    const controls=card("Phân tích theo chiều dữ liệu","Denominator quyết định = actions 1+2+3; số liệu mô tả release, không phải kết quả trả nợ");
+    const form=el("form","toolbar"),dimension=el("select");dimension.setAttribute("aria-label","HMDA 2024 One-Year breakdown dimension");
+    Object.entries(snapshot.dimensions).forEach(([key,label])=>{const option=el("option","",label);option.value=key;dimension.append(option);});
+    if(!Object.hasOwn(snapshot.dimensions,hmdaOneYearDimension))hmdaOneYearDimension="state_code";dimension.value=hmdaOneYearDimension;
+    const submit=el("button","button secondary","Đọc breakdown 2024");submit.type="submit";
+    const exportButton=button("Tải JSON",()=>downloadJSON("/api/hmda-one-year-report?"+new URLSearchParams({view_id:selected,dimension:hmdaOneYearDimension}),"CreditAtlas-HMDA-One-Year-2024-"+hmdaOneYearDimension+".json"));
+    form.append(append(el("label","","Breakdown dimension"),dimension),submit,exportButton);controls.append(form);body.append(controls);
+    const totals=grid("four");totals.id="hmda-one-year-2024-summary";
+    append(totals,metric("LAR records",number(snapshot.summary.records),"2024 One-Year national"),metric("Reporting institutions",number(snapshot.summary.reporters),"Distinct LEIs"),metric("Decided · actions 1–3",number(snapshot.summary.decision_denominator),"Origination decision denominator"),metric("Denied share",percent(snapshot.summary.descriptive_denial_rate,4),number(snapshot.summary.denied_numerator)+" / "+number(snapshot.summary.decision_denominator)+" · not default PD"));body.append(totals);
+    const actionCard=card("Tám action codes · 2024 One-Year","Mọi action code được giữ; codes 4–8 không đi vào denominator quyết định");actionCard.id="hmda-one-year-2024-actions";
+    actionCard.append(table(["Code","HMDA action","Records","Share of LAR"],snapshot.actions.map(row=>[row.code,HMDA_ACTION_LABELS[row.code]||row.code,number(row.records),percent(row.records/snapshot.summary.records,4)])));body.append(actionCard);
+    const breakdown=card("Breakdown 2024","Tối đa 100 nhóm; JSON tải xuống chứa đầy đủ nhóm");breakdown.id="hmda-one-year-2024-breakdown";body.append(breakdown);
+    const draw=async()=>{const request=++requestId;breakdown.replaceChildren(para("Đang đọc aggregate 2024…"));try{
+      const report=await api("/api/hmda-one-year-aggregates",{view_id:selected,dimension:hmdaOneYearDimension});if(generation!==renderGeneration||request!==requestId)return;breakdown.replaceChildren();
+      const reasons=report.dimension==="denial_reason_1",rows=report.breakdown.slice(0,100);
+      const data=rows.map(row=>reasons?[row.bucket==="(SOURCE_BLANK)"?"Source blank":row.bucket,number(row.denied_reason_records),percent(row.denied_reason_records/report.summary.denied_numerator,4)]:[row.bucket==="(SOURCE_BLANK)"?"Source blank":row.bucket,number(row.records),number(row.decision_denominator),number(row.denied_numerator),percent(row.descriptive_denial_rate,4),absUSD(row.public_amount_sum_usd)]);
+      breakdown.append(table(reasons?["Primary denial reason · action 3","Action 3 records","Share of action 3"]:[report.dimension_label,"All records","Decided 1+2+3","Denied 3","Denied share","Public amount USD"],data));
+      breakdown.append(note(reasons?"Field nguồn 2024 là denial_reason-1; chỉ mô tả hồ sơ action 3, không phải default.":"Public loan amounts may be interval midpoints. Comparisons to 2025 Snapshot are descriptive across distinct release designs."));
+    }catch(error){if(generation===renderGeneration&&request===requestId)breakdown.replaceChildren(callout(error.message));}};
+    form.addEventListener("submit",event=>{event.preventDefault();hmdaOneYearDimension=dimension.value;const q=new URLSearchParams(location.search);q.set("hmda_one_year_dimension",hmdaOneYearDimension);history.replaceState(null,"","?"+q);draw();});
+    const scope=card("Định nghĩa, nguồn và giới hạn","HMDA One-Year 2024 · aggregate source-verified");scope.id="hmda-one-year-2024-scope";scope.append(para(snapshot.scope),para("Denominator: "+snapshot.denominator_contract.meaning));snapshot.limitations.forEach(text=>scope.append(para(text)));
+    const link=el("a","source-link","Official FFIEC 2024 release ↗");link.href=snapshot.source_url;link.target="_blank";link.rel="noopener noreferrer";
+    const apiDocs=el("a","source-link","Data Browser API documentation ↗");apiDocs.href=snapshot.api_docs_url;apiDocs.target="_blank";apiDocs.rel="noopener noreferrer";
+    const workbook=el("a","source-link","Tải Excel · KPI + codebook + audit ↓");workbook.href="/downloads/hmda-one-year-2024-audit.xlsx";scope.append(link,apiDocs,workbook);body.append(scope);await draw();
+  }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
+}
 async function hmdaWorkspace(container,generation){
   $("context-note").textContent="Đang xác minh HMDA source; lần đọc đầu của phiên có thể mất vài phút.";
   await renderHmdaNational(container,generation);if(generation!==renderGeneration)return;
+  await renderHmdaOneYear(container,generation);if(generation!==renderGeneration)return;
   const catalog=await api("/api/hmda-views");if(generation!==renderGeneration)return;const valid=catalog.views.filter(row=>row.status==="verified");
   if(!valid.length){container.append(empty("Chưa có HMDA aggregate snapshot đã xác minh."));return;}if(!hmdaState.view_id)hmdaState.view_id=valid[0].view_id;
   const selector=el("select");selector.setAttribute("aria-label","HMDA snapshot");valid.forEach(row=>{const o=el("option","",row.view_id);o.value=row.view_id;selector.append(o);});selector.value=hmdaState.view_id;

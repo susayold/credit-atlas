@@ -49,6 +49,10 @@ MORTGAGE_SAMPLE_WORKBOOKS = {
         "data/private/hmda/hmda-national-snapshot-2025-9a5e89600e3c/CreditAtlas-HMDA-National-2025-Audit.xlsx",
         "CreditAtlas-HMDA-National-2025-Audit.xlsx",
     ),
+    "/downloads/hmda-one-year-2024-audit.xlsx": (
+        "data/private/hmda/hmda-national-one-year-2024-002bab12cd71/CreditAtlas-HMDA-One-Year-2024-Audit.xlsx",
+        "CreditAtlas-HMDA-One-Year-2024-Audit.xlsx",
+    ),
 }
 
 
@@ -369,6 +373,18 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path == '/api/hmda-national-views':
                     if query: raise ValueError('HMDA national catalog has no filters')
                     result = service.hmda_national_views.catalog()
+                elif url.path == '/api/hmda-one-year-views':
+                    if query: raise ValueError('HMDA One-Year catalog has no filters')
+                    result = service.hmda_one_year_views.catalog()
+                elif url.path in {'/api/hmda-one-year-view', '/api/hmda-one-year-aggregates', '/api/hmda-one-year-report'}:
+                    if url.path == '/api/hmda-one-year-view':
+                        if set(query) != {'view_id'}: raise ValueError('HMDA One-Year view accepts view_id only')
+                        result = service.hmda_one_year_views.view(query['view_id'])
+                    else:
+                        result = service.hmda_one_year_views.report(query.get('view_id', ''), query)
+                        if url.path == '/api/hmda-one-year-report':
+                            self.send(200, result, filename=f"CreditAtlas-{result['view_id']}-private-hmda-one-year.json", head=head)
+                            return
                 elif url.path in {'/api/hmda-national-view', '/api/hmda-national-aggregates', '/api/hmda-national-report'}:
                     if url.path == '/api/hmda-national-view':
                         if set(query) != {'view_id'}: raise ValueError('HMDA national view accepts view_id only')

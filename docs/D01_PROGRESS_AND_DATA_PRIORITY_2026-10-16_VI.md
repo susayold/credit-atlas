@@ -9,6 +9,14 @@ One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại
 Đây là hồ sơ application/decision riêng cho D08, không phải payment/performance
 panel và không làm tăng % D01 bên dưới.
 
+Đã tích hợp aggregate view riêng vào app và tạo workbook Excel riêng 7 sheet
+(không nhét 12,26 triệu dòng vượt giới hạn Excel). Browser acceptance cho cả
+Snapshot 2025 và One-Year 2024 **PASS, 8 checks, zero errors**, gồm breakdown,
+JSON/Excel download và mobile width; bằng chứng private tại
+`D:\data\Codex\credit-atlas\artifacts\private\hmda-national-browser-qa-6f761518ddc3\receipt.json`.
+Bước data kế tiếp là lấy One-Year 2023 để tạo so sánh cùng release family. Tỷ lệ
+D01 vẫn 26/50 vì HMDA không đáp ứng gate performance R2/R3.
+
 ## Tiến độ tổng thể
 
 CreditAtlas hiện hoàn thành **26/50 yêu cầu = 52%** theo completion ledger;
@@ -41,6 +49,10 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   Freddie Release 47, có hash riêng. Chúng giúp xác định thay đổi code/sentinel,
   missing value, loss sign, cumulative modification cost, score field và layout.
   Đây là tài liệu schema, **không phải loan-performance rows**; thêm 0 vintage.
+- **HMDA mới cho D08, không tính vào D01:** One-Year National 2024 đã được tải,
+  hash/reconcile, tích hợp view và workbook; browser acceptance đã đạt. One-Year
+  2023 là bước tiếp theo cho so sánh application mix, vẫn không thay thế Freddie
+  performance vintages.
 - **Data chính Freddie:** chỉ 2012 đã qua pipeline hiện có. Trang chính thức
   công bố monthly performance đến 31/03/2026, nhưng download annual files chạy
   qua Clarity có sign-in. Không lấy macro, HMDA hay survey thay cho vintage.

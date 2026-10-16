@@ -22,6 +22,7 @@ def _serve(tmp_path, service):
     ("route", "query", "service_name", "method", "args"),
     [
         ("/api/hmda-views", "", "hmda_views", "catalog", ()),
+        ("/api/hmda-one-year-views", "", "hmda_one_year_views", "catalog", ()),
         ("/api/hmda-references", "source_id=hmda-source-x", "hmda_reference_views", "catalog", ("hmda-source-x",)),
         ("/api/hmda-cohorts", "case_id=hmda-case-x", "hmda_cohort_views", "catalog", ("hmda-case-x",)),
         ("/api/sec-views", "", "sec_views", "catalog", ()),
@@ -84,6 +85,7 @@ def test_workspace_snapshot_http_routes_require_exact_view_id(tmp_path, route, v
     ("route", "query", "service_name", "method", "identifier", "attachment"),
     [
         ("/api/hmda-report", "view_id=hmda-view-x", "hmda_views", "report", "hmda-view-x", True),
+        ("/api/hmda-one-year-report", "view_id=hmda-one-year-2024-view-123456789abc&dimension=state_code", "hmda_one_year_views", "report", "hmda-one-year-2024-view-123456789abc", True),
         ("/api/hmda-labeled-report", "reference_id=ref-x&source_id=source-x", "hmda_reference_views", "report", "ref-x", True),
         ("/api/sec-report", "view_id=sec-view-x", "sec_views", "report", "sec-view-x", True),
         ("/api/market-report", "view_id=market-view-x&series=DGS2", "market_views", "report", "market-view-x", True),
@@ -114,6 +116,28 @@ def test_report_and_daily_http_routes_preserve_query_and_response_contract(
             with pytest.raises(HTTPError) as error:
                 urlopen(f"{base}{route}?source_id=source-x")
             assert error.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(timeout=5)
+
+
+def test_hmda_one_year_workbook_download_is_private_root_bound(tmp_path):
+    from pathlib import Path
+
+    expected = Path(tmp_path) / "data/private/hmda/hmda-national-one-year-2024-002bab12cd71/CreditAtlas-HMDA-One-Year-2024-Audit.xlsx"
+    expected.parent.mkdir(parents=True)
+    expected.write_bytes(b"xlsx-test-payload")
+    service = SimpleNamespace(root=tmp_path)
+    server, worker, base = _serve(tmp_path, service)
+    try:
+        with urlopen(f"{base}/downloads/hmda-one-year-2024-audit.xlsx") as response:
+            assert response.status == 200
+            assert response.headers["Content-Disposition"] == 'attachment; filename="CreditAtlas-HMDA-One-Year-2024-Audit.xlsx"'
+            assert response.read() == b"xlsx-test-payload"
+        with pytest.raises(HTTPError) as error:
+            urlopen(f"{base}/downloads/hmda-one-year-2024-audit.xlsx?extra=1")
+        assert error.value.code == 400
     finally:
         server.shutdown()
         server.server_close()

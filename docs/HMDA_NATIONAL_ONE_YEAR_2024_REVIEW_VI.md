@@ -87,17 +87,35 @@ Private D: folder:
 The public repository contains only the acquisition code and this methodology /
 result summary, never the private CSV or row-level records.
 
+## App integration and review workbook
+
+The private workbench now serves this release through a source-specific
+aggregate view; it does not alter the verified 2025 Snapshot receipt. The
+browser acceptance receipt records **PASS, 8 checks, zero browser errors**,
+including the 2024 panel, all eight action codes, state profile, primary
+denial-reason breakdown, private JSON export, and byte-identical Excel download.
+The UI labels the release as One-Year 2024 and states the limitations and
+denominator contract.
+
+The private Excel workbook is:
+
+`D:\data\Codex\credit-atlas\data\private\hmda\hmda-national-one-year-2024-002bab12cd71\CreditAtlas-HMDA-One-Year-2024-Audit.xlsx`
+
+It has seven filterable sheets: Overview, Actions, Geography, Institution LEI,
+Credit & product, Field dictionary, and Source audit. It contains audited
+aggregates and metadata, not application-level rows. The full CSV exceeds
+Excel's worksheet row limit, so the workbook links the audit context to the
+private source folder instead of pretending Excel contains the raw file.
+
 ## Next data-first steps
 
-1. Add a source-specific aggregate view for the 2024 One-Year release without
-   changing or invalidating the existing 2025 Snapshot view receipt.
-2. Build a private Excel review workbook containing the source/limitations,
-   field dictionary, action counts, and state/county/loan-purpose summaries;
-   do not attempt to place 12.26 million raw rows in Excel.
-3. Add explicit release-vintage labels to the app and compare only measures with
-   matching definitions and denominators. Treat year-over-year differences as
-   descriptive; do not infer causal or credit-performance change.
-4. Continue seeking authorized Freddie Clarity performance files and the
+1. Acquire and audit official **2023 One-Year National HMDA** as the closest
+   release-family comparison to 2024; reconcile action totals, field schema,
+   and freeze/revision vintage before adding a separate app panel.
+2. Compare only definitions and denominators that match across 2023/2024.
+   Describe changes as release-level application patterns; do not infer causal
+   effects, borrower repayment, or credit performance.
+3. Continue seeking authorized Freddie Clarity performance files and the
    user-provided Ginnie signed-in session artifact. Those remain the gating data
    for D01 R2/R3; public HMDA cannot substitute for them.
 

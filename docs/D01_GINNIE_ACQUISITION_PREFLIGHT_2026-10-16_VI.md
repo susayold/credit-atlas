@@ -13,6 +13,25 @@ Người dùng đã xác nhận đọc và chấp nhận Terms of Use. Tuy nhiê
 - Chạy auditor trên ZIP sample chính thức hiện có: 213 loan-period rows, 104 disclosure keys, kỳ 202304–202306; HH/LP/TT và schema 59-field đạt structural contract. Đây chỉ là kiểm thử định dạng trên sample, không phải production coverage, không phải 104 người vay độc lập và không hỗ trợ tỷ lệ default.
 - Downloader yêu cầu file cookie Netscape trên D:, chỉ giữ secure/unexpired `gm_up_token` áp dụng cho domain tải chính thức, kiểm tra phiên qua profile endpoint, khóa redirect vào host HTTPS chính thức, giới hạn 1 GiB, đối chiếu bytes với catalog, kiểm ZIP/member và SHA-256, ghi receipt private; nó không ghi nội dung cookie hoặc xuất loan rows.
 
+### Fresh access recheck — 2026-10-16
+
+- D: access folders đã được kiểm tra lại; hiện chưa có cookie file do user lưu.
+- Freddie Clarity unauthenticated probe mới nhất trả **HTTP 403 / `AUTHENTICATION_REQUIRED`**, không tải data. Credential/cookie không được cung cấp trong probe; receipt private: `D:\data\Codex\credit-atlas\artifacts\private\source-access-2b88beade3dc.json`.
+- Ginnie downloader + structural-auditor tests được chạy lại với pytest temp đặt trên D:: **13/13 PASS**. Một lượt thử đầu dùng pytest temp mặc định trên C: và bị `PermissionError`; chạy lại bằng `--basetemp` trên D: đã pass.
+- Ginnie official catalog page vẫn là source of truth cho byte size/release; không tải production ZIP khi thiếu authenticated session.
+
+Khi cookie Netscape đã được lưu, đặt một bản private ở, ví dụ,
+`D:\data\Codex\credit-atlas\data\private\access\ginnie.cookies.txt`, rồi
+chạy từ public checkout:
+
+```powershell
+python scripts/download_ginnie_loanperf.py --root D:\data\Codex\credit-atlas --cookie-file D:\data\Codex\credit-atlas\data\private\access\ginnie.cookies.txt --terms-accepted-by-user
+```
+
+Không gửi nội dung cookie qua chat. Chỉ cần báo đường dẫn file nếu tên/vị trí
+khác ví dụ trên. Downloader kiểm tra phiên trước khi tải; nếu hết hạn hoặc sai
+scope, nó dừng trước khi lấy production ZIP.
+
 ## Gate trước khi phân tích
 
 Khi nhận được đường dẫn cookie trên D:, chạy `scripts/download_ginnie_loanperf.py` với `--terms-accepted-by-user`, sau đó chạy `scripts/audit_ginnie_loanperf.py` trên ZIP private cũng với xác nhận này. Chỉ sau khi receipt, hash, ZIP integrity, HH/LP/TT counts, key-period uniqueness, date range, code domains và blankness qua kiểm tra mới cập nhật coverage. Không tạo nhãn PD hoặc projection từ file này cho đến khi source-specific target, exit/censoring và follow-up được nghiên cứu, kiểm chứng.

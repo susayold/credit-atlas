@@ -13,6 +13,9 @@ hai trạng thái phát hành, không phải chuyển trạng thái borrower hay
 nợ. Đây là D08/application-decision data, **không thêm Freddie vintage**; D01
 vẫn 26/50 (52%). Chi tiết tại
 [`HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md`](HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md).
+Browser acceptance cuối cho Snapshot/Dynamic, Excel/JSON, các release One-Year
+2019–2024 và mobile pass **21/21 checks, zero errors**; receipt ở private D:
+`artifacts/private/hmda-national-browser-qa-9fa5ed6e2f65/receipt.json`.
 
 **Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
 One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại

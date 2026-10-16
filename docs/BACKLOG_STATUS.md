@@ -17,7 +17,11 @@ share is 22.5718%, not PD. Difference versus the June 2 Snapshot is a release
 comparison only; no borrower-level transition or repayment interpretation is
 claimed. No forecast, imputation, or model fit. HMDA remains D08 application /
 decision data and does not change D01's **26/50 complete (52%)** or its missing
-Freddie multi-vintage gate. See
+Freddie multi-vintage gate. The final app acceptance passes **21 checks with
+zero browser errors**, including Dynamic/Snapshot selection, release-specific
+Excel/JSON downloads, the 2019–2024 comparison, and 390px layout; private
+receipt: `artifacts/private/hmda-national-browser-qa-9fa5ed6e2f65/receipt.json`.
+See
 [`HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md`](HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md).
 
 ### Data-first continuation — HMDA One-Year 2019, publisher vintage exception, 2026-10-16

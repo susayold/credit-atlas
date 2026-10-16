@@ -65,6 +65,11 @@ kiểm chứng; không trả các dòng hồ sơ gốc. Excel riêng có năm sh
 Action compare, Dynamic detail (đầy đủ **8.156 category buckets**), Field
 dictionary (99 trường, định nghĩa và category chính thức), Sources & method.
 Workbook chỉ chứa số tổng hợp/codebook và provenance, không có LAR hay dòng TS.
+Browser acceptance trên app thật đạt **21/21 checks, 0 browser errors**; bao
+gồm chọn Dynamic/Snapshot, JSON/Excel downloads khớp byte, các panel One-Year
+2019–2024 và bảng so sánh năm-release, denial-reason mapping, cùng summary ở
+viewport 390px. Receipt private:
+`D:\data\Codex\credit-atlas\artifacts\private\hmda-national-browser-qa-9fa5ed6e2f65\receipt.json`.
 
 Tệp gốc, receipt và workbook riêng tư được đặt tại
 `D:\data\Codex\credit-atlas\data\private\hmda\hmda-national-dynamic-2025-20261011`.

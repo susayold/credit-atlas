@@ -166,6 +166,20 @@ def handler_for(service: ResearchService):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-NMDB-Performance.xlsx", head=head)
                     return
+                if url.path == "/downloads/alfred-macro-context.xlsx":
+                    if query:
+                        raise ValueError("ALFRED macro context workbook accepts no filters")
+                    workbook = service.root / "apps/excel/templates/CreditAtlas-ALFRED-Macro-Context.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "ALFRED macro context workbook is not built"}, head=head)
+                        return
+                    if workbook.stat().st_size > 20 * 1024 * 1024:
+                        self.send(413, {"error": "ALFRED macro context workbook exceeds its download bound"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-ALFRED-Macro-Context.xlsx", head=head)
+                    return
                 if url.path in MORTGAGE_SAMPLE_WORKBOOKS:
                     if query:
                         raise ValueError("Mortgage sample Excel references accept no filters")

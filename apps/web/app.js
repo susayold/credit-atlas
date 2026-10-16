@@ -163,6 +163,7 @@ function mortgageExcelLibraryPane(container){
   ['/downloads/fannie-layout-reference.xlsx','Fannie Mae · layout & categories','114 SF positions, 62 MF positions, annual DSCR layout và source enumeration blocks.','CreditAtlas-Fannie-Layout-Reference.xlsx'],
   ['/downloads/ginnie-public-samples.xlsx','Ginnie Mae · sample records','LoanPerf, liquidation và payment-history records; giữ identifiers theo source, dùng trong case Ginnie riêng.','CreditAtlas-Ginnie-Public-Samples.xlsx'],
   ['/downloads/ginnie-layout-reference.xlsx','Ginnie Mae · layout, codes & QA','Field definitions, categories và aggregate-only sample QA; không có row records.','CreditAtlas-Ginnie-LoanPerf-Reference.xlsx'],
+  ['/downloads/alfred-macro-context.xlsx','ALFRED · mortgage macro history','171 month-end observations and 95,395 vintage × series × observation rows, with source, field dictionary and archive hashes. Context only; not a qualified model predictor.','CreditAtlas-ALFRED-Macro-Context.xlsx'],
  ];
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Các workbook chỉ giúp xem/lọc sample và codebook. Freddie Release 47 examples không làm tăng annual vintages; Fannie, Ginnie, NSMO, HMDA và Freddie giữ source/population riêng.',true));container.append(box);
 }

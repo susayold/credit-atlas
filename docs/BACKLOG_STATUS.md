@@ -674,3 +674,16 @@ research-backed method, source evidence, validation and a separately labeled
 assumption/uncertainty record before implementation. See
 `docs/NSMO_WAVE_COMPARABILITY_AUDIT_VI.md` and
 `docs/NSMO_EXCEL_REFERENCE_VI.md`.
+
+## 2026-10-16 Ginnie production-data preflight
+
+Rechecked the live official catalog: `LoanPerf_202606.zip` remains the latest
+quarterly LoanPerf release (782,688,297 bytes). The authenticated bounded
+downloader's and structural auditor's focused tests pass 13/13; the official
+format sample passes HH/LP/TT and 59-field checks (213 loan-period rows,
+104 disclosure keys, 202304–202306), but this is sample-format evidence only.
+The user has accepted Ginnie terms; a Netscape session-cookie path on D: has not
+yet been located, so no production ZIP was downloaded. No loan-level risk rate
+or projection was derived from the sample. The Freddie annual-vintage gate is
+also still blocked by Clarity sign-in. Details and exact next commands are in
+`docs/D01_GINNIE_ACQUISITION_PREFLIGHT_2026-10-16_VI.md`.

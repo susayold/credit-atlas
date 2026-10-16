@@ -1,0 +1,127 @@
+{
+  "status": "PASS",
+  "dataset": "Nissan Auto Receivables 2024-B monthly ABS-EE / 10-D exception ledger",
+  "period_count": 23,
+  "source_scope": {
+    "asset_month_observations": 1154259,
+    "asset_keys_seen": 63688,
+    "report_start": "2024-10-31",
+    "report_end": "2026-08-31"
+  },
+  "summary": {
+    "pool_balance_exact_periods": 23,
+    "positive_balance_count_exact_periods": 23,
+    "chargeoff_event_count_exact_periods": 20,
+    "chargeoff_amount_exact_periods": 21,
+    "first_code4_count_exact_periods": 21,
+    "first_code4_amount_exact_periods": 20,
+    "recovery_exact_periods": 17,
+    "recovery_exception_periods": 6,
+    "recovery_signed_residual_total_usd": "8859.23000000",
+    "dpd_literal_exact_fields": 178,
+    "dpd_total_fields": 184,
+    "dpd_shifted_exact_fields_diagnostic_only": 86,
+    "june_2025_dpd_literal_checks": 2,
+    "june_2025_dpd_shifted_checks_diagnostic_only": 8,
+    "july_2025_asset_chargeoff_event_count": 36,
+    "july_2025_certificate_defaulted_receivables": 1,
+    "july_2025_asset_chargeoff_amount_usd": "655185.56000000",
+    "july_2025_certificate_gross_defaulted_principal_signed_usd": "-59000.49",
+    "july_2025_first_code4_count": 33,
+    "july_2025_repeated_code4_count": 3,
+    "july_2025_repeated_code4_chargeoff_amount_usd": "77765.22000000",
+    "july_2025_certificate_monthly_net_losses_usd": "-316637.01",
+    "july_2025_certificate_current_net_loss_ratio_pct": "-0.39",
+    "august_2025_positive_chargeoff_count_matches_certificate": true,
+    "august_2025_first_code4_count": 24,
+    "june_2025_dpd_bucket_deltas": {
+      "31-60 Days Delinquent": {
+        "count": 2,
+        "balance_usd": "50837.98000000"
+      },
+      "61-90 Days Delinquent": {
+        "count": -1,
+        "balance_usd": "-28108.10000000"
+      },
+      "91-120 Days Delinquent": {
+        "count": -1,
+        "balance_usd": "-22729.88000000"
+      },
+      "More than 120 Days": {
+        "count": 0,
+        "balance_usd": "0.00"
+      }
+    }
+  },
+  "method": "Use audited month-level aggregate inputs; preserve source signs. Reconcile each candidate event definition separately. DPD shifted-boundary results are diagnostic only and never replace literal bucket deltas. Recovery delta = ABS-EE recoveredAmount aggregate minus certificate Recoveries of Defaulted Receivables. Exact Decimal sums; no labels or residuals are imputed.",
+  "current_sec_submissions_check": {
+    "checked_on": "2026-10-17",
+    "endpoint": "https://data.sec.gov/submissions/CIK0002035264.json",
+    "latest_filing_date": "2026-09-25",
+    "recent_submission_rows": 57,
+    "july_2025_report_date_amendments": 0,
+    "july_pair": [
+      {
+        "form": "ABS-EE",
+        "accession": "0000950131-25-003344",
+        "filing_date": "2025-08-20",
+        "report_date": "2025-07-31"
+      },
+      {
+        "form": "10-D",
+        "accession": "0001193125-25-187356",
+        "filing_date": "2025-08-25",
+        "report_date": "2025-07-31"
+      }
+    ],
+    "limitation": "No 10-D/A or ABS-EE/A for report date 2025-07-31 was present in the current submissions response; this does not prove that no servicer-side adjustment or undocumented classification exists."
+  },
+  "private_audit_evidence": {
+    "certificate_tieout": {
+      "artifact_id": "nissan-2024b-certificate-tieout-d7a71f85c77c",
+      "status": "NISSAN_2024B_ABSEE_TO_10D_CERTIFICATE_TIEOUT_AUDITED",
+      "audit_sha256": "899ba82f689d8efecc665d3c4d68211375bfb3780dcc35b61e8f9cb3a75163ea",
+      "receipt_sha256": "bc5fa08037ed9c5a16b5916c31f264c83f47be376559fd8dbdeac0ec393c3e62",
+      "source_receipt_sha256": null,
+      "panel_manifest_sha256": null
+    },
+    "event_exceptions": {
+      "artifact_id": "nissan-2024b-event-exceptions-90406964d980",
+      "status": "NISSAN_2024B_EVENT_EXCEPTIONS_DRILLED",
+      "audit_sha256": "b1a48ac5e55958a94bb083654fc3c645627216716f816f86ae7b7f3490716c47",
+      "receipt_sha256": "719bd332a270b4804deeca1e3a0a5450e10ea014d4fccf6a2bf9d7158c5133e0",
+      "source_receipt_sha256": "a7970f3274c32056afb036d7c2f3744d68d57464a8d2e9aa424f0b7c9b186758",
+      "panel_manifest_sha256": "d496f54dd937225c3f0eaac2bd6c6d0c95101e8a47d52721208943afd70309c7"
+    },
+    "dpd_boundary": {
+      "artifact_id": "nissan-2024b-dpd-boundary-audit-014f95c3b7eb",
+      "status": "NISSAN_2024B_DPD_BOUNDARY_RULES_COMPARED",
+      "audit_sha256": "627747fa23e92cfbedb1ab4676b8e1f37812c1f68ef473f2391555ec3a9a8694",
+      "receipt_sha256": "4689cbad6d136e2a15d797de438023dd3c0dfc612aa78c328dfa7ee9c1747656",
+      "source_receipt_sha256": "a7970f3274c32056afb036d7c2f3744d68d57464a8d2e9aa424f0b7c9b186758",
+      "panel_manifest_sha256": "d496f54dd937225c3f0eaac2bd6c6d0c95101e8a47d52721208943afd70309c7"
+    },
+    "recovery_dpd": {
+      "artifact_id": "nissan-2024b-recovery-dpd-exceptions-e148ce023a55",
+      "status": "NISSAN_2024B_RECOVERY_AND_DPD_EXCEPTIONS_ANALYZED",
+      "audit_sha256": "5e84d030ca7ff34290395fb107349f546ecac1b81d3bf01d2793f629fff4fc9c",
+      "receipt_sha256": "8d1fd38b21eafe0877817acff3b7fcd6e961e906034b320cabe5875d3a864e74",
+      "source_receipt_sha256": "a7970f3274c32056afb036d7c2f3744d68d57464a8d2e9aa424f0b7c9b186758",
+      "panel_manifest_sha256": "d496f54dd937225c3f0eaac2bd6c6d0c95101e8a47d52721208943afd70309c7"
+    },
+    "panel": {
+      "artifact_id": "nissan-2024b-absee-panel-audit-8b5590abd3d5",
+      "status": "NISSAN_2024B_LONGITUDINAL_PANEL_AUDITED",
+      "audit_sha256": "33f72cc4e9dfa8798b5bf33307340de3754783152d21d47781dd9549c0e2adc2",
+      "receipt_sha256": "46192fac31f2802463b48042827f383069c6f9bc3d4d5c037e7af296983de3a0",
+      "source_receipt_sha256": null,
+      "panel_manifest_sha256": null
+    }
+  },
+  "csv_file": "nissan-2024b-exception-ledger-23-periods.csv",
+  "csv_sha256": "fece6bf29feffb7e345dce41259efce39924d86ebb9cd3473e7dc980c70e51bb",
+  "visibility": "public aggregate only; no asset identifiers or borrower rows",
+  "loan_level_rows_published": false,
+  "forecast_or_imputation_used": false,
+  "root_cause_resolved": false
+}

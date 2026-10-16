@@ -55,6 +55,16 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Theo tiêu chí N07, ledger/bridge và bằng chứng unresolved đạt. Việc xác định root cause và qualification cho LGD/cashflow vẫn mở. Excel desktop chưa mở/recalculate; kiểm tra vừa làm chỉ dùng artifact-tool/render.
 - N07 là một action trong kế hoạch, không phải một trong 50 capability acceptance; ledger toàn CreditAtlas vẫn **26/50 = 52%**.
 
+## N08 — Nissan event, DPD và recovery exceptions
+
+- Tái lập panel Nissan 2024-B gồm **23 kỳ**, **1.154.259 asset-month rows** và **63.688 asset keys**; public deliverable chỉ có số tổng theo kỳ, accession, URL và hash lineage.
+- So sánh độc lập các candidate: pool balance và positive-balance count **23/23**; positive charge-off count **20/23**, amount **21/23**; first-code-4 count **21/23**, amount **20/23**; DPD literal **178/184**; recovery **17/23**. Không chọn event rule chỉ để khớp một tháng.
+- Tháng 07/2025: 36 positive charge-off rows / **+$655.185,56** ở ABS-EE; certificate có 1 defaulted receivable và principal signed **−$59.000,49**. Không có transaction-level mapping chứng minh đây là cùng một đại lượng. SEC submission census ngày 17/10/2026 không có 10-D/A hay ABS-EE/A cho report date này trong 57 submission gần nhất; điều đó không loại trừ adjustment trong servicing records.
+- Tháng 06/2025 DPD literal khớp **2/8** bucket fields; candidate dời ranh giới sớm một ngày khớp **8/8** riêng tháng đó nhưng chỉ **86/184** trên toàn panel so với **178/184** literal. Candidate được giữ ở dạng diagnostic, không áp thành rule.
+- Sáu recovery deltas (12/2024–05/2025) tổng **+$8.859,23**. Workbook ba sheet có summary công thức, period ledger lọc được đủ 66 trường và method/source notes; công thức được artifact-tool tính lại, các checkpoint ra đúng **23/23/23/20/21/17/6; $8.859,23; 178/184; 86/184**. Đã render và xem bố cục; chưa mở/recalculate bằng Microsoft Excel desktop.
+- Thêm [Nissan exception research](NISSAN_2024B_EXCEPTION_LEDGER_VI.md), [23-period CSV](data/nissan-2024b-exception-ledger-23-periods.csv), [receipt/hash summary](data/nissan-2024b-exception-ledger-23-periods-receipt.json) và workbook [CreditAtlas-Nissan-Exception-Ledger.xlsx](../apps/excel/templates/CreditAtlas-Nissan-Exception-Ledger.xlsx). Registry ghi riêng panel và public aggregate derivative.
+- Theo acceptance của N08, tái lập exceptions và bác bỏ rule chỉ khớp một kỳ đã đạt. Root cause/source-field mapping còn mở; N08 không phải capability trong 50-item ledger nên CreditAtlas vẫn **26/50 = 52%**.
+
 ## Giao diện
 
 Trang **Tiến độ & registry** trong điều hướng chung hiển thị capability acceptance, D01 releases, dataset filters, quyền truy cập, method cards và giới hạn. Register JSON có thể tải xuống. Không đưa raw borrower rows hoặc private exposure values vào catalog.
@@ -70,4 +80,4 @@ JSON/Python/JavaScript syntax và `git diff --check` được kiểm tra. Không
 1. Browser review N06 và Excel desktop open/recalculate; xác nhận bộ lọc, chart, bảng, missingness và lineage hiển thị đúng.
 2. Mở rộng N02 từ 24 nhóm trọng tâm tới nguồn thực sự cấp dữ liệu cho mỗi KPI, bind release/hash receipt khi có.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
-4. Tiếp tục N08–N09: Nissan event/DPD/recovery exceptions rồi surveillance finding/export; giữ 77 Toyota recovery deltas unresolved cho tới khi có mapping evidence.
+4. Tiếp tục N09: hợp nhất Toyota/Nissan thành surveillance finding/export có source-backed KPI và Excel drilldown; giữ 77 Toyota và 6 Nissan recovery deltas unresolved cho tới khi có mapping evidence.

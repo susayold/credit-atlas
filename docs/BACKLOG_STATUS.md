@@ -4,6 +4,19 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — Treasury HAMP supplement, 2026-10-16
+
+Acquired an official Treasury HAMP Performance Supplemental update and audited
+9,872,074 rows against the ZIP metadata. Aggregate checks found 0 primary-key
+duplicate groups, no blank IDs, and no unexpected record/status domains. The
+observed payment activity is limited to 14 months, 2022-01 through 2023-02;
+coverage for 2018–2021 is not established. The official 2009–2017 Treasury host
+timed out during retrieval. This is a separate loss-mitigation source and adds no
+Freddie vintage or D01 acceptance evidence. Do not increase the master plan
+count: it remains **26/50 complete (52%)**, with 42/50 having at least some
+implementation or conditional coverage. No forecast, imputation or model fit was
+performed. See [`TREASURY_HAMP_DATA_REVIEW_VI.md`](TREASURY_HAMP_DATA_REVIEW_VI.md).
+
 ### D01/R1 acceptance and progress rebasing — 2026-10-16
 
 R1 is accepted for the **single frozen Freddie 2012 descriptive case** under

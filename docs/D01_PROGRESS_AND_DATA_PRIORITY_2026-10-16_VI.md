@@ -48,6 +48,13 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   công khai/layout có ích cho parser, không tương đương full panel. Chỉ dùng sau
   khi quyền truy cập và mục đích sử dụng được kiểm chứng, làm case/cross-validation
   riêng trước khi harmonize.
+- **Treasury HAMP (nguồn bổ trợ, không phải Freddie vintage):** đã tải và audit
+  archive public update; khớp metadata **9.872.074 rows**, 0 duplicate key groups
+  và 0 domain ngoài danh mục. Tuy nhiên payment activity quan sát được chỉ có
+  14 tháng **2022-01–2023-02**; 2018–2021 vẫn chưa có coverage được chứng minh.
+  Bản Treasury 2009–2017 đang timeout ở host chính thức. Nguồn này được giữ như
+  một case servicing/loss-mitigation riêng; không làm tăng 26/50 hay số vintage
+  Freddie. Xem [Treasury HAMP review](TREASURY_HAMP_DATA_REVIEW_VI.md).
 - **Aggregate/context:** FHFA NMDB, CFPB Mortgage Trends, Fed/FRED, HMDA, FHFA
   PUDB, HUD và NSMO có ích cho domain riêng hoặc benchmark, nhưng khác grain,
   population/cadence/observation process; không ghép để tạo Freddie panel.

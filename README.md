@@ -187,6 +187,11 @@ receipts stay in ignored private directories on `D:`.
 - Keep model readiness and public-export eligibility separate from descriptive
   data readiness. A one-vintage sample cannot pass the research training gate.
 
+An additional public Treasury HAMP servicing/loss-mitigation source is reviewed
+separately in [the HAMP data note](docs/TREASURY_HAMP_DATA_REVIEW_VI.md). Its
+observed monthly activity currently spans only 2022-01 through 2023-02 and does
+not increase the Freddie D01 vintage count or qualify an origination model.
+
 The current status and execution evidence are in `docs/IMPLEMENTATION_STATUS.md`.
 The application is for local/private research. It does not make credit approvals,
 claim production/regulatory validation or present D3 event risk as accounting ECL.

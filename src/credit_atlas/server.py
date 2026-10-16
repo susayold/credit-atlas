@@ -210,6 +210,30 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename=filename, head=head)
                     return
+                if url.path == "/downloads/hmda-one-year-2023-audit.xlsx":
+                    if query:
+                        raise ValueError("HMDA 2023 One-Year Excel accepts no filters")
+                    from .hmda_one_year_2023_views import source_folder
+                    catalog = service.hmda_one_year_2023_views.catalog()
+                    verified = next((row for row in catalog.get("views", []) if row.get("status") == "verified"), None)
+                    if verified is None:
+                        self.send(404, {"error": "HMDA 2023 One-Year audit workbook is not available"}, head=head)
+                        return
+                    source = source_folder(service.root, verified["source_id"])
+                    workbook = (source / "CreditAtlas-HMDA-One-Year-2023-Audit.xlsx").resolve()
+                    private_root = (service.root / "data/private/hmda").resolve()
+                    if not workbook.is_relative_to(private_root):
+                        raise ValueError("HMDA 2023 One-Year workbook escaped the private data root")
+                    if not workbook.is_file():
+                        self.send(404, {"error": "HMDA 2023 One-Year audit workbook is not available"}, head=head)
+                        return
+                    if workbook.stat().st_size > 20 * 1024 * 1024:
+                        self.send(413, {"error": "HMDA 2023 One-Year workbook exceeds its download bound"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        filename=workbook.name, head=head)
+                    return
                 if url.path == "/api/nmdb-performance":
                     if query:
                         raise ValueError("NMDB performance aggregate accepts no filters")
@@ -383,6 +407,18 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     else:
                         result = service.hmda_one_year_views.report(query.get('view_id', ''), query)
                         if url.path == '/api/hmda-one-year-report':
+                            self.send(200, result, filename=f"CreditAtlas-{result['view_id']}-private-hmda-one-year.json", head=head)
+                            return
+                elif url.path == '/api/hmda-one-year-2023-views':
+                    if query: raise ValueError('HMDA 2023 One-Year catalog has no filters')
+                    result = service.hmda_one_year_2023_views.catalog()
+                elif url.path in {'/api/hmda-one-year-2023-view', '/api/hmda-one-year-2023-aggregates', '/api/hmda-one-year-2023-report'}:
+                    if url.path == '/api/hmda-one-year-2023-view':
+                        if set(query) != {'view_id'}: raise ValueError('HMDA 2023 One-Year view accepts view_id only')
+                        result = service.hmda_one_year_2023_views.view(query['view_id'])
+                    else:
+                        result = service.hmda_one_year_2023_views.report(query.get('view_id', ''), query)
+                        if url.path == '/api/hmda-one-year-2023-report':
                             self.send(200, result, filename=f"CreditAtlas-{result['view_id']}-private-hmda-one-year.json", head=head)
                             return
                 elif url.path in {'/api/hmda-national-view', '/api/hmda-national-aggregates', '/api/hmda-national-report'}:

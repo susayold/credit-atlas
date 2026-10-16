@@ -109,13 +109,10 @@ private source folder instead of pretending Excel contains the raw file.
 
 ## Next data-first steps
 
-1. Acquire and audit official **2023 One-Year National HMDA** as the closest
-   release-family comparison to 2024; reconcile action totals, field schema,
-   and freeze/revision vintage before adding a separate app panel.
-2. Compare only definitions and denominators that match across 2023/2024.
-   Describe changes as release-level application patterns; do not infer causal
-   effects, borrower repayment, or credit performance.
-3. Continue seeking authorized Freddie Clarity performance files and the
-   user-provided Ginnie signed-in session artifact. Those remain the gating data
-   for D01 R2/R3; public HMDA cannot substitute for them.
+The 2023 One-Year National release has now been acquired, audited, compared, and
+integrated as a separate app panel. See
+[`HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md).
+Continue seeking authorized Freddie Clarity performance files and the
+user-provided Ginnie signed-in session artifact. Those remain the gating data
+for D01 R2/R3; public HMDA cannot substitute for them.
 

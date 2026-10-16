@@ -15,6 +15,7 @@ STATIC = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js",
           "/nsmo": "nsmo.html", "/nsmo.html": "nsmo.html",
           "/nsmo.js": "nsmo.js", "/nsmo.css": "nsmo.css",
           "/workspace-content.js": "workspace-content.js",
+          "/project-register.js": "project-register.js",
           "/monitor.js": "monitor.js",
           "/kpi-analysis.js": "kpi-analysis.js",
           "/monitor-reviews.js": "monitor-reviews.js",
@@ -480,6 +481,11 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     result = {"status": "running", "mode": "local_private_research", "module": "P2/D01"}
                 elif url.path == "/api/suite-views":
                     result = service.suite_views.catalog()
+                elif url.path == "/api/project-register":
+                    if query:
+                        raise ValueError("Project register accepts no filters")
+                    from .project_register import project_register
+                    result = project_register()
                 elif url.path == '/api/retail-policies':
                     if set(query)!={'freeze_id'}: raise ValueError('Frozen-model policy catalog scope required')
                     result=service.retail_policy_views.catalog(query['freeze_id'])

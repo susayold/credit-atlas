@@ -1,6 +1,7 @@
 # CreditAtlas
 
 Current review (16 October 2026): [Vietnamese project assessment and next plan](docs/PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md).
+Implementation progress (17 October): [N01–N03 register work](docs/IMPLEMENTATION_LOG_2026-10-17_VI.md); the local app adds a progress, data, and methods registry view.
 The five-workspace ledger has 26/50 requirements accepted within their recorded
 scope. D01 R2/R3 remain data-gated. The review verifies 138 completion-evidence
 hash references and distinguishes existing observations, benchmark models,

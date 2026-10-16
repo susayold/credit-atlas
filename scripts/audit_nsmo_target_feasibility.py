@@ -56,13 +56,16 @@ def classify_followup(statuses: list[str], close_ordinal: int | None,
 
 
 def first_eligible_c_landmark(statuses: list[str], close_ordinal: int | None,
+                              open_year: int, open_month: int,
                               horizon: int = 4) -> tuple[int, str] | None:
     """Choose one earliest fully-followed C landmark per mortgage for support checks.
 
     This is a diagnostic anchor only. It does not freeze cohort eligibility or
     create a target label.
     """
-    for baseline_index, status in enumerate(statuses):
+    first_post_open = _first_post_open_index(open_year, open_month, len(statuses))
+    for baseline_index in range(first_post_open, len(statuses)):
+        status = statuses[baseline_index]
         if status != "C":
             continue
         if baseline_index + horizon >= len(statuses):
@@ -98,6 +101,18 @@ def _quarter_ordinal(index: int) -> int:
     return year * 12 + month
 
 
+def _first_post_open_index(open_year: int, open_month: int,
+                           status_count: int = 51) -> int:
+    """First quarter-end strictly after the quarter containing origination.
+
+    Origination is reported only at month grain, so a snapshot in the same
+    quarter cannot be ordered reliably relative to the opening date.
+    """
+    open_quarter_end = open_year * 12 + ((open_month - 1) // 3 + 1) * 3
+    return next((i for i in range(status_count)
+                 if _quarter_ordinal(i) > open_quarter_end), status_count)
+
+
 def _close_ordinal(year_text: str, month_text: str) -> int | None:
     try:
         year, month = int(year_text), int(month_text)
@@ -127,8 +142,12 @@ def audit(path: Path) -> dict:
         if len(headers) != 587 or len(status_cols) != 51:
             raise ValueError("Expected the reconciled 587-column NSMO v7.0 PUF")
         indices = [pos[c.casefold()] for c in status_cols]
+        id_i = pos.get("nsmoid")
+        if id_i is None:
+            raise ValueError("NSMOID is required to verify one record per mortgage")
         close_status_i = pos["close_status_0925"]
         close_year_i, close_month_i = pos["close_year"], pos["close_month"]
+        open_year_i, open_month_i = pos["open_year"], pos["open_month"]
         weight_i = pos["analysis_weight"]
         vintage_i = pos["open_year"]
         quarter_ends = [parse_performance_column(c).isoformat() for c in status_cols]
@@ -143,12 +162,21 @@ def audit(path: Path) -> dict:
         first_c_landmark_by_vintage: dict[str, Counter] = defaultdict(Counter)
         first_c_landmark_by_quarter: dict[tuple[str, str], Counter] = defaultdict(Counter)
         first_c_landmark_weights: dict[str, Counter] = defaultdict(Counter)
-        rows = width_errors = 0
+        seen_ids: set[str] = set()
+        rows = width_errors = missing_ids = duplicate_ids = invalid_open_dates = 0
         for row in reader:
             rows += 1
             if len(row) != len(headers):
                 width_errors += 1
                 continue
+            loan_id = row[id_i].strip()
+            if not loan_id:
+                missing_ids += 1
+                continue
+            if loan_id in seen_ids:
+                duplicate_ids += 1
+                continue
+            seen_ids.add(loan_id)
             try:
                 weight = float(row[weight_i])
             except ValueError:
@@ -157,18 +185,30 @@ def audit(path: Path) -> dict:
                 weight = 0.0
             close_status = row[close_status_i].strip()
             close = _close_ordinal(row[close_year_i].strip(), row[close_month_i].strip()) if close_status in {"2", "3", "4"} else None
+            try:
+                open_year, open_month = int(row[open_year_i]), int(row[open_month_i])
+            except ValueError:
+                invalid_open_dates += 1
+                continue
+            if not 1900 <= open_year <= 2100 or not 1 <= open_month <= 12:
+                invalid_open_dates += 1
+                continue
             vintage = row[vintage_i].strip()
             if not vintage.isdigit() or not 2013 <= int(vintage) <= 2024:
                 vintage = "unknown"
             states = [row[i].strip().upper() for i in indices]
-            first_landmark = first_eligible_c_landmark(states, close)
+            first_landmark = first_eligible_c_landmark(
+                states, close, open_year, open_month
+            )
             if first_landmark is not None:
                 baseline_index, first_result = first_landmark
                 first_c_landmark_by_vintage[vintage][first_result] += 1
                 first_c_landmark_by_quarter[(quarter_ends[baseline_index], vintage)][first_result] += 1
                 first_c_landmark_weights[vintage][first_result] += weight
             unique_baseline_outcomes: set[tuple[tuple[str, str], str]] = set()
-            for baseline_i, baseline_status in enumerate(states):
+            first_post_open = _first_post_open_index(open_year, open_month, len(states))
+            for baseline_i in range(first_post_open, len(states)):
+                baseline_status = states[baseline_i]
                 if baseline_status not in BASELINES:
                     continue
                 key = (baseline_i, baseline_status)
@@ -256,19 +296,25 @@ def audit(path: Path) -> dict:
         ]
     return {
         "schema_version": "nsmo-target-feasibility-v1",
-        "status": "PASS" if rows == 62359 and not width_errors else "FAIL",
+        "status": "PASS" if rows == 62359 and len(seen_ids) == rows and not (
+            width_errors or missing_ids or duplicate_ids or invalid_open_dates
+        ) else "FAIL",
         "audited_at": datetime.now(timezone.utc).isoformat(),
         "source": {"bytes": path.stat().st_size, "sha256": _sha256(path)},
         "schema": {"rows": rows, "columns": 587, "quarterly_status_columns": 51},
         "candidate_definition_for_feasibility_only": {
             "baseline_states": {k: v for k, v in BASELINES.items()},
+            "origination_timing": "only quarter-end snapshots strictly after the quarter containing the reported origination month are eligible; within-quarter ordering is unavailable",
             "horizon": "next four quarterly snapshots (~12 months)",
             "primary_event_codes": ["3", "4", "5", "6"],
             "separate_other_adverse_codes": ["7", "8", "9"],
             "same-month termination": "ambiguous ordering; censored separately",
             "weights": "unweighted counts plus baseline descriptive weight sums; no variance estimator",
         },
-        "width_errors": width_errors,
+        "integrity": {"width_errors": width_errors, "missing_ids": missing_ids,
+                      "duplicate_ids": duplicate_ids,
+                      "invalid_open_dates": invalid_open_dates,
+                      "unique_mortgages": len(seen_ids)},
         "baseline_quarter_state_aggregates": out,
         "origination_vintage_baseline_aggregates": vintage_out,
         "same_month_ambiguous_snapshot_status_counts_by_baseline_state": {
@@ -276,7 +322,7 @@ def audit(path: Path) -> dict:
         },
         "same_month_ambiguous_snapshot_status_counts_by_vintage_and_baseline_state": same_month_by_vintage,
         "one_landmark_per_mortgage_support": {
-            "selection_rule": "earliest C snapshot per mortgage with a full four-quarter horizon, excluding known closed-by-baseline loans",
+            "selection_rule": "earliest C snapshot strictly after the quarter containing origination, with a full four-quarter horizon, excluding known closed-by-baseline loans",
             "target_created": False,
             "outcomes_by_origination_vintage": first_c_vintage_out,
             "outcomes_by_landmark_quarter_and_vintage": first_c_quarter_out,

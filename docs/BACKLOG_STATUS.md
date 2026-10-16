@@ -625,3 +625,22 @@ ledger unchanged. Private receipts:
 `artifacts/private/observed-loss-details-browser-2baa2931904c/receipt.json`.
 These route-specific checks are additional to the 106-check general browser
 suite; M01-028 remains Partial across the wider route inventory.
+
+## 2026-10-16 D02/NSMO risk-set feasibility and target gate
+
+Rechecked FHFA's official NSMO page: v7.0 (May 27, 2026; performance through
+2025Q3) remains the latest listed PUF. The source-independent target auditors
+now explicitly require the first eligible performance quarter to be strictly
+after the quarter containing the reported origination month; the origination
+quarter is excluded because the PUF has no opening day. Regression coverage for
+that boundary and horizon handling passes 17/17. Reruns on the private 62,359 ×
+587 PUF reconcile all rows and 51 quarterly status fields. The one-earliest-
+current-landmark screen has 156 observed 90+ cases at 12 months (4–21 by
+origination cohort), versus 41 at six months and 302 at 24 months. The separate
+first-entry dynamic screen counts 57,311 mortgages, 887,861 intervals and 695
+first observed 90+ exits; it has variable follow-up and is not a fixed-horizon
+rate. Termination, same-month ambiguity, non-observation and survey-weight/
+variance limitations remain. No target, PD, or model is created; D02 remains
+descriptive/feasibility-only and D01 stays 26/50. See
+`docs/D02_NSMO_RISK_SET_FEASIBILITY_2026-10-16_VI.md` and
+`docs/D01_NSMO_SOURCE_REVIEW_VI.md`.

@@ -2,6 +2,7 @@ from collections import Counter, defaultdict
 
 from scripts.audit_nsmo_target_feasibility import (
     _commit_unique_vintage_support,
+    _first_post_open_index,
     classify_followup,
     first_eligible_c_landmark,
     same_month_close_snapshot_status,
@@ -70,11 +71,21 @@ def test_repeated_quarter_snapshots_do_not_inflate_unique_loan_support():
 
 def test_one_landmark_rule_selects_earliest_fully_followed_current_snapshot():
     states = ["C", "C", "1", "3", "A", "A"]
-    assert first_eligible_c_landmark(states, None) == (0, "observed_90plus_event")
+    # Origination in 2013Q1 makes June the first eligible quarter-end.
+    assert first_eligible_c_landmark(states, None, 2013, 1) == (1, "observed_90plus_event")
 
 
 def test_one_landmark_rule_skips_baseline_known_closed_before_snapshot():
     # Index 0 is 2013-03. Closed in February means it was closed before that
     # quarter's endpoint; the later current-state snapshot cannot form a risk set.
     states = ["C", "C", "C", "C", "C"]
-    assert first_eligible_c_landmark(states, 2013 * 12 + 2) is None
+    assert first_eligible_c_landmark(states, 2013 * 12 + 2, 2013, 1) is None
+
+
+def test_origination_quarter_snapshot_is_excluded_when_day_order_is_unknown():
+    assert _first_post_open_index(2013, 1) == 1
+    assert _first_post_open_index(2013, 4) == 2
+    states = ["C", "C", "C", "C", "3", "A"]
+    assert first_eligible_c_landmark(states, None, 2013, 4, horizon=2) == (
+        2, "observed_90plus_event"
+    )

@@ -95,14 +95,22 @@ Therefore NSMO may support a separate quarterly delinquency/default study, or a 
 Next work sequence for the separate NSMO case:
 
 1. Manually review item wording, routing, respondent role, answer scale and codebook wave variants for each candidate common field. The downloaded questionnaire packages and automated extracts are locators only; freeze a versioned harmonization crosswalk and point-in-time feature allowlist after that review.
-2. Review the completed 51-quarter count/transition and close-status audit, then establish defensible rules for when a loan enters/leaves an observed risk set. The aggregate state audit is complete; the risk-set decision is not.
-3. Freeze a target protocol separately from Freddie. Define the quarterly horizon, event definition, competing termination outcomes, eligibility, censoring, missing/suppressed states and weighting/variance treatment before any PD estimation.
+2. Review the completed 51-quarter count/transition and close-status audit, then establish defensible rules for when a loan enters/leaves an observed risk set. A first-entry dynamic feasibility screen and a separate one-landmark horizon screen now exist; see `docs/D02_NSMO_RISK_SET_FEASIBILITY_2026-10-16_VI.md`. The risk-set decision is still not frozen.
+3. Freeze a target protocol separately from Freddie. Define the quarterly horizon, event definition, competing termination outcomes, eligibility, censoring, missing/suppressed states and weighting/variance treatment before any PD estimation. The current 6/12/24-month outputs are feasibility counts only.
 4. Finish the point-in-time feature allowlist; quarantine retrospective survey answers, post-origination scores and other future information.
 5. The separate D02/NSMO page/API now serves aggregate-only evidence, the required FHFA caveat, searchable field/value labels, 30 origination attribute profiles, score availability/trends, termination, forbearance and adjacent-quarter matrices. Remaining work is question/wave comparability, weight/variance design, formal risk-set/target protocol, and any additional validated domain views. Then decide whether a common-feature external comparison is scientifically defensible. Never merge IDs or rows with D01.
 
 ## Official documentation acquired locally
 
 The official May 27, 2026 technical report, Appendix C codebook, Appendix D weighted tabulations, SAS labels, and SAS formats were reviewed locally. The sanitized crosswalk and aggregate findings are documented here; raw PUF and private receipts remain outside this repository.
+
+The updated 16 October 2026 feasibility results do not establish target readiness.
+For a one-earliest-current-landmark screen, 12-month observed 90+ support is
+156 mortgages across the 2013–2024 origination cohorts, with only 4–21 events
+in each cohort and substantial competing termination/ambiguous closure. A
+quarterly first-entry screen counts a different estimand and is not a fixed
+horizon event rate. Do not fit or report PD from either screen; use the separate
+memo for counts, definitions, and remaining review gates.
 
 - [NSMO technical documentation](https://www.fhfa.gov/document/d/nsmo/nsmo-technical-report-v70.pdf)
 - [NSMO codebook and unweighted tabulations](https://www.fhfa.gov/document/d/nsmo/nsmo-appendix-c-v70.pdf)

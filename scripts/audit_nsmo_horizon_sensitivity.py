@@ -19,12 +19,12 @@ from credit_atlas.nsmo import parse_performance_column
 try:
     from scripts.audit_nsmo_target_feasibility import (
         OBSERVED, PRIMARY_EVENT, OTHER_ADVERSE, _close_ordinal,
-        _quarter_ordinal, classify_followup,
+        _first_post_open_index, _quarter_ordinal, classify_followup,
     )
 except ModuleNotFoundError:  # direct execution puts scripts/ on sys.path
     from audit_nsmo_target_feasibility import (
         OBSERVED, PRIMARY_EVENT, OTHER_ADVERSE, _close_ordinal,
-        _quarter_ordinal, classify_followup,
+        _first_post_open_index, _quarter_ordinal, classify_followup,
     )
 
 
@@ -48,9 +48,12 @@ def _classify(statuses: list[str], close_ordinal: int | None,
 
 
 def _first_eligible_c_landmark(statuses: list[str], close_ordinal: int | None,
+                               open_year: int, open_month: int,
                                horizon: int) -> str | None:
     """Return one earliest full-follow-up C outcome for support diagnostics."""
-    for baseline_index, status in enumerate(statuses):
+    first_post_open = _first_post_open_index(open_year, open_month, len(statuses))
+    for baseline_index in range(first_post_open, len(statuses)):
+        status = statuses[baseline_index]
         if status != "C":
             continue
         if baseline_index + horizon >= len(statuses):
@@ -79,6 +82,7 @@ def audit(path: Path) -> dict:
         close_status_i = positions["close_status_0925"]
         close_year_i, close_month_i = positions["close_year"], positions["close_month"]
         open_year_i = positions["open_year"]
+        open_month_i = positions["open_month"]
         status_indices = [positions[name.casefold()] for name in status_cols]
 
         counts: dict[int, Counter] = {horizon: Counter() for horizon in HORIZONS}
@@ -104,7 +108,7 @@ def audit(path: Path) -> dict:
             horizon: defaultdict(set) for horizon in HORIZONS
         }
         seen_ids: set[str] = set()
-        rows = width_errors = missing_ids = duplicate_ids = 0
+        rows = width_errors = missing_ids = duplicate_ids = invalid_open_dates = 0
         for row in reader:
             rows += 1
             if len(row) != len(headers):
@@ -116,20 +120,32 @@ def audit(path: Path) -> dict:
                 continue
             if loan_id in seen_ids:
                 duplicate_ids += 1
-            else:
-                seen_ids.add(loan_id)
+                continue
+            seen_ids.add(loan_id)
             close_status = row[close_status_i].strip()
             origination_year = row[open_year_i].strip()
             if not (origination_year.isdigit() and 1900 <= int(origination_year) <= 2100):
                 origination_year = "unknown"
+            try:
+                open_year, open_month = int(row[open_year_i]), int(row[open_month_i])
+            except ValueError:
+                invalid_open_dates += 1
+                continue
+            if not 1900 <= open_year <= 2100 or not 1 <= open_month <= 12:
+                invalid_open_dates += 1
+                continue
             close = (
                 _close_ordinal(row[close_year_i].strip(), row[close_month_i].strip())
                 if close_status in {"2", "3", "4"} else None
             )
             statuses = [row[index].strip().upper() for index in status_indices]
             for horizon in HORIZONS:
-                first_anchor_outcome = _first_eligible_c_landmark(statuses, close, horizon)
-                for baseline_index, baseline_status in enumerate(statuses):
+                first_anchor_outcome = _first_eligible_c_landmark(
+                    statuses, close, open_year, open_month, horizon
+                )
+                first_post_open = _first_post_open_index(open_year, open_month, len(statuses))
+                for baseline_index in range(first_post_open, len(statuses)):
+                    baseline_status = statuses[baseline_index]
                     if baseline_status != "C" or baseline_index + horizon >= len(statuses):
                         continue
                     if close is not None and close <= _quarter_ordinal(baseline_index):
@@ -198,7 +214,9 @@ def audit(path: Path) -> dict:
                 ],
             },
         })
-    passed = rows == 62359 and not (width_errors or missing_ids or duplicate_ids)
+    passed = rows == 62359 and not (
+        width_errors or missing_ids or duplicate_ids or invalid_open_dates
+    )
     return {
         "schema_version": "nsmo-horizon-sensitivity-v1",
         "status": "PASS" if passed else "FAIL",
@@ -206,9 +224,11 @@ def audit(path: Path) -> dict:
         "source": {"bytes": path.stat().st_size, "sha256": _sha256(path)},
         "schema": {"rows": rows, "columns": 587, "quarterly_status_columns": 51},
         "integrity": {"width_errors": width_errors, "missing_ids": missing_ids,
-                      "duplicate_ids": duplicate_ids},
+                      "duplicate_ids": duplicate_ids,
+                      "invalid_open_dates": invalid_open_dates},
         "candidate_definition_for_feasibility_only": {
             "baseline_state": "C",
+            "origination_timing": "only quarter-end snapshots strictly after the quarter containing the reported origination month are eligible",
             "primary_event_codes": sorted(PRIMARY_EVENT),
             "other_adverse_codes_separate": sorted(OTHER_ADVERSE),
             "observed_codes": sorted(OBSERVED),

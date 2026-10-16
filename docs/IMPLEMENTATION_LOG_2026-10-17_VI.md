@@ -16,6 +16,16 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Phân biệt Freddie annual samples đang chờ authenticated access, Ginnie production chưa tải, dữ liệu exposure private và nguồn public đã audit.
 - Đây chưa phải census mọi raw source trong workspace và chưa map đủ mọi KPI trong app. Việc nối từng receipt/source version và kiểm tra rights theo từng release tiếp tục trong N02.
 
+### N02 — source-to-KPI code trace — 17/10/2026
+
+- Đọc trực tiếp register hiện tại (**27 dataset/domain records**), `public_sources.catalog()` (**20 source IDs cụ thể**), server routing, service/view classes và các màn hình chính trong `apps/web`.
+- Tạo [crosswalk N02 từ source tới KPI/API/workspace](N02_SOURCE_TO_KPI_TRACEABILITY_2026-10-17_VI.md): ghi module, API, UI consumer, output, scope và loại bằng chứng cho từng 27 record. Đây là static trace; không coi sự tồn tại của route là runtime acceptance.
+- Xác minh local public-suite acquisition receipt: **20/20 source objects DOWNLOADED_AND_PROFILED**, batch hoàn tất 2026-10-08, không có failure. Receipt private nên bản public chỉ ghi count/status, không phát hành raw rows hay hash. ALFRED, CFPB, HUD FHA, FHFA HPI và Federal Reserve bank context có receipt/review riêng; chi tiết date/grain và semantic gaps được ghi trong crosswalk.
+- Tạo [crosswalk N02 dạng JSON](data/n02-source-to-kpi-map-2026-10-17.json) để tiện tra theo registry ID, source ID, module/API và source family. 13/20 `public_sources` IDs map được tới parent record cấp nhóm; bảy FRED series chưa có record source-specific.
+- Phát hiện nhiều source family đang có API/UI nhưng chưa có source-level record hoặc chưa bind release/hash đầy đủ: bảy FRED series, FRED/ALFRED vintages, FHFA quarterly HPI, CFPB mortgage delinquency, HUD FHA IIF và performance, Federal Reserve bank asset quality, Fannie format samples và Treasury/ICE market context.
+- Một vài record hiện là nhóm bao nhiều source objects: SBA có sáu cohort CSV và dictionary; FDIC có financials snapshot và failure events; HMDA có nhiều release families. Cần crosswalk từng object/receipt, không suy rằng record nhóm đã chứng minh mọi release.
+- N02 vẫn **In progress**. Chưa đối chiếu mọi receipt private với register và chưa gắn từng source release/hash vào từng KPI output. Không thay publication date bằng retrieval timestamp; không thay đổi ledger 26/50.
+
 ### N03 — provenance và phương pháp
 
 - Ghi nhận bảy loại giá trị: reported, derived, publisher-imputed, model-preprocessing-imputed, model prediction, declared scenario và forecast.
@@ -98,6 +108,6 @@ N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_bounda
 ## Bước kế tiếp
 
 1. Browser review N06 và Excel desktop open/recalculate; xác nhận bộ lọc, chart, bảng, missingness và lineage hiển thị đúng.
-2. Mở rộng N02 từ 24 nhóm trọng tâm tới nguồn thực sự cấp dữ liệu cho mỗi KPI, bind release/hash receipt khi có.
+2. Hoàn thiện N02 theo crosswalk mới: tách source families đang thiếu record, bind mọi release/hash receipt và kiểm tra source rights/date-grain cho từng KPI.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
 4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.

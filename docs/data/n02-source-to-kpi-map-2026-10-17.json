@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "reviewed_public_commit": "dd7d34d0130f64a6425aa0023db21fd975d70e80",
+  "scope_note": "Static source-to-code/API/UI trace for current public checkout. Does not certify all runtime routes or reprofile all raw data. Receipt completion summary is based on the local private acquisition-complete.json.",
+  "counts": {
+    "registered_dataset_domain_records": 27,
+    "mapped_registry_records": 27,
+    "source_catalog_ids": 20,
+    "source_catalog_ids_with_parent_record": 13,
+    "source_catalog_ids_without_parent_record": 7,
+    "unregistered_or_underregistered_source_families": 8
+  },
+  "public_source_bundle": {
+    "status": "COMPLETE",
+    "completed_at": "2026-10-08T18:26:19.217563+00:00",
+    "source_count": 20,
+    "successful_count": 20,
+    "failed_source_ids": [],
+    "note": "Public source bundle acquisition receipt is local/private; this summary publishes no rows or hashes."
+  },
+  "registry_source_id_crosswalk": [
+    {
+      "source_id": "uci-retail",
+      "parent_registry_id": "uci-350",
+      "modules": [
+        "P1"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://archive.ics.uci.edu/dataset/350",
+      "rights": "CC BY 4.0; cite original dataset/DOI",
+      "scope": "Source-specific benchmark, not local underwriting qualification"
+    },
+    {
+      "source_id": "uci-retail-metadata",
+      "parent_registry_id": "uci-350",
+      "modules": [
+        "P1"
+      ],
+      "kind": "json",
+      "metadata_url": "https://archive.ics.uci.edu/dataset/350",
+      "rights": "UCI source metadata",
+      "scope": "Variable definitions and source interpretation"
+    },
+    {
+      "source_id": "uci-bankruptcy",
+      "parent_registry_id": "uci-365",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://archive.ics.uci.edu/dataset/365",
+      "rights": "CC BY 4.0; cite original dataset/DOI",
+      "scope": "Source-specific benchmark, not local underwriting qualification"
+    },
+    {
+      "source_id": "uci-bankruptcy-metadata",
+      "parent_registry_id": "uci-365",
+      "modules": [
+        "P3"
+      ],
+      "kind": "json",
+      "metadata_url": "https://archive.ics.uci.edu/dataset/365",
+      "rights": "UCI source metadata",
+      "scope": "Variable definitions and source interpretation"
+    },
+    {
+      "source_id": "sba-7a-fy1991_fy1999",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-7a-fy2000_fy2009",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-7a-fy2010_fy2019",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-7a-fy2020_present",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-504-fy1991_fy2009",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-504-fy2010_present",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+    },
+    {
+      "source_id": "sba-dictionary",
+      "parent_registry_id": "sba-foia",
+      "modules": [
+        "P3"
+      ],
+      "kind": "xlsx",
+      "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
+      "rights": "U.S. Government Works",
+      "scope": "Source dictionary"
+    },
+    {
+      "source_id": "fdic-financials-20260630",
+      "parent_registry_id": "fdic-bank-panel",
+      "modules": [
+        "P4"
+      ],
+      "kind": "json",
+      "metadata_url": "https://api.fdic.gov/banks/docs",
+      "rights": "Public FDIC data; cite FDIC",
+      "scope": "One bank-quarter snapshot; not a bank loan book"
+    },
+    {
+      "source_id": "fdic-failures",
+      "parent_registry_id": "fdic-bank-panel",
+      "modules": [
+        "P4"
+      ],
+      "kind": "json",
+      "metadata_url": "https://api.fdic.gov/banks/docs",
+      "rights": "Public FDIC data; cite FDIC",
+      "scope": "Failure/assistance events; not loan defaults"
+    },
+    {
+      "source_id": "fred-unrate",
+      "parent_registry_id": null,
+      "modules": [
+        "P2",
+        "P4"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/UNRATE",
+      "rights": "Public domain; citation requested",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-ussthpi",
+      "parent_registry_id": null,
+      "modules": [
+        "P2"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "rights": "Public domain; citation requested",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-mortgage30us",
+      "parent_registry_id": null,
+      "modules": [
+        "P2",
+        "P5"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+      "rights": "Freddie Mac copyright; internal research and citation",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-dgs2",
+      "parent_registry_id": null,
+      "modules": [
+        "P5"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/DGS2",
+      "rights": "Public domain; citation requested",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-dgs10",
+      "parent_registry_id": null,
+      "modules": [
+        "P5"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/DGS10",
+      "rights": "Public domain; citation requested",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-dgs30",
+      "parent_registry_id": null,
+      "modules": [
+        "P5"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/DGS30",
+      "rights": "Public domain; citation requested",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    },
+    {
+      "source_id": "fred-bamlc0a0cm",
+      "parent_registry_id": null,
+      "modules": [
+        "P5"
+      ],
+      "kind": "csv",
+      "metadata_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
+      "rights": "ICE copyrighted: internal use only; no redistribution",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+    }
+  ],
+  "registered_record_trace": [
+    {
+      "registry_id": "freddie-2012",
+      "code_and_consumer": "D01: `service.py`, `snapshot.py`, `monitoring.py`, `period_transitions.py`; API `/api/runs`, `/api/snapshot`, `/api/report`, `/api/period-transitions`, `/api/monitoring`, `/api/loans`, `/api/timeline`; workspace mortgage/monitor",
+      "kpi_or_output": "Monthly stock, delinquency states, transitions/cure và denominators theo count/UPB",
+      "status_and_limits": "App/API hiện hữu; chỉ là descriptive cohort 2012, không phải multi-vintage model. Không bind sample receipt mới trong lượt này.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "uci-350",
+      "code_and_consumer": "Frozen P1 case trong suite snapshot; workspace Retail; `/api/suite-view` và các route retail policy/explanation",
+      "kpi_or_output": "AUC, average precision, Brier/log loss, calibration và support của next-month behavioral benchmark",
+      "status_and_limits": "Output benchmark đã lưu; đây không phải application underwriting/PD12. KPI từ frozen artifact, không đọc lại raw UCI trong lượt này.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "lendingclub-accepted",
+      "code_and_consumer": "`lendingclub_full_source.py`, `lendingclub_source.py`, `lendingclub_temporal.py`; Retail tabs Accepted & rejected / LendingClub source; `/api/lendingclub-full-source`, `/api/lendingclub-source`, `/api/retail-source-quality`",
+      "kpi_or_output": "Accepted-loan counts, status/feature support, cohort and temporal diagnostics",
+      "status_and_limits": "Có source/API workflow; label maturity, repeated borrowers và predictor availability vẫn cần qualify trước modeling.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "lendingclub-rejected",
+      "code_and_consumer": "Cùng full-source workflow và Retail tab; `/api/lendingclub-full-source`, `/api/lendingclub-source`",
+      "kpi_or_output": "Rejected-application population/field support",
+      "status_and_limits": "Mô tả population; không có outcome repayment để suy default hoặc approval rate nếu thiếu mẫu số tương thích.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "bondora-public",
+      "code_and_consumer": "`scripts/audit_bondora_n14_readiness.py`, N14 audit note và Excel; không thấy route KPI riêng trong app",
+      "kpi_or_output": "Tri-state 12-MOB label counts, maturity proxy, country/year support",
+      "status_and_limits": "Research artifact, chưa nối thành score/model UI. 10.860 mature-proxy NULL còn mở; không biến NULL thành 0.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fhfa-nsmo-v7",
+      "code_and_consumer": "`nsmo_views.py`, `apps/web/nsmo.js`, `/nsmo`; APIs `/api/nsmo-profile`, `/api/nsmo-dictionary`, `/api/nsmo-survey-returns`, `/api/nsmo-domains`, `/api/nsmo-target-feasibility`, `/api/nsmo-origination-feasibility`, `/api/nsmo-first-observed-transition-support`, `/api/nsmo-first-entry-risk-set-feasibility`, `/api/nsmo-horizon-sensitivity`",
+      "kpi_or_output": "Survey-wave/response coverage, weighted profile/domain estimates, feasibility/support",
+      "status_and_limits": "Runtime smoke đã có trong evidence trước; survey weights, routing, censoring và publisher-imputed item provenance vẫn giới hạn estimand. Tách khỏi Freddie.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fhfa-nmdb-new",
+      "code_and_consumer": "`nmdb_mortgage_statistics.py`, `_excel.py`; P2 `nmdb`; `/api/nmdb-mortgage-statistics-catalog`, `/api/nmdb-mortgage-statistics`, `/api/nmdb-mortgage-statistics-excel`",
+      "kpi_or_output": "Annual origination counts, value/market mixes and weighted rate/score series",
+      "status_and_limits": "Runtime/API + browser filter/missingness review đã thực hiện; Excel desktop open/recalculate còn pending. Aggregate context, không phải loan-level outcome.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fhfa-nmdb-outstanding",
+      "code_and_consumer": "Cùng NMDB mart/API/UI/export",
+      "kpi_or_output": "Quarterly active stock, UPB and publisher-defined market/performance context",
+      "status_and_limits": "Runtime/API + browser filter review đã thực hiện; Excel desktop pending. Flow và stock phải giữ riêng; suppression/missingness không fill.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "hmda-releases-2018-2025",
+      "code_and_consumer": "`hmda_views.py`, release-specific view modules; P2 HMDA; route families `/api/hmda-*`",
+      "kpi_or_output": "Application/decision/lender/geography/product mix, denial comparison and fixed-mix analysis",
+      "status_and_limits": "Có nhiều release-specific grains. Record gộp hiện tại chưa cross-reference đủ từng release receipt; HMDA không có repayment/default outcome.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "sba-foia",
+      "code_and_consumer": "`business_sba.py`, `business_archive.py`; Business workspace; `/api/business-archive`, `/api/business-report`",
+      "kpi_or_output": "SBA guarantee/source-record summaries, status and cohort distributions",
+      "status_and_limits": "`public_sources.catalog()` có sáu cohort CSV và dictionary. Registry group chưa bind đủ từng source ID/receipt; status không phải fixed-horizon default.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "uci-365",
+      "code_and_consumer": "`bankruptcy.py`, `bankruptcy_views.py`, `bankruptcy_study.py`, `bankruptcy_model_views.py`; `/api/bankruptcy-view`, `/api/bankruptcy-model-view` và catalogs",
+      "kpi_or_output": "Bankruptcy ratio distributions and frozen one-year classification metrics",
+      "status_and_limits": "Source benchmark/firm-level population; không phải local-business PD calibration. Acquisition source IDs gồm CSV và metadata.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "sec-filings-financials",
+      "code_and_consumer": "`sec_views.py`, issuer financial/debt modules; P3 Issuer Financials; `/api/sec-*`, `/api/utility-debt-service`",
+      "kpi_or_output": "Filing-specific balance sheet, debt maturity/service, coverage and reconciliation diagnostics",
+      "status_and_limits": "KPI phụ thuộc filing/accession/period mapping. Mỗi source filing và amendment phải tiếp tục bind cụ thể; không dùng latest API fact thay as-filed history.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fdic-bank-panel",
+      "code_and_consumer": "`bank_panel.py`, `bank_views.py`; Bank workspace; `/api/bank-view`, `/api/bank-timeline`",
+      "kpi_or_output": "Bank-quarter asset/liability/loan quality and charge-off/coverage ratios",
+      "status_and_limits": "`public_sources.catalog()` có financials snapshot và failure events. Hai source object có grain/use khác nhau; failure event không là loan default.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "exposure-actual-2026-03",
+      "code_and_consumer": "`exposure_views.py`, movements/scenario/ECL/tail/convergence views; P4 Exposure; `/api/exposure-imports`, `/api/exposure-aggregates`, `/api/exposure-movement`, `/api/exposure-scenario`, `/api/exposure-ecl`, `/api/exposure-tail`, `/api/exposure-convergence`",
+      "kpi_or_output": "Actual currency exposure/concentration/movement; separate assumption-based scenario, ECL and tail outputs",
+      "status_and_limits": "Actual imports và declared scenario phải có lineage riêng. Không cộng khác tiền tệ; scenario không phải reported loss.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "toyota-2022b-absee",
+      "code_and_consumer": "`absee_profile.py`, `absee_surveillance.py`; P5 ABS monitor; `/api/absee-profile`, `/api/absee-surveillance`",
+      "kpi_or_output": "Period pool/charge-off/recovery and contract-specific exception outputs",
+      "status_and_limits": "Aggregate panel is source evidence; 49/51 certificate-vs-ABS-EE recovery periods unresolved per N09 evidence. No LGD.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "toyota-2024b-absee",
+      "code_and_consumer": "Cùng ABS surveillance/API và contract-specific ledger",
+      "kpi_or_output": "Pool/loss/recovery comparison by reporting period",
+      "status_and_limits": "28/29 recovery differences unresolved per N09 evidence. Keep deal contract separate.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "toyota-recovery-components-ledger-80-periods",
+      "code_and_consumer": "`abs_servicer.py`, `absee_surveillance.py`; source bridge and N09",
+      "kpi_or_output": "Certificate component identities and ABS-EE proceeds comparator",
+      "status_and_limits": "Certificate identity reconciles 80/80; only 3/80 ABS-EE ties. This is an exception audit, not recovery-rate/LGD evidence.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "nissan-2024b-absee",
+      "code_and_consumer": "`absee_profile.py`, `absee_surveillance.py`; `/api/absee-profile`, `/api/absee-surveillance`",
+      "kpi_or_output": "Period balance, events, DPD and recovery comparators",
+      "status_and_limits": "Aggregate source panel; literal DPD/recovery exceptions remain as reported, with diagnostic alternatives not promoted to rules.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "nissan-2024b-exception-ledger-23-periods",
+      "code_and_consumer": "`absee_surveillance.py`, N08/N09 API, report and Excel",
+      "kpi_or_output": "23-period event/DPD/recovery exception counts and deltas",
+      "status_and_limits": "Acceptance N08/N09 source-backed; July 2025 event, June DPD boundary and six recovery differences remain unresolved.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "ginnie-loanperf-production",
+      "code_and_consumer": "No current production-data KPI route; downloader/reference artifacts only",
+      "kpi_or_output": "None until an authorized production quarterly pilot is received and reconciled",
+      "status_and_limits": "Access/terms gate. Do not count samples/layout references as a production performance panel.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "world-omni-2025a",
+      "code_and_consumer": "`abs_views.py`, `abs_waterfall.py`; P5 ABS; `/api/abs-views`, `/api/abs-view`, `/api/abs-period`, `/api/abs-report`",
+      "kpi_or_output": "Reported pool/certificate/waterfall values and conditional replay",
+      "status_and_limits": "Separate trust/contract scope; terms, date, source-reported versus modeled components must remain distinct.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "world-bank-wdi",
+      "code_and_consumer": "`country_observatory.py`, `country_views.py`; Country workspace; `/api/country-view`, `/api/country-report`",
+      "kpi_or_output": "Country macro indicators and coverage/gap profile",
+      "status_and_limits": "Context-only aggregate, not borrower PD or direct portfolio loss KPI. Preserve native indicator/year.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "sovereign-archive",
+      "code_and_consumer": "`country_observatory.py`, `country_views.py`; sovereign panel `/api/sovereign-defaults`",
+      "kpi_or_output": "Sovereign default-event chronology and country context",
+      "status_and_limits": "Historical country event archive; not retail/corporate obligor outcome labels. Edition/coding differences remain source-specific.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "treasury-hamp",
+      "code_and_consumer": "Research note, audit/acquisition scripts and private aggregate artifact; no current dedicated KPI route located in `server.py`/`app.js`",
+      "kpi_or_output": "HAMP modification/performance counts and source audit outputs",
+      "status_and_limits": "Research artifact only in current app. Static/updated Treasury files and cutoff/source availability are separate; not a Freddie vintage.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fhfa-pudb-2025",
+      "code_and_consumer": "`fhfa_pudb.py`; mortgage workspace; `/api/fhfa-pudb-profile`",
+      "kpi_or_output": "2025 Enterprise-acquisition categories/support (purpose, guarantee, DTI, score model, geography)",
+      "status_and_limits": "Runtime profile display in code. Acquisition context only; no monthly performance/default outcome. Bind archive hash/release into N02.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "fhfa-nmdb-performance",
+      "code_and_consumer": "Two source paths are present: `nmdb_performance.py` serves curated national CSV through `/api/nmdb-performance` and `/api/nmdb-state-performance` in NSMO; `nmdb_aggregate.py` serves the full-market package through `/api/fhfa-nmdb-performance` in the mortgage workspace.",
+      "kpi_or_output": "Quarterly delinquency, foreclosure and forbearance shares, with different geography/market coverage by path",
+      "status_and_limits": "Aggregate reported rates, not D01 cohort incidence. Code confirms both paths exist; runtime receipt parity and their release/hash crosswalk still need verification. Registry label “app integration pending” is stale and should be corrected.",
+      "evidence_type": "static_code_trace"
+    },
+    {
+      "registry_id": "abs-surveillance-exceptions-103-periods",
+      "code_and_consumer": "`absee_surveillance.py`, `abs_views.py`; P5 monitor; `/api/absee-surveillance`, report and workbook",
+      "kpi_or_output": "103 contract-periods, deal-specific tie/exceptions and analyst finding",
+      "status_and_limits": "N09 acceptance met. Keep 83 recovery residuals unresolved; do not aggregate recovery dollars across contracts.",
+      "evidence_type": "static_code_trace"
+    }
+  ],
+  "unregistered_or_underregistered_source_families": [
+    {
+      "source_family": "FRED/ALFRED macro, source-version records",
+      "code_and_route_evidence": "`public_sources.py`, `market_data.py`, `mortgage_macro_context.py`; `/api/market-report`, `/api/mortgage-macro-context`",
+      "output": "Native-frequency rates/spreads; latest-revised context; separate point-in-time vintage context",
+      "registry_action": "Add one source record per series/retrieval policy and separate ALFRED vintage receipts from latest-revised FRED snapshots. Seven `fred-*` source IDs are already generated by `public_sources.catalog()` but are not explicit registry IDs. Mortgage macro view's `USSTHPI` is the FRED series with ALFRED snapshots, not the separate FHFA CSV."
+    },
+    {
+      "source_family": "CFPB mortgage delinquency geography series",
+      "code_and_route_evidence": "`cfpb_mortgage_trends.py`; `/api/cfpb-mortgage-trends`",
+      "output": "30–89 and 90+ delinquency rates by geography",
+      "registry_action": "Add source/version/coverage/revision and suppression/imputation provenance record."
+    },
+    {
+      "source_family": "HUD FHA Insurance in Force by tract",
+      "code_and_route_evidence": "`hud_fha_iif.py`; `/api/hud-fha-iif-profile`",
+      "output": "Aggregate tract/state insured-loan counts and balances",
+      "registry_action": "Add record and keep timing conflict unresolved: HUD catalog coverage 2025-03 vs layer description 09/2021."
+    },
+    {
+      "source_family": "HUD FHA performance/recovery products",
+      "code_and_route_evidence": "`hud_fha_performance.py`; `/api/hud-fha-performance`",
+      "output": "FHA performance, foreclosure and recovery aggregate outputs",
+      "registry_action": "Add separate record(s) for each CSV/product and release; do not blend with FHA IIF exposure."
+    },
+    {
+      "source_family": "Federal Reserve bank asset-quality context",
+      "code_and_route_evidence": "`fed_bank_mortgage_context.py`; `/api/fed-bank-mortgage-context` and workbook download",
+      "output": "Quarterly series by product and bank-size group",
+      "registry_action": "Add source/release record and distinguish source series/denominators from FDIC bank panel."
+    },
+    {
+      "source_family": "Fannie Mae format/layout samples",
+      "code_and_route_evidence": "`fannie_samples.py`; `/api/fannie-samples`; Excel library",
+      "output": "Parser/layout/field coverage, not performance KPI",
+      "registry_action": "Register as format/reference artifact with explicit non-model use; keep separate from actual acquisition/performance cohorts."
+    },
+    {
+      "source_family": "Market Treasury / ICE OAS source families",
+      "code_and_route_evidence": "`market_data.py`, `market_views.py`; Market workspace, `/api/market-view`, `/api/market-report`",
+      "output": "Treasury par-yield context, ICE OAS observations, rate/bond scenarios",
+      "registry_action": "Bind source-specific license, release and native date coverage. ICE remains internal-use only; user-entered bond scenario inputs are separate assumptions."
+    },
+    {
+      "source_family": "FHFA State All-Transactions HPI QA artifact",
+      "code_and_route_evidence": "`fhfa_hpi.py`, `scripts/ingest_fhfa_state_hpi.py`, `docs/data/fhfa-state-all-transactions-hpi-quarterly-2026q2.csv`; no current API route found",
+      "output": "Source validation and normalized state-quarter table; not currently a mortgage macro UI KPI input",
+      "registry_action": "Add a source record if this audited file remains part of the maintained data estate. Keep separate from both FHFA PUDB acquisitions and the FRED/ALFRED `USSTHPI` series used by the macro view."
+    }
+  ]
+}

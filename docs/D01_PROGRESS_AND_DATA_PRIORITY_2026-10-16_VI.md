@@ -3,6 +3,17 @@
 **Checkpoint:** 16/10/2026. Đây là trạng thái theo bằng chứng có thể kiểm tra,
 không phải ước lượng thời gian đã bỏ ra.
 
+**Bổ sung HMDA 2025 Dynamic:** đã tải bản FFIEC cập nhật tuần, chụp ngày
+11/10/2026: 13.558.306 hồ sơ, 99 trường, 4.794 LEI; tổng LAR đối soát chính
+xác với TS và các kiểm tra profile bằng 0 ngoại lệ. App cho chọn bản Dynamic
+hoặc Snapshot đóng băng 02/06/2026; workbook riêng có KPI, 8.156 nhóm tổng hợp,
+codebook 99 trường và source/method audit. Tỷ trọng action 3 là 22,5718% trên
+denominator actions 1–3, không phải PD/default. So sánh release chỉ phản ánh
+hai trạng thái phát hành, không phải chuyển trạng thái borrower hay outcome trả
+nợ. Đây là D08/application-decision data, **không thêm Freddie vintage**; D01
+vẫn 26/50 (52%). Chi tiết tại
+[`HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md`](HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md).
+
 **Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
 One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại
 [`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).
@@ -80,7 +91,8 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   Freddie Release 47, có hash riêng. Chúng giúp xác định thay đổi code/sentinel,
   missing value, loss sign, cumulative modification cost, score field và layout.
   Đây là tài liệu schema, **không phải loan-performance rows**; thêm 0 vintage.
-- **HMDA mới cho D08, không tính vào D01:** One-Year National 2019–2024 đã được
+- **HMDA mới cho D08, không tính vào D01:** One-Year National 2019–2024 và
+  Dynamic 2025 (as of 2026-10-11) đã được
   tải, kiểm định theo vintage, tích hợp thành release-specific views và workbook
   Excel riêng; app so sánh cùng action denominator và ghi rõ freeze. Với 2020,
   2021 và 2022, không tuyên bố API

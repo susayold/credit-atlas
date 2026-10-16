@@ -21,6 +21,14 @@ def _cookie(name, domain, *, domain_specified, domain_initial_dot, secure=True):
     )
 
 
+def _jar_with_token(value="synthetic-test-token"):
+    jar = http.cookiejar.MozillaCookieJar()
+    jar.set_cookie(_cookie("gm_up_token", ".ginniemae.gov", domain_specified=True, domain_initial_dot=True))
+    cookie = next(iter(jar))
+    cookie.value = value
+    return jar
+
+
 def _save_cookies(path, cookies):
     jar = http.cookiejar.MozillaCookieJar(str(path))
     for cookie in cookies:
@@ -95,11 +103,12 @@ def test_expired_or_unauthorized_profile_stops_before_download(tmp_path, monkeyp
     monkeypatch.setattr(acquisition, "_under_d", lambda _path: True)
     monkeypatch.setattr(acquisition.shutil, "disk_usage", lambda _root: type("Usage", (), {"free": 10**12})())
     monkeypatch.setattr(acquisition, "_catalog_entry", lambda _filename: {"bytes": 100, "last_modified": ""})
-    monkeypatch.setattr(acquisition, "load_official_cookie_jar", lambda _path: http.cookiejar.MozillaCookieJar())
+    monkeypatch.setattr(acquisition, "load_official_cookie_jar", lambda _path: _jar_with_token())
 
     class UnauthorizedOpener:
         def open(self, request, timeout):
             assert request.full_url == acquisition.PROFILE_URL
+            assert request.get_header("Authorization") == "Bearer synthetic-test-token"
             raise urllib.error.HTTPError(request.full_url, 401, "Unauthorized", {}, None)
 
     monkeypatch.setattr(acquisition.urllib.request, "build_opener", lambda *_handlers: UnauthorizedOpener())
@@ -119,7 +128,7 @@ def test_authenticated_download_writes_private_zip_and_credential_free_receipt(t
         "file_name": filename, "directory": "data_bulk", "bytes": len(zip_payload),
         "last_modified": "test-only",
     })
-    monkeypatch.setattr(acquisition, "load_official_cookie_jar", lambda _path: http.cookiejar.MozillaCookieJar())
+    monkeypatch.setattr(acquisition, "load_official_cookie_jar", lambda _path: _jar_with_token())
 
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -140,6 +149,7 @@ def test_authenticated_download_writes_private_zip_and_credential_free_receipt(t
 
         def open(self, request, timeout):
             self.requests.append(request.full_url)
+            assert request.get_header("Authorization") == "Bearer synthetic-test-token"
             if request.full_url == acquisition.PROFILE_URL:
                 return FakeResponse(b"{}", "application/json")
             assert request.full_url == (
@@ -158,6 +168,14 @@ def test_authenticated_download_writes_private_zip_and_credential_free_receipt(t
     assert receipt["sha256"] == saved_receipt["sha256"]
     assert receipt["cookie_contents_recorded"] is False
     assert receipt["loan_rows_emitted"] is False
+    assert "synthetic-test-token" not in json.dumps(saved_receipt)
     assert len(fake_opener.requests) == 2
     assert fake_opener.requests[0] == acquisition.PROFILE_URL
     assert "?dlfile=" in fake_opener.requests[1]
+
+
+def test_authorization_token_rejects_ambiguous_or_header_unsafe_values():
+    with pytest.raises(acquisition.GinnieAcquisitionError, match="one unambiguous"):
+        acquisition._authorization_token(http.cookiejar.MozillaCookieJar())
+    with pytest.raises(acquisition.GinnieAcquisitionError, match="malformed"):
+        acquisition._authorization_token(_jar_with_token("token\r\nInjected: yes"))

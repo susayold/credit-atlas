@@ -13,6 +13,12 @@ Người dùng đã xác nhận đọc và chấp nhận Terms of Use. Tuy nhiê
 - Chạy auditor trên ZIP sample chính thức hiện có: 213 loan-period rows, 104 disclosure keys, kỳ 202304–202306; HH/LP/TT và schema 59-field đạt structural contract. Đây chỉ là kiểm thử định dạng trên sample, không phải production coverage, không phải 104 người vay độc lập và không hỗ trợ tỷ lệ default.
 - Downloader yêu cầu file cookie Netscape trên D:, chỉ giữ secure/unexpired `gm_up_token` áp dụng cho domain tải chính thức, kiểm tra phiên qua profile endpoint, khóa redirect vào host HTTPS chính thức, giới hạn 1 GiB, đối chiếu bytes với catalog, kiểm ZIP/member và SHA-256, ghi receipt private; nó không ghi nội dung cookie hoặc xuất loan rows.
 
+### Recheck catalog endpoint and downloader auth flow — 2026-10-16 (later same day)
+
+- Public metadata API `https://www.ginniemae.gov/bulk-content/api/disclosure-data` returned HTTP 200 JSON. Current catalog still lists quarterly `LoanPerf_202606.zip` (782.688.297 bytes); annual `LoanPerfAnn_202512.zip` (2.302.624.988 bytes); and payment history `llpaymhist_202609.zip` (67.497.851 bytes, catalog modified 15/10/2026).
+- Production request to the official `/disclosure-api/api/download?dlfile=data_bulk/LoanPerf_202606.zip` returned HTTP 401 without an authenticated token. A guessed static path returns HTML, not the ZIP. No bypass was attempted.
+- Inspection of the official portal's published JavaScript shows its interceptor copies cookie `gm_up_token` to `Authorization: Bearer …` for both the profile and download APIs. The Python downloader previously forwarded the cookie but omitted that header; it now mirrors the official request flow, keeps the token in memory only, restricts the destination host, and still omits it from receipts/logs. Synthetic-token tests verify both Authorization headers and the credential-free receipt: **7/7 tests pass**.
+
 ### Fresh access recheck — 2026-10-16
 
 - D: access folders đã được kiểm tra lại; hiện chưa có cookie file do user lưu.

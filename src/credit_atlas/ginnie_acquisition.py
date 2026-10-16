@@ -82,8 +82,20 @@ class _OfficialRedirects(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(request, response, code, message, headers, new_url)
 
 
-def _profile_is_valid(opener) -> None:
-    request = urllib.request.Request(PROFILE_URL, headers={"Accept": "application/json"})
+def _authorization_token(jar: http.cookiejar.CookieJar) -> str:
+    values = {cookie.value for cookie in jar if cookie.name == COOKIE_NAME}
+    if len(values) != 1:
+        raise GinnieAcquisitionError("Provide one unambiguous Ginnie Mae gm_up_token cookie")
+    token = next(iter(values))
+    if not token or len(token) > 8192 or any(ord(char) < 33 or ord(char) > 126 for char in token):
+        raise GinnieAcquisitionError("Ginnie Mae session token is malformed")
+    return token
+
+
+def _profile_is_valid(opener, token: str) -> None:
+    request = urllib.request.Request(PROFILE_URL, headers={
+        "Accept": "application/json", "Authorization": "Bearer " + token,
+    })
     try:
         with opener.open(request, timeout=30) as response:
             if response.status != 200:
@@ -155,8 +167,9 @@ def download_loanperf_202606(root: Path, cookie_file: Path) -> dict:
         raise GinnieAcquisitionError("Insufficient D: space for the official LoanPerf pilot")
 
     jar = load_official_cookie_jar(cookie_file)
+    token = _authorization_token(jar)
     opener = urllib.request.build_opener(_OfficialRedirects(), urllib.request.HTTPCookieProcessor(jar))
-    _profile_is_valid(opener)
+    _profile_is_valid(opener, token)
 
     url = f"{DOWNLOAD_BASE}?dlfile={quote(DOWNLOAD_FILE, safe='')}"
     _validate_download_url(url)
@@ -170,7 +183,9 @@ def download_loanperf_202606(root: Path, cookie_file: Path) -> dict:
     digest = hashlib.sha256()
     size = 0
     partial_created = False
-    request = urllib.request.Request(url, headers={"Accept": "application/zip,application/octet-stream"})
+    request = urllib.request.Request(url, headers={
+        "Accept": "application/zip,application/octet-stream", "Authorization": "Bearer " + token,
+    })
     try:
         with opener.open(request, timeout=60) as response:
             if response.status != 200:

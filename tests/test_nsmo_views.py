@@ -105,7 +105,7 @@ def _write_public_dictionary(root: Path) -> None:
     (data / "nsmo-v70-value-labels.csv").write_text(
         "format_name,format_value,format_label\nFMT,1,One\n", encoding="utf-8")
     (data / "nsmo-v70-wave-coverage.csv").write_text(
-        "csv_column,observed_response_waves,entirely_not_asked_waves,partially_not_asked_waves,not_applicable_waves\n"
+        "csv_column,puf_nonmissing_value_waves,entirely_not_asked_waves,partially_not_asked_waves,not_applicable_waves\n"
         "field_0,1-46,,-,\n", encoding="utf-8")
     (data / "nsmo-v70-wave-item-comparability.csv").write_text(
         "field,assessment\nfield_0,WORDING_VERSION_BREAK: separate wave groups\n",
@@ -362,7 +362,7 @@ def test_nsmo_dictionary_has_full_field_crosswalk_and_value_labels(tmp_path):
     assert result["predictor_gates"][0]["eligibility_bucket"] == "POST_ORIGINATION_RESPONSE_EXCLUDE"
     assert result["fields"][0]["csv_column"] == "field_0"
     assert result["value_labels"][0]["format_label"] == "One"
-    assert result["wave_coverage"][0]["observed_response_waves"] == "1-46"
+    assert result["wave_coverage"][0]["puf_nonmissing_value_waves"] == "1-46"
 
 
 def test_nsmo_dictionary_rejects_incomplete_crosswalk(tmp_path):

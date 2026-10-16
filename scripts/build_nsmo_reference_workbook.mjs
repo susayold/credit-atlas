@@ -20,12 +20,12 @@ const sources = [
   }],
   ["Coverage theo wave", "nsmo-v70-wave-coverage.csv", {
     csv_column: "Tên cột CSV (giữ nguyên)", sas_label: "Nhãn SAS / câu hỏi", sas_format: "SAS format",
-    question_refs: "Mã câu hỏi", codebook_variant_flags: "Cờ biến thể codebook", observed_response_waves: "Wave có phản hồi quan sát",
+    question_refs: "Mã câu hỏi", codebook_variant_flags: "Cờ biến thể codebook", puf_nonmissing_value_waves: "Wave có giá trị PUF không thiếu (có thể đã impute)",
     entirely_not_asked_waves: "Wave hoàn toàn không được hỏi (-3)", partially_not_asked_waves: "Wave được hỏi một phần (-3)",
     not_applicable_waves: "Wave không áp dụng (-2)", waves_with_missing_code: "Wave có mã thiếu", interpretation: "Cách diễn giải / giới hạn",
   }],
   ["So sanh wording item", "nsmo-v70-wave-item-comparability.csv", {
-    field: "Tên cột CSV (giữ nguyên)", sas_label: "Nhãn SAS / câu hỏi", observed_response_waves: "Wave có phản hồi quan sát",
+    field: "Tên cột CSV (giữ nguyên)", sas_label: "Nhãn SAS / câu hỏi", puf_nonmissing_value_waves: "Wave có giá trị PUF không thiếu (có thể đã impute)",
     not_asked_waves: "Wave không được hỏi", question_refs: "Mã câu hỏi", sas_format: "SAS format",
     scale_labels: "Nhãn thang trả lời", exact_item_phrase_found_in_packages: "Số gói questionnaire có wording",
     assessment: "Đánh giá / giới hạn trend",
@@ -47,11 +47,11 @@ const guide = wb.worksheets.add("Bat dau");
 guide.showGridLines = false;
 const guideRows = [
   ["CreditAtlas · NSMO v7.0 research workbook", ""],
-  ["Mục đích", "Tra cứu codebook, category, coverage/wording theo wave và so sánh support quan sát được theo horizon; không chứa hồ sơ khoản vay."],
+  ["Mục đích", "Tra cứu codebook, category, coverage/wording theo wave và so sánh support theo horizon; không chứa hồ sơ khoản vay."],
   ["Nguồn", "Bốn bảng metadata trong docs/data và một bảng aggregate-only trong docs; PUF gốc được giữ riêng, receipt private ràng buộc SHA-256."],
   ["Cách dùng", "Năm sheet dữ liệu là Excel Table có bộ lọc. Horizon có repeated C snapshots và một earliest C landmark/mortgage, theo tổng PUF hoặc năm giải ngân."],
   ["Mã category", "Giữ nguyên mã SAS/CSV, gồm -2 và -3; không tự gộp missing, not asked hoặc not applicable."],
-  ["Coverage", "Phản ánh availability/mã quan sát theo wave; không tự chứng minh cùng cách đo hoặc đủ điều kiện làm predictor."],
+  ["Coverage", "Wave coverage đếm giá trị X không thiếu trong PUF, không xác nhận borrower đã trực tiếp trả lời: FHFA có thể impute giá trị thiếu vào biến X. PUF công khai không có cờ J theo từng item để nhận diện imputation; biến Z chỉ ghi nhận việc trả lời cho một số câu hỏi được chọn. Vì vậy không dùng các số đếm này làm response rate."],
   ["So sánh item", "Wording được rà trên questionnaire packages; đọc cột đánh giá trước khi so sánh trend giữa wave."],
   ["Horizon sensitivity", "So sánh 6/12/24 tháng giữa repeated C snapshots và một earliest C landmark/mortgage, theo tổng PUF hoặc năm giải ngân; đây là support/censoring, không phải PD."],
   ["Làm mới", "Cập nhật CSV metadata/aggregate đã review, rồi chạy scripts/build_nsmo_reference_workbook.mjs với root project và output .xlsx."],

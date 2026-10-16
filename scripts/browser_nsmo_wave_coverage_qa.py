@@ -34,13 +34,18 @@ def main() -> None:
             response = page.goto(url, wait_until="networkidle", timeout=30_000)
             if response is None or response.status != 200:
                 raise RuntimeError("NSMO page did not return HTTP 200")
-            download = page.locator("a.excel-download")
+            download = page.locator('a.excel-download[href="/downloads/nsmo-reference.xlsx"]')
             if download.get_attribute("href") != "/downloads/nsmo-reference.xlsx":
                 raise AssertionError("NSMO Excel reference download is not linked from the dictionary")
             checks.append("codebook/category Excel workbook is linked from the dictionary")
             page.locator("#dictionary-count").get_by_text("319", exact=False).wait_for(timeout=15_000)
             page.locator("#dictionary-count").get_by_text("9", exact=False).wait_for(timeout=15_000)
             checks.append("dictionary reports 319 survey-variable coverage rows and 9 item notes")
+            dictionary_intro = page.locator(".dictionary-panel").inner_text()
+            for phrase in ("giá trị không thiếu trong PUF", "impute", "không phải response rate", "Biến Z"):
+                if phrase.lower() not in dictionary_intro.lower():
+                    raise AssertionError(f"Imputation caveat is missing: {phrase}")
+            checks.append("dictionary explains imputation, Z-variable limits and non-response-rate scope")
             for field, observed, not_asked in (
                 ("x20j", "13-24", "1-12;25-46"),
                 ("x14a", "7-46", "1-6"),
@@ -52,7 +57,7 @@ def main() -> None:
                 option.wait_for(timeout=10_000)
                 option.click()
                 detail = page.locator("#field-detail")
-                detail.get_by_text("Observed response waves", exact=True).wait_for()
+                detail.get_by_text("PUF waves with nonmissing values (may be imputed)", exact=True).wait_for()
                 text = detail.inner_text()
                 if observed not in text or not_asked not in text:
                     raise AssertionError(f"Wave coverage mismatch in rendered detail for {field}")

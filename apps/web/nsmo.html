@@ -23,7 +23,7 @@
       <section id="metrics" class="metric-grid" aria-label="NSMO sample summary"></section>
       <section class="panel source-panel">
         <div><div class="eyebrow">OFFICIAL SOURCE · v7.0</div><h2>National Survey of Mortgage Originations</h2><p>FHFA / CFPB · released 27 May 2026 · sample mortgages originated 2013–2024</p></div>
-        <div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel toàn bộ dữ liệu D02 · 19 sheet</a><a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a></div>
+        <div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel toàn bộ dữ liệu D02 · 23 sheet</a><a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a></div>
       </section>
       <section class="panel hud-context-panel">
         <div class="section-head"><div><div class="eyebrow">SEPARATE PROGRAM BENCHMARK · FHA · HUD</div><h2>FHA portfolio performance context</h2><p>Benchmark aggregate từ HUD, độc lập với NSMO; không gộp sample, không dùng làm target hay nhãn train.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/hud-fha-performance.xlsx">Tải Excel HUD FHA · đủ 6 bảng</a><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD report · Aug 2026 ↗</a></div></div>
@@ -213,7 +213,7 @@
       <section class="panel limitations"><div class="eyebrow">SCOPE & LIMITATIONS</div><ul id="limits"></ul><p class="disclaimer" id="disclaimer"></p></section>
     </div>
     <section class="panel dictionary-panel">
-      <div class="section-head"><div><div class="eyebrow">FIELD MAP · OFFICIAL v7.0</div><h2>Tra từ điển 587 trường dữ liệu</h2><p>Tra nhãn SAS, câu hỏi/wave trong codebook, phạm vi trả lời quan sát thực tế theo wave, giá trị được gán “not asked/not applicable” và giới hạn sử dụng. Ghi chú version item nêu rõ các trường hợp không nên gộp trend đơn giản; coverage không tự chứng minh measurement invariance.</p></div><span class="dictionary-count" id="dictionary-count">Đang tải…</span></div>
+      <div class="section-head"><div><div class="eyebrow">FIELD MAP · OFFICIAL v7.0</div><h2>Tra từ điển 587 trường dữ liệu</h2><p>Tra nhãn SAS, câu hỏi/wave trong codebook, wave có giá trị không thiếu trong PUF, giá trị “not asked/not applicable” và giới hạn sử dụng. Lưu ý: FHFA có thể impute câu trả lời thiếu vào biến X; PUF không có cờ J theo item để xác định giá trị nào đã impute. Vì vậy coverage này không phải response rate hay bằng chứng borrower trực tiếp trả lời. Biến Z chỉ ghi nhận câu trả lời ở một số item được chọn.</p></div><span class="dictionary-count" id="dictionary-count">Đang tải…</span></div>
       <a class="excel-download" href="/downloads/nsmo-reference.xlsx">Tải Excel tra cứu nhanh · codebook, category, coverage & wording</a>
       <label class="dictionary-search">Tìm field<input id="field-search" type="search" placeholder="Ví dụ: score_orig, forbearance, borrower…" autocomplete="off"></label>
       <div class="dictionary-layout"><div id="field-results" class="field-results" role="listbox" aria-label="Trường NSMO"></div><article id="field-detail" class="field-detail" aria-live="polite"><p>Chọn một trường để xem định nghĩa và quy tắc sử dụng.</p></article></div>

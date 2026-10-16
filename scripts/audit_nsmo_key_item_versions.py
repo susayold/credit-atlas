@@ -97,17 +97,25 @@ def write_comparability_index(report: dict, dictionary_path: Path, labels_path: 
         rows.append({
             "field": name,
             "sas_label": field["sas_label"],
-            "observed_response_waves": coverage[name]["observed_response_waves"],
+            "puf_nonmissing_value_waves": coverage[name]["puf_nonmissing_value_waves"],
             "not_asked_waves": coverage[name]["entirely_not_asked_waves"],
             "question_refs": field["survey_question_refs"],
             "sas_format": field["sas_format"],
             "scale_labels": " | ".join(label_groups.get(field["sas_format"].casefold(), [])),
             "exact_item_phrase_found_in_packages": len(report["phrase_package_coverage"][name]),
-            "assessment": "COMMON_ITEM_CANDIDATE; wording found in all packages; verify routing/respondent/mode and scale before trend use",
+            "assessment": (
+                "COMMON_ITEM_CANDIDATE; wording found in all packages; waves 1-10: "
+                "borrow enough money from a bank or credit union; waves 11-46: "
+                "borrow a significant amount from a bank or credit union; PVERYFM "
+                "labels unchanged; stratify or run sensitivity before interpreting "
+                "long-run trend; verify routing/respondent/mode and scale before use"
+                if name == "x94a" else
+                "COMMON_ITEM_CANDIDATE; wording found in all packages; verify routing/respondent/mode and scale before trend use"
+            ),
         })
     additional = {
-        "x14a": "Separate from x14a_1: PIMPFM scale, observed waves 7-46; do not pool raw numeric codes.",
-        "x14a_1": "Separate from x14a: PVERYFM scale, observed waves 1-6; do not pool raw numeric codes.",
+        "x14a": "Separate from x14a_1: PIMPFM scale, nonmissing PUF values in waves 7-46; do not pool raw numeric codes.",
+        "x14a_1": "Separate from x14a: PVERYFM scale, nonmissing PUF values in waves 1-6; do not pool raw numeric codes.",
         "x20j": "Wave-limited item: PUF values in waves 13-24 only; not-asked in other waves. Codebook parsed wave range is not authoritative.",
     }
     for name, assessment in additional.items():
@@ -115,7 +123,7 @@ def write_comparability_index(report: dict, dictionary_path: Path, labels_path: 
         rows.append({
             "field": name,
             "sas_label": field["sas_label"],
-            "observed_response_waves": coverage[name]["observed_response_waves"],
+            "puf_nonmissing_value_waves": coverage[name]["puf_nonmissing_value_waves"],
             "not_asked_waves": coverage[name]["entirely_not_asked_waves"],
             "question_refs": field["survey_question_refs"],
             "sas_format": field["sas_format"],

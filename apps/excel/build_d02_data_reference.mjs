@@ -44,12 +44,12 @@ const sources = [
   } },
   { sheet: "NSMO wave coverage", file: "nsmo-v70-wave-coverage.csv", table: "NsmoWaveCoverage", headers: {
     csv_column: "CSV field name", sas_label: "SAS label / question", sas_format: "SAS format", question_refs: "Question reference",
-    codebook_variant_flags: "Codebook variation flags", observed_response_waves: "Waves with observed responses",
+    codebook_variant_flags: "Codebook variation flags", puf_nonmissing_value_waves: "PUF waves with nonmissing values (may be imputed)",
     entirely_not_asked_waves: "Entirely not asked (-3)", partially_not_asked_waves: "Partially not asked (-3)",
     not_applicable_waves: "Not applicable (-2)", waves_with_missing_code: "Waves with missing code", interpretation: "Interpretation / limitation",
   } },
   { sheet: "NSMO item wording", file: "nsmo-v70-wave-item-comparability.csv", table: "NsmoItemWording", headers: {
-    field: "CSV field name", sas_label: "SAS label / question", observed_response_waves: "Waves with observed responses",
+    field: "CSV field name", sas_label: "SAS label / question", puf_nonmissing_value_waves: "PUF waves with nonmissing values (may be imputed)",
     not_asked_waves: "Waves not asked", question_refs: "Question reference", sas_format: "SAS format",
     scale_labels: "Response-scale labels", exact_item_phrase_found_in_packages: "Questionnaire packages with exact phrase",
     assessment: "Comparability assessment",
@@ -138,6 +138,7 @@ const guideRows = [
   ["Item routing", "The routing sheet crosswalks all 319 survey-response fields to question references and codebook conditions. Seven previously missing references are reconciled to questionnaire question numbers; a historical wording variant remains flagged."],
   ["Question references", "The reconciliation sheet preserves original references beside the questionnaire number and evidence; it does not claim full wave/mode routing is resolved."],
   ["Response mode", "Tables 3–6 show aggregate returns, usability exclusions and 2013–2024 origination scope. The v7.0 PUF has 62,359 mortgages from waves 1–46; no row-level mode link is published."],
+  ["X-variable imputation", "FHFA may impute missing survey responses into X variables. The public PUF has no item-level J flags to identify each imputed value; selected Z fields mark actual answers only for certain items. Wave coverage is nonmissing PUF-value availability, not a borrower response rate."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["FHFA HPI", "Quarterly state/DC All-Transactions HPI through 2026Q2. Index, not dollar value; current history is retrospective and not point-in-time."],
   ["HUD FHA", "Monthly trend, subgroups, new-90+ reason shares, foreclosure pipeline, REO recovery by geography and REO loss components through August 2026. These are not NSMO loan records."],

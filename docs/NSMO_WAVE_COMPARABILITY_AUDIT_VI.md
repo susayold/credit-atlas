@@ -23,7 +23,7 @@ Pilot crosswalk đã xuất thành [`nsmo-v70-wave-item-comparability.csv`](data
 
 Các câu về hiểu biết tín dụng, trải nghiệm vay, cảm nhận khả năng trả nợ, khó khăn tài chính và sức chống chịu hộ gia đình là câu trả lời khảo sát sau thời điểm origination. Chúng có thể dùng cho mô tả trải nghiệm người vay hoặc phân tích khả năng dự báo tại đúng ngày khảo sát nếu thiết kế target và thời gian được đóng băng riêng. Chúng **không** là predictor tại origination cho D01 hay D02 chỉ vì nhãn có liên quan tín dụng. Những biến này cũng không thay thế lịch sử bureau, DTI/LTV tại thời điểm giải ngân, hay target hiệu suất khoản vay.
 
-App `/nsmo` hiển thị thêm wave trả lời quan sát được, wave toàn bộ mã `-3`, wave một phần `-3`, wave có `-2`, tách khỏi phần wave được nhắc trong codebook. Màn này là dữ liệu coverage không trọng số; chưa có phân tích khác biệt nonresponse, design variance, DIF/measurement invariance, hoặc kiểm định trend.
+App `/nsmo` hiển thị wave có giá trị không thiếu trong PUF, wave toàn bộ mã `-3`, wave một phần `-3`, wave có `-2`, tách khỏi phần wave được nhắc trong codebook. Không gọi đây là wave có borrower trả lời: FHFA Technical Report v7.0 cho biết câu trả lời thiếu có thể được impute vào các biến `X`; cờ `J` tương ứng ghi phương pháp/lý do impute nhưng không có trong PUF công khai. Một số biến `Z` ghi nhận câu trả lời thực tế cho các item được chọn, không khôi phục được trạng thái trực tiếp/imputed cho mọi trường. Vì vậy coverage trong app, CSV và workbook là **field-wave value availability**, không phải response rate hay respondent count. Phân tích weighted nonresponse, survey-design variance, DIF/measurement invariance và trend vẫn chưa được thực hiện.
 
 ## Tái lập trong workspace riêng
 
@@ -40,7 +40,7 @@ python scripts\audit_nsmo_wave_response_coverage.py `
   --puf-csv data\private\mortgage\nsmo-2026-05-27\puf\nsmo_v70_1324_puf.csv `
   --field-dictionary docs\data\nsmo-v70-field-dictionary.csv `
   --value-labels docs\data\nsmo-v70-value-labels.csv `
-  --output artifacts\private\nsmo-wave-response-coverage-20261015\receipt.json `
+  --output artifacts\private\nsmo-wave-value-coverage-20261016\receipt.json `
   --public-coverage-csv docs\data\nsmo-v70-wave-coverage.csv
 
 python scripts\audit_nsmo_key_item_versions.py `

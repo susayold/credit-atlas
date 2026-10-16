@@ -644,3 +644,33 @@ variance limitations remain. No target, PD, or model is created; D02 remains
 descriptive/feasibility-only and D01 stays 26/50. See
 `docs/D02_NSMO_RISK_SET_FEASIBILITY_2026-10-16_VI.md` and
 `docs/D01_NSMO_SOURCE_REVIEW_VI.md`.
+
+## 2026-10-16 CreditAtlas completion ledger, data-first priority, and imputation evidence
+
+The shared CreditAtlas P1–P5 completion ledger proves full completion for
+**26/50 requirements (52%)**; 42/50 (84%) have at least some implementation or
+conditional coverage, which is not completion. These are requirement-count
+ratios, not effort/time or model readiness. D01's multi-vintage gate still
+depends on additional Freddie annual
+loan-performance data; the Clarity download route requires sign-in. Ginnie
+quarterly production is also separate and awaits the user's saved session-cookie
+path. Do not treat NSMO, HMDA, SBA, HUD, NMDB, or macro aggregates as substitutes
+for a Freddie-compatible monthly performance vintage. The latest SBA public FOIA
+snapshot (as of 2026-06-30) is already acquired and audited in the business case;
+the March snapshot is retained as a separate historical archive, so no newer SBA
+release was identified on this checkpoint.
+
+The official FHFA v7.0 Technical Report states that survey responses may be
+imputed into `X` variables and corresponding `J` variables record imputation
+method/reason; the public PUF does not carry item-level `J` fields. Selected `Z`
+variables record actual responses only for some items. Regenerated the sanitized
+coverage CSV with the explicit key `puf_nonmissing_value_waves`, bumped its
+receipt schema, and rebuilt both NSMO Excel workbooks. The count remains 62,359
+rows × 319 survey fields × 46 waves, with 14,674/14,674 cells and zero unmapped
+SAS values. App/workbook wording now says nonmissing PUF-value coverage, not
+respondent response waves. No variable was projected, imputed, or forecast by
+CreditAtlas in this continuation; any future projection needs an approved
+research-backed method, source evidence, validation and a separately labeled
+assumption/uncertainty record before implementation. See
+`docs/NSMO_WAVE_COMPARABILITY_AUDIT_VI.md` and
+`docs/NSMO_EXCEL_REFERENCE_VI.md`.

@@ -25,7 +25,7 @@ Use this source to add state-level trend and portfolio context to the mortgage w
 
 ## Reproduction and workbook
 
-The acquisition script validates the official archive's headers, state scope, time fields, 51 × 98 × 4 × 4 key coverage, duplicates, suppression and value ranges before writing the public CSV and hash receipt. `scripts/add_nmdb_state_to_reference_workbook.py` appends the 79,968-row filterable `NMDB states` table and separate `NMDB state definitions` sheet to the Excel reference workbook without re-importing its other large sheets; blank cells remain empty in Excel. The local app API returns only one selected state's 1,568 rows per request.
+The acquisition script validates the official archive's headers, state scope, time fields, 51 × 98 × 4 × 4 key coverage, duplicates, suppression and value ranges before writing the public CSV and hash receipt. The base D02 workbook is built with `apps/excel/build_d02_data_reference.mjs`, then `scripts/add_nmdb_state_to_reference_workbook.py` appends the 79,968-row filterable `NMDB states` table and separate `NMDB state definitions` sheet without re-importing its other large sheets; blank cells remain empty in Excel. This incremental step is required because the combined import exceeds the bundled spreadsheet runtime's memory limit. The local app API returns only one selected state's 1,568 rows per request.
 
 - [FHFA NMDB source page](https://www.fhfa.gov/data/nmdb)
 - [FHFA 2026Q1 dictionary and technical notes](https://www.fhfa.gov/document/d/nmdb/nmdb-aggregate-statistics-data-dictionary-technical-notes-2026q1.pdf)

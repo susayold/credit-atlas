@@ -1,4 +1,4 @@
-"""Audit aggregate NSMO survey-field response coverage by assigned wave."""
+"""Audit nonmissing NSMO PUF field values by assigned survey wave."""
 
 from __future__ import annotations
 
@@ -58,7 +58,7 @@ def write_public_coverage_csv(report: dict, dictionary_path: Path, output: Path)
     for row in report["field_wave_rows"]:
         by_field[row["field"]].append(row)
     columns = ["csv_column", "sas_label", "sas_format", "question_refs", "codebook_variant_flags",
-               "observed_response_waves", "entirely_not_asked_waves", "partially_not_asked_waves",
+               "puf_nonmissing_value_waves", "entirely_not_asked_waves", "partially_not_asked_waves",
                "not_applicable_waves", "waves_with_missing_code", "interpretation"]
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8", newline="") as stream:
@@ -72,12 +72,12 @@ def write_public_coverage_csv(report: dict, dictionary_path: Path, output: Path)
                 "sas_format": metadata["sas_format"],
                 "question_refs": metadata["survey_question_refs"],
                 "codebook_variant_flags": metadata["wave_variant_flags"],
-                "observed_response_waves": compress_waves([x["survey_wave"] for x in field_rows if x["substantive_or_other_labeled_n"] > 0]),
+                "puf_nonmissing_value_waves": compress_waves([x["survey_wave"] for x in field_rows if x["substantive_or_other_labeled_n"] > 0]),
                 "entirely_not_asked_waves": compress_waves([x["survey_wave"] for x in field_rows if x["not_asked_n"] == x["wave_n"]]),
                 "partially_not_asked_waves": compress_waves([x["survey_wave"] for x in field_rows if 0 < x["not_asked_n"] < x["wave_n"]]),
                 "not_applicable_waves": compress_waves([x["survey_wave"] for x in field_rows if x["not_applicable_n"] > 0]),
                 "waves_with_missing_code": compress_waves([x["survey_wave"] for x in field_rows if x["missing_code_n"] > 0]),
-                "interpretation": "Observed values and SAS availability codes only; wording/scale invariance requires questionnaire review.",
+                "interpretation": "Nonmissing PUF X values may include imputed values; this is not direct-response coverage. SAS availability codes only; wording/scale invariance requires questionnaire review.",
             })
 
 
@@ -144,7 +144,7 @@ def run_audit(puf: Path, dictionary: Path, labels_path: Path) -> dict:
             "unmapped_value_n": counter["unmapped_value"],
         })
     return {
-        "schema_version": "nsmo-wave-response-coverage-v1",
+        "schema_version": "nsmo-wave-value-coverage-v2",
         "status": "PASS" if not unknown else "FAIL",
         "built_at": datetime.now(timezone.utc).isoformat(),
         "source": {"puf": puf.name, "puf_sha256": sha256(puf), "dictionary_sha256": sha256(dictionary), "value_labels_sha256": sha256(labels_path)},
@@ -156,7 +156,8 @@ def run_audit(puf: Path, dictionary: Path, labels_path: Path) -> dict:
         "unknown_value_count": sum(unknown.values()),
         "unknown_value_fields": sorted({name for name, _ in unknown}),
         "limitations": [
-            "Field availability by assigned survey wave is structural evidence, not proof that wording, construct, scale, sampling or response mode is invariant.",
+            "Nonmissing X values by assigned survey wave are structural PUF-value evidence and may include imputed responses; this is not borrower-response or response-rate evidence.",
+            "The public PUF does not include item-level J imputation flags; selected Z fields record actual answers only for selected items.",
             "Only explicit SAS-format labels identify not-asked, not-applicable, don't-know and missing codes; unmapped values fail the audit.",
             "Counts are mortgage-row aggregates and do not account for survey design variance or nonresponse adjustment.",
             "No identifiers or respondent-level records are emitted.",

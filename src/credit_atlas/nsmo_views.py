@@ -84,7 +84,7 @@ class NsmoViews:
         required_fields = {"csv_column", "codebook_name", "codebook_part", "field_family",
                            "timing_class", "predictor_use", "sas_format", "sas_label"}
         required_labels = {"format_name", "format_value", "format_label"}
-        required_coverage = {"csv_column", "observed_response_waves", "entirely_not_asked_waves",
+        required_coverage = {"csv_column", "puf_nonmissing_value_waves", "entirely_not_asked_waves",
                              "partially_not_asked_waves", "not_applicable_waves"}
         required_item_review = {"field", "assessment"}
         required_gates = {"codebook_order", "csv_column", "codebook_name", "field_family", "timing_class",

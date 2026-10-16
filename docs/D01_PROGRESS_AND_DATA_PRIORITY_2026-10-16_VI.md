@@ -118,6 +118,15 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   2021 và 2022, không tuyên bố API
   reconciliation vì Data Browser hiện dùng Three-Year vintage.
   Đây là application mix, không thay thế Freddie performance vintages.
+- **FHFA NMDB New/Outstanding aggregates (bổ sung 16/10):** tải release
+  30/09/2026 vào private D: và kiểm đủ 3.038.100 dòng annual origination
+  1998–2025 cùng 535.464 dòng outstanding quarterly 2013Q1–2026Q2; hai file
+  đều khớp 14-field schema, khóa unique và time coverage liên tục. Nguồn thêm
+  origination/UPB market mix, score/DTI/LTV/rate và địa lý; VALUE1 theo loan
+  count, VALUE2 theo loan amount/UPB, suppression/missingness được giữ tách.
+  Chi tiết/hash tại [`FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md`](FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md).
+  Đây là aggregate context, không tạo payment/default labels hay thêm Freddie vintage;
+  R2/R3 D01 vẫn mở.
 - **Data chính Freddie:** chỉ 2012 đã qua pipeline hiện có. Trang chính thức
   công bố monthly performance đến 31/03/2026, nhưng download annual files chạy
   qua Clarity có sign-in. Không lấy macro, HMDA hay survey thay cho vintage.

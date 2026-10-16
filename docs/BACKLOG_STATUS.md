@@ -798,6 +798,25 @@ snapshot (as of 2026-06-30) is already acquired and audited in the business case
 the March snapshot is retained as a separate historical archive, so no newer SBA
 release was identified on this checkpoint.
 
+## 2026-10-16 FHFA NMDB originations and outstanding data acquisition
+
+Acquired FHFA's official 2026-09-30 NMDB release into private D: storage and
+independently re-audited both archives. New annual originations contain 3,038,100
+unique aggregate rows for 1998–2025; Outstanding quarterly stock contains
+535,464 unique aggregate rows for 2013Q1–2026Q2. Schema, ZIP CRC, row widths,
+period continuity, suppression, numeric domains, and aggregate-key uniqueness
+pass. VALUE1 (loan-count weighted) and VALUE2 (origination-amount or UPB
+weighted) remain separate; suppressed/missing cells are not converted to zero.
+Added a reproducible bounded downloader/auditor, three focused passing tests, and
+a Vietnamese source/method review with observed 2025 and 2026Q2 examples. Raw
+files and receipts remain private. This is aggregate market composition and
+active-stock context, not loan-level repayment performance, a new Freddie
+vintage, or a forecast; the D01 master remains 26/50 complete (52%). App/Excel
+integration and audit of the separate official wide-format alternatives remain
+follow-up work. See
+`docs/FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md` and
+`docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md`.
+
 The official FHFA v7.0 Technical Report states that survey responses may be
 imputed into `X` variables and corresponding `J` variables record imputation
 method/reason; the public PUF does not carry item-level `J` fields. Selected `Z`

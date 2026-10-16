@@ -26,7 +26,7 @@ R1 được đánh dấu đạt theo scope mô tả một vintage vì Definition
 plan §47.22 yêu cầu views dùng cùng frozen dataset, reconciliation, denominator
 và support, unavailable khác zero, finding review, export có lineage/filter và
 browser QA. Đạt R1 không đồng nghĩa D01 hoàn chỉnh. Browser receipt mới nhất
-cho case `d01-202610150931` ghi **PASS, 106 checks, zero browser errors**; receipt,
+cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; receipt,
 ảnh và dữ liệu giữ trong private D:.
 
 ## Data đã bổ sung / data còn thiếu
@@ -40,7 +40,8 @@ cho case `d01-202610150931` ghi **PASS, 106 checks, zero browser errors**; recei
   qua Clarity có sign-in. Không lấy macro, HMDA hay survey thay cho vintage.
 - **Ginnie:** user đã chấp thuận Terms. Official catalog có production quarterly
   `LoanPerf_202606.zip`, nhưng endpoint yêu cầu phiên hợp lệ; thư mục nhận cookie
-  trên D: hiện chưa có file. Ginnie là case riêng và sẽ không tăng Freddie
+  `D:\data\Codex\credit-atlas\data\private\access` hiện chưa có file cookie.
+  Ginnie là case riêng và sẽ không tăng Freddie
   vintage count.
 - **Fannie Mae:** primary dataset hiện công bố acquisition/performance Q1 2026,
   nhưng yêu cầu Data Dynamics account, xác minh email và chấp nhận terms; sample
@@ -111,8 +112,9 @@ quan sát. Chi tiết phương pháp và kết quả nghiên cứu phải đư�
 - [`D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md`](D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md)
   — current real-case split and train-feature availability; DTI mask is confirmed
   by Freddie's official FAQ to be structural for Relief Refinance; aggregate-only
-  train audit is implemented/tested; no model fit.
+  train audit is implemented/tested and its verified aggregates now appear in
+  Model Readiness; no model fit. Latest UI acceptance: **107 checks**.
 - Latest private browser receipt:
-  `D:\data\Codex\credit-atlas\artifacts\private\browser-qa-b0f2574128dc\receipt.json`.
-  Source code used: public commit `ae94e77`; real-data case:
+  `D:\data\Codex\credit-atlas\artifacts\private\browser-qa-7137a6a6545b\receipt.json`.
+  Source code used: current public working tree; real-data case:
   `d01-202610150931`.

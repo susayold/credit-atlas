@@ -19,7 +19,7 @@ chapter 47 of the consolidated research plan.
   time. See `docs/BACKLOG_STATUS.md` for the requirement-by-requirement ledger.
 - D01's R1 descriptive release is accepted only for the frozen 2012 sample. The
   latest public-code browser run on the private, verified real-data case passed
-  106 checks with no browser errors; it covers desktop/mobile views, data
+  107 checks with no browser errors; it covers desktop/mobile views, data
   support, findings and exports. Chart/support, export-contract and reproduction
   audits are linked below. Private data and receipts stay outside this public
   repository.
@@ -35,12 +35,15 @@ chapter 47 of the consolidated research plan.
   counts, not imputed or projected values. Official Freddie FAQ research shows
   token 999 means DTI >65% or unavailable for Non-Relief, and always 999 for
   Relief. A new lineage-checked, train-only audit script now reproduces the
-  segment cross-tab with no loan IDs in its output; 9/9 focused tests pass. See
+  segment cross-tab with no loan IDs in its output; Model Readiness now shows
+  verified group counts and Freddie's source explanation after rechecking audit,
+  study, split and source hashes. The study/model adapter tests pass 20/20 and
+  the real-data browser acceptance passes 107 checks. See
   `docs/D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md` and its private receipts.
 - The next data gate is authorized delivery/access: Freddie Clarity sign-in for
   D01; Ginnie session cookie for a separate Ginnie case. Neither source is
-  replaced by aggregate or survey data. The Ginnie cookie folder on D: currently
-  contains no cookie file.
+  replaced by aggregate or survey data. The Ginnie cookie folder
+  `D:\data\Codex\credit-atlas\data\private\access` currently contains no cookie file.
 - Before any future projection, document the target variable and information
   cutoff; research and cite the source/forecast method; specify training window,
   transformations and assumptions; run a time-ordered backtest against a naive

@@ -392,6 +392,16 @@ async function models(container,generation){
       if(feature.coverage){append(block,para("Encoder fit: "+feature.encoder_fit_partition+" · "+number(feature.encoder_fit_rows)+" loans · parity: "+feature.transform_parity),table(["Train feature",{label:"Known",number:true},{label:"Missing",number:true},{label:"Missing rate",number:true}],feature.coverage.filter(r=>r.partition==="train").map(r=>[r.feature,number(r.known),number(r.missing),percent(r.missing_rate)])),note(feature.all_missing_train.length?"All-missing train: "+feature.all_missing_train.join(", ")+"; cần exclusion/ablation review.":"Allowlist không có trường all-missing trong train; availability/protocol review vẫn chưa frozen."));
       }
     });
+    (study.dti_mask_audits||[]).forEach(audit=>{
+      append(block,el("h4","","DTI sentinel & segment audit · "+audit.audit_id),para(audit.status));
+      if(audit.status==="evidence_unavailable_or_changed"){
+        block.append(note("Audit hoặc input lineage đã thay đổi/không đọc được; không hiển thị số liệu."));return;
+      }
+      append(block,table(["Program segment","DTI source status",{label:"Loans",number:true},{label:"Events",number:true},{label:"Non-events",number:true}],audit.groups.map(row=>[row.segment,row.dti_status,number(row.loans),number(row.positive),number(row.negative)])));
+      const meanings=audit.source_semantics,source=el("p","");source.append(document.createTextNode("Nguồn định nghĩa 999: Non-Relief = DTI >65% hoặc unavailable (không phân biệt được); Relief = luôn bị mask theo quy trình xác minh thu nhập streamlined. "));
+      const link=el("a","","Freddie Mac FAQ");link.href=meanings.official_faq;link.target="_blank";link.rel="noopener noreferrer";source.append(link);
+      block.append(source,note("Train-only, mô tả một vintage 2012. Không suy diễn missing-at-random, không impute 999, không dùng cờ missing làm proxy cho mô hình. Chưa fit model; final-test data chưa truy cập."));
+    });
     (study.assessments||[]).forEach(assessment=>{
       append(block,el("h4","",assessment.assessment_id),para(assessment.status));
       if(assessment.status==="evidence_unavailable_or_changed"){block.append(note("Evidence đã thay đổi hoặc không đọc được; không hiển thị kết quả."));return;}

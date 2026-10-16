@@ -10,6 +10,7 @@ from .workspace import contained, engine_root, read_json, sha256
 
 FEATURE_ID = re.compile(r"feature-audit-[0-9a-f]{12}\Z")
 ASSESSMENT_ID = re.compile(r"assessment-[0-9a-f]{12}\Z")
+DTI_AUDIT_ID = re.compile(r"dti-mask-audit-[0-9a-f]{12}\Z")
 
 
 def assessment_summary(service, folder, study, study_digest):
@@ -188,6 +189,92 @@ def feature_summary(service, folder, study, study_digest):
             "final_test_predictors_materialized": False}
 
 
+def dti_mask_summary(service, folder, study, cases, study_digest):
+    """Verify private DTI mask evidence and return aggregate fields only."""
+    from .dti_mask_audit import FAQ_URL, require_no_final_test_source
+
+    folder = contained(service.root, "artifacts/private/" + folder.name)
+    receipt = read_json(folder / "receipt.json")
+    if (not isinstance(receipt, dict) or not DTI_AUDIT_ID.fullmatch(folder.name)
+            or receipt.get("audit_id") != folder.name or receipt.get("schema_version") != 1
+            or receipt.get("status") != "TRAIN_ONLY_DTI_MASK_AUDIT_COMPLETE"
+            or receipt.get("study_receipt_sha256") != study_digest
+            or receipt.get("model_training_performed") is not False
+            or receipt.get("visibility") != "private"
+            or receipt.get("public_release_approved") is not False):
+        raise ValueError("DTI mask receipt lineage changed")
+    require_no_final_test_source(study)
+    audit_path, access_path = folder / "audit.json", folder / "access-start.json"
+    if (sha256(audit_path) != receipt.get("audit_sha256")
+            or sha256(access_path) != receipt.get("access_start_sha256")):
+        raise ValueError("DTI mask evidence digest changed")
+    access = read_json(access_path)
+    if (access.get("purpose") != "train_only_dti_sentinel_and_segment_coverage_audit"
+            or access.get("final_test_predictors_materialized") is not False
+            or access.get("final_test_labels_read") is not False
+            or access.get("model_training_performed") is not False):
+        raise ValueError("DTI audit access boundary changed")
+    audit = read_json(audit_path)
+    if (audit.get("schema_version") != 1
+            or audit.get("status") != receipt.get("status")
+            or audit.get("study_id") != study["study_id"]
+            or audit.get("method_version") != "d01-train-dti-mask-audit-v1"
+            or audit.get("method_source_sha256") != sha256(Path(__file__).with_name("dti_mask_audit.py"))
+            or audit.get("study_receipt_sha256") != study_digest
+            or audit.get("target") != study["target"]
+            or audit.get("source_years") != study["source_years"]
+            or audit.get("case_references") != study["case_references"]
+            or audit.get("protocol_sha256") != study["protocol_sha256"]
+            or audit.get("train_support") != study["support"]["train"]
+            or audit.get("visibility") != "private"
+            or audit.get("public_release_approved") is not False
+            or audit.get("access") != {"partition": "train", "final_test_labels_read": False,
+                                        "final_test_predictors_materialized": False,
+                                        "model_training_performed": False}):
+        raise ValueError("DTI mask audit lineage or access contract changed")
+    expected_inputs = {"split_manifest.parquet": sha256(
+        contained(service.root, "artifacts/private/" + study["study_id"]) / "split_manifest.parquet")}
+    for case, reference in zip(cases, study["case_references"]):
+        case_id = case["manifest"]["case_id"]
+        if case_id != reference["case_id"]:
+            raise ValueError("DTI audit case order changed")
+        expected_inputs[f"{case_id}:labels.parquet"] = sha256(
+            contained(service.root, str(Path(case["manifest"]["label_run"]) / "labels.parquet")))
+        expected_inputs[f"{case_id}:dim_loan.parquet"] = sha256(
+            contained(service.root, str(Path(case["manifest"]["canonical_run"]) / "dim_loan.parquet")))
+    if audit.get("input_sha256") != expected_inputs:
+        raise ValueError("DTI mask inputs changed")
+    semantics = audit.get("source_semantics")
+    if semantics != {"source_token": "999", "canonical_value": None,
+                     "non_relief_meaning": "DTI greater than 65 percent OR not available; source does not distinguish these",
+                     "relief_meaning": "always disclosed as 999; Freddie says DTI is masked due to differing streamlined-refinance income-verification requirements",
+                     "official_faq": FAQ_URL}:
+        raise ValueError("DTI source semantics changed")
+    groups = audit.get("groups")
+    if not isinstance(groups, list) or not groups:
+        raise ValueError("DTI groups missing")
+    safe_groups = []
+    for row in groups:
+        if (not isinstance(row, dict) or set(row) != {"segment", "dti_status", "loans", "positive", "negative"}
+                or row["segment"] not in {"Relief", "Non-Relief"}
+                or row["dti_status"] not in {"observed", "sentinel_999_censored_or_unavailable", "blank_or_other_missing"}
+                or any(type(row[key]) is not int or row[key] < 0 for key in ("loans", "positive", "negative"))
+                or row["loans"] != row["positive"] + row["negative"]):
+            raise ValueError("DTI group grain invalid")
+        safe_groups.append({key: row[key] for key in
+                            ("segment", "dti_status", "loans", "positive", "negative")})
+    support = study["support"]["train"]
+    if (sum(row["loans"] for row in safe_groups) != support["positive"] + support["negative"]
+            or sum(row["positive"] for row in safe_groups) != support["positive"]
+            or sum(row["negative"] for row in safe_groups) != support["negative"]):
+        raise ValueError("DTI audit does not reconcile to prepared train support")
+    return {"audit_id": folder.name, "status": receipt["status"],
+            "completed_at": receipt["completed_at"], "groups": safe_groups,
+            "source_semantics": {key: semantics[key] for key in
+                                 ("source_token", "non_relief_meaning", "relief_meaning", "official_faq")},
+            "final_test_access": False, "model_training_performed": False}
+
+
 def list_studies(service, case_id):
     service.case(case_id)
     private = service.root / "artifacts/private"
@@ -197,6 +284,8 @@ def list_studies(service, case_id):
                       key=lambda path: path.stat().st_mtime_ns, reverse=True)
     assessments = sorted(private.glob("assessment-*/assessment-complete.json"),
                          key=lambda path: path.stat().st_mtime_ns, reverse=True)
+    dti_audits = sorted(private.glob("dti-mask-audit-*/receipt.json"),
+                        key=lambda path: path.stat().st_mtime_ns, reverse=True)
     items = []
     unreadable = set()
     for path in studies[:100]:
@@ -209,7 +298,7 @@ def list_studies(service, case_id):
             unreadable.add(str(path))
             continue
         try:
-            folder, study, _, digest = verify_prepared(service, path.parent.name)
+            folder, study, cases, digest = verify_prepared(service, path.parent.name)
             feature_items = []
             for feature_path in features[:100]:
                 try:
@@ -242,18 +331,44 @@ def list_studies(service, case_id):
                 except (ValueError, KeyError, TypeError, OSError):
                     assessment_items.append({"assessment_id": assessment_path.parent.name,
                                              "status": "evidence_unavailable_or_changed"})
+            dti_items = []
+            for audit_path in dti_audits[:100]:
+                try:
+                    audit_receipt = read_json(audit_path)
+                    if not isinstance(audit_receipt, dict):
+                        raise ValueError("DTI audit receipt must be an object")
+                except (ValueError, KeyError, TypeError, OSError):
+                    unreadable.add(str(audit_path))
+                    continue
+                if audit_receipt.get("study_id") not in (None, folder.name):
+                    continue
+                # The stable study reference is stored in audit.json, so inspect it
+                # only to select this study; the verifier below validates its digest.
+                try:
+                    audit_doc = read_json(audit_path.parent / "audit.json")
+                except (ValueError, KeyError, TypeError, OSError):
+                    dti_items.append({"audit_id": audit_path.parent.name,
+                                      "status": "evidence_unavailable_or_changed"})
+                    continue
+                if not isinstance(audit_doc, dict) or audit_doc.get("study_id") != folder.name:
+                    continue
+                try:
+                    dti_items.append(dti_mask_summary(service, audit_path.parent, study, cases, digest))
+                except (ValueError, KeyError, TypeError, OSError):
+                    dti_items.append({"audit_id": audit_path.parent.name,
+                                      "status": "evidence_unavailable_or_changed"})
             items.append({"study_id": folder.name, "status": study["status"],
                           "completed_at": study["completed_at"], "source_years": study["source_years"],
                           "source_and_split_ready": study["source_and_split_ready"],
                           "model_fit_ready": False, "support": study["support"],
                           "blocking_reasons": study["blocking_reasons"], "feature_audits": feature_items,
-                          "assessments": assessment_items})
+                          "assessments": assessment_items, "dti_mask_audits": dti_items})
         except (ValueError, KeyError, TypeError, OSError):
             # Legacy schema-1 references require preparation with a saved protocol.
             items.append({"study_id": path.parent.name,
                           "status": "evidence_unavailable_or_legacy"})
     return {"case_id": case_id, "studies": items, "scan_limit_per_artifact_kind": 100,
             "unreadable_artifacts": len(unreadable),
-            "scan_truncated": any(len(paths) > 100 for paths in (studies, features, assessments)),
+            "scan_truncated": any(len(paths) > 100 for paths in (studies, features, assessments, dti_audits)),
             "visibility": "private", "public_release_approved": False,
             "scope_note": "Preparation, features and development validation remain separate stages; no champion or final out-of-time scores."}

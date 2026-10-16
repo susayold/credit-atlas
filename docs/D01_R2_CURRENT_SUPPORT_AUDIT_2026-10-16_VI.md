@@ -124,6 +124,19 @@ The script refuses studies containing final-test vintages or nonempty final-test
 support. Its tests pass **9/9**. Latest private audit ID:
 `dti-mask-audit-fb6738d8fa0e`.
 
+The Model Readiness screen now shows the verified, aggregate-only cross-tab for
+this audit. Its API adapter checks the study receipt, access boundary, audit
+digest, method-source hash, split/label/canonical input hashes, target and train
+denominators before exposing the groups. The screen labels this as one-vintage,
+train-only descriptive evidence; it links the Freddie FAQ and says not to impute
+999 or use the missing flag as a model proxy. The prior superseded audit is
+shown as unavailable because it predates the final-test access guard. Browser
+acceptance on the private real-data case passed **107 checks**; study/model
+adapter tests passed **20/20**.
+
+Latest private browser receipt:
+`D:\data\Codex\credit-atlas\artifacts\private\browser-qa-7137a6a6545b\receipt.json`.
+
 Private receipts (do not publish the underlying loan rows):
 
 - `D:\data\Codex\credit-atlas\artifacts\private\study-b71a0d76e11d\study-complete.json`

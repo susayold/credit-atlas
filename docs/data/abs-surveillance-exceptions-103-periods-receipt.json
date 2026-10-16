@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "release_id": "abs-surveillance-2026-10-17",
+  "row_grain": "one deal contract × public report date",
+  "period_count": 103,
+  "deal_count": 3,
+  "deal_contract_summaries": [
+    {
+      "contract_id": "toyota-2022-b-recovery-v1",
+      "deal_id": "TOYOTA-2022-B",
+      "period_count": 51,
+      "report_start": "2022-04-30",
+      "report_end": "2026-06-30",
+      "recovery_comparator_id": "aggregate_net_liquidation_proceeds",
+      "recovery_tie_periods": 2,
+      "recovery_exception_periods": 49,
+      "recovery_residual_total_usd_within_contract_only": "2058647.06000000",
+      "exception_periods": 49,
+      "exception_category_counts": {
+        "recovery_comparator_delta": 49
+      }
+    },
+    {
+      "contract_id": "toyota-2024-b-recovery-v1",
+      "deal_id": "TOYOTA-2024-B",
+      "period_count": 29,
+      "report_start": "2024-04-30",
+      "report_end": "2026-08-31",
+      "recovery_comparator_id": "aggregate_net_liquidation_proceeds",
+      "recovery_tie_periods": 1,
+      "recovery_exception_periods": 28,
+      "recovery_residual_total_usd_within_contract_only": "1764558.08000000",
+      "exception_periods": 28,
+      "exception_category_counts": {
+        "recovery_comparator_delta": 28
+      }
+    },
+    {
+      "contract_id": "nissan-2024-b-surveillance-v1",
+      "deal_id": "NISSAN-2024-B",
+      "period_count": 23,
+      "report_start": "2024-10-31",
+      "report_end": "2026-08-31",
+      "recovery_comparator_id": "recoveries_of_defaulted_receivables",
+      "recovery_tie_periods": 17,
+      "recovery_exception_periods": 6,
+      "recovery_residual_total_usd_within_contract_only": "8859.23000000",
+      "exception_periods": 9,
+      "exception_category_counts": {
+        "chargeoff_amount": 2,
+        "chargeoff_event_count": 3,
+        "first_code4_amount": 3,
+        "first_code4_event_count": 2,
+        "literal_dpd_bucket": 1,
+        "recovery_comparator_delta": 6
+      }
+    }
+  ],
+  "cross_deal_recovery_residual_total": null,
+  "cross_deal_residual_note": "Not calculated: certificate recovery comparator semantics differ by contract; aggregate only within each contract.",
+  "exception_period_count": 86,
+  "recovery_exception_period_count": 83,
+  "source_receipts": {
+    "TOYOTA-2022-B": {
+      "source_csv": "toyota-recovery-components-80-periods.csv",
+      "source_csv_sha256": "eb805524af41ced91dec49b936392171aeee2778f7242987e56aff92d4cbeeb5",
+      "source_receipt": "toyota-recovery-components-80-periods-receipt.json",
+      "source_receipt_sha256": "e74997cdcc55971c75d09b2fd29dc92661c0ead1160652c4a825bc05eb2937ae",
+      "period_count_expected": 51
+    },
+    "TOYOTA-2024-B": {
+      "source_csv": "toyota-recovery-components-80-periods.csv",
+      "source_csv_sha256": "eb805524af41ced91dec49b936392171aeee2778f7242987e56aff92d4cbeeb5",
+      "source_receipt": "toyota-recovery-components-80-periods-receipt.json",
+      "source_receipt_sha256": "e74997cdcc55971c75d09b2fd29dc92661c0ead1160652c4a825bc05eb2937ae",
+      "period_count_expected": 29
+    },
+    "NISSAN-2024-B": {
+      "source_csv": "nissan-2024b-exception-ledger-23-periods.csv",
+      "source_csv_sha256": "fece6bf29feffb7e345dce41259efce39924d86ebb9cd3473e7dc980c70e51bb",
+      "source_receipt": "nissan-2024b-exception-ledger-23-periods-receipt.json",
+      "source_receipt_sha256": "bc4dab2823e4278a8c4ab5103f6d7c9f90428a8220073dd6d4b66722d0254054",
+      "period_count_expected": 23
+    }
+  },
+  "contracts_sha256": "5089b5c637ea052b236d84e9b6a7390e08562badd0ddb75563bde2e6ef952692",
+  "csv_sha256": "9917687f9fb4a12bbc1b8eff2d0d5620b4e81fa3f72a651ca20f771e5752822f",
+  "visibility": "public filing aggregates, accession links and contract metadata only",
+  "loan_level_rows_published": false,
+  "forecast_or_imputation_used": false,
+  "root_cause_resolved": false
+}

@@ -357,3 +357,26 @@ def test_finding_requires_same_origin_json_and_revision_context(http_app):
     assert request("/api/findings", "POST", json.dumps(stale), headers)[0] == 409
     invalid = {**payload, "filters": {"loan_id": "source-private-id"}}
     assert request("/api/findings", "POST", json.dumps(invalid), headers)[0] == 400
+
+
+def test_abs_surveillance_public_release_and_excel_routes(http_app):
+    request, _ = http_app
+    status, headers, body = request("/api/absee-surveillance")
+    assert status == 200 and headers["Cache-Control"] == "no-store"
+    release = json.loads(body)
+    assert release["period_count"] == 103
+    assert release["deal_count"] == 3
+    assert release["exception_period_count"] == 86
+    assert release["cross_deal_recovery_residual_total"] is None
+    assert request("/api/absee-surveillance?deal_id=NISSAN-2024-B")[0] == 400
+
+    status, headers, body = request("/api/absee-surveillance-report")
+    assert status == 200 and "CreditAtlas-ABS-Surveillance-Release.json" in headers["Content-Disposition"]
+    assert json.loads(body)["recovery_exception_period_count"] == 83
+
+    status, headers, body = request("/downloads/abs-surveillance-exceptions.xlsx")
+    assert status == 200
+    assert headers["Content-Type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert "CreditAtlas-ABS-Surveillance-Exceptions.xlsx" in headers["Content-Disposition"]
+    assert body[:2] == b"PK"
+    assert request("/downloads/abs-surveillance-exceptions.xlsx?deal_id=NISSAN-2024-B")[0] == 400

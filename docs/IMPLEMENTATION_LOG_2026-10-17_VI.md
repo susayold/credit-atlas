@@ -19,7 +19,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 ### N03 — provenance và phương pháp
 
 - Ghi nhận bảy loại giá trị: reported, derived, publisher-imputed, model-preprocessing-imputed, model prediction, declared scenario và forecast.
-- Thêm tám method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA fixed-mix, P4 scenario/ECL và Toyota/Nissan reconciliation.
+- Registry hiện có mười một method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA fixed-mix, P4 scenario/ECL và Toyota/Nissan/structured ABS reconciliation.
 - Các giả định P4 hiển thị đúng scope illustrative: lịch bullet 36 tháng, monthly EIR 0,004, weights 0,7/0,3; source expected loss vẫn unavailable. Không tạo biến dự phóng mới.
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
 
@@ -65,6 +65,16 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Thêm [Nissan exception research](NISSAN_2024B_EXCEPTION_LEDGER_VI.md), [23-period CSV](data/nissan-2024b-exception-ledger-23-periods.csv), [receipt/hash summary](data/nissan-2024b-exception-ledger-23-periods-receipt.json) và workbook [CreditAtlas-Nissan-Exception-Ledger.xlsx](../apps/excel/templates/CreditAtlas-Nissan-Exception-Ledger.xlsx). Registry ghi riêng panel và public aggregate derivative.
 - Theo acceptance của N08, tái lập exceptions và bác bỏ rule chỉ khớp một kỳ đã đạt. Root cause/source-field mapping còn mở; N08 không phải capability trong 50-item ledger nên CreditAtlas vẫn **26/50 = 52%**.
 
+## N09 — contract-aware ABS surveillance
+
+- Tạo hợp đồng dữ liệu riêng cho Toyota 2022-B, Toyota 2024-B và Nissan 2024-B. Comparator Toyota là aggregate net liquidation proceeds từ hai signed certificate components; Nissan là current-period Recoveries of Defaulted Receivables. Collection window, source signs, DPD definitions, missingness và source accession giữ theo từng trust.
+- Build 103 aggregate deal-period rows, kiểm SHA-256 của input ledgers/receipts, contract JSON và output CSV. Runtime API kiểm integrity, khóa contract × report date duy nhất, period counts và summary trước khi trả dữ liệu.
+- Kết quả: 86/103 kỳ có ít nhất một exception; 83 recovery residual khác 0. Toyota 2022-B: 2/51 recovery ties, 49 exceptions, residual +USD 2,058,647.06 trong deal. Toyota 2024-B: 1/29, 28, +USD 1,764,558.08. Nissan 2024-B: 17/23, 6, +USD 8,859.23; thêm ba kỳ exception không thuộc recovery; literal DPD 178/184. Không tính recovery-dollar total hay tie-rate chung qua deal.
+- Thêm `ABS-SURV-F001` với root cause open, use limits, required follow-up evidence và link filing tại từng kỳ. Finding không phải LGD/loss/fraud/ECL hay validation kết quả model.
+- Thêm API `/api/absee-surveillance`, report JSON và workbook route; UI hiển thị summary, contract comparator, nguồn SEC liên kết và exception drilldown. Excel có Summary, Period ledger, Data contracts, Analyst finding; công thức đối chiếu 103/3/86/83 và số theo từng deal.
+- Thêm finding note, release contract, CSV/receipt, method card, dataset record và README Excel. Public release chỉ chứa aggregate period rows, không phát hành loan/asset-level records.
+- Acceptance N09 đủ: hợp nhất các deal với explicit contract, source-backed KPI, exception drilldown, SEC links, Excel và analyst finding đã có. Root cause vẫn mở; 83 recovery deltas chưa giải thích. N09 không đổi 26/50 capability acceptance.
+
 ## Giao diện
 
 Trang **Tiến độ & registry** trong điều hướng chung hiển thị capability acceptance, D01 releases, dataset filters, quyền truy cập, method cards và giới hạn. Register JSON có thể tải xuống. Không đưa raw borrower rows hoặc private exposure values vào catalog.
@@ -73,11 +83,11 @@ Workbook plan ở `docs/reviews/` đã cập nhật trạng thái N01–N03 thà
 
 ## Trạng thái kiểm tra
 
-JSON/Python/JavaScript syntax và `git diff --check` được kiểm tra. Không chạy test suite. API catalog/report, weight restriction, dynamic XLSX và static workbook download đã được kiểm tra trên server local. Browser visual acceptance và Excel desktop open/recalculate check chưa chạy; do đó N06 vẫn mở. N01–N03 cũng chưa được đánh dấu nghiệm thu cuối. Lượt trước có public regression riêng 1.670 passed/196 skipped; kết quả đó có trước các thay đổi này và không kiểm chứng code mới.
+N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook builder recalculates và kiểm tra 103/3/86/83 cùng từng deal; Summary và Analyst finding đã render để QA. Node/Python/JSON syntax và `git diff --check` được kiểm tra trước publish. Đây chưa phải mở/recalculate bằng Microsoft Excel desktop. Browser/native Excel acceptance riêng của N06 vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước thay đổi này; kết quả đó không thay cho test mới.
 
 ## Bước kế tiếp
 
 1. Browser review N06 và Excel desktop open/recalculate; xác nhận bộ lọc, chart, bảng, missingness và lineage hiển thị đúng.
 2. Mở rộng N02 từ 24 nhóm trọng tâm tới nguồn thực sự cấp dữ liệu cho mỗi KPI, bind release/hash receipt khi có.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
-4. Tiếp tục N09: hợp nhất Toyota/Nissan thành surveillance finding/export có source-backed KPI và Excel drilldown; giữ 77 Toyota và 6 Nissan recovery deltas unresolved cho tới khi có mapping evidence.
+4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.

@@ -139,6 +139,17 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 if any(len(v) != 1 for v in values.values()):
                     raise ValueError("Duplicate query parameter")
                 query = {k: v[0] for k, v in values.items()}
+                if url.path == "/downloads/abs-surveillance-exceptions.xlsx":
+                    if query:
+                        raise ValueError("ABS surveillance workbook accepts no filters")
+                    workbook = Path(__file__).resolve().parents[2] / "apps/excel/templates/CreditAtlas-ABS-Surveillance-Exceptions.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "ABS surveillance workbook is not built"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-ABS-Surveillance-Exceptions.xlsx", head=head)
+                    return
                 if url.path == "/downloads/nsmo-reference.xlsx":
                     if query:
                         raise ValueError("NSMO Excel reference accepts no filters")
@@ -966,6 +977,13 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     result = saved_report(service.root, query)
                     if url.path.endswith('-report'):
                         self.send(200, result, filename='CreditAtlas-private-absee-mirror-profile.json', head=head)
+                        return
+                elif url.path in {"/api/absee-surveillance", "/api/absee-surveillance-report"}:
+                    from .absee_surveillance import report as absee_surveillance_report
+                    public_root = Path(__file__).resolve().parents[2]
+                    result = absee_surveillance_report(public_root, query)
+                    if url.path.endswith('-report'):
+                        self.send(200, result, filename='CreditAtlas-ABS-Surveillance-Release.json', head=head)
                         return
                 elif url.path in {"/api/managed-pool", "/api/managed-pool-report"}:
                     from .managed_pool import report as managed_pool_report

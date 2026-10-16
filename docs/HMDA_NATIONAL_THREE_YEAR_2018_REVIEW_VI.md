@@ -55,9 +55,9 @@ domain, not a ninth outcome category. All rows using documented action codes
 have a nonblank LEI and a two-character state code. The audit therefore records
 `PASS_WITH_QUARANTINED_SOURCE_ROWS`: raw rows are preserved; the 1,961 rows are
 not silently recoded, treated as a ninth action, included in action KPIs, or
-discarded from the acquisition count. Do not integrate this vintage into app
-comparisons until the source anomaly is understood or the app can show the
-quarantine count and exact valid-code denominator.
+discarded from the acquisition count. A private aggregate workbook now shows
+the quarantine count and exact valid-code denominator. The source anomaly is
+still not explained, so this release remains outside app comparisons.
 
 Reproduction:
 
@@ -67,6 +67,27 @@ Reproduction:
   parsing, 99-field schema, activity year, documented action counts against the
   official aggregation API and out-of-domain rows. The loan-level CSV is
   excluded from GitHub.
+
+- `scripts/prepare_hmda_browser_2018_aggregates.py` builds aggregate-only
+  portfolio, underwriting, geography, and denial-reason tables; it excludes
+  action `-1`, retains it in the source, and does not export identifiers.
+- `apps/excel/build_hmda_2018_review.mjs` builds a five-sheet workbook from
+  those aggregates and the reviewed 99-field codebook. The private workbook is
+  `D:\data\Codex\credit-atlas\data\private\hmda\hmda-browser-three-year-2018\CreditAtlas-HMDA-2018-Three-Year-Analysis.xlsx`.
+
+## Aggregate analysis workbook
+
+The workbook contains an overview, action distribution, 3,503 category rows
+across 20 dimensions, a 99-field guide, and source/method controls. Action 3 is
+2,552,640 of the 10,623,751 action 1–3 decision denominator (24.0277%). This is
+a descriptive application-denial share, not default probability, delinquency,
+or repayment performance. LTV is binned as `<60`, `60–<80`, `80–<90`,
+`90–<100`, and `100+`; interest rate as `<3`, `3–<4`, `4–<5`, `5–<6`,
+`6–<7`, and `7+`. `NA` and `Exempt` remain distinct; unrecognized tokens are
+shown as `Other/missing`. These are analyst-created reporting bins, not
+publisher categories. Denial-reason columns are tabulated among action-3 rows
+only. Formula checks pass; all five sheets were rendered for visual review.
+No forecast or imputation was used. The workbook and raw rows remain private.
 
 ## Analytical use and limitations
 

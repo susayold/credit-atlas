@@ -4,6 +4,20 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — HMDA One-Year 2020, 2026-10-16
+
+Acquired the official FFIEC/CFPB static 2020 One-Year National LAR (25,666,745
+rows, 99 fields, 4,512 LEIs; 10,022,564,079-byte CSV). Archive/CSV SHA-256, ZIP
+CRC, all eight action totals and row-quality checks were verified. Integrated a
+private source-bound aggregate view, an eight-sheet Excel workbook, JSON/XLSX
+downloads and an app panel. Actions 1–3 total 18,134,264 applications; 2,880,243
+were action-3 denials (15.8829%). This is a descriptive application share, not
+PD/default and does not change D01's 26/50 (52%) completion or 42/50 (84%)
+some/conditional coverage. Raw data remains private on D:. FFIEC's vintage FAQ
+does not list a 2021 One-Year release; the app leaves that year absent. No
+forecast, imputation or model fit was performed. See
+[`HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md).
+
 ### Data-first continuation — official HMDA 2024 One-Year national file, 2026-10-16
 
 Acquired the complete official FFIEC/CFPB 2024 One-Year national LAR CSV to

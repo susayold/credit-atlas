@@ -38,6 +38,21 @@ CFPB county export and export-outage handling, with no browser errors; receipt:
 regenerated at `docs/M01_028_ROUTE_TEST_INVENTORY_VI.md`; M01-028 remains
 Partial pending the remaining route families and UI download failure coverage.
 
+### M01-028 continuation — Federal Reserve workbook attachment, 2026-10-16
+
+Extended the shared download handler to validate fixed `/downloads/*.xlsx`
+attachments as Excel MIME responses, alongside the existing API report flow.
+The Fed workbook link now goes through HTTP/MIME/empty-response validation, so a
+503 JSON response surfaces in the UI rather than reaching the browser as an
+Excel download. Real-data browser acceptance verifies all three bank-size
+groups in the Fed panel, the exact local workbook bytes and server filename,
+valid ZIP structure, four sheets and ten charts, plus simulated 503 JSON and
+200 HTML responses with no fake downloads. The full real-data browser suite
+passes 98/98 on verified case `d01-202610150931`, with no browser errors;
+receipt: `artifacts/private/browser-qa-96705eb6de9c/receipt.json`. M01-028
+remains Partial while the broader route inventory still has other
+workspace-specific delivery paths to audit.
+
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample
 (2013–2024 originations; quarterly performance through 2025 Q3) was downloaded

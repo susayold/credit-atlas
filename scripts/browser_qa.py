@@ -180,6 +180,47 @@ def run(root: Path):
                     assert fannie_export["public_release_approved"] is False
                     assert fannie_export["source_id"] == "fannie-public-samples-4d84128d3cb6"
                     checks.append("shared attachment handler exports the cross-workspace Fannie format audit with its private filename")
+                    fed_bank = page.locator("#fed-bank-mortgage-context")
+                    expect(fed_bank).to_contain_text("five products × three bank-size groups")
+                    expect(fed_bank).to_contain_text("All commercial banks")
+                    expect(fed_bank).to_contain_text("Top 100 banks")
+                    expect(fed_bank).to_contain_text("Other banks")
+                    checks.append("Federal Reserve bank-quality panel exposes all three size groups across five domains")
+                    with page.expect_download(timeout=30000) as captured:
+                        page.get_by_role("link", name="Federal Reserve · bank asset quality", exact=True).click()
+                    fed_download = captured.value
+                    assert fed_download.suggested_filename == "CreditAtlas-Fed-Bank-Asset-Quality.xlsx"
+                    fed_workbook_path = output / fed_download.suggested_filename
+                    fed_download.save_as(str(fed_workbook_path))
+                    official_local_workbook = root / "apps" / "excel" / "templates" / "CreditAtlas-Fed-Bank-Asset-Quality.xlsx"
+                    assert fed_workbook_path.read_bytes() == official_local_workbook.read_bytes()
+                    with zipfile.ZipFile(fed_workbook_path) as workbook_zip:
+                        assert workbook_zip.testzip() is None
+                        workbook_xml = workbook_zip.read("xl/workbook.xml").decode("utf-8")
+                        assert all(sheet in workbook_xml for sheet in ("Overview", "Quarterly History", "Series Dictionary", "Sources &amp; QA"))
+                        assert len([name for name in workbook_zip.namelist() if name.startswith("xl/charts/chart")]) == 10
+                    checks.append("Federal Reserve Excel download preserves source workbook bytes, four sheets and ten charts")
+                    fed_error_page = context.new_page()
+                    fed_failed_downloads = []
+                    fed_error_page.on("download", lambda download: fed_failed_downloads.append(download.suggested_filename))
+                    fed_error_page.goto(base + "/?view=sources", wait_until="networkidle")
+                    fed_error_page.route("**/downloads/fed-bank-mortgage-context.xlsx", lambda route: route.fulfill(
+                        status=503, content_type="application/json",
+                        body=json.dumps({"error": "Synthetic Federal Reserve workbook outage"})))
+                    fed_error_page.get_by_role("link", name="Federal Reserve · bank asset quality", exact=True).click()
+                    expect(fed_error_page.locator("#notice.error")).to_contain_text("Synthetic Federal Reserve workbook outage")
+                    assert fed_failed_downloads == []
+                    checks.append("Federal Reserve workbook HTTP 503 is shown without creating a fake Excel download")
+                    fed_error_page.unroute("**/downloads/fed-bank-mortgage-context.xlsx")
+                    fed_error_page.route("**/downloads/fed-bank-mortgage-context.xlsx", lambda route: route.fulfill(
+                        status=200, content_type="text/html", body="<html>not a workbook</html>"))
+                    fed_error_page.get_by_role("link", name="Federal Reserve · bank asset quality", exact=True).click()
+                    expect(fed_error_page.locator("#notice.error")).to_contain_text(
+                        "HTML page instead of a downloadable report"
+                    )
+                    assert fed_failed_downloads == []
+                    checks.append("Federal Reserve workbook rejects HTTP 200 HTML and creates no fake Excel download")
+                    fed_error_page.close()
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")

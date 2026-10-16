@@ -4,6 +4,22 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — HMDA 2025 Dynamic capture and release selector, 2026-10-16
+
+Downloaded the official FFIEC Dynamic 2025 LAR and TS as captured 2026-10-11.
+LAR: 13,558,306 records, 99 fields, 4,794 LEIs; TS total reconciles exactly.
+All tested row-quality exceptions are zero; ZIP/member CRC, sizes and hashes
+pass. Added a private aggregate view alongside the static 2025 Snapshot, with a
+release selector in the app and a separate five-sheet Excel review workbook
+(including all 8,156 aggregate buckets and the official 99-field codebook).
+Action 1–3 denominator is 9,373,448; action 3 is 2,115,756; descriptive denied
+share is 22.5718%, not PD. Difference versus the June 2 Snapshot is a release
+comparison only; no borrower-level transition or repayment interpretation is
+claimed. No forecast, imputation, or model fit. HMDA remains D08 application /
+decision data and does not change D01's **26/50 complete (52%)** or its missing
+Freddie multi-vintage gate. See
+[`HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md`](HMDA_NATIONAL_DYNAMIC_2025_REVIEW_VI.md).
+
 ### Data-first continuation — HMDA One-Year 2019, publisher vintage exception, 2026-10-16
 
 Found and acquired the official static 2019 One-Year national LAR (17,563,200 rows, 99 fields, 5,565 LEIs; CSV SHA-256 `f13d5b3aedba074921a7d114e0787d6220d10b2746a769eae135178b13b1673b`). All eight action counts reconcile to the fully profiled file; tested row-quality exceptions are zero. The official release page warns that 2019 contains more than 12 months of updates because of release timing. This is disclosed in the panel and adjacent-year comparison; do not treat 2019 as a standardized 12-month cutoff. Added a source-bound private aggregate view and the panel/API; D08 only, no Freddie vintage and no change to D01 26/50. No forecast, imputation or model fit. See [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).

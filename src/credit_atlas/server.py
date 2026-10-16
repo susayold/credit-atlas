@@ -49,6 +49,10 @@ MORTGAGE_SAMPLE_WORKBOOKS = {
         "data/private/hmda/hmda-national-snapshot-2025-9a5e89600e3c/CreditAtlas-HMDA-National-2025-Audit.xlsx",
         "CreditAtlas-HMDA-National-2025-Audit.xlsx",
     ),
+    "/downloads/hmda-national-2025-dynamic-audit.xlsx": (
+        "data/private/hmda/hmda-national-dynamic-2025-20261011/CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx",
+        "CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx",
+    ),
     "/downloads/hmda-one-year-2024-audit.xlsx": (
         "data/private/hmda/hmda-national-one-year-2024-002bab12cd71/CreditAtlas-HMDA-One-Year-2024-Audit.xlsx",
         "CreditAtlas-HMDA-One-Year-2024-Audit.xlsx",

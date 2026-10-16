@@ -1,6 +1,8 @@
 """Private aggregate view for the official 2019 HMDA One-Year national LAR."""
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from decimal import Decimal
 from pathlib import Path
@@ -198,7 +200,9 @@ def build_view(root: Path, source_id: str) -> dict:
         raise ValueError("Private HMDA aggregates must remain on D:")
     source, source_receipt, source_receipt_path, csv = verify_source(root, source_id)
     source_digest = sha256(source_receipt_path)
-    identifier = "hmda-one-year-2019-view-" + source_id[-12:]
+    method_fingerprint = hashlib.sha256(json.dumps(methods(), sort_keys=True).encode("utf-8")).hexdigest()[:12]
+    identifier = "hmda-one-year-2019-view-" + hashlib.sha256(
+        f"{source_id}:{method_fingerprint}".encode("utf-8")).hexdigest()[:12]
     folder = contained(root, "artifacts/private/" + identifier)
     if folder.exists():
         raise ValueError("HMDA 2019 aggregate view already exists; verify/reuse it")

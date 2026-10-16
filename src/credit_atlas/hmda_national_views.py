@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
+import shutil
+import zipfile
 from decimal import Decimal
 from pathlib import Path
 
@@ -10,7 +13,7 @@ import duckdb
 
 from .workspace import contained, read_json, sha256, timestamp, write_new
 
-SOURCE_PATTERN = re.compile(r"hmda-national-snapshot-2025-[0-9a-f]{12}\Z")
+SOURCE_PATTERN = re.compile(r"hmda-national-(?:snapshot-2025-[0-9a-f]{12}|dynamic-2025-20261011)\Z")
 VIEW_PATTERN = re.compile(r"hmda-national-view-[0-9a-f]{12}\Z")
 DATASET_PAGE = "https://ffiec.cfpb.gov/data-publication/snapshot-national-loan-level-dataset/2025"
 LAR_URL = "https://files.ffiec.cfpb.gov/static-data/snapshot/2025/2025_public_lar_csv.zip"
@@ -53,6 +56,8 @@ def verify_source(root: Path, source_id: str, *, hash_payloads: bool = True):
     folder = source_folder(root, source_id)
     receipt_path = contained(folder, "acquisition-complete.json")
     receipt = read_json(receipt_path)
+    if source_id.startswith("hmda-national-dynamic-"):
+        return _verify_dynamic_source(folder, source_id, receipt_path, receipt, hash_payloads)
     if (receipt.get("source_id") != source_id
             or receipt.get("status") != "VERIFIED_HMDA_NATIONAL_SNAPSHOT_2025"
             or receipt.get("publisher") != "FFIEC / Consumer Financial Protection Bureau"
@@ -99,11 +104,63 @@ def verify_source(root: Path, source_id: str, *, hash_payloads: bool = True):
     return folder, receipt, receipt_path, paths
 
 
+def _verify_dynamic_source(folder, source_id, receipt_path, receipt, hash_payloads):
+    source_page = "https://ffiec.cfpb.gov/data-publication/dynamic-national-loan-level-dataset/2025"
+    if (receipt.get("source_id") != source_id
+            or receipt.get("status") != "VERIFIED_HMDA_2025_DYNAMIC_AS_OF_2026_10_11"
+            or receipt.get("publisher") != "FFIEC / Consumer Financial Protection Bureau"
+            or receipt.get("source_page") != source_page
+            or receipt.get("visibility") != "private"
+            or receipt.get("public_release_approved") is not False
+            or receipt.get("loan_performance_labels") is not False
+            or receipt.get("forecast_or_imputation") is not False):
+        raise ValueError("HMDA dynamic acquisition receipt contract changed")
+    datasets = receipt.get("datasets")
+    if not isinstance(datasets, dict) or set(datasets) != {"lar", "ts"}:
+        raise ValueError("HMDA dynamic source datasets are incomplete")
+    expected = {
+        "lar": ("https://files.ffiec.cfpb.gov/dynamic-data/2025/2025_lar.zip", "2025_lar.zip", "2025_lar.txt"),
+        "ts": ("https://files.ffiec.cfpb.gov/dynamic-data/2025/2025_ts.zip", "2025_ts.zip", "2025_ts.txt"),
+    }
+    paths = []
+    for key, (url, filename, member) in expected.items():
+        item = datasets[key]
+        archive_path = contained(folder, filename)
+        http = item.get("http", {})
+        if (http.get("url") != url or http.get("last_modified") != receipt.get("release_as_of_utc", {}).get(key)
+                or archive_path.stat().st_size != http.get("bytes")
+                or item.get("csv", {}).get("member") != member):
+            raise ValueError("HMDA dynamic archive identity or size changed")
+        if hash_payloads and sha256(archive_path) != item.get("archive_sha256"):
+            raise ValueError("HMDA dynamic source archive hash changed")
+        with zipfile.ZipFile(archive_path) as archive:
+            members = [entry for entry in archive.infolist() if not entry.is_dir()]
+            if len(members) != 1 or members[0].filename != member:
+                raise ValueError("HMDA dynamic source archive layout changed")
+            if members[0].file_size != item["csv"].get("uncompressed_bytes"):
+                raise ValueError("HMDA dynamic member size changed")
+            if hash_payloads and archive.testzip() is not None:
+                raise ValueError("HMDA dynamic source ZIP CRC failed")
+        paths.append(archive_path)
+    profile = datasets["lar"].get("profile", {})
+    summary = profile.get("summary", {})
+    if (len(profile.get("columns", [])) != 99 or not REQUIRED_FIELDS.issubset(profile.get("columns", []))
+            or summary.get("records") != 13_558_306 or summary.get("distinct_LEIs") != 4_794
+            or any(summary.get(key) != 0 for key in ("wrong_year_rows", "invalid_action_rows", "invalid_state_rows",
+                "invalid_loan_type_rows", "invalid_lei_rows", "invalid_loan_amount_rows"))):
+        raise ValueError("HMDA dynamic LAR profile contract changed")
+    ts_summary = datasets["ts"].get("profile", {}).get("summary", {})
+    if (ts_summary.get("records") != 4_794 or ts_summary.get("unique_LEIs") != 4_794
+            or ts_summary.get("sum_reported_lar_count") != summary["records"]):
+        raise ValueError("HMDA dynamic Transmittal Sheet does not reconcile to LAR")
+    return folder, receipt, receipt_path, paths
+
+
 def _category(field):
     return f"COALESCE(NULLIF({field}, ''), '(SOURCE_BLANK)')"
 
 
-def aggregate_csv(path: Path, temp_root: Path | None = None) -> dict:
+def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str = ",") -> dict:
     """Read one frozen LAR and aggregate multiple dimensions in one DuckDB scan."""
     path = path.resolve()
     temp_root = (temp_root or path.parent).resolve()
@@ -113,7 +170,9 @@ def aggregate_csv(path: Path, temp_root: Path | None = None) -> dict:
     connection.execute("SET memory_limit='3GB'")
     connection.execute("SET threads=4")
     connection.execute("SET temp_directory=?", [str(temp_dir)])
-    relation = "read_csv(?, header=true, all_varchar=true, strict_mode=true, ignore_errors=false, null_padding=false)"
+    if delimiter not in {",", "|"}:
+        raise ValueError("Unsupported HMDA source delimiter")
+    relation = f"read_csv(?, delim='{delimiter}', header=true, all_varchar=true, strict_mode=true, ignore_errors=false, null_padding=false)"
     try:
         columns = [row[0] for row in connection.execute(f"DESCRIBE SELECT * FROM {relation}", [str(path)]).fetchall()]
         if len(columns) != 99 or len(set(columns)) != 99 or not REQUIRED_FIELDS.issubset(columns):
@@ -198,25 +257,48 @@ def build_view(root: Path, source_id: str) -> dict:
     root = root.resolve()
     source, source_receipt, source_receipt_path, pinned_paths = verify_source(root, source_id)
     source_digest = sha256(source_receipt_path)
-    source_csv = contained(source, "extracted/2025_public_lar_csv.csv")
-    identifier = "hmda-national-view-" + source_id[-12:]
+    dynamic = source_id.startswith("hmda-national-dynamic-")
+    identifier_seed = json.dumps({"source_receipt": source_digest, "methods": methods()}, sort_keys=True)
+    identifier = "hmda-national-view-" + hashlib.sha256(identifier_seed.encode()).hexdigest()[:12]
     folder = contained(root, "artifacts/private/" + identifier)
     if folder.exists():
         raise ValueError("HMDA national aggregate view already exists; verify/reuse it")
     folder.mkdir(parents=True)
     frozen = methods()
-    payload = aggregate_csv(source_csv, folder)
+    extract_dir = None
+    if dynamic:
+        extract_dir = folder / "source-input"
+        extract_dir.mkdir()
+        archive_path = pinned_paths[0]
+        with zipfile.ZipFile(archive_path) as archive:
+            member = archive.getinfo("2025_lar.txt")
+            source_csv = extract_dir / "2025_lar.txt"
+            with archive.open(member) as src, source_csv.open("xb") as dst:
+                shutil.copyfileobj(src, dst, 1024 * 1024)
+        if source_csv.stat().st_size != source_receipt["datasets"]["lar"]["csv"]["uncompressed_bytes"]:
+            raise ValueError("HMDA dynamic LAR extraction size differs from acquisition receipt")
+        payload = aggregate_csv(source_csv, folder, delimiter="|")
+        shutil.rmtree(extract_dir)
+    else:
+        source_csv = contained(source, "extracted/2025_public_lar_csv.csv")
+        payload = aggregate_csv(source_csv, folder)
     profile = source_receipt["datasets"]["lar"]["profile"]["summary"]
-    payload["summary"]["reporters"] = profile["distinct_reporting_LEIs"]
-    expected_actions = {row["value"]: row["records"] for row in source_receipt["datasets"]["lar"]["profile"]["actions"]}
+    reporter_count = profile["distinct_LEIs"] if dynamic else profile["distinct_reporting_LEIs"]
+    payload["summary"]["reporters"] = reporter_count
+    action_rows = source_receipt["datasets"]["lar"]["profile"]["actions"]
+    expected_actions = ({row["code"]: row["records"] for row in action_rows} if dynamic
+                        else {row["value"]: row["records"] for row in action_rows})
     actual_actions = {row["code"]: row["records"] for row in payload["actions"]}
     if (payload["summary"]["records"] != profile["records"]
             or actual_actions != expected_actions
-            or payload["summary"]["reporters"] != profile["distinct_reporting_LEIs"]):
+            or payload["summary"]["reporters"] != reporter_count):
         raise ValueError("National HMDA aggregate does not reconcile to acquisition receipt")
+    snapshot_date = "2026-10-11" if dynamic else "2026-06-02"
+    source_url = ("https://ffiec.cfpb.gov/data-publication/dynamic-national-loan-level-dataset/2025"
+                  if dynamic else DATASET_PAGE)
     payload.update({"view_id": identifier, "source_id": source_id,
-        "snapshot_date": "2026-06-02", "activity_year": 2025,
-        "source_url": DATASET_PAGE,
+        "snapshot_date": snapshot_date, "release_type": "dynamic weekly snapshot" if dynamic else "static snapshot",
+        "activity_year": 2025, "source_url": source_url,
         "dimensions": DIMENSIONS,
         "scope": "United States nationwide 2025 public HMDA LAR snapshot; all actions retained",
         "limitations": [
@@ -225,7 +307,8 @@ def build_view(root: Path, source_id: str) -> dict:
             "Public values are privacy-modified; no borrower/loan-level performance linkage is established.",
             "Credit-score field indicates score-model type, not the numerical score.",
             "Public loan amounts are published interval midpoints; sums are not exact funded cash.",
-            "Snapshot is frozen June 2, 2026 and may differ from later one-year/dynamic releases after resubmissions.",
+            ("Dynamic file captured October 11, 2026; it is a dated copy of a mutable weekly source." if dynamic
+             else "Snapshot is frozen June 2, 2026 and may differ from later one-year/dynamic releases after resubmissions."),
             "No forecast, imputation, or model fit was performed.",
         ],
         "denominator_contract": {"codes": ["1", "2", "3"], "numerator": "3",
@@ -283,7 +366,7 @@ class HmdaNationalViews:
         payload = read_json(aggregate_path)
         if (payload.get("view_id") != identifier or payload.get("source_id") != source_id
                 or payload.get("visibility") != "private" or payload.get("public_release_approved") is not False
-                or payload.get("summary", {}).get("records") != 13_543_606
+                or payload.get("summary", {}).get("records") != source_receipt["datasets"]["lar"]["profile"]["summary"]["records"]
                 or set(payload.get("breakdowns", {})) != set(DIMENSIONS)):
             raise ValueError("HMDA national aggregate content contract changed")
         return folder, receipt, payload
@@ -295,16 +378,19 @@ class HmdaNationalViews:
                 _, receipt, payload = self._view(path.parent.name)
                 rows.append({"view_id": payload["view_id"], "source_id": receipt["source_id"],
                     "status": "verified", "records": payload["summary"]["records"],
-                    "snapshot_date": payload["snapshot_date"], "completed_at": receipt["completed_at"]})
+                    "snapshot_date": payload["snapshot_date"], "release_type": payload.get("release_type", "static snapshot"),
+                    "completed_at": receipt["completed_at"]})
             except (OSError, ValueError, KeyError, TypeError):
                 rows.append({"view_id": path.parent.name, "status": "unavailable", "records": None})
         return {"views": rows}
 
     def view(self, identifier):
         _, _, payload = self._view(identifier)
-        return {key: payload[key] for key in ("view_id", "source_id", "snapshot_date", "activity_year",
+        result = {key: payload[key] for key in ("view_id", "source_id", "snapshot_date", "activity_year",
             "summary", "actions", "dimensions", "scope", "limitations", "denominator_contract",
             "source_url", "visibility", "public_release_approved")}
+        result["release_type"] = payload.get("release_type", "static snapshot")
+        return result
 
     def report(self, identifier, query):
         if not isinstance(query, dict) or set(query) - {"view_id", "dimension"} or query.get("view_id", identifier) != identifier:
@@ -314,7 +400,7 @@ class HmdaNationalViews:
             raise ValueError("Unsupported HMDA national breakdown dimension")
         _, _, payload = self._view(identifier)
         return {"view_id": identifier, "source_id": payload["source_id"],
-            "snapshot_date": payload["snapshot_date"], "activity_year": payload["activity_year"],
+            "snapshot_date": payload["snapshot_date"], "release_type": payload.get("release_type", "static snapshot"), "activity_year": payload["activity_year"],
             "summary": payload["summary"], "actions": payload["actions"],
             "dimension": dimension, "dimension_label": DIMENSIONS[dimension],
             "breakdown": payload["breakdowns"][dimension], "scope": payload["scope"],

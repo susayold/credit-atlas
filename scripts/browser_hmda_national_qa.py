@@ -24,8 +24,10 @@ def run(root):
     output.mkdir(parents=True)
     service = ResearchService(root, review_path=output / "qa-reviews.sqlite3")
     catalog = service.hmda_national_views.catalog()
-    view_id = next(row["view_id"] for row in catalog["views"] if row["status"] == "verified")
+    view_id = next(row["view_id"] for row in catalog["views"] if row["status"] == "verified" and row.get("release_type") == "static snapshot")
     snapshot = service.hmda_national_views.view(view_id)
+    dynamic_view_id = next(row["view_id"] for row in catalog["views"] if row["status"] == "verified" and row.get("release_type") == "dynamic weekly snapshot")
+    dynamic_snapshot = service.hmda_national_views.view(dynamic_view_id)
     one_year_catalog = service.hmda_one_year_views.catalog()
     one_year_id = next(row["view_id"] for row in one_year_catalog["views"] if row["status"] == "verified")
     one_year_snapshot = service.hmda_one_year_views.view(one_year_id)
@@ -62,7 +64,7 @@ def run(root):
             page.set_default_timeout(120000)
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
-            page.goto(base + "/?view=hmda", wait_until="domcontentloaded")
+            page.goto(base + f"/?view=hmda&hmda_national_view_id={view_id}", wait_until="domcontentloaded")
             diagnostic_text = page.locator("body").inner_text()[:5000]
             expect(page.locator("#hmda-national-snapshot")).to_contain_text("Toàn quốc")
             expect(page.locator("#hmda-national-summary .metric-value").nth(0)).to_have_text("13,543,606")
@@ -94,6 +96,21 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-National-2025-Audit.xlsx") == sha256(
                 root / "data/private/hmda/hmda-national-snapshot-2025-9a5e89600e3c/CreditAtlas-HMDA-National-2025-Audit.xlsx")
             checks.append("Excel codebook/KPI/source-audit workbook downloads byte-identically")
+
+            page.get_by_label("HMDA national release version").select_option(dynamic_view_id)
+            page.get_by_role("button", name="Load release").click()
+            expect(page.locator("#hmda-national-snapshot")).to_contain_text("dynamic weekly snapshot")
+            expect(page.locator("#hmda-national-snapshot")).to_contain_text("2026-10-11")
+            expect(page.locator("#hmda-national-summary .metric-value").nth(0)).to_have_text("13,558,306")
+            expect(page.locator("#hmda-national-summary .metric-value").nth(1)).to_have_text("4,794")
+            expect(page.locator("#hmda-national-summary .metric-value").nth(2)).to_have_text("9,373,448")
+            expect(page.locator("#hmda-national-summary .metric-value").nth(3)).to_have_text("22.5718%")
+            with page.expect_download() as info:
+                page.get_by_role("link", name="Tải Excel · release compare + 99-field codebook + full breakdowns").click()
+            info.value.save_as(str(output / "CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx"))
+            expected_dynamic_book = root / "data/private/hmda/hmda-national-dynamic-2025-20261011/CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx"
+            assert sha256(output / "CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx") == sha256(expected_dynamic_book)
+            checks.append("Dynamic 2025 as-of release renders its own counts and rate; dated 5-sheet Excel review downloads byte-identically")
 
             one_year_panel = page.locator("#hmda-one-year-2024")
             expect(one_year_panel).to_contain_text("One-Year 2024")
@@ -237,7 +254,8 @@ def run(root):
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("25,666,745")
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("26,227,364")
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("-0.1881 pp")
-            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("2021 One-Year tồn tại")
+            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("2021")
+            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("2,922,414")
             checks.append("2023 One-Year source and five-release 2020–2024 comparison render with matched denominator and verified 2021 release")
 
             one_year_2023_panel.get_by_label("HMDA 2023 One-Year breakdown dimension").select_option("denial_reason_1")
@@ -281,6 +299,7 @@ def run(root):
         write_new(output / "receipt.json", {
             "status": "PASS", "checks": checks, "browser_errors": errors,
             "view_id": view_id, "snapshot_summary": snapshot["summary"],
+            "dynamic_view_id": dynamic_view_id, "dynamic_summary": dynamic_snapshot["summary"],
             "one_year_view_id": one_year_id, "one_year_summary": one_year_snapshot["summary"],
             "one_year_2020_view_id": one_year_2020_id,
             "one_year_2020_summary": one_year_2020_snapshot["summary"],

@@ -14,7 +14,7 @@ from credit_atlas.hmda_national_views import build_national_view
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, required=True, help="Private CreditAtlas data root on D:")
-    parser.add_argument("--source-id", required=True, help="Verified hmda-national-snapshot-2025-<12 hex> source id")
+    parser.add_argument("--source-id", required=True, help="Verified national HMDA snapshot or dated dynamic source id")
     args = parser.parse_args()
     if args.root.resolve().drive.upper() != "D:":
         parser.error("Private national HMDA aggregates must remain on D:")

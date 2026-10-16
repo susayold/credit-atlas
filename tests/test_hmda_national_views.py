@@ -31,9 +31,9 @@ def row(**overrides):
     return value
 
 
-def write_lar(path: Path, records: list[dict[str, str]]) -> Path:
+def write_lar(path: Path, records: list[dict[str, str]], delimiter: str = ",") -> Path:
     with path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=FIELDS)
+        writer = csv.DictWriter(stream, fieldnames=FIELDS, delimiter=delimiter)
         writer.writeheader()
         writer.writerows(records)
     return path
@@ -57,6 +57,20 @@ def test_aggregate_csv_preserves_actions_and_explicit_decision_denominator(tmp_p
     ca = next(item for item in result["breakdowns"]["state_code"] if item["bucket"] == "CA")
     assert (ca["records"], ca["decision_denominator"], ca["denied_numerator"]) == (2, 2, 1)
     assert ca["descriptive_denial_rate"] == "0.5"
+    assert result["quality"] == {"wrong_year_rows": 0, "invalid_action_rows": 0, "invalid_amount_rows": 0}
+
+
+def test_aggregate_dynamic_pipe_delimited_lar(tmp_path: Path) -> None:
+    path = write_lar(tmp_path / "dynamic-lar.txt", [
+        row(action_taken="1", loan_amount="100000"),
+        row(action_taken="3", loan_amount="150000", denial_reason_1="3", lei="B" * 20),
+    ], delimiter="|")
+
+    result = aggregate_csv(path, tmp_path, delimiter="|")
+
+    assert result["summary"]["records"] == 2
+    assert result["summary"]["decision_denominator"] == 2
+    assert result["summary"]["denied_numerator"] == 1
     assert result["quality"] == {"wrong_year_rows": 0, "invalid_action_rows": 0, "invalid_amount_rows": 0}
 
 

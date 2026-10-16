@@ -1176,6 +1176,7 @@ const HMDA_TYPES={"1":"Conventional · 1","2":"FHA · 2","3":"VA · 3","4":"RHS/
 const HMDA_ACTION_LABELS={"1":"Loan originated","2":"Approved, not accepted","3":"Application denied","4":"Withdrawn","5":"Closed for incompleteness","6":"Purchased loan","7":"Preapproval denied","8":"Preapproval approved, not accepted"};
 const HMDA_NATIONAL_DIMENSIONS={state_code:"State / territory",county_code:"County FIPS",lei:"Reporting lender LEI",loan_type:"Loan type",loan_purpose:"Loan purpose",lien_status:"Lien status",occupancy_type:"Occupancy type",derived_dwelling_category:"Dwelling category",debt_to_income_ratio:"Public DTI category",derived_race:"Derived race",derived_ethnicity:"Derived ethnicity",derived_sex:"Derived sex",applicant_credit_score_type:"Applicant score-model type",denial_reason_1:"Primary denial reason · action 3"};
 let hmdaNationalDimension=new URLSearchParams(location.search).get("hmda_national_dimension")||"state_code";
+let hmdaNationalViewId=new URLSearchParams(location.search).get("hmda_national_view_id")||"";
 let hmdaOneYearDimension=new URLSearchParams(location.search).get("hmda_one_year_dimension")||"state_code";
 let hmdaOneYear2020Dimension=new URLSearchParams(location.search).get("hmda_one_year_2020_dimension")||"state_code";
 let hmdaOneYear2021Dimension=new URLSearchParams(location.search).get("hmda_one_year_2021_dimension")||"state_code";
@@ -1185,14 +1186,21 @@ let hmdaOneYear2023Dimension=new URLSearchParams(location.search).get("hmda_one_
 function hmdaQuery(){const query={...hmdaState};if(!query.reference_id)delete query.reference_id;return query;}
 function updateHmdaURL(){updateURL();const q=new URLSearchParams(location.search);Object.entries(hmdaState).forEach(([key,value])=>q.set("hmda_"+key,value));Object.entries(hmdaComparisonState).forEach(([key,value])=>q.set("hmda_comparison_"+key,value));history.replaceState(null,"","?"+q);}
 async function renderHmdaNational(container,generation){
-  const panel=card("HMDA · Toàn quốc · Snapshot 2025","Dữ liệu đơn đăng ký và quyết định underwriting · đóng băng 02/06/2026 · tách khỏi pilot Maryland");panel.id="hmda-national-snapshot";section(container,panel);
+  container.querySelector("#hmda-national-snapshot")?.remove();
+  const panel=card("HMDA · Toàn quốc · 2025 releases","Dữ liệu đơn đăng ký và quyết định underwriting · chọn bản Snapshot đóng băng hoặc bản Dynamic chụp theo ngày · tách khỏi repayment D01");panel.id="hmda-national-snapshot";section(container,panel);
   try{
     const catalog=await api("/api/hmda-national-views");if(generation!==renderGeneration)return;
     const valid=catalog.views.filter(row=>row.status==="verified");
     if(!valid.length){panel.append(note("Chưa có national aggregate view đã xác minh. Dữ liệu gốc vẫn được giữ riêng; cần chạy bước prepare aggregate trước khi phục vụ app."));return;}
-    let selected=valid[0].view_id;
-    if(!valid.some(row=>row.view_id===selected)){panel.append(callout("National snapshot trong URL không khả dụng."));return;}
+    valid.sort((a,b)=>(b.snapshot_date||"").localeCompare(a.snapshot_date||""));
+    let selected=valid.some(row=>row.view_id===hmdaNationalViewId)?hmdaNationalViewId:valid[0].view_id;
+    hmdaNationalViewId=selected;
     const snapshot=await api("/api/hmda-national-view",{view_id:selected});if(generation!==renderGeneration)return;
+    const releaseSelect=el("select");releaseSelect.setAttribute("aria-label","HMDA national release version");
+    valid.forEach(row=>{const option=el("option","",`${row.release_type||"snapshot"} · ${row.snapshot_date||"date unknown"} · ${number(row.records)} rows`);option.value=row.view_id;releaseSelect.append(option);});
+    releaseSelect.value=selected;
+    const releaseForm=el("form","toolbar");releaseForm.append(append(el("label","","Data release"),releaseSelect),button("Load release",()=>{hmdaNationalViewId=releaseSelect.value;const q=new URLSearchParams(location.search);q.set("hmda_national_view_id",hmdaNationalViewId);history.replaceState(null,"","?"+q);renderHmdaNational(container,generation);}));
+    panel.append(releaseForm);
     const body=el("div");panel.append(body);let requestId=0;
     const controls=card("Phân tích theo chiều dữ liệu","Mỗi nhóm giữ mẫu số action 1+2+3; trường demographic dùng cho mô tả nguồn, không chứng minh nguyên nhân hay compliance");
     const form=el("form","toolbar"),dimension=el("select");dimension.setAttribute("aria-label","HMDA national breakdown dimension");
@@ -1214,7 +1222,7 @@ async function renderHmdaNational(container,generation){
       updateURL();const q=new URLSearchParams(location.search);q.set("hmda_national_dimension",hmdaNationalDimension);history.replaceState(null,"","?"+q);
     }catch(error){if(generation===renderGeneration&&request===requestId)breakdown.replaceChildren(callout(error.message));}};
     form.addEventListener("submit",event=>{event.preventDefault();hmdaNationalDimension=dimension.value;draw();});
-    const scope=card("Định nghĩa và giới hạn","HMDA national snapshot · source-verified aggregates only");scope.id="hmda-national-scope";scope.append(para(snapshot.scope),para("Denominator: "+snapshot.denominator_contract.meaning));snapshot.limitations.forEach(text=>scope.append(para(text)));const link=el("a","source-link","Official FFIEC 2025 snapshot ↗");link.href=snapshot.source_url;link.target="_blank";link.rel="noopener noreferrer";const workbook=el("a","source-link","Tải Excel · codebook + KPI + source audit ↓");workbook.href="/downloads/hmda-national-2025-audit.xlsx";scope.append(link,workbook);body.append(scope);await draw();
+    const scope=card("Định nghĩa và giới hạn",`HMDA national ${snapshot.release_type} · source-verified aggregates only · as of ${snapshot.snapshot_date}`);scope.id="hmda-national-scope";scope.append(para(snapshot.scope),para("Denominator: "+snapshot.denominator_contract.meaning));snapshot.limitations.forEach(text=>scope.append(para(text)));const link=el("a","source-link",snapshot.release_type==="dynamic weekly snapshot"?"Official FFIEC 2025 Dynamic release ↗":"Official FFIEC 2025 Snapshot ↗");link.href=snapshot.source_url;link.target="_blank";link.rel="noopener noreferrer";scope.append(link);const workbook=el("a","source-link",snapshot.release_type==="dynamic weekly snapshot"?"Tải Excel · release compare + 99-field codebook + full breakdowns ↓":"Tải Excel · codebook + KPI + source audit ↓");workbook.href=snapshot.release_type==="dynamic weekly snapshot"?"/downloads/hmda-national-2025-dynamic-audit.xlsx":"/downloads/hmda-national-2025-audit.xlsx";scope.append(workbook);body.append(scope);await draw();
   }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
 }
 async function renderHmdaOneYear(container,generation){

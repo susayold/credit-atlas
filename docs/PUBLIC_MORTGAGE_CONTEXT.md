@@ -113,14 +113,15 @@ Re-run from the private workspace root:
 
 ## Federal Reserve commercial-bank asset quality by product — 2026-10-16
 
-Acquired 10 official FRED histories in the Federal Reserve's Charge-Off and
+Acquired 14 official FRED histories in the Federal Reserve's Charge-Off and
 Delinquency Rates on Loans and Leases at Commercial Banks release. The series
 cover single-family mortgage, credit card, other consumer, commercial real
-estate (excluding farmland), and business loans. Delinquency histories begin
-in 1987 or 1991; charge-off histories begin in 1985 or 1991. All have a common
+estate (excluding farmland), and business loans, plus separate credit-card
+rates for the top-100 banks and other banks. Delinquency histories begin in
+1987 or 1991; charge-off histories begin in 1985 or 1991. All have a common
 latest observation of 2026Q2, with 142–166 complete quarters per series. Private
 CSV snapshots and SHA-256 receipts are stored in
-`data/private/public-context/fed-bank-mortgage-asset-quality-20261016T005352Z`.
+`data/private/public-context/fed-bank-mortgage-asset-quality-20261016T010309Z`.
 
 At 2026Q2, the displayed delinquency / annualized net charge-off rates are:
 single-family mortgage 1.86% / 0.00%; credit card 2.85% / 3.82%; other consumer
@@ -130,6 +131,13 @@ source-reported percentages rounded to two decimals. Delinquency covers loans
 end-of-period loans. Charge-off is annualized net charge-offs after recoveries
 divided by average loans; negative values are possible when recoveries exceed
 charge-offs.
+
+The card size split is material: the 100 largest banks report 2.74% delinquency
+and 3.70% charge-off, while other banks report 6.49% and 7.80%. Year over year,
+those rates fell 0.18/0.36 pp for the top 100 and 0.55/0.84 pp for other banks.
+The publisher defines the top 100 by consolidated foreign and domestic assets.
+These group rates are separate alongside the all-bank series; do not add or
+average them to reconstruct the overall rate.
 
 Compared with the same quarter one year earlier, mortgage delinquency rose
 0.08 percentage point while net charge-off was unchanged; credit-card
@@ -141,8 +149,9 @@ percentile; mortgage delinquency and charge-off are near the 20th percentile.
 These ranks are not cross-product scores or PDs and may shift when the publisher
 revises the history.
 
-The Sources view displays five separate product panels, latest rates, 4-quarter
-changes, history and definitions. The Excel workbook
+The Sources view displays five product panels plus separate credit-card
+Top-100/other-bank panels, latest rates, 4-quarter changes, history and
+definitions. The Excel workbook
 `CreditAtlas-Fed-Bank-Asset-Quality.xlsx` contains Overview, Quarterly History,
 Series Dictionary, and Sources & QA. Earlier periods before a particular series
 begins are blank, not zero. Delinquency and charge-off are separate accounting
@@ -162,7 +171,11 @@ Sources: [Federal Reserve release and definitions](https://www.federalreserve.go
 [FRED CRE delinquency](https://fred.stlouisfed.org/series/DRCRELEXFACBS),
 [FRED CRE charge-off](https://fred.stlouisfed.org/series/CORCREXFACBS),
 [FRED business delinquency](https://fred.stlouisfed.org/series/DRBLACBS),
-[FRED business charge-off](https://fred.stlouisfed.org/series/CORBLACBS).
+[FRED business charge-off](https://fred.stlouisfed.org/series/CORBLACBS),
+[FRED Top-100-bank card delinquency](https://fred.stlouisfed.org/series/DRCCLT100S),
+[FRED other-bank card delinquency](https://fred.stlouisfed.org/series/DRCCLOBS),
+[FRED Top-100-bank card charge-off](https://fred.stlouisfed.org/series/CORCCT100S),
+[FRED other-bank card charge-off](https://fred.stlouisfed.org/series/CORCCOBS).
 
 Re-acquire from the private workspace root:
 

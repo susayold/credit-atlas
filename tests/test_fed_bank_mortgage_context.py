@@ -78,8 +78,9 @@ def test_fed_bank_mortgage_context_validates_native_quarterly_series(tmp_path):
     assert result["quarter_count"] == 4
     assert result["rows"][-1]["DRSFRMACBS"] == 1.3
     assert result["rows"][1]["CORSFRMACBS"] == -0.02
-    assert len(result["series"]) == 10
-    assert len(result["products"]) == 5
+    assert len(result["series"]) == 14
+    assert len(result["products"]) == 7
+    assert "Credit card · Top 100 banks" in result["products"]
     mortgage = next(s for s in result["series"] if s["series_id"] == "DRSFRMACBS")
     assert mortgage["historical_high_value"] == 1.3
     assert mortgage["historical_high_date"] == "2025-10-01"
@@ -125,4 +126,4 @@ def test_fed_bank_quality_excel_library_entry_is_present(app_server):
         source = response.read().decode("utf-8")
     assert "/api/fed-bank-mortgage-context" in source
     assert "/downloads/fed-bank-mortgage-context.xlsx" in source
-    assert "10 quarterly series across mortgages, cards, consumer, CRE and business loans" in source
+    assert "14 quarterly series across five products, plus credit-card bank-size splits" in source

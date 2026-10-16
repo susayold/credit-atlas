@@ -9,6 +9,7 @@ from pathlib import Path
 from openpyxl import Workbook, load_workbook
 from openpyxl.chart import LineChart, Reference
 from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.table import Table, TableStyleInfo
 
 from credit_atlas.fed_bank_mortgage_context import report
@@ -70,7 +71,7 @@ def build(root: Path, output: Path) -> dict:
     sources = wb.create_sheet("Sources & QA")
 
     _style_title(overview, "CreditAtlas · Federal Reserve Bank Asset Quality",
-                 "Aggregate quarterly portfolio context for five bank lending domains · latest revised public snapshot · context only",
+                 "Aggregate quarterly portfolio context for five products plus credit-card bank-size splits · latest revised public snapshot · context only",
                  12)
     overview.append([])
     overview.append(["Latest common quarter", payload["last_period"], "Coverage starts", payload["first_period"],
@@ -106,7 +107,7 @@ def build(root: Path, output: Path) -> dict:
         overview.cell(row, 11).number_format = '0.0"%"'
     _table(overview, "ProductSummary", f"A6:L{overview.max_row}")
     series_columns = {s["series_id"]: col for col, s in enumerate(payload["series"], 2)}
-    chart_slots = ["N3", "N21", "N39", "N57", "N75"]
+    chart_slots = ["N3", "V3", "N21", "V21", "N39", "V39", "N57"]
     for product, anchor in zip(payload["products"], chart_slots):
         pair = by_product[product]
         chart = LineChart()
@@ -139,23 +140,28 @@ def build(root: Path, output: Path) -> dict:
     overview.cell(note_row + 3, 1, "Historical percentile compares each latest rate only against its own full published series; it is not a bank peer rank, PD or cross-product risk score.")
     overview.merge_cells(start_row=note_row + 3, start_column=1, end_row=note_row + 3, end_column=12)
     overview.cell(note_row + 3, 1).alignment = Alignment(wrap_text=True)
+    overview.cell(note_row + 4, 1, "Credit-card Top 100 banks and other banks are separate size groups alongside the all-bank aggregate; do not add or average their rates.")
+    overview.merge_cells(start_row=note_row + 4, start_column=1, end_row=note_row + 4, end_column=12)
+    overview.cell(note_row + 4, 1).alignment = Alignment(wrap_text=True)
     for col, width in enumerate([25, 16, 15, 18, 16, 18, 18, 15, 18, 16, 18, 32], 1):
         overview.column_dimensions[chr(64 + col)].width = width
     overview.freeze_panes = "A7"
 
+    series_count = len(payload["series"])
+    history_cols = series_count + 1
     _style_title(hist, "Quarterly History · rates in percent",
-                 "Native quarterly grain; source series are seasonally adjusted and retain their own start dates.", 11)
+                 "Native quarterly grain; source series are seasonally adjusted and retain their own start dates.", history_cols)
     headers = ["Quarter", *[s["series_id"] for s in payload["series"]]]
     hist.append([])
     hist.append(headers)
     _header(hist, 4, len(headers))
     for row in payload["rows"]:
         hist.append([row["period"], *[row.get(s["series_id"]) for s in payload["series"]]])
-    _table(hist, "QuarterlyRates", f"A4:K{hist.max_row}")
+    _table(hist, "QuarterlyRates", f"A4:{get_column_letter(history_cols)}{hist.max_row}")
     hist.freeze_panes = "B5"
     hist.column_dimensions["A"].width = 16
-    for col in range(2, 12):
-        hist.column_dimensions[chr(64 + col)].width = 18
+    for col in range(2, history_cols + 1):
+        hist.column_dimensions[get_column_letter(col)].width = 18
         for cells in hist.iter_rows(min_row=5, min_col=col, max_col=col):
             cells[0].number_format = "0.00;[Red]-0.00;–"
     hist.sheet_view.showGridLines = False

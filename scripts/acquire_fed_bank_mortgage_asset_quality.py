@@ -84,6 +84,32 @@ SERIES = {
         "seasonal_adjustment": "Seasonally adjusted",
         "denominator": "Average loans; annualized net charge-offs after recoveries",
     },
+    "DRCCLT100S": {
+        "product": "Credit card · Top 100 banks",
+        "title": "Delinquency rate on credit card loans, banks ranked 1st to 100th by consolidated assets",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "CORCCT100S": {
+        "product": "Credit card · Top 100 banks",
+        "title": "Charge-off rate on credit card loans, banks ranked 1st to 100th by consolidated assets",
+        "unit": "Percent", "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
+    "DRCCLOBS": {
+        "product": "Credit card · Other banks",
+        "title": "Delinquency rate on credit card loans, banks not among the 100 largest by assets",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "CORCCOBS": {
+        "product": "Credit card · Other banks",
+        "title": "Charge-off rate on credit card loans, banks not among the 100 largest by assets",
+        "unit": "Percent", "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
 }
 FRED_DATA_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
 FED_RELEASE_URL = "https://www.federalreserve.gov/releases/ChargeOff/"

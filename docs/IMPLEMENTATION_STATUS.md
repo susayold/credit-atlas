@@ -312,21 +312,24 @@ target/model gates.
 
 ## 2026-10-16 continuation — Federal Reserve bank asset quality by product
 
-Expanded the official CHGDEL panel to ten FRED series across mortgage, credit
-card, other consumer, CRE excluding farmland, and business loans. All histories
+Expanded the official CHGDEL panel to fourteen FRED series across mortgage,
+credit card, other consumer, CRE excluding farmland, and business loans, with
+credit-card rates split between the top 100 banks by consolidated assets and
+other banks. All histories
 are uninterrupted quarterly series through 2026Q2 (142–166 rows); raw files,
 manifest and hashes remain private. At 2026Q2, delinquency/net charge-off are
-1.86%/0.00% for mortgages, 2.85%/3.82% for cards, 2.33%/1.21% for other
-consumer, 1.53%/0.14% for CRE, and 1.27%/0.58% for business loans.
+1.86%/0.00% for mortgages, 2.85%/3.82% for all-bank cards, 2.33%/1.21% for
+other consumer, 1.53%/0.14% for CRE, and 1.27%/0.58% for business loans. Card
+rates are 2.74%/3.70% for the top 100 and 6.49%/7.80% for other banks.
 
 The validated API and Sources UI add same-quarter year-over-year changes,
 historical highs and current historical percentiles for each measure. Five
 domain panels show the paired histories and denominators; unobserved pre-start
 quarters stay null. The four-sheet private Excel workbook contains an overview
-with paired charts and KPIs, filterable quarter history, a series dictionary,
+with seven paired charts and KPIs, filterable quarter history, a series dictionary,
 and source/hash QA. It reopens cleanly and its fixed download endpoint returns
 the newly built 24 KB template. Focused API/parser/download tests pass 4/4;
-Edge smoke test passes for five products, high-history KPIs and zero JS errors.
+Edge smoke test passes for seven product/size panels, high-history KPIs and zero JS errors.
 Bank aggregates remain context only: no loan-level histories, PD labels or
 qualified model features were added. D01 remains 26/50. Details and sources:
 `docs/PUBLIC_MORTGAGE_CONTEXT.md`.

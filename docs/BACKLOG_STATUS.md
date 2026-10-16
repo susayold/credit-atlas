@@ -8,16 +8,17 @@ behavior it exercises; it does not qualify absent vintages or model performance.
 
 Extended the Federal Reserve CHGDEL benchmark from mortgage-only to five bank
 lending domains: single-family mortgage, credit card, other consumer, CRE
-(excluding farmland), and business loans. Ten official FRED series now provide
-delinquency and annualized net charge-off rates to a common 2026Q2 endpoint;
-each has 142–166 complete quarters. The validated API and Sources panel show
+(excluding farmland), and business loans. Fourteen official FRED series provide
+delinquency and annualized net charge-off rates, including a separate credit-
+card split for top-100 and other banks, to a common 2026Q2 endpoint; each has
+142–166 complete quarters. The validated API and Sources panel show
 the latest rate, same-quarter year-over-year change, historical high and current
 historical percentile. The private four-sheet workbook includes product KPIs,
 five paired time-series charts, a filterable quarterly table, field dictionary,
 source URLs and per-file hashes. Earlier periods before publication remain
 blank, not zero. This is aggregate bank context, not loan-level history or a
 qualified predictor. Focused parser/API/download tests pass 4/4 and the live
-Edge smoke test shows all five products without browser errors.
+Edge smoke test shows all seven product/size panels without browser errors.
 
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample

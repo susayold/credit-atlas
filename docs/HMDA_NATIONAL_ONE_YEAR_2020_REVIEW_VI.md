@@ -20,10 +20,11 @@ below were derived from the archived One-Year CSV and checked against its own
 archive/CSV hashes, ZIP CRC, schema, and row-quality profile; no Three-Year API
 count is presented as an exact-vintage reconciliation.
 
-The FAQ's listed One-Year vintages are 2020, 2022, 2023 and 2024; it does not
-list a 2021 One-Year release. The app leaves that year absent instead of
-interpolating or substituting another vintage. This documents release
-availability only; it does not infer why a 2021 One-Year file is absent.
+**Correction, 2026-10-16:** an earlier version of this review incorrectly said
+2021 had no One-Year release. Rechecking the current FFIEC FAQ found the 2021
+One-Year vintage and its 2023-05-01 freeze date. The official 2021 archive has
+since been acquired and audited; see
+[`HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md).
 
 ## Acquisition and audit
 
@@ -70,14 +71,15 @@ performance labels and this release is not used to train D01.
 | Activity year | Freeze date | LAR rows | Actions 1–3 denominator | Denied action 3 | Descriptive denied share |
 |---|---|---:|---:|---:|---:|
 | 2020 | 2022-04-30 | 25,666,745 | 18,134,264 | 2,880,243 | 15.8829% |
-| 2021 | No One-Year release listed by FFIEC | — | — | — | — |
+| 2021 | 2023-05-01 | 26,227,364 | 18,620,312 | 2,922,414 | 15.6948% |
 | 2022 | 2024-05-01 | 16,099,307 | 11,323,683 | 2,500,211 | 22.0795% |
 | 2023 | 2025-05-19 | 11,564,178 | 8,058,391 | 2,037,094 | 25.2792% |
 | 2024 | 2026-06-02 | 12,259,199 | 8,661,779 | 2,103,462 | 24.2844% |
 
-Across available releases the descriptive share rises 6.1966 percentage points
-from 2020 to 2022, rises 3.1997 points from 2022 to 2023, then falls 0.9948
-points from 2023 to 2024. The 2020-to-2024 difference is +8.4015 points. These
+The descriptive share falls 0.1881 percentage points from 2020 to 2021, rises
+6.3847 points from 2021 to 2022, rises 3.1997 points from 2022 to 2023, then
+falls 0.9948 points from 2023 to 2024. The 2020-to-2024 difference is +8.4015
+points. These
 are release-to-release changes in reported application mix; market conditions,
 application composition, reporting/resubmissions and release timing may
 contribute. They do not establish cause or a change in booked-loan performance.
@@ -89,8 +91,7 @@ actions, the shared 1+2+3 denominator, aggregate breakdowns, action-3 denial
 reason view, private JSON, official source links, and an eight-sheet Excel
 audit workbook. The workbook contains aggregate tables and the 99-field source
 dictionary, not the 25.7-million-row CSV, which exceeds Excel's worksheet row
-limit. The comparison section includes 2020 and 2022–2024 and calls out the
-missing 2021 One-Year release without filling it.
+limit. The comparison section includes all five audited releases, 2020–2024.
 
 Private artifacts:
 

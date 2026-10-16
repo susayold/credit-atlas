@@ -71,21 +71,22 @@ this One-Year freeze, so it is not an exact-vintage reconciliation.
 
 ## Available One-Year release comparison
 
-The app presents the available 2020 and 2022–2024 static One-Year releases with
-the same action definitions and denominator. FFIEC's FAQ does not list a 2021
-One-Year release, so the app leaves that year absent rather than filling it.
-The observed aggregates are:
+The app presents the audited 2020–2024 static One-Year releases with the same
+action definitions and denominator. A prior review missed the 2021 line in the
+FFIEC FAQ; it has now been downloaded and separately audited. The observed
+aggregates are:
 
 | Activity year | Freeze date | LAR rows | Actions 1–3 denominator | Denied action 3 | Descriptive denied share |
 |---|---|---:|---:|---:|---:|
 | 2020 | 2022-04-30 | 25,666,745 | 18,134,264 | 2,880,243 | 15.8829% |
-| 2021 | No One-Year release listed by FFIEC | — | — | — | — |
+| 2021 | 2023-05-01 | 26,227,364 | 18,620,312 | 2,922,414 | 15.6948% |
 | 2022 | 2024-05-01 | 16,099,307 | 11,323,683 | 2,500,211 | 22.0795% |
 | 2023 | 2025-05-19 | 11,564,178 | 8,058,391 | 2,037,094 | 25.2792% |
 | 2024 | 2026-06-02 | 12,259,199 | 8,661,779 | 2,103,462 | 24.2844% |
 
-The denied share rises 6.1966 percentage points from 2020 to 2022, rises 3.1997
-points from 2022 to 2023, then falls 0.9948 points from 2023 to 2024. These are
+The denied share falls 0.1881 percentage points from 2020 to 2021, rises 6.3847
+points from 2021 to 2022, rises 3.1997 points from 2022 to 2023, then falls
+0.9948 points from 2023 to 2024. These are
 descriptive release-to-release changes; changes in application mix, market
 conditions, reporting/resubmissions and freeze timing may contribute. They do
 not establish cause, applicant-level transitions, loan performance, or default
@@ -96,8 +97,8 @@ risk.
 The HMDA workspace has a separate 2022 One-Year view with the action table,
 breakdowns by state, county, LEI, product and applicant attributes, action-3-only
 denial reasons, JSON export, source limits and private Excel download. The 2023
-panel now compares the available release years, showing adjacent-release deltas
-and the missing 2021 release explicitly.
+panel compares the release years, showing adjacent-release deltas, including
+2021 after its source archive was verified.
 The eight-sheet Excel workbook includes Overview, Actions, Geography, Institution
 LEI, Credit & product, Field dictionary, Source audit, and 2022 vs 2024. It records
 all 99 actual source fields and carries the warning that the current 2022 Data

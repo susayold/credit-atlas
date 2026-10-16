@@ -4,6 +4,22 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
+### Data-first continuation — HMDA One-Year 2021, correction to release research, 2026-10-16
+
+Rechecked the current official FFIEC vintage FAQ and corrected the prior claim
+that no 2021 One-Year release existed. The official table lists the 2021 static
+One-Year dataset with a 2023-05-01 freeze. Downloaded the 1,518,888,317-byte ZIP
+and verified its ETag, SHA-256, member CRC, and 10,212,571,276-byte CSV. Full
+profile: 26,227,364 LAR rows, 99 fields, 4,368 distinct LEIs, all eight action
+codes and zero tested row-quality exceptions. Integrated a source-bound private
+aggregate view, an eight-sheet Excel workbook and an app panel; the five One-Year
+views now compare 2020–2024. Actions 1–3 total 18,620,312 applications; action 3
+denials are 2,922,414 (15.6948%), an application-decision share, not PD/default.
+No Three-Year API reconciliation is claimed, and no forecast, imputation or
+model fit was performed. This improves D08 only; D01 stays 26/50 (52%), with
+42/50 some/conditional coverage. See
+[`HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md).
+
 ### Data-first continuation — HMDA One-Year 2020, 2026-10-16
 
 Acquired the official FFIEC/CFPB static 2020 One-Year National LAR (25,666,745
@@ -13,9 +29,8 @@ private source-bound aggregate view, an eight-sheet Excel workbook, JSON/XLSX
 downloads and an app panel. Actions 1–3 total 18,134,264 applications; 2,880,243
 were action-3 denials (15.8829%). This is a descriptive application share, not
 PD/default and does not change D01's 26/50 (52%) completion or 42/50 (84%)
-some/conditional coverage. Raw data remains private on D:. FFIEC's vintage FAQ
-does not list a 2021 One-Year release; the app leaves that year absent. No
-forecast, imputation or model fit was performed. See
+some/conditional coverage. Raw data remains private on D:. No forecast,
+imputation or model fit was performed. See
 [`HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md).
 
 ### Data-first continuation — official HMDA 2024 One-Year national file, 2026-10-16

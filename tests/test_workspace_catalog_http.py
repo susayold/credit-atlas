@@ -24,6 +24,7 @@ def _serve(tmp_path, service):
         ("/api/hmda-views", "", "hmda_views", "catalog", ()),
         ("/api/hmda-one-year-views", "", "hmda_one_year_views", "catalog", ()),
         ("/api/hmda-one-year-2020-views", "", "hmda_one_year_2020_views", "catalog", ()),
+        ("/api/hmda-one-year-2021-views", "", "hmda_one_year_2021_views", "catalog", ()),
         ("/api/hmda-one-year-2022-views", "", "hmda_one_year_2022_views", "catalog", ()),
         ("/api/hmda-one-year-2023-views", "", "hmda_one_year_2023_views", "catalog", ()),
         ("/api/hmda-references", "source_id=hmda-source-x", "hmda_reference_views", "catalog", ("hmda-source-x",)),
@@ -122,10 +123,33 @@ def test_hmda_2020_audit_workbook_download_is_bound_to_verified_private_source(t
         worker.join(timeout=5)
 
 
+def test_hmda_2021_audit_workbook_download_is_bound_to_verified_private_source(tmp_path):
+    source_id = "hmda-national-one-year-2021-123456789abc"
+    source = tmp_path / "data/private/hmda" / source_id
+    source.mkdir(parents=True)
+    workbook = source / "CreditAtlas-HMDA-One-Year-2021-Audit.xlsx"
+    workbook.write_bytes(b"private-xlsx-test")
+    view = SimpleNamespace(catalog=lambda: {"views": [{"status": "verified", "source_id": source_id}]})
+    server, worker, base = _serve(tmp_path, SimpleNamespace(hmda_one_year_2021_views=view))
+    try:
+        with urlopen(f"{base}/downloads/hmda-one-year-2021-audit.xlsx") as response:
+            assert response.status == 200
+            assert response.headers["Content-Disposition"].endswith(workbook.name + '"')
+            assert response.read() == b"private-xlsx-test"
+        with pytest.raises(HTTPError) as error:
+            urlopen(f"{base}/downloads/hmda-one-year-2021-audit.xlsx?source_id=other")
+        assert error.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(timeout=5)
+
+
 @pytest.mark.parametrize(
     ("route", "view_name"),
     [("/api/sec-view", "sec_views"), ("/api/market-view", "market_views"),
      ("/api/hmda-one-year-2020-view", "hmda_one_year_2020_views"),
+     ("/api/hmda-one-year-2021-view", "hmda_one_year_2021_views"),
      ("/api/hmda-one-year-2022-view", "hmda_one_year_2022_views"),
      ("/api/hmda-one-year-2023-view", "hmda_one_year_2023_views")],
 )
@@ -158,6 +182,7 @@ def test_workspace_snapshot_http_routes_require_exact_view_id(tmp_path, route, v
     [
         ("/api/hmda-report", "view_id=hmda-view-x", "hmda_views", "report", "hmda-view-x", True),
         ("/api/hmda-one-year-2020-report", "view_id=hmda-one-year-2020-view-123456789abc&dimension=state_code", "hmda_one_year_2020_views", "report", "hmda-one-year-2020-view-123456789abc", True),
+        ("/api/hmda-one-year-2021-report", "view_id=hmda-one-year-2021-view-123456789abc&dimension=state_code", "hmda_one_year_2021_views", "report", "hmda-one-year-2021-view-123456789abc", True),
         ("/api/hmda-one-year-report", "view_id=hmda-one-year-2024-view-123456789abc&dimension=state_code", "hmda_one_year_views", "report", "hmda-one-year-2024-view-123456789abc", True),
         ("/api/hmda-one-year-2022-report", "view_id=hmda-one-year-2022-view-123456789abc&dimension=state_code", "hmda_one_year_2022_views", "report", "hmda-one-year-2022-view-123456789abc", True),
         ("/api/hmda-one-year-2023-report", "view_id=hmda-one-year-2023-view-123456789abc&dimension=state_code", "hmda_one_year_2023_views", "report", "hmda-one-year-2023-view-123456789abc", True),

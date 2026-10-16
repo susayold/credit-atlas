@@ -34,6 +34,11 @@ def run(root):
     one_year_2020_snapshot = service.hmda_one_year_2020_views.view(one_year_2020_id)
     one_year_2020_state_rows = service.hmda_one_year_2020_views.report(one_year_2020_id, {"dimension": "state_code"})["breakdown"]
     one_year_2020_reason_rows = service.hmda_one_year_2020_views.report(one_year_2020_id, {"dimension": "denial_reason_1"})["breakdown"]
+    one_year_2021_catalog = service.hmda_one_year_2021_views.catalog()
+    one_year_2021_id = next(row["view_id"] for row in one_year_2021_catalog["views"] if row["status"] == "verified")
+    one_year_2021_snapshot = service.hmda_one_year_2021_views.view(one_year_2021_id)
+    one_year_2021_state_rows = service.hmda_one_year_2021_views.report(one_year_2021_id, {"dimension": "state_code"})["breakdown"]
+    one_year_2021_reason_rows = service.hmda_one_year_2021_views.report(one_year_2021_id, {"dimension": "denial_reason_1"})["breakdown"]
     one_year_2022_catalog = service.hmda_one_year_2022_views.catalog()
     one_year_2022_id = next(row["view_id"] for row in one_year_2022_catalog["views"] if row["status"] == "verified")
     one_year_2022_snapshot = service.hmda_one_year_2022_views.view(one_year_2022_id)
@@ -152,6 +157,39 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-One-Year-2020-Audit.xlsx") == sha256(expected_workbook)
             checks.append("2020 One-Year workbook downloads byte-identically from its verified private source")
 
+            one_year_2021_panel = page.locator("#hmda-one-year-2021")
+            expect(one_year_2021_panel).to_contain_text("One-Year 2021")
+            expect(one_year_2021_panel).to_contain_text("01/05/2023")
+            expect(page.locator("#hmda-one-year-2021-summary .metric-value").nth(0)).to_have_text("26,227,364")
+            expect(page.locator("#hmda-one-year-2021-summary .metric-value").nth(1)).to_have_text("4,368")
+            expect(page.locator("#hmda-one-year-2021-summary .metric-value").nth(2)).to_have_text("18,620,312")
+            expect(page.locator("#hmda-one-year-2021-summary .metric-value").nth(3)).to_have_text("15.6948%")
+            expect(page.locator("#hmda-one-year-2021-actions tbody tr")).to_have_count(8)
+            expect(page.locator("#hmda-one-year-2021-breakdown tbody tr")).to_have_count(len(one_year_2021_state_rows))
+            expect(one_year_2021_panel).to_contain_text("Three-Year")
+            checks.append("2021 One-Year static release renders audited row count, LEIs, denominator, action profile and official Three-Year API caveat")
+
+            one_year_2021_panel.get_by_label("HMDA 2021 One-Year breakdown dimension").select_option("denial_reason_1")
+            one_year_2021_panel.get_by_role("button", name="Đọc breakdown 2021").click()
+            expect(page.locator("#hmda-one-year-2021-breakdown tbody tr")).to_have_count(len(one_year_2021_reason_rows))
+            expect(page.locator("#hmda-one-year-2021-breakdown")).to_contain_text("denial_reason_1")
+            with page.expect_download() as info:
+                one_year_2021_panel.locator("button", has_text="Tải JSON").click()
+            info.value.save_as(str(output / "hmda-one-year-2021-denial-reasons.json"))
+            exported = json.loads((output / "hmda-one-year-2021-denial-reasons.json").read_text(encoding="utf-8"))
+            expected = service.hmda_one_year_2021_views.report(one_year_2021_id, {"dimension": "denial_reason_1"})
+            assert exported == expected
+            assert exported["visibility"] == "private" and exported["public_release_approved"] is False
+            checks.append("2021 denial-reason JSON matches the verified aggregate and source-specific field mapping")
+
+            with page.expect_download() as info:
+                one_year_2021_panel.locator("#hmda-one-year-2021-scope a[href='/downloads/hmda-one-year-2021-audit.xlsx']").click()
+            info.value.save_as(str(output / "CreditAtlas-HMDA-One-Year-2021-Audit.xlsx"))
+            source_2021 = one_year_2021_snapshot["source_id"]
+            expected_workbook = root / "data/private/hmda" / source_2021 / "CreditAtlas-HMDA-One-Year-2021-Audit.xlsx"
+            assert sha256(output / "CreditAtlas-HMDA-One-Year-2021-Audit.xlsx") == sha256(expected_workbook)
+            checks.append("2021 One-Year workbook downloads byte-identically from its verified private source")
+
             one_year_2022_panel = page.locator("#hmda-one-year-2022")
             expect(one_year_2022_panel).to_contain_text("One-Year 2022")
             expect(one_year_2022_panel).to_contain_text("01/05/2024")
@@ -197,8 +235,10 @@ def run(root):
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("-0.9948 pp")
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("16,099,307")
             expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("25,666,745")
-            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("One-Year 2021 không xuất hiện")
-            checks.append("2023 One-Year source and four-release 2020, 2022–2024 comparison render with the 2021 release gap and matched action denominator")
+            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("26,227,364")
+            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("-0.1881 pp")
+            expect(page.locator("#hmda-one-year-2023-comparison")).to_contain_text("2021 One-Year tồn tại")
+            checks.append("2023 One-Year source and five-release 2020–2024 comparison render with matched denominator and verified 2021 release")
 
             one_year_2023_panel.get_by_label("HMDA 2023 One-Year breakdown dimension").select_option("denial_reason_1")
             one_year_2023_panel.get_by_role("button", name="Đọc breakdown 2023").click()
@@ -225,6 +265,7 @@ def run(root):
             expect(page.locator("#hmda-national-summary")).to_be_visible()
             expect(page.locator("#hmda-one-year-2024-summary")).to_be_visible()
             expect(page.locator("#hmda-one-year-2020-summary")).to_be_visible()
+            expect(page.locator("#hmda-one-year-2021-summary")).to_be_visible()
             expect(page.locator("#hmda-one-year-2022-summary")).to_be_visible()
             expect(page.locator("#hmda-one-year-2023-summary")).to_be_visible()
             page.screenshot(path=str(output / "hmda-national-mobile.png"), full_page=True)
@@ -234,6 +275,7 @@ def run(root):
         view_receipt = json.loads((root / "artifacts/private" / view_id / "view-complete.json").read_text(encoding="utf-8"))
         one_year_receipt = json.loads((root / "artifacts/private" / one_year_id / "view-complete.json").read_text(encoding="utf-8"))
         one_year_2020_receipt = json.loads((root / "artifacts/private" / one_year_2020_id / "view-complete.json").read_text(encoding="utf-8"))
+        one_year_2021_receipt = json.loads((root / "artifacts/private" / one_year_2021_id / "view-complete.json").read_text(encoding="utf-8"))
         one_year_2022_receipt = json.loads((root / "artifacts/private" / one_year_2022_id / "view-complete.json").read_text(encoding="utf-8"))
         one_year_2023_receipt = json.loads((root / "artifacts/private" / one_year_2023_id / "view-complete.json").read_text(encoding="utf-8"))
         write_new(output / "receipt.json", {
@@ -242,6 +284,10 @@ def run(root):
             "one_year_view_id": one_year_id, "one_year_summary": one_year_snapshot["summary"],
             "one_year_2020_view_id": one_year_2020_id,
             "one_year_2020_summary": one_year_2020_snapshot["summary"],
+            "one_year_2021_view_id": one_year_2021_id,
+            "one_year_2021_summary": one_year_2021_snapshot["summary"],
+            "one_year_2021_receipt_sha256": sha256(root / "artifacts/private" / one_year_2021_id / "view-complete.json"),
+            "one_year_2021_aggregate_sha256": one_year_2021_receipt["aggregate_sha256"],
             "one_year_2022_view_id": one_year_2022_id,
             "one_year_2022_summary": one_year_2022_snapshot["summary"],
             "one_year_2023_view_id": one_year_2023_id,

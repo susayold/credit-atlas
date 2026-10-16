@@ -10,6 +10,8 @@ from uuid import uuid4
 ROOT=Path.cwd();out=ROOT/'data/private/mortgage'/('freddie-public-reference-'+uuid4().hex[:12]);out.mkdir()
 sources=[
  ('general-user-guide.pdf','https://www.freddiemac.com/fmac-resources/research/pdf/user_guide.pdf'),
+ ('release-notes.pdf','https://www.freddiemac.com/fmac-resources/research/pdf/release_notes.pdf'),
+ ('disclosure-changes-july-2026.pdf','https://www.freddiemac.com/fmac-resources/research/pdf/disclosure-changes-summary.pdf'),
  ('clarity-download-announcement.html','https://capitalmarkets.freddiemac.com/clarity/whats-new/december-2025-clarity-updates'),
  ('release-47-sample-files.zip','https://www.freddiemac.com/fmac-resources/research/docs/release-47-sample-files.zip'),
  ('file-layout-july-2026.xlsx','https://www.freddiemac.com/fmac-resources/research/pdf/file_layout_july_2026.xlsx'),

@@ -687,3 +687,17 @@ yet been located, so no production ZIP was downloaded. No loan-level risk rate
 or projection was derived from the sample. The Freddie annual-vintage gate is
 also still blocked by Clarity sign-in. Details and exact next commands are in
 `docs/D01_GINNIE_ACQUISITION_PREFLIGHT_2026-10-16_VI.md`.
+
+## 2026-10-16 Freddie Release 47 schema/version audit
+
+Downloaded and hash-receipted Freddie's official Release Notes and July 2026
+Disclosure Changes PDFs. They confirm R47's 2026-03-31 performance cutoff and
+report 49.21M origination / 2.91B performance records for the full Standard
+Dataset; those full-volume counts are not D01 sample counts. The schema change
+matrix flags delinquency code formatting/cap/missing changes, clarified removal
+reason 96, loss-component sign convention, cumulative modification cost,
+VantageScore 4.0 and field/enum moves. The current user-supplied 2012 corpus
+still has no authenticated release identity, so no retrofit or vintage count
+was made. Public docs updated; no model/PD/projection was created. See
+`docs/FREDDIE_RELEASE47_CROSS_VINTAGE_IMPLICATIONS_VI.md` and the refreshed
+`docs/D01_R2_DATA_SOURCE_RECHECK_2026-10-16_VI.md`.

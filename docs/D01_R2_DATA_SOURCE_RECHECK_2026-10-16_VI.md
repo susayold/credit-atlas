@@ -73,6 +73,22 @@ validation, song đều có access/terms gate và không được pool vào Fred
    context; nếu cần loan-level NMDB ngoài NSMO, gửi inquiry tới contact chính
    thức của FHFA và chờ access/terms rõ ràng trước khi dự tính pipeline.
 
+## Release 47 cross-vintage findings added 2026-10-16
+
+Downloaded Freddie's official Release Notes and July 2026 Disclosure Changes
+PDFs and recorded private hashes in
+`data/private/mortgage/freddie-public-reference-c88f57796bfd/receipt.json`.
+The two documents show why a newer file layout cannot be applied blindly to the
+user-supplied 2012 corpus: R47 changes delinquency string codes (`0/1/2/3` to
+`00/01/02/03`, `XX`, and a 99 cap), clarifies zero-balance reason 96, changes
+the disclosed signs for loss components, makes cumulative modification costs
+repeat after the first modification, adds VantageScore 4.0, and moves fields
+between origination and monthly performance files. Categorical disclosure also
+changes for borrower count, seller, conforming, HARP, special program and
+postal-code fields. The current 2012 source's exact publisher release remains
+unverified. This is schema/version evidence only: **0 annual Freddie vintages
+added**. See `docs/FREDDIE_RELEASE47_CROSS_VINTAGE_IMPLICATIONS_VI.md`.
+
 Không tải thêm aggregate chỉ để tăng số file: các context chính đã có và không
 giải quyết gate loan-level. Không fit D01 model trong lúc M01-005/006,
 M01-015 và protocol chưa đạt.

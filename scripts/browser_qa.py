@@ -11,7 +11,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
 
 from browser_navigation import navigate_workspace, select_task
-from credit_atlas.server import handler_for
+from credit_atlas.server import MORTGAGE_SAMPLE_WORKBOOKS, handler_for
 from credit_atlas.service import ResearchService
 from credit_atlas.workspace import app_root, timestamp, write_new
 
@@ -200,6 +200,42 @@ def run(root: Path):
                         assert all(sheet in workbook_xml for sheet in ("Overview", "Quarterly History", "Series Dictionary", "Sources &amp; QA"))
                         assert len([name for name in workbook_zip.namelist() if name.startswith("xl/charts/chart")]) == 10
                     checks.append("Federal Reserve Excel download preserves source workbook bytes, four sheets and ten charts")
+                    library_labels = {
+                        "/downloads/freddie-release47-samples.xlsx": "Freddie Release 47 · 2 parser examples",
+                        "/downloads/fannie-public-samples.xlsx": "Fannie Mae · sample rows",
+                        "/downloads/fannie-layout-reference.xlsx": "Fannie Mae · layout & categories",
+                        "/downloads/ginnie-public-samples.xlsx": "Ginnie Mae · sample records",
+                        "/downloads/ginnie-layout-reference.xlsx": "Ginnie Mae · layout, codes & QA",
+                    }
+                    for route, label in library_labels.items():
+                        relative, filename = MORTGAGE_SAMPLE_WORKBOOKS[route]
+                        local_workbook = root / relative
+                        with page.expect_download(timeout=30000) as captured:
+                            page.get_by_role("link", name=label, exact=True).click()
+                        item = captured.value
+                        assert item.suggested_filename == filename
+                        saved = output / filename
+                        item.save_as(str(saved))
+                        assert saved.read_bytes() == local_workbook.read_bytes()
+                        with zipfile.ZipFile(saved) as workbook_zip:
+                            assert workbook_zip.testzip() is None
+                            assert "xl/workbook.xml" in workbook_zip.namelist()
+                        checks.append(label + " Excel attachment matches the private source workbook and opens as a valid XLSX")
+                    for route, label, filename in (
+                        ("/downloads/alfred-macro-context.xlsx", "ALFRED · mortgage macro history", "CreditAtlas-ALFRED-Macro-Context.xlsx"),
+                    ):
+                        local_workbook = root / "apps" / "excel" / "templates" / filename
+                        with page.expect_download(timeout=30000) as captured:
+                            page.get_by_role("link", name=label, exact=True).click()
+                        item = captured.value
+                        assert item.suggested_filename == filename
+                        saved = output / filename
+                        item.save_as(str(saved))
+                        assert saved.read_bytes() == local_workbook.read_bytes()
+                        with zipfile.ZipFile(saved) as workbook_zip:
+                            assert workbook_zip.testzip() is None
+                            assert "xl/workbook.xml" in workbook_zip.namelist()
+                        checks.append(label + " Excel attachment matches the private source workbook and opens as a valid XLSX")
                     fed_error_page = context.new_page()
                     fed_failed_downloads = []
                     fed_error_page.on("download", lambda download: fed_failed_downloads.append(download.suggested_filename))

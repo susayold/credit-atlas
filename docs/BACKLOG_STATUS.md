@@ -611,3 +611,17 @@ Reviewed CFPB Consumer Credit Trends as a possible P1/P4 market-context source. 
 Added a real-source browser acceptance for the bankruptcy ratio profile export: the scoped JSON matches the verified source evidence, retains the 64-feature and horizon/precision audit, and an injected HTTP 503 is shown in the UI without creating a fake download. The suite passes 9/9 checks at `artifacts/private/bankruptcy-browser-qa-6949e456b58c/receipt.json`.
 
 The bankruptcy model catalog currently has no verified snapshot, so its report route cannot be exercised with real evidence; the saved-model export remains pending an available verified view. This adds one delivery route to M01-028 and does not change D01 data/model readiness.
+
+## 2026-10-16 Mortgage export route privacy acceptance
+
+Real-data browser acceptance for Mortgage Provenance and Observed Loss Details
+passes for all four relief scopes (`all`, `relief`, `non_relief`, `unknown`).
+The downloaded JSON matches the API payload; both responses explicitly carry
+`visibility=private` and `public_release_approved=false`, while Observed Loss
+Details is checked for loan, borrower, SSN, disclosure, and account identifiers.
+Both checks pass without browser errors and leave the protected holdout-access
+ledger unchanged. Private receipts:
+`artifacts/private/mortgage-provenance-browser-ecd8afb69e15/receipt.json` and
+`artifacts/private/observed-loss-details-browser-2baa2931904c/receipt.json`.
+These route-specific checks are additional to the 106-check general browser
+suite; M01-028 remains Partial across the wider route inventory.

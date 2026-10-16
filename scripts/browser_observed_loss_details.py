@@ -13,6 +13,9 @@ with sync_playwright() as p:
     browser=p.chromium.launch(channel='msedge',headless=True);page=browser.new_page(viewport={'width':1450,'height':1000},accept_downloads=True)
     page.on('pageerror',lambda e:errors.append(str(e)))
     response=page.request.get(BASE+'/api/observed-loss-details?run='+CASE,timeout=120000);assert response.status==200;r=response.json()
+    assert r['visibility']=='private' and r['public_release_approved'] is False
+    serialized=json.dumps(r).lower()
+    assert not any(token in serialized for token in ['loan_id','borrower_id','ssn','disclosure_id','account_number'])
     for mode in ['signed','magnitude']:
         for key in ['mean','min','max']:assert Decimal(r[mode+'_ratio'][key+'_exact'])==Decimal(audit[mode+'_ratio'][key])
     assert r['expense_formula']['checked_rows']==audit['expense_formula_checked_rows']==374

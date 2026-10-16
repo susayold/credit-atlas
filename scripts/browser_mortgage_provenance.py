@@ -16,6 +16,7 @@ with sync_playwright() as p:
     response=page.request.get(BASE+'/api/mortgage-provenance?run='+CASE,timeout=120000)
     assert response.status==200
     r=response.json()
+    assert r['visibility']=='private' and r['public_release_approved'] is False
     foundation=json.loads((ROOT/f'artifacts/private/{CASE}/foundation-complete.json').read_text())
     receipt_path=ROOT/f'vendor/credit_risk_strategy_lab/data/private/raw/{foundation["raw_sha256"]}.receipt.json'
     raw=json.loads(receipt_path.read_text())

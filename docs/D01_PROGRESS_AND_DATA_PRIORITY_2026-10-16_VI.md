@@ -17,6 +17,14 @@ Browser acceptance cuối cho Snapshot/Dynamic, Excel/JSON, các release One-Yea
 2019–2024 và mobile pass **21/21 checks, zero errors**; receipt ở private D:
 `artifacts/private/hmda-national-browser-qa-9fa5ed6e2f65/receipt.json`.
 
+**Mở rộng HMDA về 2018:** tải national CSV qua Data Browser API chính thức vì
+link static Three-Year hiển thị “File not found”. Bản này frozen 31/12/2021,
+99 trường, 5.879.026.670 bytes. Tám action counts hợp lệ khớp official
+aggregation API (15.138.510 hồ sơ); CSV còn 1.961 dòng `action_taken=-1` với
+LEI/state trống nên được giữ và quarantine, chưa đưa vào app hoặc KPI. Đây là
+D08 application/decision, không phải payment performance; D01 vẫn 26/50.
+Chi tiết/hash: [`HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`](HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md).
+
 **Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
 One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại
 [`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).

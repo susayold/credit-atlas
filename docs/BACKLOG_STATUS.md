@@ -839,3 +839,22 @@ still has no authenticated release identity, so no retrofit or vintage count
 was made. Public docs updated; no model/PD/projection was created. See
 `docs/FREDDIE_RELEASE47_CROSS_VINTAGE_IMPLICATIONS_VI.md` and the refreshed
 `docs/D01_R2_DATA_SOURCE_RECHECK_2026-10-16_VI.md`.
+
+## 2026-10-16 HMDA 2018 Three-Year API acquisition
+
+The 2018 official static Three-Year page shows its national file links as “File
+not found”, but the official Data Browser API serves the Three-Year vintage
+(freeze 2021-12-31). Acquired the 99-field national CSV to private D: storage
+(5,879,026,670 bytes; SHA-256
+`6b6678ce3c3dc0c640b867b77a10cce3e8ec05e91965e77c44ef0bce4c28c924`). Its eight
+documented action-code counts (15,138,510 rows) exactly reconcile to the
+official aggregation API. The CSV includes 1,961 additional rows with
+`action_taken=-1` and blank LEI/state; because the public LAR codebook only
+documents action values 1–8, these source rows are preserved and quarantined,
+not silently mapped into a category. Audit status is
+`PASS_WITH_QUARANTINED_SOURCE_ROWS`; no app integration or KPI uses them pending
+source investigation. This is D08 application/decision data, not D01 loan
+performance, so the master 26/50 count and D01 model gates do not change.
+Reproducible acquisition/audit scripts are `scripts/acquire_hmda_browser_2018.py`
+and `scripts/audit_hmda_browser_2018.py`; detailed evidence is in
+`docs/HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`.

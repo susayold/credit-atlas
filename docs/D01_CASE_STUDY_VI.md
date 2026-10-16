@@ -40,7 +40,7 @@ Target hiện hữu giữ nguyên version `d01-early-entry-d3-before-prepay-12m-
 
 ## Những gì ứng dụng hiện cung cấp
 
-Workspace có source/quality, portfolio stock/profile, competing-outcome cohort, transition matrix, private lifecycle timeline, model-readiness/feature audit, signed loss bridge và evidence/findings. Browser QA gần nhất kiểm tra 39 flows; stale/missing/unlisted run, mất kết nối và JSON lỗi đều fail closed; chart/support audit đối chiếu sáu nhóm dữ liệu; report schema-2 export đã qua 5 scope và privacy scan; clean eight-stage foundation reproduction có 13 tables và bốn stable summaries với zero differences. Mỗi artifact phải đọc cùng case ID, pipeline, target, scope note và receipt.
+Workspace có source/quality, portfolio stock/profile, competing-outcome cohort, transition matrix, private lifecycle timeline, model-readiness/feature audit, signed loss bridge và evidence/findings. Latest real-data browser acceptance chạy trên public code với frozen private case `d01-202610150931` passed **106 checks**, không có browser errors; gồm stale/missing/unlisted run, export failure handling, findings save/reopen, responsive views và real Excel downloads. Riêng chart/support audit đối chiếu sáu nhóm dữ liệu; report schema-2 export đã qua 5 scopes và privacy scan; clean eight-stage foundation reproduction có 13 tables và bốn stable summaries với zero differences. Receipt browser mới nhất: `D:\data\Codex\credit-atlas\artifacts\private\browser-qa-b0f2574128dc\receipt.json` (private, không đưa dữ liệu vào GitHub). Mỗi artifact phải đọc cùng case ID, pipeline, target, scope note và receipt.
 
 ## Model/data status và điều kiện mở tiếp
 

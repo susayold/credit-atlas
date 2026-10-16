@@ -1763,17 +1763,18 @@
         "P2"
       ],
       "consumer_trace": [
-        "src/credit_atlas/fhfa_pudb.py → /api/fhfa-pudb-profile; mortgage workspace"
+        "src/credit_atlas/fhfa_pudb.py → /api/fhfa-pudb-profile; mortgage workspace",
+        "apps/excel/build_fhfa_pudb_analyst_review.mjs → /downloads/fhfa-pudb-2025-analyst.xlsx (private output)"
       ],
-      "kpi_or_output": "2025 acquisition-category counts/support by purpose, guarantee, DTI, score-model and geography. Category shares use the 2,093,767-row dataset denominator; cells below 30 are suppressed in display.",
+      "kpi_or_output": "2025 acquisition-category counts/support by purpose, guarantee, DTI, score-model and geography. Category shares use the 2,093,767-row dataset denominator; cells below 30 are suppressed in display. A separate five-sheet analyst workbook provides category mix, all-field missingness, dictionary, and source/method context; categories under 30 are suppressed.",
       "method_card_ids": [
         "fhfa-pudb-acquisition-composition"
       ],
       "rights_use_gate": "Public FHFA release; preserve definitions/attribution. Raw records remain private; no borrower-level output or cross-source joins.",
       "rights_review_status": "PUBLIC_SOURCE; PRIVATE_RAW; NO_MODEL_QUALIFICATION",
-      "receipt_status": "PASS; unique source keys, expected member, 66 headers, official Enterprise code domains and totals reconcile; 0 duplicate keys.",
+      "receipt_status": "PASS; unique source keys, expected member, 66 headers, official Enterprise code domains and totals reconcile; 0 duplicate keys; profile v4 records per-field blank counts for all 66 fields, including explicit zero counts (exact profile remains private)",
       "retrieved_at_utc": "2026-10-15T11:25:12.328423+00:00",
-      "receipt_completed_at_utc": null,
+      "receipt_completed_at_utc": "2026-10-16T23:03:45.123041+00:00",
       "receipt_reference": "Local-private FHFA PUDB receipt/profile; archive SHA-256 verified against local file.",
       "sha256_prefix": "a4ec41faf9a8",
       "missing_cell_count": null,
@@ -1800,10 +1801,10 @@
         }
       ],
       "scope_note": "2,093,767 rows × 66 fields; 2025 acquisitions, 2020 census tracts; unique record keys. No monthly performance/default target. Dataset frequency and field values are published categories, not a loan performance panel.",
-      "missing_cell_count_basis": "Field-level blanks are reported only for selected fields in the profile; a whole-file missing-cell total was not computed (null is unknown).",
+      "missing_cell_count_basis": "Per-field blank counts for all 66 fields are recorded in the private v4 aggregate profile, including explicit zero counts; exact counts remain private and whole-file missing-cell total remains unknown (null).",
       "field_count": 66,
       "component_sha256_prefixes": {
-        "profile_json": "b82f69191392",
+        "profile_json": "f7b65acb0795",
         "dictionary_xlsx": "6259b7506fce",
         "record_count_xlsx": "c3707e7ab0ad"
       }

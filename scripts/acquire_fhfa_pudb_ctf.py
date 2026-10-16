@@ -108,6 +108,7 @@ def run(root: Path, *, profile_existing: bool = False) -> dict:
             "all records acquisition year 2025 and census year 2020",
             "official Enterprise code domains and row totals",
             "official 2025 record-count workbook totals match",
+            "source-blank counts recorded for all 66 fields, including explicit zero counts",
             "aggregate-only profile; no record numbers or loan-level rows emitted",
         ],
     }

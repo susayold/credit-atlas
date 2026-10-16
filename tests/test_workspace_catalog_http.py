@@ -269,3 +269,23 @@ def test_hmda_one_year_workbook_download_is_private_root_bound(tmp_path):
         server.shutdown()
         server.server_close()
         worker.join(timeout=5)
+
+
+def test_fhfa_pudb_analyst_workbook_download_is_bound_to_private_outputs(tmp_path):
+    output_root = tmp_path / "outputs"
+    workbook = output_root / "pudb-analyst-review-20261017" / "CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx"
+    workbook.parent.mkdir(parents=True)
+    workbook.write_bytes(b"private-pudb-xlsx-test")
+    server, worker, base = _serve(tmp_path, SimpleNamespace(root=tmp_path))
+    try:
+        with urlopen(f"{base}/downloads/fhfa-pudb-2025-analyst.xlsx") as response:
+            assert response.status == 200
+            assert response.headers["Content-Disposition"] == 'attachment; filename="CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx"'
+            assert response.read() == b"private-pudb-xlsx-test"
+        with pytest.raises(HTTPError) as error:
+            urlopen(f"{base}/downloads/fhfa-pudb-2025-analyst.xlsx?source_id=other")
+        assert error.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(timeout=5)

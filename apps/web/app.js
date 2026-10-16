@@ -291,6 +291,7 @@ async function fhfaPudbPane(container,generation){
   r.limitations.forEach(x=>box.append(note(x)));
   const source=el('a','button secondary','Mở FHFA Enterprise PUDB source page');source.href='https://www.fhfa.gov/data/pudb';source.target='_blank';source.rel='noopener noreferrer';box.append(source);
   box.append(button('Xuất FHFA PUDB aggregate profile',()=>downloadJSON('/api/fhfa-pudb-profile-report','FHFA-Enterprise-PUDB-2025-private-acquisition-profile.json')));
+  const excel=el('a','button secondary','Tải workbook Excel phân tích PUDB');excel.href='/downloads/fhfa-pudb-2025-analyst.xlsx';excel.download='CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx';box.append(excel);
  }catch(error){if(generation===renderGeneration)box.append(callout(error.message));}
 }
 async function hudFhaIifPane(container,generation){

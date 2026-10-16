@@ -58,6 +58,11 @@ def test_profile_returns_only_aggregate_counts_and_hashes(tmp_path):
     assert result["enterprise_counts"] == {"1": 1, "2": 1}
     assert result["category_counts"]["purpose_ctf"] == {"1": 1, "7": 1}
     assert result["category_counts"]["sex_borr"] == {"2": 2}
+    assert result["blank_counts"]["race2_borr"] == 2
+    assert result["blank_counts"]["income_annual"] == 2
+    assert result["blank_counts"]["year_acq"] == 0
+    assert len(result["blank_counts"]) == len(HEADERS)
+    assert result["schema_version"] == 4
     assert "synthetic-1" not in json.dumps(result)
     assert result["limitations"] and "no monthly payment performance" in result["limitations"][0]
 

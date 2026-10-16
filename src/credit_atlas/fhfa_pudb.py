@@ -98,7 +98,7 @@ def profile_archive(path: Path, *, verify_release: bool = True, expected_rows: i
                 indexes = {name: position for position, name in enumerate(headers)}
                 seen_keys: set[str] = set()
                 category_counts = {name: Counter() for name in CATEGORY_FIELDS}
-                blank_counts = Counter()
+                blank_counts = Counter({field: 0 for field in headers})
                 rows = 0
                 for row in reader:
                     rows += 1
@@ -118,8 +118,10 @@ def profile_archive(path: Path, *, verify_release: bool = True, expected_rows: i
                         raise ValueError("Unexpected federal-guarantee code")
                     for field, counter in category_counts.items():
                         counter[row[indexes[field]].strip() or "<BLANK>"] += 1
-                    for field in NUMERIC_FIELDS:
-                        if not row[indexes[field]].strip():
+                    # Keep a complete source-blank census for the analyst
+                    # workbook, including explicit zero counts for each field.
+                    for position, field in enumerate(headers):
+                        if not row[position].strip():
                             blank_counts[field] += 1
     except (zipfile.BadZipFile, OSError, UnicodeError, csv.Error) as error:
         raise ValueError("Invalid FHFA PUDB ZIP/CSV payload") from error
@@ -135,7 +137,7 @@ def profile_archive(path: Path, *, verify_release: bool = True, expected_rows: i
         raise ValueError("FHFA PUDB Enterprise counts differ from the official record-count workbook")
 
     return {
-        "schema_version": 2,
+        "schema_version": 4,
         "dataset": "FHFA 2025 Enterprise PUDB Single-Family Census Tract File",
         "source_url": SOURCE_URL,
         "source_release_date": SOURCE_RELEASE_DATE,

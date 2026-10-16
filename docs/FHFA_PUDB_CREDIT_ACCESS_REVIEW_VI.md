@@ -26,8 +26,11 @@ dictionary SHA-256 is
 `6259b7506efce08752adcea7dcd01ac5af17d9628ed5730ef9b97be4e591beeb`; the
 record-count workbook SHA-256 is
 `c3707e7ab0ad055e495caa0004557d93c4039a6efdf53b77f157050a059edf8f`. The
-latest aggregate-only profile is recorded in the private receipt
-`data/private/fhfa-enterprise-pudb/2025/receipt-v2-a4ec41faf9a8.json`.
+latest aggregate-only profile is recorded in the local-private receipt
+`receipt-v4-a4ec41faf9a8.json` (profile hash prefix `f7b65acb0795`). It records
+blank counts for all 66 fields, including explicit zero counts. Field-level counts
+and the detailed profile remain private; no full profile hash or private data
+path is published.
 
 ## What it contains and what it supports
 
@@ -77,10 +80,20 @@ rows. The Sources page exposes the counts with an explicit non-performance
 caveat; categories with fewer than 30 records are suppressed in the display.
 The JSON export is marked private and not approved for public release.
 
-All source files and derived profiles remain under `data/private/` on D: and
-are ignored by Git. The public repository contains only the parser, acquisition
-script, synthetic tests, and this source review. The profile acquisition and
-reproduction tests passed; the production audit verified all 2,093,767 rows.
+All source files, derived profiles and the analyst workbook remain under the
+private CreditAtlas data root on D: and are ignored by Git. The local workbook
+`CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx` has five sheets: Overview,
+Category Mix, Missingness, Data Dictionary, and Sources & Methods. It contains
+126 supported category rows, reports all 66 fields' missingness, suppresses
+categories with fewer than 30 observations, and contains no loan-level rows.
+Its internal download route is `/downloads/fhfa-pudb-2025-analyst.xlsx` and is
+confined to the service's private `outputs` directory. The current receipt does
+not approve public release, so neither workbook nor profile is in Git. The
+37,209-byte workbook download passed an HTTP check on a test server; visual
+browser and native Excel desktop open/recalculate acceptance remain pending.
+The public repository contains only the parser, acquisition and workbook
+builder scripts, synthetic tests, and this source review. Profile/reproduction
+tests passed; the production audit verified all 2,093,767 rows.
 
 ## Official references
 

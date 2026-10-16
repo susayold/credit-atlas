@@ -150,6 +150,24 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-ABS-Surveillance-Exceptions.xlsx", head=head)
                     return
+                if url.path == "/downloads/fhfa-pudb-2025-analyst.xlsx":
+                    if query:
+                        raise ValueError("FHFA PUDB analyst workbook accepts no filters")
+                    output_root = (service.root / "outputs").resolve()
+                    workbook = (output_root / "pudb-analyst-review-20261017" /
+                                "CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx").resolve()
+                    if not workbook.is_relative_to(output_root):
+                        raise ValueError("FHFA PUDB workbook escaped the private outputs root")
+                    if not workbook.is_file():
+                        self.send(404, {"error": "FHFA PUDB analyst workbook is not built"}, head=head)
+                        return
+                    if workbook.stat().st_size > 20 * 1024 * 1024:
+                        self.send(413, {"error": "FHFA PUDB analyst workbook exceeds its download bound"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-FHFA-PUDB-2025-Analyst-Review.xlsx", head=head)
+                    return
                 if url.path == "/downloads/nsmo-reference.xlsx":
                     if query:
                         raise ValueError("NSMO Excel reference accepts no filters")

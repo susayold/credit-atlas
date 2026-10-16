@@ -2,14 +2,19 @@
   "schema_version": 1,
   "as_of": "2026-10-17",
   "reviewed_public_commit": "dd7d34d0130f64a6425aa0023db21fd975d70e80",
-  "scope_note": "Static source-to-code/API/UI trace for current public checkout. Does not certify all runtime routes or reprofile all raw data. Receipt completion summary is based on the local private acquisition-complete.json.",
+  "scope_note": "N02 review maps 27 parent dataset groups and records concrete source objects, local receipts, code consumers, KPI scope and limitations. Sixteen groups have source objects bound; 11 still require object-level binding or an explicit no-data/access state. Source counts are not capability completion.",
   "counts": {
     "registered_dataset_domain_records": 27,
     "mapped_registry_records": 27,
     "source_catalog_ids": 20,
     "source_catalog_ids_with_parent_record": 13,
     "source_catalog_ids_without_parent_record": 7,
-    "unregistered_or_underregistered_source_families": 8
+    "unregistered_or_underregistered_source_families": 8,
+    "source_catalog_ids_receipt_matched": 20,
+    "source_level_records": 91,
+    "supplemental_source_records": 71,
+    "registry_groups_with_source_objects": 16,
+    "registry_groups_without_source_objects": 11
   },
   "public_source_bundle": {
     "status": "COMPLETE",
@@ -29,7 +34,8 @@
       "kind": "csv",
       "metadata_url": "https://archive.ics.uci.edu/dataset/350",
       "rights": "CC BY 4.0; cite original dataset/DOI",
-      "scope": "Source-specific benchmark, not local underwriting qualification"
+      "scope": "Source-specific benchmark, not local underwriting qualification",
+      "source_release_record_id": "uci-retail"
     },
     {
       "source_id": "uci-retail-metadata",
@@ -40,7 +46,8 @@
       "kind": "json",
       "metadata_url": "https://archive.ics.uci.edu/dataset/350",
       "rights": "UCI source metadata",
-      "scope": "Variable definitions and source interpretation"
+      "scope": "Variable definitions and source interpretation",
+      "source_release_record_id": "uci-retail-metadata"
     },
     {
       "source_id": "uci-bankruptcy",
@@ -51,7 +58,8 @@
       "kind": "csv",
       "metadata_url": "https://archive.ics.uci.edu/dataset/365",
       "rights": "CC BY 4.0; cite original dataset/DOI",
-      "scope": "Source-specific benchmark, not local underwriting qualification"
+      "scope": "Source-specific benchmark, not local underwriting qualification",
+      "source_release_record_id": "uci-bankruptcy"
     },
     {
       "source_id": "uci-bankruptcy-metadata",
@@ -62,7 +70,8 @@
       "kind": "json",
       "metadata_url": "https://archive.ics.uci.edu/dataset/365",
       "rights": "UCI source metadata",
-      "scope": "Variable definitions and source interpretation"
+      "scope": "Variable definitions and source interpretation",
+      "source_release_record_id": "uci-bankruptcy-metadata"
     },
     {
       "source_id": "sba-7a-fy1991_fy1999",
@@ -73,7 +82,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-7a-fy1991_fy1999"
     },
     {
       "source_id": "sba-7a-fy2000_fy2009",
@@ -84,7 +94,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-7a-fy2000_fy2009"
     },
     {
       "source_id": "sba-7a-fy2010_fy2019",
@@ -95,7 +106,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-7a-fy2010_fy2019"
     },
     {
       "source_id": "sba-7a-fy2020_present",
@@ -106,7 +118,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-7a-fy2020_present"
     },
     {
       "source_id": "sba-504-fy1991_fy2009",
@@ -117,7 +130,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-504-fy1991_fy2009"
     },
     {
       "source_id": "sba-504-fy2010_present",
@@ -128,7 +142,8 @@
       "kind": "csv",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label"
+      "scope": "Snapshot as of 2026-06-30; status is not a fixed-horizon default label",
+      "source_release_record_id": "sba-504-fy2010_present"
     },
     {
       "source_id": "sba-dictionary",
@@ -139,7 +154,8 @@
       "kind": "xlsx",
       "metadata_url": "https://data.sba.gov/dataset/7a-504-foia",
       "rights": "U.S. Government Works",
-      "scope": "Source dictionary"
+      "scope": "Source dictionary",
+      "source_release_record_id": "sba-dictionary"
     },
     {
       "source_id": "fdic-financials-20260630",
@@ -150,7 +166,8 @@
       "kind": "json",
       "metadata_url": "https://api.fdic.gov/banks/docs",
       "rights": "Public FDIC data; cite FDIC",
-      "scope": "One bank-quarter snapshot; not a bank loan book"
+      "scope": "One bank-quarter snapshot; not a bank loan book",
+      "source_release_record_id": "fdic-financials-20260630"
     },
     {
       "source_id": "fdic-failures",
@@ -161,7 +178,8 @@
       "kind": "json",
       "metadata_url": "https://api.fdic.gov/banks/docs",
       "rights": "Public FDIC data; cite FDIC",
-      "scope": "Failure/assistance events; not loan defaults"
+      "scope": "Failure/assistance events; not loan defaults",
+      "source_release_record_id": "fdic-failures"
     },
     {
       "source_id": "fred-unrate",
@@ -173,7 +191,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/UNRATE",
       "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-unrate"
     },
     {
       "source_id": "fred-ussthpi",
@@ -184,7 +203,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/USSTHPI",
       "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-ussthpi"
     },
     {
       "source_id": "fred-mortgage30us",
@@ -196,7 +216,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
       "rights": "Freddie Mac copyright; internal research and citation",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-mortgage30us"
     },
     {
       "source_id": "fred-dgs2",
@@ -207,7 +228,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS2",
       "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-dgs2"
     },
     {
       "source_id": "fred-dgs10",
@@ -218,7 +240,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS10",
       "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-dgs10"
     },
     {
       "source_id": "fred-dgs30",
@@ -229,7 +252,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS30",
       "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-dgs30"
     },
     {
       "source_id": "fred-bamlc0a0cm",
@@ -240,7 +264,8 @@
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
       "rights": "ICE copyrighted: internal use only; no redistribution",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes"
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "source_release_record_id": "fred-bamlc0a0cm"
     }
   ],
   "registered_record_trace": [
@@ -256,70 +281,121 @@
       "code_and_consumer": "Frozen P1 case trong suite snapshot; workspace Retail; `/api/suite-view` và các route retail policy/explanation",
       "kpi_or_output": "AUC, average precision, Brier/log loss, calibration và support của next-month behavioral benchmark",
       "status_and_limits": "Output benchmark đã lưu; đây không phải application underwriting/PD12. KPI từ frozen artifact, không đọc lại raw UCI trong lượt này.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace_plus_private_receipt_crosswalk",
+      "source_release_record_ids": [
+        "uci-retail",
+        "uci-retail-metadata"
+      ]
     },
     {
       "registry_id": "lendingclub-accepted",
       "code_and_consumer": "`lendingclub_full_source.py`, `lendingclub_source.py`, `lendingclub_temporal.py`; Retail tabs Accepted & rejected / LendingClub source; `/api/lendingclub-full-source`, `/api/lendingclub-source`, `/api/retail-source-quality`",
       "kpi_or_output": "Accepted-loan counts, status/feature support, cohort and temporal diagnostics",
-      "status_and_limits": "Có source/API workflow; label maturity, repeated borrowers và predictor availability vẫn cần qualify trước modeling.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "Ba snapshot accepted được ghi riêng: Kaggle v3 (2.260.701 × 151, 2007–2018Q4) và Mendeley v1 expired-loan subset (1.055.054 × 90, 2016Q1–2020Q2), cộng dictionary 280 definitions checked. Không cộng/union hai snapshot. Route/API có sẵn cho diagnostics; label maturity, borrower repetition, issuer fidelity, predictor availability và rights vẫn mở; chưa fit model.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "lendingclub-kaggle-accepted-2007-2018q4-v3",
+        "lendingclub-mendeley-expired-loans-2016q1-2020q2-v1",
+        "lendingclub-issuer-data-dictionary-2026-10-12"
+      ]
     },
     {
       "registry_id": "lendingclub-rejected",
       "code_and_consumer": "Cùng full-source workflow và Retail tab; `/api/lendingclub-full-source`, `/api/lendingclub-source`",
       "kpi_or_output": "Rejected-application population/field support",
-      "status_and_limits": "Mô tả population; không có outcome repayment để suy default hoặc approval rate nếu thiếu mẫu số tương thích.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "Kaggle v3: 27.648.741 × 9, application-day grain; source audit có 0 invalid/missing application dates. Chỉ mô tả population/fields. Không có repayment outcome; khác grain với accepted funded-loan rows nên không suy approval rate, default hay reject inference.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "lendingclub-kaggle-rejected-2007-2018q4-v3"
+      ]
     },
     {
       "registry_id": "bondora-public",
       "code_and_consumer": "`scripts/audit_bondora_n14_readiness.py`, N14 audit note và Excel; không thấy route KPI riêng trong app",
       "kpi_or_output": "Tri-state 12-MOB label counts, maturity proxy, country/year support",
-      "status_and_limits": "Research artifact, chưa nối thành score/model UI. 10.860 mature-proxy NULL còn mở; không biến NULL thành 0.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "789.144 × 31, unique loan_id, source hash/profile matched; 12M target 86.618 true / 520.246 false / 182.280 NULL. 10.860 NULL rơi vào maturity-date proxy nhưng thiếu action evidence; Last-Modified không phải verified observation cutoff. Chỉ aggregate N14 diagnostic, chưa có KPI route/model; rights và snapshot retrieval date chưa qualified.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "bondora-public-loan-dataset-investor-xlsx"
+      ]
     },
     {
       "registry_id": "fhfa-nsmo-v7",
       "code_and_consumer": "`nsmo_views.py`, `apps/web/nsmo.js`, `/nsmo`; APIs `/api/nsmo-profile`, `/api/nsmo-dictionary`, `/api/nsmo-survey-returns`, `/api/nsmo-domains`, `/api/nsmo-target-feasibility`, `/api/nsmo-origination-feasibility`, `/api/nsmo-first-observed-transition-support`, `/api/nsmo-first-entry-risk-set-feasibility`, `/api/nsmo-horizon-sensitivity`",
       "kpi_or_output": "Survey-wave/response coverage, weighted profile/domain estimates, feasibility/support",
-      "status_and_limits": "Runtime smoke đã có trong evidence trước; survey weights, routing, censoring và publisher-imputed item provenance vẫn giới hạn estimand. Tách khỏi Freddie.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "Runtime/readiness routes exist; raw PUF profile confirms 62,359 × 587. Survey weights, routing, censoring and item provenance still limit estimand; separate from Freddie.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "fhfa-nsmo-public-use-file-v7-2026-05-27"
+      ]
     },
     {
       "registry_id": "fhfa-nmdb-new",
       "code_and_consumer": "`nmdb_mortgage_statistics.py`, `_excel.py`; P2 `nmdb`; `/api/nmdb-mortgage-statistics-catalog`, `/api/nmdb-mortgage-statistics`, `/api/nmdb-mortgage-statistics-excel`",
       "kpi_or_output": "Annual origination counts, value/market mixes and weighted rate/score series",
       "status_and_limits": "Runtime/API + browser filter/missingness review đã thực hiện; Excel desktop open/recalculate còn pending. Aggregate context, không phải loan-level outcome.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "fhfa-nmdb-new-annual-2026-09-30"
+      ]
     },
     {
       "registry_id": "fhfa-nmdb-outstanding",
       "code_and_consumer": "Cùng NMDB mart/API/UI/export",
       "kpi_or_output": "Quarterly active stock, UPB and publisher-defined market/performance context",
       "status_and_limits": "Runtime/API + browser filter review đã thực hiện; Excel desktop pending. Flow và stock phải giữ riêng; suppression/missingness không fill.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "fhfa-nmdb-outstanding-quarterly-2026-09-30"
+      ]
     },
     {
       "registry_id": "hmda-releases-2018-2025",
       "code_and_consumer": "`hmda_views.py`, release-specific view modules; P2 HMDA; route families `/api/hmda-*`",
       "kpi_or_output": "Application/decision/lender/geography/product mix, denial comparison and fixed-mix analysis",
-      "status_and_limits": "Có nhiều release-specific grains. Record gộp hiện tại chưa cross-reference đủ từng release receipt; HMDA không có repayment/default outcome.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "12 source-level LAR/TS/MSAMD objects are receipt-crosswalked across 2018 Three-Year, 2019–2024 One-Year, 2025 static Snapshot and 2025 Dynamic (dated 2026-10-11). Counts, fields, LEIs, release freezes and recorded retrieval times are kept at object level; 2018 has 1,961 quarantined out-of-domain rows. HMDA remains application/underwriting outcomes, not repayment/default performance; release-window comparability and privacy/rights gates remain.",
+      "evidence_type": "static_code_trace_plus_private_receipt_crosswalk",
+      "source_release_record_ids": [
+        "hmda-2018-three-year-national",
+        "hmda-2019-one-year-national",
+        "hmda-2020-one-year-national",
+        "hmda-2021-one-year-national",
+        "hmda-2022-one-year-national",
+        "hmda-2023-one-year-national",
+        "hmda-2024-one-year-national",
+        "hmda-2025-snapshot-national-lar",
+        "hmda-2025-snapshot-transmittal-sheet",
+        "hmda-2025-snapshot-msamd-reference",
+        "hmda-2025-dynamic-national-lar",
+        "hmda-2025-dynamic-transmittal-sheet"
+      ]
     },
     {
       "registry_id": "sba-foia",
       "code_and_consumer": "`business_sba.py`, `business_archive.py`; Business workspace; `/api/business-archive`, `/api/business-report`",
       "kpi_or_output": "SBA guarantee/source-record summaries, status and cohort distributions",
       "status_and_limits": "`public_sources.catalog()` có sáu cohort CSV và dictionary. Registry group chưa bind đủ từng source ID/receipt; status không phải fixed-horizon default.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace_plus_private_receipt_crosswalk",
+      "source_release_record_ids": [
+        "sba-7a-fy1991_fy1999",
+        "sba-7a-fy2000_fy2009",
+        "sba-7a-fy2010_fy2019",
+        "sba-7a-fy2020_present",
+        "sba-504-fy1991_fy2009",
+        "sba-504-fy2010_present",
+        "sba-dictionary"
+      ]
     },
     {
       "registry_id": "uci-365",
       "code_and_consumer": "`bankruptcy.py`, `bankruptcy_views.py`, `bankruptcy_study.py`, `bankruptcy_model_views.py`; `/api/bankruptcy-view`, `/api/bankruptcy-model-view` và catalogs",
       "kpi_or_output": "Bankruptcy ratio distributions and frozen one-year classification metrics",
       "status_and_limits": "Source benchmark/firm-level population; không phải local-business PD calibration. Acquisition source IDs gồm CSV và metadata.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace_plus_private_receipt_crosswalk",
+      "source_release_record_ids": [
+        "uci-bankruptcy",
+        "uci-bankruptcy-metadata"
+      ]
     },
     {
       "registry_id": "sec-filings-financials",
@@ -333,7 +409,11 @@
       "code_and_consumer": "`bank_panel.py`, `bank_views.py`; Bank workspace; `/api/bank-view`, `/api/bank-timeline`",
       "kpi_or_output": "Bank-quarter asset/liability/loan quality and charge-off/coverage ratios",
       "status_and_limits": "`public_sources.catalog()` có financials snapshot và failure events. Hai source object có grain/use khác nhau; failure event không là loan default.",
-      "evidence_type": "static_code_trace"
+      "evidence_type": "static_code_trace_plus_private_receipt_crosswalk",
+      "source_release_record_ids": [
+        "fdic-financials-20260630",
+        "fdic-failures"
+      ]
     },
     {
       "registry_id": "exposure-actual-2026-03",
@@ -393,38 +473,90 @@
     },
     {
       "registry_id": "world-bank-wdi",
-      "code_and_consumer": "`country_observatory.py`, `country_views.py`; Country workspace; `/api/country-view`, `/api/country-report`",
-      "kpi_or_output": "Country macro indicators and coverage/gap profile",
-      "status_and_limits": "Context-only aggregate, not borrower PD or direct portfolio loss KPI. Preserve native indicator/year.",
-      "evidence_type": "static_code_trace"
+      "code_and_consumer": "22 receipt-bound API/reference objects for 7 WDI series + country catalog; `country_observatory.py`, `country_views.py`; Country workspace; `/api/country-view`, `/api/country-report`.",
+      "kpi_or_output": "122,892 annual observations across 7 indicators (17,556 rows/indicator); 64,452 source NULL values; country/economy and aggregate context.",
+      "status_and_limits": "Private receipt hashes verified and canonical source validation re-run; WDI source lastupdated 2026-10-08, live 2026-10-17 spot check of NPL endpoint also returned 2026-10-08. Coverage is indicator-specific; NPL/capital aggregates are entirely NULL. Keep provider-specific reuse restrictions open; macro/banking-system context, not borrower PD or direct portfolio loss.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "wdi-country-catalog-2026-10-08",
+        "wdi-fb.ast.nper.zs-metadata-2026-10-08",
+        "wdi-fb.ast.nper.zs-observations-2026-10-08",
+        "wdi-fb.ast.nper.zs-glossary-2026-10-08",
+        "wdi-fb.bnk.capa.zs-metadata-2026-10-08",
+        "wdi-fb.bnk.capa.zs-observations-2026-10-08",
+        "wdi-fb.bnk.capa.zs-glossary-2026-10-08",
+        "wdi-fs.ast.prvt.gd.zs-metadata-2026-10-08",
+        "wdi-fs.ast.prvt.gd.zs-observations-2026-10-08",
+        "wdi-fs.ast.prvt.gd.zs-glossary-2026-10-08",
+        "wdi-fd.ast.prvt.gd.zs-metadata-2026-10-08",
+        "wdi-fd.ast.prvt.gd.zs-observations-2026-10-08",
+        "wdi-fd.ast.prvt.gd.zs-glossary-2026-10-08",
+        "wdi-dt.dod.dect.gn.zs-metadata-2026-10-08",
+        "wdi-dt.dod.dect.gn.zs-observations-2026-10-08",
+        "wdi-dt.dod.dect.gn.zs-glossary-2026-10-08",
+        "wdi-ny.gdp.mktp.kd.zg-metadata-2026-10-08",
+        "wdi-ny.gdp.mktp.kd.zg-observations-2026-10-08",
+        "wdi-ny.gdp.mktp.kd.zg-glossary-2026-10-08",
+        "wdi-fp.cpi.totl.zg-metadata-2026-10-08",
+        "wdi-fp.cpi.totl.zg-observations-2026-10-08",
+        "wdi-fp.cpi.totl.zg-glossary-2026-10-08"
+      ]
     },
     {
       "registry_id": "sovereign-archive",
       "code_and_consumer": "`country_observatory.py`, `country_views.py`; sovereign panel `/api/sovereign-defaults`",
-      "kpi_or_output": "Sovereign default-event chronology and country context",
-      "status_and_limits": "Historical country event archive; not retail/corporate obligor outcome labels. Edition/coding differences remain source-specific.",
-      "evidence_type": "static_code_trace"
+      "kpi_or_output": "Sovereign government debt in default and domestic-arrears context by entity/reference year; annual edition comparison and source revision analysis.",
+      "status_and_limits": "12 receipt-bound objects cover the 2023–2026 annual edition pages, four XLSX releases, accompanying papers and TR124 methodology. Hash/size match private receipts; edition profile has 42,519 entity-year rows × 16 selected metrics. Sovereign government obligation-in-default/domestic-arrears context, not retail or corporate borrower PD/LGD. Bank-owned website content permits reuse with attribution; third-party input rights must be checked before raw redistribution.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "sovereign-archive-2023-landing",
+        "sovereign-archive-2023-workbook",
+        "sovereign-archive-2023-paper",
+        "sovereign-archive-2024-landing",
+        "sovereign-archive-2024-workbook",
+        "sovereign-archive-2024-paper",
+        "sovereign-archive-2025-landing",
+        "sovereign-archive-2025-workbook",
+        "sovereign-archive-2026-landing",
+        "sovereign-archive-2026-workbook",
+        "sovereign-archive-2026-paper",
+        "sovereign-archive-methodology-tr124-2023"
+      ]
     },
     {
       "registry_id": "treasury-hamp",
-      "code_and_consumer": "Research note, audit/acquisition scripts and private aggregate artifact; no current dedicated KPI route located in `server.py`/`app.js`",
-      "kpi_or_output": "HAMP modification/performance counts and source audit outputs",
-      "status_and_limits": "Research artifact only in current app. Static/updated Treasury files and cutoff/source availability are separate; not a Freddie vintage.",
-      "evidence_type": "static_code_trace"
+      "code_and_consumer": "scripts/audit_treasury_hamp_performance.py and docs/TREASURY_HAMP_DATA_REVIEW_VI.md; no dedicated KPI route located in server.py/app.js.",
+      "kpi_or_output": "9,872,074 source records profiled: 1,889,234 modifications, 7,982,840 monthly payment-activity records; aggregate audit outputs only.",
+      "status_and_limits": "Private aggregate audit is bound to Treasury archive and guide. Local observed activity coverage is only 2022-01–2023-02 (14 dates); Treasury lists monthly updates from 2018-01 through 2023-02, so earlier coverage remains unresolved. Selected modified-loan cohort; no PD/default KPI or Freddie vintage extension.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "treasury-hamp-performance-update-2023-02",
+        "treasury-hamp-performance-user-guide-v1"
+      ]
     },
     {
       "registry_id": "fhfa-pudb-2025",
       "code_and_consumer": "`fhfa_pudb.py`; mortgage workspace; `/api/fhfa-pudb-profile`",
       "kpi_or_output": "2025 Enterprise-acquisition categories/support (purpose, guarantee, DTI, score model, geography)",
-      "status_and_limits": "Runtime profile display in code. Acquisition context only; no monthly performance/default outcome. Bind archive hash/release into N02.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "2,093,767 × 66 verified from receipt; API produces aggregate profile JSON. Dictionary and official count workbook are bound separately. Add Excel export/workbook parity; acquisition only, no performance/default outcome.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "fhfa-pudb-2025-sf-census-tract",
+        "fhfa-pudb-2025-data-dictionary",
+        "fhfa-pudb-2025-record-counts"
+      ]
     },
     {
       "registry_id": "fhfa-nmdb-performance",
       "code_and_consumer": "Two source paths are present: `nmdb_performance.py` serves curated national CSV through `/api/nmdb-performance` and `/api/nmdb-state-performance` in NSMO; `nmdb_aggregate.py` serves the full-market package through `/api/fhfa-nmdb-performance` in the mortgage workspace.",
       "kpi_or_output": "Quarterly delinquency, foreclosure and forbearance shares, with different geography/market coverage by path",
-      "status_and_limits": "Aggregate reported rates, not D01 cohort incidence. Code confirms both paths exist; runtime receipt parity and their release/hash crosswalk still need verification. Registry label “app integration pending” is stale and should be corrected.",
-      "evidence_type": "static_code_trace"
+      "status_and_limits": "Three distinct packages/receipts are bound: all geographies 261,856; national/census areas 25,088 raw and 1,568 national; states 79,968. Direct readers/APIs have actual-data smoke checks; browser/workbook acceptance remains scoped by route. Aggregate rates, not loan-level incidence.",
+      "evidence_type": "static_code_trace",
+      "source_release_record_ids": [
+        "fhfa-nmdb-performance-all-geographies-2026-09-30",
+        "fhfa-nmdb-performance-national-census-areas-2026-09-30",
+        "fhfa-nmdb-performance-states-2026-09-30"
+      ]
     },
     {
       "registry_id": "abs-surveillance-exceptions-103-periods",
@@ -439,49 +571,658 @@
       "source_family": "FRED/ALFRED macro, source-version records",
       "code_and_route_evidence": "`public_sources.py`, `market_data.py`, `mortgage_macro_context.py`; `/api/market-report`, `/api/mortgage-macro-context`",
       "output": "Native-frequency rates/spreads; latest-revised context; separate point-in-time vintage context",
-      "registry_action": "Add one source record per series/retrieval policy and separate ALFRED vintage receipts from latest-revised FRED snapshots. Seven `fred-*` source IDs are already generated by `public_sources.catalog()` but are not explicit registry IDs. Mortgage macro view's `USSTHPI` is the FRED series with ALFRED snapshots, not the separate FHFA CSV."
+      "registry_action": "Source-level rows for all seven FRED catalog IDs and three ALFRED point-in-time series are now present. Still resolve FRED/ALFRED rights, parent-group assignment, source terms and direct-publisher parity before software/model use; do not reconstruct vintages from revised data."
     },
     {
       "source_family": "CFPB mortgage delinquency geography series",
       "code_and_route_evidence": "`cfpb_mortgage_trends.py`; `/api/cfpb-mortgage-trends`",
       "output": "30–89 and 90+ delinquency rates by geography",
-      "registry_action": "Add source/version/coverage/revision and suppression/imputation provenance record."
+      "registry_action": "A source/release record and current API consumer are now registered. On refresh, verify official publication/revision date, suppression and publisher-imputation semantics against methodology; keep aggregate NMDB-derived context distinct from loan-level performance."
     },
     {
       "source_family": "HUD FHA Insurance in Force by tract",
       "code_and_route_evidence": "`hud_fha_iif.py`; `/api/hud-fha-iif-profile`",
       "output": "Aggregate tract/state insured-loan counts and balances",
-      "registry_action": "Add record and keep timing conflict unresolved: HUD catalog coverage 2025-03 vs layer description 09/2021."
+      "registry_action": "A source record is now registered. Preserve the unresolved Data.gov 2025-03 versus live-layer 09/2021 timing conflict; do not call the balances current until resolved."
     },
     {
       "source_family": "HUD FHA performance/recovery products",
       "code_and_route_evidence": "`hud_fha_performance.py`; `/api/hud-fha-performance`",
       "output": "FHA performance, foreclosure and recovery aggregate outputs",
-      "registry_action": "Add separate record(s) for each CSV/product and release; do not blend with FHA IIF exposure."
+      "registry_action": "Six report-table transcriptions are now registered. Link each table/page/row to the official report; the PDF binary was not acquired (403), so keep provenance as transcription and do not infer PD/LGD."
     },
     {
       "source_family": "Federal Reserve bank asset-quality context",
       "code_and_route_evidence": "`fed_bank_mortgage_context.py`; `/api/fed-bank-mortgage-context` and workbook download",
       "output": "Quarterly series by product and bank-size group",
-      "registry_action": "Add source/release record and distinguish source series/denominators from FDIC bank panel."
+      "registry_action": "The 30 quarterly source series are now registered. Verify API/workbook parity and preserve annualized net charge-off, recovery and delinquency definitions; keep separate from FDIC bank-quarter data."
     },
     {
       "source_family": "Fannie Mae format/layout samples",
       "code_and_route_evidence": "`fannie_samples.py`; `/api/fannie-samples`; Excel library",
       "output": "Parser/layout/field coverage, not performance KPI",
-      "registry_action": "Register as format/reference artifact with explicit non-model use; keep separate from actual acquisition/performance cohorts."
+      "registry_action": "Seven parser/layout sample artifacts are registered as reference only. Full performance cohorts are not acquired and external rights are unqualified; do not claim performance KPI or model support."
     },
     {
       "source_family": "Market Treasury / ICE OAS source families",
       "code_and_route_evidence": "`market_data.py`, `market_views.py`; Market workspace, `/api/market-view`, `/api/market-report`",
       "output": "Treasury par-yield context, ICE OAS observations, rate/bond scenarios",
-      "registry_action": "Bind source-specific license, release and native date coverage. ICE remains internal-use only; user-entered bond scenario inputs are separate assumptions."
+      "registry_action": "Bind direct Treasury/ICE source release, native date coverage and terms; FRED-distributed series remain a separate route. ICE OAS is internal-only unless written rights permit wider use."
     },
     {
       "source_family": "FHFA State All-Transactions HPI QA artifact",
       "code_and_route_evidence": "`fhfa_hpi.py`, `scripts/ingest_fhfa_state_hpi.py`, `docs/data/fhfa-state-all-transactions-hpi-quarterly-2026q2.csv`; no current API route found",
       "output": "Source validation and normalized state-quarter table; not currently a mortgage macro UI KPI input",
-      "registry_action": "Add a source record if this audited file remains part of the maintained data estate. Keep separate from both FHFA PUDB acquisitions and the FRED/ALFRED `USSTHPI` series used by the macro view."
+      "registry_action": "The 2026Q2 normalized QA artifact is now registered; decide whether to maintain it. Keep it separate from FRED/ALFRED USSTHPI and PUDB/NMDB; no current API consumer was identified."
+    }
+  ],
+  "source_release_register": {
+    "path": "docs/data/creditatlas-source-release-register-2026-10-17.json",
+    "record_count": 91,
+    "receipt_bound_public_source_ids": 20,
+    "supplemental_source_families": 15,
+    "note": "20 public-suite objects plus 71 supplemental source objects across 16 broad families, including 22 World Bank WDI objects, 12 HMDA files, 9 FHFA PUDB/NMDB/NSMO objects, 5 LendingClub/Bondora objects, 2 Treasury HAMP objects and 12 BoC–BoE Sovereign Archive page/workbook/paper/methodology objects. Publication, observation and retrieval dates remain distinct; only short hash prefixes are public.",
+    "supplemental_source_records": 71
+  },
+  "supplemental_source_record_crosswalk": [
+    {
+      "source_release_record_id": "fred-alfred-unrate-pit",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "distributor": "Federal Reserve Bank of St. Louis — ALFRED",
+      "source_id": "UNRATE",
+      "source_family": "ALFRED point-in-time vintage",
+      "current_use_status": "Terms/source-route gate; not qualified for app/model use",
+      "note": "Series has its own vintage count/release record; run manifest has no per-file retrieval timestamp."
+    },
+    {
+      "source_release_record_id": "fred-alfred-ussthpi-pit",
+      "publisher": "Federal Housing Finance Agency",
+      "distributor": "Federal Reserve Bank of St. Louis — ALFRED",
+      "source_id": "USSTHPI",
+      "source_family": "ALFRED point-in-time vintage",
+      "current_use_status": "Terms/source-route gate; not qualified for app/model use",
+      "note": "Series has its own vintage count/release record; run manifest has no per-file retrieval timestamp."
+    },
+    {
+      "source_release_record_id": "fred-alfred-mortgage30us-pit",
+      "publisher": "Freddie Mac",
+      "distributor": "Federal Reserve Bank of St. Louis — ALFRED",
+      "source_id": "MORTGAGE30US",
+      "source_family": "ALFRED point-in-time vintage",
+      "current_use_status": "Terms/source-route gate; not qualified for app/model use",
+      "note": "Series has its own vintage count/release record; run manifest has no per-file retrieval timestamp."
+    },
+    {
+      "source_release_record_id": "fed-commercial-bank-credit-quality-2026-08",
+      "publisher": "Board of Governors of the Federal Reserve System",
+      "source_family": "Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks",
+      "current_use_status": "Current aggregate bank-credit-quality context; not borrower-level outcomes.",
+      "note": "Thirty quarterly series are source-registered; validate route/workbook parity and retain annualized net charge-off / delinquency definitions."
+    },
+    {
+      "source_release_record_id": "hud-fha-iif-tract-snapshot",
+      "publisher": "U.S. Department of Housing and Urban Development",
+      "source_family": "FHA Insurance in Force by Census Tract",
+      "current_use_status": "Aggregate insured-loan exposure profile; effective snapshot timing is unresolved.",
+      "note": "Source object is registered; Data.gov coverage 2025-03 conflicts with live layer description 09/2021, so do not label the balance current."
+    },
+    {
+      "source_release_record_id": "hud-fha-performance-2026-08",
+      "publisher": "U.S. Department of Housing and Urban Development",
+      "source_family": "FHA Single-Family Loan Performance Trends August 2026",
+      "current_use_status": "Aggregate performance/recovery transcription; not borrower-level PD/LGD validation.",
+      "note": "Six report-table transcriptions are registered; the source PDF binary was not acquired (HTTP 403). Preserve report/table/page lineage and transcription status."
+    },
+    {
+      "source_release_record_id": "hmda-2018-three-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2018 Three-Year National LAR; freeze 2021-12-31",
+      "source_id": "hmda-2018-three-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "15,140,471 source rows; 99 fields; as-of/freeze 2021-12-31; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2019-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2019",
+      "source_id": "hmda-2019-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "17,563,200 source rows; 99 fields; as-of/freeze 2022-04-05; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2020-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2020",
+      "source_id": "hmda-2020-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "25,666,745 source rows; 99 fields; as-of/freeze 2022-04-30; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2021-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2021",
+      "source_id": "hmda-2021-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "26,227,364 source rows; 99 fields; as-of/freeze 2023-05-01; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2022-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2022",
+      "source_id": "hmda-2022-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "16,099,307 source rows; 99 fields; as-of/freeze 2024-05-01; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2023-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2023",
+      "source_id": "hmda-2023-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "11,564,178 source rows; 99 fields; as-of/freeze 2025-05-19; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2024-one-year-national",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA One-Year National Loan-Level Dataset · 2024",
+      "source_id": "hmda-2024-one-year-national",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "12,259,199 source rows; 99 fields; as-of/freeze 2026-06-02; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2025-dynamic-national-lar",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2025 Dynamic National Loan-Level Dataset · LAR; as of 2026-10-11 12:00:30Z",
+      "source_id": "hmda-2025-dynamic-national-lar",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "13,558,306 source rows; 99 fields; as-of/freeze 2026-10-11T12:00:30+00:00; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2025-dynamic-transmittal-sheet",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2025 Dynamic National Loan-Level Dataset · Transmittal Sheet (TS); as of 2026-10-11 12:00:20Z",
+      "source_id": "hmda-2025-dynamic-transmittal-sheet",
+      "current_use_status": "QA/reference only; preserve private fence for institution/contact/tax identifiers; no borrower KPI.",
+      "note": "4,794 source rows; 10 fields; as-of/freeze 2026-10-11T12:00:20+00:00; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2025-snapshot-msamd-reference",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2025 Snapshot · MSA/MD Description reference",
+      "source_id": "hmda-2025-snapshot-msamd-reference",
+      "current_use_status": "Geography reference/QA only; no current KPI consumer identified.",
+      "note": "418 source rows; 3 fields; as-of/freeze 2026-06-02; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2025-snapshot-national-lar",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2025 Snapshot National Loan-Level Dataset · LAR",
+      "source_id": "hmda-2025-snapshot-national-lar",
+      "current_use_status": "Application/underwriting descriptive analysis; not borrower repayment/default performance or PD.",
+      "note": "13,543,606 source rows; 99 fields; as-of/freeze 2026-06-02; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "hmda-2025-snapshot-transmittal-sheet",
+      "publisher": "Federal Financial Institutions Examination Council (FFIEC) / Consumer Financial Protection Bureau (CFPB)",
+      "source_family": "HMDA 2025 Snapshot National Loan-Level Dataset · Transmittal Sheet (TS)",
+      "source_id": "hmda-2025-snapshot-transmittal-sheet",
+      "current_use_status": "QA/reference only; preserve private fence for institution/contact/tax identifiers; no borrower KPI.",
+      "note": "4,782 source rows; 10 fields; as-of/freeze 2026-06-02; row grain and period remain release-specific."
+    },
+    {
+      "source_release_record_id": "cfpb-mpt-2026-08",
+      "publisher": "Consumer Financial Protection Bureau",
+      "source_family": "Mortgage Performance Trends August 2026 latest-revised release",
+      "current_use_status": "CFPB mortgage delinquency context; aggregate, not borrower PD.",
+      "note": "Source object/API record is now registered; verify revision date, suppression/imputation provenance and route/API parity on the next refresh."
+    },
+    {
+      "source_release_record_id": "fannie-single-family-sample-layout-reference",
+      "publisher": "Fannie Mae",
+      "source_family": "Single-Family Loan Performance sample and layout references",
+      "current_use_status": "Parser/layout sample reference only; full performance cohort not acquired and external rights remain unqualified.",
+      "note": "Seven sample/layout artifacts are registered with per-file retrieval evidence; do not count them as loan-performance data."
+    },
+    {
+      "source_release_record_id": "fhfa-state-all-transactions-hpi-2026q2",
+      "publisher": "Federal Housing Finance Agency",
+      "source_family": "State All-Transactions HPI, through 2026Q2",
+      "current_use_status": "Normalized state-quarter QA artifact; no current API/KPI consumer identified.",
+      "note": "The 2026Q2 artifact is registered; keep separate from FRED USSTHPI and PUDB/NMDB, and decide whether the QA file remains maintained."
+    },
+    {
+      "source_release_record_id": "fhfa-pudb-2025-sf-census-tract",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-pudb-2025-sf-census-tract",
+      "source_family": "FHFA PUDB 2025 single-family/census-tract acquisition ZIP",
+      "current_use_status": "Acquired profile input; category counts only, no performance target.",
+      "note": "2025 acquisition records, 2,093,767 × 66; 2020 census tracts; category display suppresses cells under 30."
+    },
+    {
+      "source_release_record_id": "fhfa-pudb-2025-data-dictionary",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-pudb-2025-data-dictionary",
+      "source_family": "FHFA PUDB 2025 data dictionary",
+      "current_use_status": "Field/category definitions for profile and future analyst Excel export.",
+      "note": "Definition workbook, not a loan/record observation table."
+    },
+    {
+      "source_release_record_id": "fhfa-pudb-2025-record-counts",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-pudb-2025-record-counts",
+      "source_family": "FHFA PUDB 2025 official record-count workbook",
+      "current_use_status": "Official reconciliation benchmark for Enterprise/category counts.",
+      "note": "Reference totals; not an independent observation dataset."
+    },
+    {
+      "source_release_record_id": "fhfa-nmdb-new-annual-2026-09-30",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nmdb-new-annual-2026-09-30",
+      "source_family": "FHFA NMDB New annual flow",
+      "current_use_status": "P2 mortgage origination context; `/api/nmdb-mortgage-statistics*` and workbook.",
+      "note": "1998–2025 annual; weighted flow statistics, 3,038,100 raw aggregate rows."
+    },
+    {
+      "source_release_record_id": "fhfa-nmdb-outstanding-quarterly-2026-09-30",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nmdb-outstanding-quarterly-2026-09-30",
+      "source_family": "FHFA NMDB Outstanding quarterly stock",
+      "current_use_status": "P2 active stock/UPB context; same filtered API/workbook contract but separate product.",
+      "note": "2013Q1–2026Q2 quarter-end stock; 535,464 raw aggregate rows."
+    },
+    {
+      "source_release_record_id": "fhfa-nmdb-performance-all-geographies-2026-09-30",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nmdb-performance-all-geographies-2026-09-30",
+      "source_family": "FHFA NMDB performance all-geographies quarterly",
+      "current_use_status": "Full geography mortgage workspace API `/api/fhfa-nmdb-performance`.",
+      "note": "2002Q1–2026Q2; 261,856 rows; all geography package."
+    },
+    {
+      "source_release_record_id": "fhfa-nmdb-performance-national-census-areas-2026-09-30",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nmdb-performance-national-census-areas-2026-09-30",
+      "source_family": "FHFA NMDB performance national/census areas quarterly",
+      "current_use_status": "National/census-area report path `/api/nmdb-performance`; 1,568 national observations.",
+      "note": "25,088 raw rows across four geographies; curated national path separately hashed."
+    },
+    {
+      "source_release_record_id": "fhfa-nmdb-performance-states-2026-09-30",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nmdb-performance-states-2026-09-30",
+      "source_family": "FHFA NMDB performance states quarterly",
+      "current_use_status": "State filter API and NMDB performance workbook.",
+      "note": "79,968 rows; state/D.C. grain; not the national/census package."
+    },
+    {
+      "source_release_record_id": "fhfa-nsmo-public-use-file-v7-2026-05-27",
+      "publisher": "Federal Housing Finance Agency",
+      "source_id": "fhfa-nsmo-public-use-file-v7-2026-05-27",
+      "source_family": "FHFA NSMO PUF v7",
+      "current_use_status": "Survey profile/weighted domain and feasibility workspace.",
+      "note": "62,359 survey loans × 587 fields; separate from Freddie performance cohort."
+    },
+    {
+      "source_release_record_id": "lendingclub-kaggle-accepted-2007-2018q4-v3",
+      "publisher": "Kaggle contributor dataset by wordsforthewise (Nathan George); original LendingClub source fidelity is not verified",
+      "source_id": "accepted_2007_to_2018Q4.csv.gz",
+      "source_family": "LendingClub Kaggle accepted/rejected historical snapshot v3",
+      "current_use_status": "Private research; accepted loan/cohort diagnostics; no qualified fixed-horizon target or public redistribution.",
+      "note": "2,260,701 rows × 151; SHA prefix 55c16f75120f; source receipt and independent audit matched. Distinct from Mendeley expired-loan snapshot."
+    },
+    {
+      "source_release_record_id": "lendingclub-kaggle-rejected-2007-2018q4-v3",
+      "publisher": "Kaggle contributor dataset by wordsforthewise (Nathan George); original LendingClub source fidelity is not verified",
+      "source_id": "rejected_2007_to_2018Q4.csv.gz",
+      "source_family": "LendingClub Kaggle accepted/rejected historical snapshot v3",
+      "current_use_status": "Private research; rejected application population description only.",
+      "note": "27,648,741 rows × 9; SHA prefix c1f9f2a4ec55; no repayment outcome and no compatible denominator with funded accepted records."
+    },
+    {
+      "source_release_record_id": "lendingclub-mendeley-expired-loans-2016q1-2020q2-v1",
+      "publisher": "Mendeley Data dataset contributed by David Maloney; source data described as Lending Club quarterly files",
+      "source_id": "mvvd3dnfyz.1",
+      "source_family": "LendingClub Mendeley expired-loan snapshot",
+      "current_use_status": "Private profile/diagnostic; contributor-merged resolved cohort, not all booked applications.",
+      "note": "Published 2022-08-22; CC BY 4.0 declared; 1,055,054 rows × 90; 2016Q1–2020Q2; unique id, publisher file hash matched. Original issuer fidelity and point-in-time features remain unverified."
+    },
+    {
+      "source_release_record_id": "lendingclub-issuer-data-dictionary-2026-10-12",
+      "publisher": "LendingClub resource URL; response redirected to resources.happen.com",
+      "source_id": "LCDataDictionary.xlsx",
+      "source_family": "LendingClub field dictionary reference",
+      "current_use_status": "Definition/reference only; private pending source identity/redistribution review.",
+      "note": "23,582 bytes; SHA prefix d39e281c1130; 280 definition entries checked; response redirected from LendingClub resource URL to Happen host. Does not establish application-time availability."
+    },
+    {
+      "source_release_record_id": "bondora-public-loan-dataset-investor-xlsx",
+      "publisher": "Go & Grow (formerly Bondora), public statistics dataset",
+      "source_id": "loan_dataset_investor.xlsx",
+      "source_family": "Go & Grow/Bondora public loan dataset snapshot",
+      "current_use_status": "Private aggregate N14 readiness diagnostic; row-level reuse/license unqualified.",
+      "note": "789,144 × 31, unique loan_id; 12M label true/false/NULL 86,618/520,246/182,280. File-level retrieval timestamp is absent; 10,860 proxy-mature NULL remain unresolved."
+    },
+    {
+      "source_release_record_id": "treasury-hamp-performance-update-2023-02",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "treasury-hamp-performance-update-2023-02",
+      "source_family": "Treasury HAMP monthly performance supplemental update",
+      "current_use_status": "Aggregate audit passed; supplemental modified-loan cohort only; no app route/model qualification.",
+      "note": "9,872,074 mixed-grain records; 1,889,234 modification + 7,982,840 activity records; 14 activity dates 2022-01–2023-02. Treasury page lists updates from 2018-01; earlier local coverage remains unresolved."
+    },
+    {
+      "source_release_record_id": "treasury-hamp-performance-user-guide-v1",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "treasury-hamp-performance-user-guide-v1",
+      "source_family": "Treasury HAMP performance user guide v1.0",
+      "current_use_status": "Definition/reference source; not an observation dataset.",
+      "note": "Effective March 2018; defines mixed modification/activity records and reporting semantics. Use Not Reported as reporting state only, not default."
+    },
+    {
+      "source_release_record_id": "wdi-country-catalog-2026-10-08",
+      "publisher": "The World Bank",
+      "distributor": "World Bank Indicators API",
+      "source_id": "wdi-country-catalog-2026-10-08",
+      "source_family": "World Bank country/economy catalog API",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Country catalog row count is a join reference, not borrower rows or a time-valid historical grouping."
+    },
+    {
+      "source_release_record_id": "wdi-fb.ast.nper.zs-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fb.ast.nper.zs-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-fb.ast.nper.zs-observations-2026-10-08",
+      "publisher": "Financial Soundness Indicators, International Monetary Fund (IMF), uri: https://data.imf.org/en/datasets/IMF:EXTERNAL_DATASET_CARDS/IMF.STA:LFSI",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fb.ast.nper.zs-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "2,357 non-null values, 15,199 source NULLs; 154 economies and 0 aggregates have at least one non-null value; non-null year bounds 2000–2025. No fill/carry-forward. Underlying source organization(s): Financial Soundness Indicators, International Monetary Fund (IMF), uri: https://data.imf.org/en/datasets/IMF:EXTERNAL_DATASET_CARDS/IMF.STA:LFSI"
+    },
+    {
+      "source_release_record_id": "wdi-fb.ast.nper.zs-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-fb.ast.nper.zs-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-fb.bnk.capa.zs-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fb.bnk.capa.zs-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-fb.bnk.capa.zs-observations-2026-10-08",
+      "publisher": "Financial Soundness Indicators, International Monetary Fund (IMF), uri: https://data.imf.org/en/datasets/IMF:EXTERNAL_DATASET_CARDS/IMF.STA:LFSI",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fb.bnk.capa.zs-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "2,301 non-null values, 15,255 source NULLs; 152 economies and 0 aggregates have at least one non-null value; non-null year bounds 2000–2025. No fill/carry-forward. Underlying source organization(s): Financial Soundness Indicators, International Monetary Fund (IMF), uri: https://data.imf.org/en/datasets/IMF:EXTERNAL_DATASET_CARDS/IMF.STA:LFSI"
+    },
+    {
+      "source_release_record_id": "wdi-fb.bnk.capa.zs-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-fb.bnk.capa.zs-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-fs.ast.prvt.gd.zs-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fs.ast.prvt.gd.zs-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-fs.ast.prvt.gd.zs-observations-2026-10-08",
+      "publisher": "International Financial Statistics database, International Monetary Fund (IMF);\nWorld Development Indicators Database, World Bank (WB);\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD)",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fs.ast.prvt.gd.zs-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "9,990 non-null values, 7,566 source NULLs; 186 economies and 48 aggregates have at least one non-null value; non-null year bounds 1960–2025. No fill/carry-forward. Underlying source organization(s): International Financial Statistics database, International Monetary Fund (IMF);\nWorld Development Indicators Database, World Bank (WB);\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD)"
+    },
+    {
+      "source_release_record_id": "wdi-fs.ast.prvt.gd.zs-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-fs.ast.prvt.gd.zs-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-fd.ast.prvt.gd.zs-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fd.ast.prvt.gd.zs-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-fd.ast.prvt.gd.zs-observations-2026-10-08",
+      "publisher": "International Financial Statistics database, International Monetary Fund (IMF);\nWorld Development Indicators Database, World Bank (WB);\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD)",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fd.ast.prvt.gd.zs-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "11,696 non-null values, 5,860 source NULLs; 186 economies and 48 aggregates have at least one non-null value; non-null year bounds 1960–2025. No fill/carry-forward. Underlying source organization(s): International Financial Statistics database, International Monetary Fund (IMF);\nWorld Development Indicators Database, World Bank (WB);\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD)"
+    },
+    {
+      "source_release_record_id": "wdi-fd.ast.prvt.gd.zs-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-fd.ast.prvt.gd.zs-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-dt.dod.dect.gn.zs-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-dt.dod.dect.gn.zs-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-dt.dod.dect.gn.zs-observations-2026-10-08",
+      "publisher": "International Debt Statistics, World Bank (WB)",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-dt.dod.dect.gn.zs-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "6,161 non-null values, 11,395 source NULLs; 121 economies and 12 aggregates have at least one non-null value; non-null year bounds 1970–2024. No fill/carry-forward. Underlying source organization(s): International Debt Statistics, World Bank (WB)"
+    },
+    {
+      "source_release_record_id": "wdi-dt.dod.dect.gn.zs-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-dt.dod.dect.gn.zs-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-ny.gdp.mktp.kd.zg-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-ny.gdp.mktp.kd.zg-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-ny.gdp.mktp.kd.zg-observations-2026-10-08",
+      "publisher": "Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-ny.gdp.mktp.kd.zg-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "14,388 non-null values, 3,168 source NULLs; 214 economies and 48 aggregates have at least one non-null value; non-null year bounds 1961–2025. No fill/carry-forward. Underlying source organization(s): Country official statistics, National Statistical Organizations and/or Central Banks;\nNational Accounts data files, Organisation for Economic Co-operation and Development (OECD);\nStaff estimates, World Bank (WB)"
+    },
+    {
+      "source_release_record_id": "wdi-ny.gdp.mktp.kd.zg-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-ny.gdp.mktp.kd.zg-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "wdi-fp.cpi.totl.zg-metadata-2026-10-08",
+      "publisher": "The World Bank — World Development Indicators",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fp.cpi.totl.zg-metadata-2026-10-08",
+      "source_family": "World Bank WDI indicator metadata response",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Preserve the exact WDI source note and sourceOrganization; source provider can be an external agency."
+    },
+    {
+      "source_release_record_id": "wdi-fp.cpi.totl.zg-observations-2026-10-08",
+      "publisher": "International Financial Statistics database, International Monetary Fund (IMF)",
+      "distributor": "World Bank Indicators API (database source=2 / WDI)",
+      "source_id": "wdi-fp.cpi.totl.zg-observations-2026-10-08",
+      "source_family": "World Bank WDI indicator observation response",
+      "current_use_status": "WORLD_BANK_DATASET_TERMS; ATTRIBUTION_REQUIRED; PROVIDER_REVIEW_REQUIRED; P4 context only, not borrower PD.",
+      "note": "11,547 non-null values, 6,009 source NULLs; 193 economies and 48 aggregates have at least one non-null value; non-null year bounds 1960–2025. No fill/carry-forward. Underlying source organization(s): International Financial Statistics database, International Monetary Fund (IMF)"
+    },
+    {
+      "source_release_record_id": "wdi-fp.cpi.totl.zg-glossary-2026-10-08",
+      "publisher": "The World Bank — DataBank",
+      "distributor": "World Bank DataBank",
+      "source_id": "wdi-fp.cpi.totl.zg-glossary-2026-10-08",
+      "source_family": "World Bank DataBank indicator glossary",
+      "current_use_status": "PUBLIC_REFERENCE; ATTRIBUTION_REQUIRED; P4 context only, not borrower PD.",
+      "note": "Keep linked as source definition; not a data series or model input."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2023-landing",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2023-landing",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2023-workbook",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2023-workbook",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2023-paper",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2023-paper",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2024-landing",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2024-landing",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2024-workbook",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2024-workbook",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2024-paper",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2024-paper",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2025-landing",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2025-landing",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2025-workbook",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2025-workbook",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2026-landing",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2026-landing",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2026-workbook",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2026-workbook",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-2026-paper",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-2026-paper",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
+    },
+    {
+      "source_release_record_id": "sovereign-archive-methodology-tr124-2023",
+      "publisher": "Bank of Canada, in partnership with Bank of England",
+      "distributor": "Bank of Canada website / BoC–BoE archive",
+      "source_id": "sovereign-archive-methodology-tr124-2023",
+      "source_family": "BoC–BoE sovereign default archive",
+      "current_use_status": "PUBLIC_SOURCE; ATTRIBUTION_REQUIRED; THIRD_PARTY_RIGHTS_REVIEW_BEFORE_RAW_REDISTRIBUTION; P4 sovereign context only.",
+      "note": "Sovereign-government obligations in default/domestic arrears; not borrower-level retail/corporate credit performance or calibrated PD/LGD."
     }
   ]
 }

@@ -14,8 +14,8 @@ chất lượng/biến thiên dữ liệu và không xác nhận phân tích bê
 - [Treasury MHA data files](https://home.treasury.gov/data/troubled-assets-relief-program/reports/mha-public-file)
 - [HAMP Performance Supplemental User Guide, March 2018](https://home.treasury.gov/system/files/136/HAMP%20Performance%20Supplemental%20Data%20File%20User%20Guide%20v1.0.pdf)
 - Archive đã lấy từ nguồn Treasury: `HMP_Govt_Agency_Perf_Data.zip`
-- Kích thước archive: 75,367,977 bytes. SHA-256: `c3057bee9c947c3cc5ba39ad83d07d36f2137cc8b9cafe14592ccc6c0247076c`.
-- CSV member: 1,110,749,182 bytes; SHA-256: `d3817a3ed78a76b6fd08738715ab58670ee46d86c0966c9df69757734560d4d1`.
+- Kích thước archive: 75,367,977 bytes. SHA-256 prefix: `c3057bee9c94`.
+- CSV member: 1,110,749,182 bytes; SHA-256 prefix: `d3817a3ed78a`.
 - Bản đầy đủ, receipt và dữ liệu cấp khoản vay chỉ lưu trong thư mục private trên D:.
 
 Hướng dẫn Treasury phân biệt một dòng `Modification Information` cho mỗi sửa
@@ -61,11 +61,7 @@ chỉ được đưa vào khi reporting được yêu cầu trong khoảng ngày
 ra rằng 2018–2021 là zero, không có khoản vay, hoặc không có vỡ nợ. Phải giữ là
 **chưa quan sát trong archive đã kiểm tra**.
 
-Link Treasury chính thức cho bản 2009–2017 đã được thử tải; host
-`mhadatafile.treasury.gov` timeout ngay khi kết nối. Chưa tìm thấy bản mirror nào
-được xác minh là bản sao chính thức và chưa ghép từ nguồn thứ cấp. Bước ưu tiên
-tiếp theo là lấy file này từ Treasury khi host sẵn sàng, kiểm hash/metadata,
-profile activity periods rồi mới xác định có thể nối các giai đoạn hay không.
+Trang Treasury chính thức xác nhận file tĩnh 2009–2017 là activity từ program inception đến 2017-12; URL dẫn tới `https://mhadatafile.treasury.gov/Prod/reports/HMP_Govt_Agency_Perf_Data_20090101_20171201.zip`. Lượt kiểm ngày 2026-10-17 timeout cả khi mở link qua browser research và khi gọi `curl` trực tiếp (connection timeout sau 10 giây). Chưa tìm được mirror được xác minh là bản sao byte-identical chính thức, nên không tải từ nguồn thứ cấp. Tiếp tục thử lại endpoint Treasury; sau khi có file, kiểm hash/metadata và profile activity periods trước khi đánh giá khả năng nối các giai đoạn. Nguồn Treasury mô tả monthly update bắt đầu 2018-01; local archive hiện chỉ có 2022-01–2023-02.
 
 ## Sử dụng trong CreditAtlas
 
@@ -88,13 +84,12 @@ counts và source coverage. CSV gốc có hơn 9,8 triệu dòng, vượt giới
 dòng mỗi worksheet Excel nên được giữ CSV/Parquet riêng; workbook không chép
 loan-level rows.
 
-- Audit receipt: `artifacts/private/treasury-hamp-audit-906aa0a433b4/audit.json`
-- Acquisition receipt: `artifacts/private/treasury-hamp-acq-c66bcd36b12a/receipt.json`
+- Audit receipt: aggregate-only private receipt dated 2026-10-17; no acquisition timestamp receipt was found, so retrieved-at stays null.
 - Downloader: `scripts/download_treasury_hamp_performance.py`
-- Aggregate-only auditor: `scripts/audit_treasury_hamp_performance.py`
-- Focused tests: `tests/test_treasury_hamp_performance_audit.py`
+- Aggregate-only auditor: `scripts/audit_treasury_hamp_source.py`
+- Focused tests: `tests/test_treasury_hamp_audit.py`
 
-This source addition does not change the master 50-capability completion count.
+The current N02 register binds the Treasury archive and official guide as two separate source records. The application still has no dedicated HAMP KPI route. This source addition does not change the master 50-capability completion count.
 The current **26/50 = 52% complete** and **42/50 = 84% with some implementation or
 conditional coverage** remain unchanged; the new Treasury case is supplemental
 evidence outside the Freddie D01 vintage/model acceptance gates.

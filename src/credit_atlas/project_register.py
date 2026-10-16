@@ -18,6 +18,8 @@ def project_register() -> dict:
     repo = Path(__file__).resolve().parents[2]
     ledger = _read_json(repo / "docs" / "COMPLETION_REQUIREMENTS_50.json")
     register = _read_json(repo / "docs" / "data" / "creditatlas-project-register-2026-10-17.json")
+    source_register = _read_json(repo / "docs" / "data" / "creditatlas-source-release-register-2026-10-17.json")
+    trace_map = _read_json(repo / "docs" / "data" / "n02-source-to-kpi-map-2026-10-17.json")
     requirements = ledger.get("requirements")
     if not isinstance(requirements, list) or len(requirements) != 50:
         raise ValueError("CreditAtlas capability ledger must contain exactly 50 requirements")
@@ -35,16 +37,59 @@ def project_register() -> dict:
     if [row.get("id") for row in gates or []] != ["R0", "R1", "R2", "R3", "R4"]:
         raise ValueError("D01 release register must preserve R0–R4")
     datasets, methods = register.get("datasets"), register.get("methods")
-    if not isinstance(datasets, list) or len(datasets) != 24 or len({row.get("id") for row in datasets}) != len(datasets):
-        raise ValueError("Dataset registry must contain 24 unique reviewed source groups")
+    if (not isinstance(datasets, list) or not datasets
+            or any(not isinstance(row, dict) or not isinstance(row.get("id"), str) for row in datasets)
+            or len({row["id"] for row in datasets}) != len(datasets)):
+        raise ValueError("Dataset registry must contain uniquely identified reviewed source groups")
+    source_records = source_register.get("source_records")
+    if (not isinstance(source_records, list) or not source_records
+            or any(not isinstance(row, dict) or not isinstance(row.get("source_id"), str)
+                   or not isinstance(row.get("publisher_publication_date"), (str, type(None)))
+                   or not isinstance(row.get("retrieved_at_utc"), (str, type(None)))
+                   for row in source_records)
+            or len({row["source_id"] for row in source_records}) != len(source_records)):
+        raise ValueError("Source release register must contain unique IDs and separate publication/retrieval fields")
+    if source_register.get("record_count") != len(source_records):
+        raise ValueError("Source release register count does not match its records")
+    source_ids = {row["source_id"] for row in source_records}
     if not isinstance(methods, list) or len(methods) != 7 or len({row.get("id") for row in methods}) != len(methods):
         raise ValueError("Method registry must contain seven unique provenance types")
     method_cards = register.get("method_cards")
     if not isinstance(method_cards, list) or len(method_cards) < 8 or len({row.get("id") for row in method_cards}) != len(method_cards):
         raise ValueError("Method registry must contain concrete documented method cards")
+    method_card_ids = {row["id"] for row in method_cards}
     dataset_ids = {row["id"] for row in datasets}
     if any(not set(row.get("datasets", [])).issubset(dataset_ids) for row in method_cards):
         raise ValueError("Method cards must reference registered dataset IDs")
+
+    def validate_refs(rows, field, label, allowed_ids, *, singular=False):
+        if not isinstance(rows, list):
+            raise ValueError(f"{label} must be a list")
+        for row in rows:
+            if not isinstance(row, dict):
+                raise ValueError(f"{label} rows must be objects")
+            refs = row.get(field, [])
+            if singular:
+                refs = [] if refs is None else [refs]
+            if not isinstance(refs, list) or any(not isinstance(ref, str) for ref in refs):
+                raise ValueError(f"{label} source references must be string IDs")
+            if missing := set(refs) - allowed_ids:
+                raise ValueError(f"{label} references unknown IDs: {sorted(missing)}")
+
+    validate_refs(datasets, "source_release_record_ids", "Dataset registry", source_ids)
+    validate_refs(method_cards, "source_release_record_ids", "Method cards", source_ids)
+    validate_refs(source_records, "method_card_ids", "Source release register", method_card_ids)
+    validate_refs(source_records, "registry_group_id", "Source release register", dataset_ids, singular=True)
+    validate_refs(trace_map.get("registered_record_trace"), "source_release_record_ids", "N02 registered-record trace", source_ids)
+    validate_refs(trace_map.get("registered_record_trace"), "registry_id", "N02 registered-record trace", dataset_ids, singular=True)
+    validate_refs(trace_map.get("supplemental_source_record_crosswalk"), "source_release_record_id", "N02 supplemental crosswalk", source_ids, singular=True)
+    validate_refs(trace_map.get("registry_source_id_crosswalk"), "source_release_record_id", "N02 registry-source crosswalk", source_ids, singular=True)
+    validate_refs(trace_map.get("registry_source_id_crosswalk"), "parent_registry_id", "N02 registry-source crosswalk", dataset_ids, singular=True)
+    supplemental = trace_map.get("supplemental_source_record_crosswalk")
+    if trace_map.get("source_release_register", {}).get("record_count") != len(source_records):
+        raise ValueError("N02 source-release count does not match the source register")
+    if trace_map.get("source_release_register", {}).get("supplemental_source_records") != len(supplemental):
+        raise ValueError("N02 supplemental count does not match its crosswalk")
     return {
         "schema_version": 1,
         "as_of": register["as_of"],
@@ -61,6 +106,8 @@ def project_register() -> dict:
             "acceptance_note": "Completion flags represent the ledger scope only; additional intended-use, temporal and deployment qualifications remain described in the acceptance records.",
         },
         "datasets": datasets,
+        "source_register_scope_note": source_register["scope_note"],
+        "source_records": source_records,
         "methods": methods,
         "method_cards": method_cards,
         "capabilities": [{key: row[key] for key in

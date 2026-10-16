@@ -55,6 +55,67 @@ async function projectRegisterWorkspace(container, generation) {
   dataCard.append(note("Data status lấy từ acquisition/audit đã lưu. Nó không chứng minh quyền tái phân phối, unique borrower count hay model readiness. Raw private rows không được đưa vào register."));
   section(container, dataCard);
 
+  const sourceCard = card("Nguồn, release và receipt", register.source_register_scope_note);
+  sourceCard.id = "project-register-source-releases";
+  const sourceToolbar = el("div", "toolbar"), sourceQuery = el("input");
+  sourceQuery.type = "search"; sourceQuery.placeholder = "Tìm source ID, publisher, release, quyền dùng hoặc API";
+  sourceQuery.setAttribute("aria-label", "Tìm source release"); sourceToolbar.append(sourceQuery); sourceCard.append(sourceToolbar);
+  const sourceBody = el("div"); sourceCard.append(sourceBody);
+  const renderSourceRecords = () => {
+    const queryText = sourceQuery.value.trim().toLocaleLowerCase("vi");
+    const rows = register.source_records.filter(row => !queryText || [
+      row.source_id, row.registry_group_id, row.publisher, row.distributor, row.release_label, row.publisher_publication_date,
+      row.publication_date_status, row.observed_period_start, row.observed_period_end, row.observed_period_label, row.grain,
+      row.source_object_url, row.receipt_reference, row.rights_use_gate, row.rights_review_status, row.receipt_status, row.consumer_trace?.join(" "),
+      row.kpi_or_output, row.scope_note
+    ].join(" ").toLocaleLowerCase("vi").includes(queryText));
+    sourceBody.replaceChildren(table(
+      ["Source / nhà phát hành", "Công bố / kỳ quan sát", "Receipt / thời điểm tải", "Grain / đầu ra", "Quyền dùng / consumer"],
+      rows.map(row => {
+        const link = row.publisher_page_url ? el("a", "", row.distributor ? "Series metadata / distributor ↗" : "Publisher ↗") : el("span", "", "Chưa có link publisher");
+        if (row.publisher_page_url) { link.href = row.publisher_page_url; link.target = "_blank"; link.rel = "noopener noreferrer"; }
+        const distributorLink = row.distributor_url ? el("a", "muted-text", "Mở series qua distributor ↗") : el("span", "muted-text", "");
+        if (row.distributor_url) { distributorLink.href = row.distributor_url; distributorLink.target = "_blank"; distributorLink.rel = "noopener noreferrer"; }
+        const objectLink = row.source_object_url ? el("a", "muted-text", "Mở source object ↗") : el("span", "muted-text", "");
+        if (row.source_object_url) { objectLink.href = row.source_object_url; objectLink.target = "_blank"; objectLink.rel = "noopener noreferrer"; }
+        const publisher = append(el("div"), el("strong", "", row.source_id), el("div", "muted-text", row.publisher),
+          row.distributor ? el("div", "muted-text", "Phân phối: " + row.distributor) : el("span", "muted-text", ""), link, distributorLink, objectLink);
+        const dates = append(el("div"), el("div", "", "Ngày công bố: " + (row.publisher_publication_date || "chưa xác nhận")),
+          el("div", "muted-text", row.publication_date_status),
+          el("div", "", "Kỳ quan sát: " + (row.observed_period_label || [row.observed_period_start, row.observed_period_end].filter(Boolean).join(" → ") || "chưa xác định")),
+          row.observed_period_label && row.observed_period_start ? el("div", "muted-text", "Date range: " + row.observed_period_start + " → " + row.observed_period_end) : el("span", "muted-text", ""),
+          row.snapshot_as_of ? el("div", "muted-text", "Snapshot/as-of: " + row.snapshot_as_of) : el("span", "muted-text", ""));
+        const receipt = append(el("div"), el("strong", "", row.receipt_status || "Trạng thái receipt chưa ghi"),
+          el("div", "muted-text", row.retrieved_at_utc ? "Tải lúc: " + row.retrieved_at_utc : row.component_retrievals?.length ? "Timestamp tải riêng cho từng component bên dưới." : row.acquisition_started_at_utc ? "Receipt ghi giờ chạy/kiểm tra, không ghi giờ tải từng file." : "Không có timestamp tải trong receipt"),
+          row.retrieval_time_range_utc ? el("div", "muted-text", "Thời gian tải từng file: " + row.retrieval_time_range_utc.first + " → " + row.retrieval_time_range_utc.last) : el("span", "muted-text", ""),
+          row.acquisition_started_at_utc ? el("div", "muted-text", "Acquisition run bắt đầu: " + row.acquisition_started_at_utc) : el("span", "muted-text", ""),
+          row.validation_completed_at_utc ? el("div", "muted-text", "Kiểm tra hoàn tất: " + row.validation_completed_at_utc) : el("span", "muted-text", ""),
+          row.receipt_completed_at_utc ? el("div", "muted-text", "Receipt hoàn tất: " + row.receipt_completed_at_utc) : el("span", "muted-text", ""),
+          row.native_row_count != null ? el("div", "muted-text", "Rows: " + number(row.native_row_count)) : el("span", "muted-text", ""),
+          row.field_count != null ? el("div", "muted-text", "Số trường: " + number(row.field_count)) : el("span", "muted-text", ""),
+          row.distinct_lei_count != null ? el("div", "muted-text", "Distinct LEI: " + number(row.distinct_lei_count)) : el("span", "muted-text", ""),
+          row.quarantined_row_count != null ? el("div", "muted-text", "Rows quarantined: " + number(row.quarantined_row_count)) : el("span", "muted-text", ""),
+          row.publisher_package_generated_at_utc ? el("div", "muted-text", "Publisher package generated at: " + row.publisher_package_generated_at_utc + " (không phải giờ tải) ") : el("span", "muted-text", ""),
+          row.publisher_package_last_modified_utc ? el("div", "muted-text", "HTTP package Last-Modified: " + row.publisher_package_last_modified_utc + " (không phải giờ tải) ") : el("span", "muted-text", ""),
+          row.sha256_prefix ? el("div", "muted-text", "SHA-256 prefix (content): " + row.sha256_prefix) : el("span", "muted-text", ""),
+          row.archive_sha256_prefix ? el("div", "muted-text", "SHA-256 prefix (archive): " + row.archive_sha256_prefix) : el("span", "muted-text", ""),
+          el("div", "muted-text", "Ô trống/missing: " + (row.missing_cell_count == null ? "chưa audit/không áp dụng" : number(row.missing_cell_count))),
+          row.missing_cell_count_basis ? el("div", "muted-text", row.missing_cell_count_basis) : el("span", "muted-text", ""),
+          ...(row.component_retrievals || []).map(item => el("div", "muted-text", item.file + " · tải " + item.retrieved_at_utc)));
+        const grain = append(el("div"), el("span", "", row.grain), el("div", "muted-text", row.kpi_or_output || "Chưa gắn KPI/output"));
+        const rights = append(el("div"), el("strong", "", row.rights_review_status || "Rights review chưa gắn"),
+          el("div", "muted-text", row.rights_use_gate || "Chưa ghi điều kiện sử dụng"),
+          ...(row.consumer_trace || []).map(value => el("div", "muted-text", value)),
+          row.method_card_ids?.length ? el("div", "muted-text", "Method cards: " + row.method_card_ids.join(", ")) : el("div", "muted-text", "Chưa liên kết method card"));
+        return [publisher, dates, receipt, grain, rights];
+      })
+    ));
+    sourceBody.prepend(para("Đang hiển thị " + number(rows.length) + " / " + number(register.source_records.length) + " source records. Ngày công bố và timestamp tải được lưu riêng; null nghĩa là receipt chưa chứng minh được."));
+  };
+  sourceQuery.addEventListener("input", renderSourceRecords); renderSourceRecords();
+  sourceCard.append(note("Đây là crosswalk một phần của N02: receipt private không phát raw rows hoặc full hash; các quyền dùng chưa xác nhận được giữ thành gate. FRED/ALFRED có điều khoản cần rà soát trước khi đưa dữ liệu vào phần mềm hoặc ML."));
+  section(container, sourceCard);
+
   const methods = card("Sổ phương pháp và giả định", "Phân biệt reported, derived, publisher-imputed, preprocessing, model output, scenario và forecast.");
   methods.id = "project-register-methods";
   methods.append(table(["Loại giá trị", "Ví dụ trong project", "Bằng chứng cần lưu", "Không được suy diễn"], register.methods.map(row => [row.name, row.examples, row.required_evidence, row.prohibited_shortcut])));

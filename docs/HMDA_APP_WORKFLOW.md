@@ -1,5 +1,18 @@
 # P2 / D08 — HMDA Application Outcome Explorer
 
+## 2018 Three-Year release
+
+The workspace has a distinct 2018 Three-Year panel. It is a separate release
+view, not a row in the 2019–2024 One-Year comparison. The panel exposes audited
+action counts, the action 1–3 decision denominator and action-3 share, a selected
+aggregate breakdown with JSON export, and a private audited Excel workbook.
+Its 1,961 out-of-domain `action_taken=-1` rows stay quarantined and excluded
+from KPIs. The panel labels the 2021-12-31 freeze and the release-window caveat.
+The case contains application outcomes only; it must not be used as repayment,
+default or D01 performance data. See
+[`HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`](HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md)
+for acquisition and reproducibility details.
+
 ## Nationwide 2025 application snapshot (separate case)
 
 The workspace now opens with a national 2025 public LAR panel above the

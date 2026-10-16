@@ -1183,6 +1183,7 @@ let hmdaOneYear2021Dimension=new URLSearchParams(location.search).get("hmda_one_
 let hmdaOneYear2019Dimension=new URLSearchParams(location.search).get("hmda_one_year_2019_dimension")||"state_code";
 let hmdaOneYear2022Dimension=new URLSearchParams(location.search).get("hmda_one_year_2022_dimension")||"state_code";
 let hmdaOneYear2023Dimension=new URLSearchParams(location.search).get("hmda_one_year_2023_dimension")||"state_code";
+let hmdaThreeYear2018Dimension=new URLSearchParams(location.search).get("hmda_three_year_2018_dimension")||"state_code";
 function hmdaQuery(){const query={...hmdaState};if(!query.reference_id)delete query.reference_id;return query;}
 function updateHmdaURL(){updateURL();const q=new URLSearchParams(location.search);Object.entries(hmdaState).forEach(([key,value])=>q.set("hmda_"+key,value));Object.entries(hmdaComparisonState).forEach(([key,value])=>q.set("hmda_comparison_"+key,value));history.replaceState(null,"","?"+q);}
 async function renderHmdaNational(container,generation){
@@ -1361,6 +1362,42 @@ async function renderHmdaOneYear2019(container,generation){
     const workbook=el("a","source-link","Tải Excel · KPI + codebook + audit ↓");workbook.href="/downloads/hmda-one-year-2019-audit.xlsx";scope.append(link,apiDocs,workbook);body.append(scope);await draw();
   }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
 }
+async function renderHmdaThreeYear2018(container,generation){
+  const panel=card("HMDA · Toàn quốc · Three-Year 2018","Freeze 31/12/2021 · khác release window One-Year 2019–2024 · 1.961 dòng action -1 được cách ly rõ ràng");panel.id="hmda-three-year-2018";section(container,panel);
+  try{
+    const catalog=await api("/api/hmda-three-year-2018-views");if(generation!==renderGeneration)return;
+    const valid=catalog.views.filter(row=>row.status==="verified");
+    if(!valid.length){panel.append(note("Chưa có view aggregate HMDA 2018 được xác minh. Không dùng các dòng action -1 trong KPI."));return;}
+    const selected=valid[0].view_id,snapshot=await api("/api/hmda-three-year-2018-view",{view_id:selected});if(generation!==renderGeneration)return;
+    const body=el("div");panel.append(body);let requestId=0;
+    const controls=card("Phân tích theo phân khúc","Aggregate chỉ gồm action codes 1–8. Action 3 là hồ sơ bị từ chối, không phải default.");
+    const form=el("form","toolbar"),dimension=el("select");dimension.setAttribute("aria-label","HMDA 2018 Three-Year breakdown dimension");
+    Object.entries(snapshot.dimensions).forEach(([key,label])=>{const option=el("option","",label);option.value=key;dimension.append(option);});
+    if(!Object.hasOwn(snapshot.dimensions,hmdaThreeYear2018Dimension))hmdaThreeYear2018Dimension="state_code";dimension.value=hmdaThreeYear2018Dimension;
+    const submit=el("button","button secondary","Đọc breakdown 2018");submit.type="submit";
+    const exportButton=button("Tải JSON",()=>downloadJSON("/api/hmda-three-year-2018-report?"+new URLSearchParams({view_id:selected,dimension:hmdaThreeYear2018Dimension}),"CreditAtlas-HMDA-Three-Year-2018-"+hmdaThreeYear2018Dimension+".json"));
+    form.append(append(el("label","","Breakdown dimension"),dimension),submit,exportButton);controls.append(form);body.append(controls);
+    const totals=grid("four");totals.id="hmda-three-year-2018-summary";
+    append(totals,metric("Action 1–8 rows",number(snapshot.summary.records),"Official action domain; reconciled to API"),metric("Quarantined raw rows",number(snapshot.quarantined_rows),"action_taken=-1; excluded from all KPI"),metric("Decision denominator",number(snapshot.summary.decision_denominator),"Actions 1 + 2 + 3"),metric("Denied share",percent(snapshot.summary.descriptive_denial_rate,4),number(snapshot.summary.denied_numerator)+" / "+number(snapshot.summary.decision_denominator)+" · not default PD"));body.append(totals);
+    const actionCard=card("Tám action codes · 2018 Three-Year","Counts reconcile to the official HMDA aggregation API; action -1 is outside the published domain");actionCard.id="hmda-three-year-2018-actions";
+    actionCard.append(table(["Code","HMDA action","Records","Share of valid codes"],snapshot.actions.map(row=>[row.code,HMDA_ACTION_LABELS[row.code]||row.code,number(row.records),percent(row.records/snapshot.summary.records,4)])),note("1.961 dòng ngoài miền action 1–8 được giữ trong file gốc, không tái mã hóa, không xóa và không cộng vào đây."));body.append(actionCard);
+    const breakdown=card("Breakdown 2018","Tối đa 100 nhóm; JSON tải xuống chứa toàn bộ nhóm");breakdown.id="hmda-three-year-2018-breakdown";body.append(breakdown);
+    const draw=async()=>{const request=++requestId;breakdown.replaceChildren(para("Đang đọc aggregate HMDA 2018…"));try{
+      const report=await api("/api/hmda-three-year-2018-aggregates",{view_id:selected,dimension:hmdaThreeYear2018Dimension});if(generation!==renderGeneration||request!==requestId)return;breakdown.replaceChildren();
+      const reasons=report.dimension.startsWith("denial_reason-"),rows=report.breakdown.slice(0,100);
+      const data=rows.map(row=>reasons?[row.bucket==="(blank)"?"Source blank":row.bucket,number(row.records),percent(row.records/report.summary.denied_numerator,4)]:[row.bucket==="(blank)"?"Source blank":row.bucket,number(row.records),number(row.decision_denominator),number(row.denied_numerator),percent(row.descriptive_denial_rate,4)]);
+      breakdown.append(table(reasons?[report.dimension_label,"Action 3 records","Share of action 3"]:[report.dimension_label,"All action 1–8 records","Decision denominator","Denied 3","Denied share"],data));
+      breakdown.append(note(reasons?"Denial reason fields describe action-3 applications only; blank stays explicit.":"Denominator is actions 1–3. LTV and rate bands are analyst reporting bins; see method note. Tải JSON để xem đủ "+number(report.breakdown.length)+" nhóm."));
+      if(!rows.length)breakdown.append(empty("Không có nhóm source trong chiều đã chọn."));
+      const q=new URLSearchParams(location.search);q.set("hmda_three_year_2018_dimension",hmdaThreeYear2018Dimension);history.replaceState(null,"","?"+q);
+    }catch(error){if(generation===renderGeneration&&request===requestId)breakdown.replaceChildren(callout(error.message));}};
+    form.addEventListener("submit",event=>{event.preventDefault();hmdaThreeYear2018Dimension=dimension.value;draw();});
+    const scope=card("Nguồn, phương pháp và giới hạn","HMDA 2018 · Three-Year frozen 2021-12-31 · private verified aggregate");scope.id="hmda-three-year-2018-scope";scope.append(para(snapshot.scope),para("Denominator: "+snapshot.denominator_contract.meaning));snapshot.limitations.forEach(text=>scope.append(para(text)));
+    const link=el("a","source-link","Official FFIEC 2018 Three-Year release ↗");link.href=snapshot.source_url;link.target="_blank";link.rel="noopener noreferrer";
+    const apiDocs=el("a","source-link","Data Browser API documentation ↗");apiDocs.href=snapshot.api_docs_url;apiDocs.target="_blank";apiDocs.rel="noopener noreferrer";
+    const workbook=el("a","source-link","Tải Excel · KPI + phân khúc + codebook + audit ↓");workbook.href="/downloads/hmda-three-year-2018-analysis.xlsx";scope.append(link,apiDocs,workbook);body.append(scope);await draw();
+  }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
+}
 async function renderHmdaOneYear2022(container,generation){
   const panel=card("HMDA · Toàn quốc · One-Year 2022","Hồ sơ application/underwriting · freeze 01/05/2024. Data Browser hiện trả release Three-Year cho activity year 2022; panel này giữ đúng file One-Year tĩnh.");panel.id="hmda-one-year-2022";section(container,panel);
   try{
@@ -1459,6 +1496,7 @@ async function renderHmdaOneYear2023(container,generation){
 async function hmdaWorkspace(container,generation){
   $("context-note").textContent="Đang xác minh HMDA source; lần đọc đầu của phiên có thể mất vài phút.";
   await renderHmdaNational(container,generation);if(generation!==renderGeneration)return;
+  await renderHmdaThreeYear2018(container,generation);if(generation!==renderGeneration)return;
   await renderHmdaOneYear(container,generation);if(generation!==renderGeneration)return;
   await renderHmdaOneYear2019(container,generation);if(generation!==renderGeneration)return;
   await renderHmdaOneYear2020(container,generation);if(generation!==renderGeneration)return;

@@ -1,5 +1,22 @@
 # HMDA 2018 Three-Year national LAR — acquisition and quality review
 
+## Tích hợp ứng dụng — 16/10/2026
+
+2018 hiện có panel riêng trong HMDA workspace, với KPI tổng action 1–8,
+quarantine, mẫu số quyết định và denied share; breakdown theo các chiều đã
+kiểm tra; JSON theo breakdown; và nút tải workbook Excel private. Panel ghi rõ
+freeze 31/12/2021 và caveat release window khác One-Year 2019–2024. Dữ liệu
+2018 không được trộn vào comparison cohort, chuỗi One-Year hoặc D01.
+
+View id đã xác minh trong môi trường private là
+`hmda-three-year-2018-view-d304e9b8cc3d`; receipt ghi source CSV SHA-256
+`6b6678ce3c3dc0c640b867b77a10cce3e8ec05e91965e77c44ef0bce4c28c924`, aggregate
+SHA-256 `740e04b4831c49cb93453534448178379596e9f9dcec9f9283a66240b08fec90`,
+15.138.510 dòng action hợp lệ và 1.961 dòng quarantine. Browser acceptance
+pass: KPI/counts, filter LTV band, private Excel download, viewport 390px không
+tràn ngang, không có browser errors. Receipt và screenshot nằm trong private
+`D:\data\Codex\credit-atlas\artifacts\private\hmda-three-year-2018-browser-qa-c92221ddfc1b\`.
+
 **Checkpoint:** 16/10/2026. This is public loan/application decision data for
 D08; it is not mortgage repayment performance and does not add a D01 vintage.
 The 2018 vintage is the official Three-Year dataset frozen **2021-12-31**. Keep

@@ -27,6 +27,13 @@ binning LTV/lãi suất, mẫu số và quarantine. Đây là D08 application/de
 không phải payment performance; D01 vẫn 26/50.
 Chi tiết/hash: [`HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`](HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md).
 
+**Trạng thái tích hợp HMDA 2018:** panel Three-Year riêng đã được nối vào app
+và có breakdown, JSON, workbook Excel riêng. Kiểm thử browser thật pass; panel
+hiển thị 15.138.510 action hợp lệ, 1.961 dòng quarantine, decision denominator
+10.623.751 và denied share 24,0277%. Mobile 390px không tràn ngang, tải Excel
+đúng và không có browser errors. Đây là tiến độ D08/app; D01 vẫn 26/50 (52%)
+vì đây là dữ liệu application/decision, không có repayment/default outcome.
+
 **Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
 One-Year 12.259.199 dòng/99 trường, 4.926 LEI; chi tiết và hash tại
 [`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).

@@ -1,5 +1,11 @@
 # D01 — Requirement audit and remaining work
 
+Scope correction, 2026-10-16: the 26/50 (52%) completion ledger covers the five
+CreditAtlas workspaces P1–P5, not D01 alone. Historical checkpoint references to
+"D01 26/50" must be read with this correction. D01 has its own 30 backlog items
+and R0–R4 release gates. The current independent review and proposed next work
+are in [`PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md`](PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md).
+
 Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.

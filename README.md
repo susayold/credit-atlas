@@ -1,5 +1,12 @@
 # CreditAtlas
 
+Current review (16 October 2026): [Vietnamese project assessment and next plan](docs/PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md).
+The five-workspace ledger has 26/50 requirements accepted within their recorded
+scope. D01 R2/R3 remain data-gated. The review verifies 138 completion-evidence
+hash references and distinguishes existing observations, benchmark models,
+imputation and declared scenarios. Current public app/vendor regression:
+1,670 passed and 196 explicitly skipped private-data/machine-local tests.
+
 SEC issuer workspaces now include a **Corporate memo** tab with structured
 analyst sections, immutable server-derived filing/trend evidence and private
 revision/history export. See the [financial memo guide](docs/CORPORATE_FINANCIAL_MEMO_VI.md).

@@ -1,5 +1,11 @@
 # D01 — tiến độ so với plan và ưu tiên dữ liệu
 
+**Đính chính phạm vi tỷ lệ (16/10/2026):** `26/50 = 52%` là completion ledger
+của toàn bộ CreditAtlas P1–P5, không phải phần trăm riêng D01. Các câu gọi tỷ lệ
+này là D01 trong checkpoint cũ dưới đây cần đọc theo đính chính này. D01 được
+đánh giá riêng theo 30 backlog items và R0–R4. Xem
+[đánh giá và kế hoạch tiếp theo](PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md).
+
 **Checkpoint:** 16/10/2026. Đây là trạng thái theo bằng chứng có thể kiểm tra,
 không phải ước lượng thời gian đã bỏ ra.
 

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 
@@ -10,7 +11,7 @@ def test_project_register_exposes_the_source_and_plan_inventory():
 
     assert len(result["source_records"]) == 91
     assert len(result["datasets"]) == 27
-    assert len(result["method_cards"]) == 14
+    assert len(result["method_cards"]) == 15
     assert len(result["capabilities"]) == 50
     assert result["progress"]["completed"] == 26
     hamp = next(row for row in result["datasets"] if row["id"] == "treasury-hamp")
@@ -24,6 +25,10 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     sovereign = next(row for row in result["datasets"] if row["id"] == "sovereign-archive")
     assert len(sovereign["source_release_record_ids"]) == 12
     assert set(sovereign["source_release_record_ids"]).issubset({row["source_id"] for row in result["source_records"]})
+    hmda_method = next(row for row in result["method_cards"] if row["id"] == "hmda-denial-share-by-decided")
+    assert len(hmda_method["source_release_record_ids"]) == 9
+    assert "n_1+n_2+n_3" in hmda_method["method"] and "n_3" in hmda_method["method"]
+    assert (Path(__file__).resolve().parents[1] / hmda_method["evidence"]).is_file()
 
 
 @pytest.mark.parametrize(

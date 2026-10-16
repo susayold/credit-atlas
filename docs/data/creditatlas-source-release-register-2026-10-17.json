@@ -1254,7 +1254,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "Eight action-code counts and descriptive decision/denial analysis on eligible records; official API action-code 1–8 denominator is 15,138,510. Not PD/default.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "PASS_WITH_QUARANTINED_SOURCE_ROWS",
@@ -1297,7 +1300,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight HMDA action counts; decision denominator action_taken 1+2+3 and action 3 denied share, descriptive only; no default/PD.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2019_ONE_YEAR_NATIONAL",
@@ -1340,7 +1346,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight HMDA action counts; decision denominator action_taken 1+2+3 and action 3 denied share, descriptive only; no default/PD.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2020_ONE_YEAR_NATIONAL",
@@ -1383,7 +1392,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight HMDA action counts; decision denominator action_taken 1+2+3 and action 3 denied share, descriptive only; no default/PD.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2021_ONE_YEAR_NATIONAL",
@@ -1426,7 +1438,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight HMDA action counts; decision denominator action_taken 1+2+3 and action 3 denied share, descriptive only; no default/PD.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2022_ONE_YEAR_NATIONAL",
@@ -1469,7 +1484,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight action codes; decision denominator action_taken 1+2+3; action 3 denial share is descriptive, not PD/default.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2023_ONE_YEAR_NATIONAL",
@@ -1512,7 +1530,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "All eight action codes; decision denominator action_taken 1+2+3; action 3 denial share is descriptive, not PD/default.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2024_ONE_YEAR_NATIONAL",
@@ -1555,7 +1576,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "Eight action-code counts; decision denominator action_taken 1+2+3 and descriptive action 3 denial share, not PD/default.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_NATIONAL_SNAPSHOT_2025",
@@ -1684,7 +1708,10 @@
         "HMDA workspace source-specific view and aggregate/report routes under /api/hmda-*; release-specific Excel audit workbooks."
       ],
       "kpi_or_output": "Eight action-code counts; decision denominator action_taken 1+2+3 and descriptive action 3 denial share, not PD/default.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "hmda-denial-share-by-decided",
+        "hmda-fixed-2023-mix"
+      ],
       "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
       "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
       "receipt_status": "VERIFIED_HMDA_2025_DYNAMIC_AS_OF_2026_10_11",

@@ -29,7 +29,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 ### N03 — provenance và phương pháp
 
 - Ghi nhận bảy loại giá trị: reported, derived, publisher-imputed, model-preprocessing-imputed, model prediction, declared scenario và forecast.
-- Registry hiện có mười hai method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA fixed-mix, P4 scenario/ECL, Toyota/Nissan/structured ABS và Bondora 12-MOB support.
+- Registry hiện có mười lăm method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA action-denominator và fixed-mix, P4 scenario/ECL, Toyota/Nissan/structured ABS và Bondora 12-MOB support.
 - Các giả định P4 hiển thị đúng scope illustrative: lịch bullet 36 tháng, monthly EIR 0,004, weights 0,7/0,3; source expected loss vẫn unavailable. Không tạo biến dự phóng mới.
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
 

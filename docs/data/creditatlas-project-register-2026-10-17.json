@@ -45,13 +45,13 @@
       "id": "N02",
       "status": "In progress: 91-record source-release register; FHFA (9), LendingClub/Bondora (5), Treasury HAMP (2), World Bank WDI (22), Sovereign Archive (12) tranches bound",
       "scope": "27 dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. Source-release register has 91 records (20 public-suite +71 supplemental across 16 broad families), including 12 HMDA, 9 FHFA PUDB/NMDB/NSMO, 5 LendingClub/Bondora, 2 Treasury HAMP, 22 World Bank WDI API/reference and 12 BoC–BoE Sovereign Archive objects. Sixteen parent groups have source-level records. WDI has 122,892 observations and 64,452 source NULLs. Sovereign archive has 42,519 entity-year rows over four editions, 680,304 selected metric positions, 515,678 missing, 72,509 zero, 1,341 source markers, 9,954 schema-absent and 68 count conflicts. HAMP has only 14 local activity dates. These aggregate/context sources do not provide compatible retail borrower PD labels. Public tests validate lineage while raw private evidence stays excluded.",
-      "remaining": "11 of 27 parent groups still need object-level records or explicit no-data/access state; 7 FRED IDs remain source-layer without parent groups. Prioritize eligible loan-level Freddie/Ginnie only within access/terms and source groups with usable outcomes; finish source-specific API/UI/Excel parity; the private PUDB analyst workbook and download route exist and need browser/native Excel acceptance; its N03 formula trace is documented; continue HMDA/NMDB and other KPI formula links; complete dataset-specific third-party rights checks. HAMP 2009–2017 archive endpoint times out; local 2018–2021 gap is unresolved. WDI is latest-revised macro context; do not project or impute. Sovereign archive is revised sovereign-government default stock context, not retail/corporate PD/LGD."
+      "remaining": "11 of 27 parent groups still need object-level records or explicit no-data/access state; 7 FRED IDs remain source-layer without parent groups. Prioritize eligible loan-level Freddie/Ginnie only within access/terms and source groups with usable outcomes; finish source-specific API/UI/Excel parity; the private PUDB analyst workbook and download route exist and need browser/native Excel acceptance; its N03 formula trace is documented; HMDA denominator and PUDB formula traces are documented; continue NMDB and other KPI formula links; complete dataset-specific third-party rights checks. HAMP 2009–2017 archive endpoint times out; local 2018–2021 gap is unresolved. WDI is latest-revised macro context; do not project or impute. Sovereign archive is revised sovereign-government default stock context, not retail/corporate PD/LGD."
     },
     {
       "id": "N03",
       "status": "In progress",
-      "scope": "Seven provenance classes and fourteen concrete method cards with input/source IDs, target, method, stored validation, limitation and evidence reference.",
-      "remaining": "PUDB source-to-KPI formula trace is documented; continue linking each remaining numeric app output to a method/input record, include all declared assumptions and publisher-versus-app imputation provenance."
+      "scope": "Seven provenance classes and fifteen concrete method cards with input/source IDs, target, method, stored validation, limitation and evidence reference.",
+      "remaining": "PUDB and HMDA denominator formula traces are documented; continue linking each remaining numeric app output to a method/input record, include all declared assumptions and publisher-versus-app imputation provenance."
     },
     {
       "id": "N05",
@@ -660,6 +660,30 @@
       ]
     },
     {
+      "id": "hmda-denial-share-by-decided",
+      "name": "HMDA descriptive denial share by decided row",
+      "datasets": [
+        "hmda-releases-2018-2025"
+      ],
+      "source_release_record_ids": [
+        "hmda-2018-three-year-national",
+        "hmda-2019-one-year-national",
+        "hmda-2020-one-year-national",
+        "hmda-2021-one-year-national",
+        "hmda-2022-one-year-national",
+        "hmda-2023-one-year-national",
+        "hmda-2024-one-year-national",
+        "hmda-2025-snapshot-national-lar",
+        "hmda-2025-dynamic-national-lar"
+      ],
+      "value_type": "derived",
+      "target": "Describe action-3 denied rows as a share of action-1/2/3 decided LAR records within a single release, activity year, and selected filter scope.",
+      "method": "For source rows with action_taken codes 1–8, let n_k be the count of code k within the current release/year/filters. Decision denominator D=n_1+n_2+n_3; denied numerator N=n_3; descriptive denied share=N/D when D>0, otherwise unavailable. Recompute within each grouped category. Keep actions 4–8 in action counts but outside D. An action_taken breakdown has no within-action denial rate. Never pool release vintages or interpret this as repayment PD, approval rate, causal/fairness or compliance result.",
+      "validation": "Official CFPB field definitions identify action 1 as originated, 2 as approved-not-accepted, 3 as denied, 4–5 as withdrawn/incomplete, 6 as purchased, and 7–8 as preapproval outcomes. Static trace confirms the 1+2+3 contract in hmda_applications evidence, shared summarize, release-specific/national SQL views, cohort calculations, and UI. 2025 Snapshot and 2025 Dynamic as-of 2026-10-11 receipt profiles reconcile action counts 1–8 to row totals, 1+2+3 to decided counts, code 3 to denied counts, and the derived share to that ratio. Tests cover denominator, action-group nulls, zero-denominator unavailable, 2018 quarantine, filter reconciliation and cohort support.",
+      "limits": "LAR records are not a deduplicated count of unique people/applications across releases. Public rows have no stable applicant-level join key. Snapshot and dynamic vintages have different cutoff/resubmission semantics; 2025 Data Browser uses Snapshot while Dynamic updates weekly. This is an app-derived descriptive statistic, not a publisher-issued rate, PD, causal or compliance conclusion.",
+      "evidence": "docs/N03_HMDA_DENOMINATOR_TRACE_2026-10-17_VI.md"
+    },
+    {
       "id": "hmda-fixed-2023-mix",
       "name": "HMDA fixed-composition denial comparison",
       "datasets": [
@@ -670,7 +694,18 @@
       "method": "Decision denominator = actions 1+2+3. Strata = loan type × occupancy × exact public total-unit bin; cell weight = 2023 decided count / 2023 denominator. Standardized rate = sum of fixed 2023 weights × target-year cell denial rate; full rate unavailable if a positive-weight reference cell lacks target-year decisions.",
       "validation": "2023 reference cells and common-support cells are counted separately; rates use exact rational arithmetic and publish support coverage.",
       "limits": "Not fully risk-adjusted, prospective, causal, fairness/compliance determination or default PD. Purchased, withdrawn, incomplete and preapproval actions stay outside the decision denominator.",
-      "evidence": "docs/HMDA_COHORT_WORKFLOW.md"
+      "evidence": "docs/HMDA_COHORT_WORKFLOW.md",
+      "source_release_record_ids": [
+        "hmda-2018-three-year-national",
+        "hmda-2019-one-year-national",
+        "hmda-2020-one-year-national",
+        "hmda-2021-one-year-national",
+        "hmda-2022-one-year-national",
+        "hmda-2023-one-year-national",
+        "hmda-2024-one-year-national",
+        "hmda-2025-snapshot-national-lar",
+        "hmda-2025-dynamic-national-lar"
+      ]
     },
     {
       "id": "p4-declared-ecl",

@@ -68,6 +68,44 @@ indicators and imputation are engineering behavior only; the feature contract,
 missingness reason, vintage stability and use eligibility still require review
 before any fit. No absent values were projected or filled during this audit.
 
+### DTI missingness is structurally tied to Relief in this train cohort
+
+The train-only cross-tab is:
+
+| Program segment | DTI status | Loans | D3 events |
+|---|---|---:|---:|
+| Relief | Missing (raw source token `999`) | 15,757 | 88 |
+| Relief | Observed | 0 | 0 |
+| Non-Relief | Missing (raw source token `999`) | 1 | 0 |
+| Non-Relief | Observed | 27,569 | 12 |
+
+This is not a random missing-value pattern: every Relief loan in the included
+2012 train cohort has DTI source token `999`, while 27,569 of 27,570 Non-Relief
+loans have an observed DTI. Freddie Mac's official FAQ gives two meanings for
+`999` on non-Relief loans: DTI greater than 65%, or not available; Relief
+Refinance loans are always disclosed as `999`. It separately explains that
+Relief DTI is masked because the streamlined program uses different borrower
+income-verification requirements. Therefore the one Non-Relief `999` in this
+cohort cannot be classified as high DTI versus unavailable from the published
+field. The Release-47 canonical mapping turns source token `999` into null but
+preserves the raw token. See official FAQ question 28 and question 66 at
+[`faq.pdf`](https://www.freddiemac.com/fmac-resources/research/pdf/faq.pdf), and
+the pinned [canonical sentinel mapping](https://github.com/susayold/credit-risk-strategy-lab/blob/master/src/crsl/canonical.py).
+
+In this one train cohort, an automatic `original_dti__missing` indicator would
+therefore act almost exactly like a Relief-program indicator (15,757/15,757
+Relief versus 1/27,570 Non-Relief); the single Non-Relief missing flag also
+mixes a possible >65% DTI with unavailable disclosure. The indicator can encode
+program selection rather than borrower affordability. The 88 versus 12 event
+counts are descriptive only, based on one vintage and low support; they do not
+establish a causal Relief effect, an advantage from using the proxy, or a
+qualified model. Do not impute a numeric DTI for source token `999`. Keep DTI
+out of a baseline until a reviewed feature contract either excludes the field
+and its missingness indicator or represents the known program explicitly and
+predeclares a coverage-aware comparison. Any alternate must be frozen before
+validation/test use and pass support and subgroup checks across additional
+vintages.
+
 ## Reproduction commands and private receipts
 
 Run from the public checkout with its `src` on `PYTHONPATH`:
@@ -76,7 +114,15 @@ Run from the public checkout with its `src` on `PYTHONPATH`:
 $env:PYTHONPATH='D:\data\Codex\credit-atlas-public\src'
 python -m credit_atlas.cli --root D:\data\Codex\credit-atlas prepare-study --case d01-202610150931
 python -m credit_atlas.cli --root D:\data\Codex\credit-atlas prepare-features --study study-b71a0d76e11d
+python scripts/audit_d01_train_dti_mask.py --root D:\data\Codex\credit-atlas --study study-b71a0d76e11d
 ```
+
+The DTI mask script verifies prepared-study/source lineage, scans only included
+training rows, checks unique-loan grain and raw/canonical sentinel consistency,
+reconciles totals to prepared train support, and writes aggregate groups only.
+The script refuses studies containing final-test vintages or nonempty final-test
+support. Its tests pass **9/9**. Latest private audit ID:
+`dti-mask-audit-fb6738d8fa0e`.
 
 Private receipts (do not publish the underlying loan rows):
 
@@ -84,6 +130,8 @@ Private receipts (do not publish the underlying loan rows):
 - `D:\data\Codex\credit-atlas\artifacts\private\study-b71a0d76e11d\split-audit.json`
 - `D:\data\Codex\credit-atlas\artifacts\private\feature-audit-bbe0ad46de92\feature-coverage.json`
 - `D:\data\Codex\credit-atlas\artifacts\private\feature-audit-bbe0ad46de92\feature-complete.json`
+- `D:\data\Codex\credit-atlas\artifacts\private\dti-mask-audit-fb6738d8fa0e\audit.json`
+- `D:\data\Codex\credit-atlas\artifacts\private\dti-mask-audit-fb6738d8fa0e\receipt.json`
 
 ## Decision and next data action
 

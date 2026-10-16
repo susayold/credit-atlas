@@ -32,7 +32,10 @@ chapter 47 of the consolidated research plan.
   and zero calibration/validation/test rows because required vintages are absent.
   It records five blockers and fits no model. The train-only feature audit shows
   15,758/43,327 original-DTI values missing (36.37%); these remain missingness
-  counts, not imputed or projected values. See
+  counts, not imputed or projected values. Official Freddie FAQ research shows
+  token 999 means DTI >65% or unavailable for Non-Relief, and always 999 for
+  Relief. A new lineage-checked, train-only audit script now reproduces the
+  segment cross-tab with no loan IDs in its output; 9/9 focused tests pass. See
   `docs/D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md` and its private receipts.
 - The next data gate is authorized delivery/access: Freddie Clarity sign-in for
   D01; Ginnie session cookie for a separate Ginnie case. Neither source is

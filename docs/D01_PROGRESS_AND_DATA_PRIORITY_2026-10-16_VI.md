@@ -109,7 +109,9 @@ quan sát. Chi tiết phương pháp và kết quả nghiên cứu phải đư�
 - [`D01_CASE_STUDY_VI.md`](D01_CASE_STUDY_VI.md) — population, target, KPI,
   denominators, kết quả và limitations.
 - [`D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md`](D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md)
-  — current real-case split and train-feature availability; no model fit.
+  — current real-case split and train-feature availability; DTI mask is confirmed
+  by Freddie's official FAQ to be structural for Relief Refinance; aggregate-only
+  train audit is implemented/tested; no model fit.
 - Latest private browser receipt:
   `D:\data\Codex\credit-atlas\artifacts\private\browser-qa-b0f2574128dc\receipt.json`.
   Source code used: public commit `ae94e77`; real-data case:

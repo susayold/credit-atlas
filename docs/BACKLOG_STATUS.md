@@ -29,7 +29,10 @@ private receipts `study-b71a0d76e11d` and `feature-audit-bbe0ad46de92`. It
 reconfirms 43,327 eligible train loans (100 positive / 43,227 negative), zero
 rows in the absent calibration/validation/test vintages, and 15,758/43,327
 train-cohort original-DTI values missing (36.37%). The five fit blockers remain;
-the command did not fit a model. See
+the command did not fit a model. Official Freddie FAQ research confirms DTI
+token `999` means >65% or unavailable for Non-Relief and is always used for
+Relief. A new train-only aggregate audit script reproduces the cross-tab without
+outputting identifiers; 9/9 focused tests pass. See
 `docs/D01_R2_CURRENT_SUPPORT_AUDIT_2026-10-16_VI.md` for lineage, cutoffs,
 feature coverage and interpretation.
 

@@ -232,7 +232,7 @@ def handler_for(service: ResearchService):
                 if url.path == "/downloads/fed-bank-mortgage-context.xlsx":
                     if query:
                         raise ValueError("Federal Reserve bank mortgage workbook accepts no filters")
-                    workbook = service.root / "apps/excel/templates/CreditAtlas-Fed-Bank-Mortgage-Context.xlsx"
+                    workbook = service.root / "apps/excel/templates/CreditAtlas-Fed-Bank-Asset-Quality.xlsx"
                     if not workbook.is_file():
                         self.send(404, {"error": "Federal Reserve bank mortgage workbook is not built"}, head=head)
                         return
@@ -241,7 +241,7 @@ def handler_for(service: ResearchService):
                         return
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                              filename="CreditAtlas-Fed-Bank-Mortgage-Context.xlsx", head=head)
+                              filename="CreditAtlas-Fed-Bank-Asset-Quality.xlsx", head=head)
                     return
                 if url.path == "/api/nsmo-profile":
                     if query:

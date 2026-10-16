@@ -1,4 +1,4 @@
-"""Acquire official Federal Reserve single-family mortgage bank-quality series.
+"""Acquire official Federal Reserve bank asset-quality series by product.
 
 The raw FRED CSV snapshots and receipt stay in the private D: workspace. This
 source is a bank-portfolio benchmark, not Freddie/NSMO loan-level evidence.
@@ -17,6 +17,7 @@ from pathlib import Path
 
 SERIES = {
     "DRSFRMACBS": {
+        "product": "Single-family mortgage",
         "title": "Delinquency rate on single-family residential mortgages, booked in domestic offices, all commercial banks",
         "unit": "Percent",
         "frequency": "Quarterly, end of period",
@@ -24,9 +25,62 @@ SERIES = {
         "denominator": "End-of-period loans",
     },
     "CORSFRMACBS": {
+        "product": "Single-family mortgage",
         "title": "Charge-off rate on single-family residential mortgages, booked in domestic offices, all commercial banks",
         "unit": "Percent",
         "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
+    "DRCCLACBS": {
+        "product": "Credit card",
+        "title": "Delinquency rate on credit card loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "CORCCACBS": {
+        "product": "Credit card",
+        "title": "Charge-off rate on credit card loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
+    "DROCLACBS": {
+        "product": "Other consumer",
+        "title": "Delinquency rate on other consumer loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "COROCLACBS": {
+        "product": "Other consumer",
+        "title": "Charge-off rate on other consumer loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
+    "DRCRELEXFACBS": {
+        "product": "Commercial real estate",
+        "title": "Delinquency rate on commercial real estate loans excluding farmland, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "CORCREXFACBS": {
+        "product": "Commercial real estate",
+        "title": "Charge-off rate on commercial real estate loans excluding farmland, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "Average loans; annualized net charge-offs after recoveries",
+    },
+    "DRBLACBS": {
+        "product": "Business loans",
+        "title": "Delinquency rate on business loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly, end of period",
+        "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
+    },
+    "CORBLACBS": {
+        "product": "Business loans",
+        "title": "Charge-off rate on business loans, all commercial banks",
+        "unit": "Percent", "frequency": "Quarterly",
         "seasonal_adjustment": "Seasonally adjusted",
         "denominator": "Average loans; annualized net charge-offs after recoveries",
     },
@@ -50,10 +104,10 @@ def validate_csv(series_id: str, raw: bytes) -> dict:
         if not period or period <= previous or not raw_value or raw_value == ".":
             raise ValueError(f"Missing, duplicate, unordered, or nonnumeric {series_id} row")
         year, month, day = (int(part) for part in period.split("-"))
-        if month not in (1, 4, 7, 10) or day != 1 or year < 1991:
+        if month not in (1, 4, 7, 10) or day != 1 or year < 1980:
             raise ValueError(f"Unexpected quarterly period in {series_id}: {period}")
         value = float(raw_value)
-        lower_bound = -100 if series_id == "CORSFRMACBS" else 0
+        lower_bound = -100 if series_id.startswith("COR") else 0
         if not math.isfinite(value) or not lower_bound <= value <= 100:
             raise ValueError(f"Out-of-domain rate in {series_id}: {raw_value}")
         previous = period

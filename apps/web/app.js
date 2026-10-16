@@ -165,7 +165,7 @@ function mortgageExcelLibraryPane(container){
   ['/downloads/ginnie-public-samples.xlsx','Ginnie Mae · sample records','LoanPerf, liquidation và payment-history records; giữ identifiers theo source, dùng trong case Ginnie riêng.','CreditAtlas-Ginnie-Public-Samples.xlsx'],
   ['/downloads/ginnie-layout-reference.xlsx','Ginnie Mae · layout, codes & QA','Field definitions, categories và aggregate-only sample QA; không có row records.','CreditAtlas-Ginnie-LoanPerf-Reference.xlsx'],
   ['/downloads/alfred-macro-context.xlsx','ALFRED · mortgage macro history','171 month-end observations and 95,395 vintage × series × observation rows, with source, field dictionary and archive hashes. Context only; not a qualified model predictor.','CreditAtlas-ALFRED-Macro-Context.xlsx'],
-  ['/downloads/fed-bank-mortgage-context.xlsx','Federal Reserve · bank mortgage quality','142 quarterly observations since 1991: delinquency and net charge-off rates for insured commercial banks. Separate bank population; context only.','CreditAtlas-Fed-Bank-Mortgage-Context.xlsx'],
+  ['/downloads/fed-bank-mortgage-context.xlsx','Federal Reserve · bank asset quality','10 quarterly series across mortgages, cards, consumer, CRE and business loans. Commercial-bank portfolio context; not loan-level model data.','CreditAtlas-Fed-Bank-Asset-Quality.xlsx'],
  ];
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Workbook có sample, codebook và lịch sử aggregate. Sample Release 47 không thay annual vintage; Fannie, Ginnie, NSMO, HMDA, NMDB và bank rates giữ population riêng. Aggregate context không phải loan-level target hay predictor đã qualified.',true));container.append(box);
 }
@@ -200,18 +200,30 @@ async function mortgageMacroContextPane(container,generation){
  }catch(error){if(generation===renderGeneration)box.append(empty('Không tải được macro context: '+error.message));}
 }
 async function fedBankMortgageQualityPane(container,generation){
- const box=card('Federal Reserve · mortgage asset quality at commercial banks','Quarterly bank-portfolio benchmark · separate population from Freddie, NSMO and NMDB loans');box.id='fed-bank-mortgage-context';container.append(box);
+ const box=card('Federal Reserve · bank asset quality by product','Quarterly commercial-bank portfolio benchmark · five lending domains · separate from loan-level sources');box.id='fed-bank-mortgage-context';container.append(box);
  try{
   const d=await api('/api/fed-bank-mortgage-context');if(generation!==renderGeneration)return;
-  if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Federal Reserve bank mortgage context unavailable.'));return;}
-  const latest=d.rows[d.rows.length-1],quarter=(period)=>period.slice(0,4)+' Q'+String(Math.floor((Number(period.slice(5,7))-1)/3)+1),metrics=grid('two');append(metrics,
-   metric('30+ DPD / nonaccrual · '+quarter(latest.period),decimal(latest.DRSFRMACBS,2)+'%','End-of-period loan denominator'),
-   metric('Net charge-offs · '+quarter(latest.period),decimal(latest.CORSFRMACBS,2)+'%','Annualized · average-loan denominator'));
-  const chart=card('U.S. insured commercial-bank mortgage rates',quarter(d.first_period)+' → '+quarter(d.last_period)+' · '+number(d.quarter_count)+' quarters');
-  chart.append(lineChart(d.rows,[{key:'DRSFRMACBS',color:'primary'},{key:'CORSFRMACBS',color:'secondary'}],{label:'Federal Reserve single-family mortgage delinquency and annualized net charge-off rates, percent',suffix:'%'}),legend([['30+ days past due or nonaccrual · end-period loans','primary'],['Net charge-offs after recoveries · annualized / average loans','secondary']]));
-  box.append(metrics,chart,table(['Quarter',{label:'30+ DPD / nonaccrual %',number:true},{label:'Net charge-offs % annualized',number:true}],d.rows.slice(-12).map(r=>[quarter(r.period),decimal(r.DRSFRMACBS,2),decimal(r.CORSFRMACBS,2)])));
+  if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Federal Reserve bank asset-quality context unavailable.'));return;}
+  const quarter=(period)=>period.slice(0,4)+' Q'+String(Math.floor((Number(period.slice(5,7))-1)/3)+1),latest=d.rows.find(r=>r.period===d.last_period),products=d.products,metrics=grid('three');
+  const profile=Object.fromEntries(d.series.map(s=>[s.series_id,s]));
+  products.forEach(product=>{const p=d.series.filter(s=>s.product===product),del=p.find(s=>s.series_id.startsWith('DR')),co=p.find(s=>s.series_id.startsWith('COR'));if(del&&co)metrics.append(metric(product+' · '+quarter(d.last_period),decimal(latest[del.series_id],2)+'% / '+decimal(latest[co.series_id],2)+'%','Delinquency / net charge-off'));});
+  box.append(metrics,para('Mỗi ô hiển thị delinquency / net charge-off. Mức thay đổi 4 quý, peak lịch sử, mẫu số và coverage có trong từng domain bên dưới; các series có lịch sử bắt đầu khác nhau.'));
+  const cards=el('div','two-column');
+  products.forEach((product,index)=>{const p=d.series.filter(s=>s.product===product),del=p.find(s=>s.series_id.startsWith('DR')),co=p.find(s=>s.series_id.startsWith('COR')),cardNode=card(product,del.first_reference_date.slice(0,4)+' Q'+Math.floor((Number(del.first_reference_date.slice(5,7))-1)/3+1)+' → '+quarter(d.last_period)+' · '+number(del.observation_count)+' delinquency quarters');
+   const oldPeriod=d.rows.find(r=>r.period===String(Number(d.last_period.slice(0,4))-1)+d.last_period.slice(4)),oldDel=oldPeriod?.[del.series_id],oldCo=oldPeriod?.[co.series_id];
+   const change=(now,old)=>old==null||now==null?'n/a':(now-old>=0?'+':'')+decimal(now-old,2)+' pp';
+   const stats=grid('two'),delStats=profile[del.series_id],coStats=profile[co.series_id];append(stats,
+    metric('Delinquency · '+quarter(d.last_period),decimal(latest[del.series_id],2)+'%','Δ 4Q '+change(latest[del.series_id],oldDel)),
+    metric('Net charge-off · '+quarter(d.last_period),decimal(latest[co.series_id],2)+'%','Δ 4Q '+change(latest[co.series_id],oldCo)),
+    metric('Delinquency high',decimal(delStats.historical_high_value,2)+'%','Observed '+quarter(delStats.historical_high_date)+' · current percentile '+decimal(delStats.historical_percentile,1)),
+    metric('Charge-off high',decimal(coStats.historical_high_value,2)+'%','Observed '+quarter(coStats.historical_high_date)+' · current percentile '+decimal(coStats.historical_percentile,1)));
+   const chartPoints=d.rows.filter(r=>r.period>=del.first_reference_date);cardNode.append(stats,lineChart(chartPoints,[{key:del.series_id,color:'primary'},{key:co.series_id,color:'secondary'}],{label:'Federal Reserve '+product+' delinquency and annualized net charge-off rates, percent',suffix:'%'}),legend([['30+ DPD / nonaccrual · '+del.denominator,'primary'],['Net charge-offs · '+co.denominator,'secondary']]));
+   const recent=d.rows.filter(r=>r.period<=d.last_period&&r[del.series_id]!=null).slice(-12);cardNode.append(table(['Quarter',{label:'Delinquency %',number:true},{label:'Net charge-off %',number:true}],recent.map(r=>[quarter(r.period),decimal(r[del.series_id],2),decimal(r[co.series_id],2)])),note('Nguồn: '+del.source_url+' · '+co.source_url+'. ' + (product==='Commercial real estate'?'CRE excludes farmland. ':'')+'Charge-off rates are annualized and net of recoveries; negative values are possible.'));
+   cards.append(cardNode);
+  });
+  box.append(cards,table(['Series','Domain','Frequency','Seasonal adjustment','Denominator','First quarter','Latest value'],d.series.map(s=>[s.series_id,s.product,s.frequency,s.seasonal_adjustment,s.denominator,quarter(s.first_reference_date),decimal(s.last_known_value,2)+'%'])));
   d.limitations.forEach(text=>box.append(note(text)));
- }catch(error){if(generation===renderGeneration)box.append(empty('Federal Reserve mortgage benchmark unavailable: '+error.message));}
+ }catch(error){if(generation===renderGeneration)box.append(empty('Federal Reserve bank asset-quality benchmark unavailable: '+error.message));}
 }
 async function cfpbMortgageTrendsPane(container,generation){
  const box=card('CFPB · Monthly mortgage delinquency by geography','County/state context · 2008–2025 · same NMDB sample family; not loan-level or independent validation');box.id='cfpb-mortgage-trends';container.append(box);

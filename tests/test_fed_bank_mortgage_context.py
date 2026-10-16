@@ -13,14 +13,10 @@ from urllib.request import Request, urlopen
 
 import pytest
 
-from credit_atlas.fed_bank_mortgage_context import RELEASE, report
+from credit_atlas.fed_bank_mortgage_context import RELEASE, SERIES as CONFIGURED_SERIES, report
 from credit_atlas.server import handler_for
 
 
-SERIES = {
-    "DRSFRMACBS": ["2.10", "2.00", "1.90", "1.80"],
-    "CORSFRMACBS": ["0.10", "-0.02", "0.00", "0.01"],
-}
 PERIODS = ["2025-01-01", "2025-04-01", "2025-07-01", "2025-10-01"]
 
 
@@ -28,7 +24,10 @@ def _fixture_root(tmp_path: Path) -> Path:
     folder = tmp_path / "data/private/public-context/fed-bank-mortgage-asset-quality-test"
     folder.mkdir(parents=True)
     metadata = {}
-    for series_id, values in SERIES.items():
+    for index, series_id in enumerate(CONFIGURED_SERIES):
+        values = [str(index + 1 + offset / 10) for offset in range(4)]
+        if series_id.startswith("COR"):
+            values[1] = "-0.02"
         path = folder / f"{series_id}.csv"
         with path.open("w", encoding="utf-8", newline="") as stream:
             writer = csv.writer(stream, lineterminator="\n")
@@ -77,9 +76,15 @@ def test_fed_bank_mortgage_context_validates_native_quarterly_series(tmp_path):
     assert result["first_period"] == "2025-01-01"
     assert result["last_period"] == "2025-10-01"
     assert result["quarter_count"] == 4
-    assert result["rows"][-1]["DRSFRMACBS"] == 1.8
+    assert result["rows"][-1]["DRSFRMACBS"] == 1.3
     assert result["rows"][1]["CORSFRMACBS"] == -0.02
-    assert "not Freddie Mac, NSMO" in result["limitations"][0]
+    assert len(result["series"]) == 10
+    assert len(result["products"]) == 5
+    mortgage = next(s for s in result["series"] if s["series_id"] == "DRSFRMACBS")
+    assert mortgage["historical_high_value"] == 1.3
+    assert mortgage["historical_high_date"] == "2025-10-01"
+    assert mortgage["historical_percentile"] == 100
+    assert "not borrower-level records" in result["limitations"][0]
 
 
 def test_fed_bank_mortgage_context_fails_closed_on_hash_mismatch(tmp_path):
@@ -93,7 +98,7 @@ def test_fed_bank_mortgage_context_fails_closed_on_hash_mismatch(tmp_path):
 
 def test_fed_bank_mortgage_api_and_fixed_workbook_download(app_server, tmp_path):
     _fixture_root(tmp_path)
-    workbook = tmp_path / "apps/excel/templates/CreditAtlas-Fed-Bank-Mortgage-Context.xlsx"
+    workbook = tmp_path / "apps/excel/templates/CreditAtlas-Fed-Bank-Asset-Quality.xlsx"
     workbook.parent.mkdir(parents=True)
     payload = b"PK\x03\x04FedBank"
     workbook.write_bytes(payload)
@@ -106,7 +111,7 @@ def test_fed_bank_mortgage_api_and_fixed_workbook_download(app_server, tmp_path)
     with urlopen(app_server + "/downloads/fed-bank-mortgage-context.xlsx", timeout=5) as response:
         assert response.status == 200
         assert response.read() == payload
-        assert "CreditAtlas-Fed-Bank-Mortgage-Context.xlsx" in response.headers["Content-Disposition"]
+        assert "CreditAtlas-Fed-Bank-Asset-Quality.xlsx" in response.headers["Content-Disposition"]
     with pytest.raises(HTTPError) as error:
         urlopen(app_server + "/api/fed-bank-mortgage-context?unexpected=1", timeout=5)
     assert error.value.code == 400
@@ -120,4 +125,4 @@ def test_fed_bank_quality_excel_library_entry_is_present(app_server):
         source = response.read().decode("utf-8")
     assert "/api/fed-bank-mortgage-context" in source
     assert "/downloads/fed-bank-mortgage-context.xlsx" in source
-    assert "Separate bank population; context only" in source
+    assert "10 quarterly series across mortgages, cards, consumer, CRE and business loans" in source

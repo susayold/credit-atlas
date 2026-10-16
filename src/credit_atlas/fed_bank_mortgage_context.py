@@ -1,4 +1,4 @@
-"""Verified Federal Reserve commercial-bank mortgage asset-quality context."""
+"""Verified Federal Reserve commercial-bank asset-quality context by product."""
 
 from __future__ import annotations
 
@@ -11,24 +11,16 @@ from .workspace import read_json, sha256
 
 
 SERIES = {
-    "DRSFRMACBS": {
-        "label": "Single-family mortgage delinquency rate",
-        "unit": "Percent",
-        "frequency": "Quarterly, end of period",
-        "seasonal_adjustment": "Seasonally adjusted",
-        "denominator": "End-of-period loans",
-        "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status",
-        "allow_negative": False,
-    },
-    "CORSFRMACBS": {
-        "label": "Single-family mortgage charge-off rate",
-        "unit": "Percent",
-        "frequency": "Quarterly",
-        "seasonal_adjustment": "Seasonally adjusted",
-        "denominator": "Average loans; annualized net charge-offs after recoveries",
-        "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter",
-        "allow_negative": True,
-    },
+    "DRSFRMACBS": {"product": "Single-family mortgage", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status", "allow_negative": False},
+    "CORSFRMACBS": {"product": "Single-family mortgage", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter", "allow_negative": True},
+    "DRCCLACBS": {"product": "Credit card", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status", "allow_negative": False},
+    "CORCCACBS": {"product": "Credit card", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter", "allow_negative": True},
+    "DROCLACBS": {"product": "Other consumer", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status", "allow_negative": False},
+    "COROCLACBS": {"product": "Other consumer", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter", "allow_negative": True},
+    "DRCRELEXFACBS": {"product": "Commercial real estate", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status; excludes farmland", "allow_negative": False},
+    "CORCREXFACBS": {"product": "Commercial real estate", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter; excludes farmland", "allow_negative": True},
+    "DRBLACBS": {"product": "Business loans", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status", "allow_negative": False},
+    "CORBLACBS": {"product": "Business loans", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter", "allow_negative": True},
 }
 RELEASE = "Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks"
 RELEASE_URL = "https://www.federalreserve.gov/releases/ChargeOff/"
@@ -45,7 +37,7 @@ def _latest_run(root: Path) -> tuple[Path, dict]:
         if manifest.get("status") == "DOWNLOADED_AND_VALIDATED":
             candidates.append((str(manifest.get("completed_at", "")), folder, manifest))
     if not candidates:
-        raise ValueError("No completed Federal Reserve mortgage context run exists")
+        raise ValueError("No completed Federal Reserve bank asset-quality context run exists")
     _, folder, manifest = max(candidates, key=lambda item: item[0])
     return folder, manifest
 
@@ -53,7 +45,7 @@ def _latest_run(root: Path) -> tuple[Path, dict]:
 def _quarter_index(value: str) -> int:
     observed = date.fromisoformat(value)
     if observed.day != 1 or observed.month not in (1, 4, 7, 10):
-        raise ValueError("Federal Reserve mortgage context contains a non-quarterly date")
+        raise ValueError("Federal Reserve context contains a non-quarterly date")
     return observed.year * 4 + ((observed.month - 1) // 3)
 
 
@@ -63,10 +55,10 @@ def report(root: Path) -> dict:
             or manifest.get("predictor_qualified") is not False
             or manifest.get("model_training_performed") is not False
             or manifest.get("release") != RELEASE):
-        raise ValueError("Federal Reserve mortgage context has an invalid source or qualification state")
+        raise ValueError("Federal Reserve context has an invalid source or qualification state")
     metadata = manifest.get("series")
     if not isinstance(metadata, dict) or set(metadata) != set(SERIES):
-        raise ValueError("Federal Reserve mortgage context must contain exactly two configured series")
+        raise ValueError("Federal Reserve context must contain exactly the configured product series")
 
     values_by_period: dict[str, dict[str, float]] = {}
     profiles = []
@@ -77,31 +69,31 @@ def report(root: Path) -> dict:
         if (not path.is_file() or path.stat().st_size > _MAX_CSV_BYTES
                 or sha256(path) != info.get("sha256")
                 or info.get("source_url") != f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"):
-            raise ValueError(f"Federal Reserve mortgage source digest or URL failed for {series_id}")
+            raise ValueError(f"Federal Reserve source digest or URL failed for {series_id}")
         rows = []
         with path.open("r", encoding="utf-8-sig", newline="") as stream:
             reader = csv.DictReader(stream)
             if reader.fieldnames != ["observation_date", series_id]:
-                raise ValueError(f"Federal Reserve mortgage CSV schema changed for {series_id}")
+                raise ValueError(f"Federal Reserve CSV schema changed for {series_id}")
             previous_index = None
             for row in reader:
                 if None in row or not row.get("observation_date") or row.get(series_id) in (None, "", "."):
-                    raise ValueError(f"Federal Reserve mortgage CSV has an invalid row for {series_id}")
+                    raise ValueError(f"Federal Reserve CSV has an invalid row for {series_id}")
                 period = date.fromisoformat(row["observation_date"]).isoformat()
                 index = _quarter_index(period)
                 if previous_index is not None and index != previous_index + 1:
-                    raise ValueError(f"Federal Reserve mortgage CSV has a gap or duplicate for {series_id}")
+                    raise ValueError(f"Federal Reserve CSV has a gap or duplicate for {series_id}")
                 value = float(row[series_id])
                 if (not math.isfinite(value) or value > 100
                         or not definition["allow_negative"] and value < 0
                         or definition["allow_negative"] and value < -100):
-                    raise ValueError(f"Federal Reserve mortgage value is outside domain for {series_id}")
+                    raise ValueError(f"Federal Reserve value is outside domain for {series_id}")
                 rows.append((period, value))
                 previous_index = index
         if (not rows or len(rows) != info.get("observations")
                 or rows[0][0] != info.get("first_reference_date")
                 or rows[-1][0] != info.get("last_reference_date")):
-            raise ValueError(f"Federal Reserve mortgage coverage differs from manifest for {series_id}")
+            raise ValueError(f"Federal Reserve coverage differs from manifest for {series_id}")
         for period, value in rows:
             values_by_period.setdefault(period, {})[series_id] = value
         profiles.append({
@@ -114,32 +106,29 @@ def report(root: Path) -> dict:
             "first_reference_date": rows[0][0],
             "last_reference_date": rows[-1][0],
             "last_known_value": rows[-1][1],
+            "historical_high_value": max(value for _, value in rows),
+            "historical_high_date": next(period for period, value in rows
+                                         if value == max(item[1] for item in rows)),
+            "historical_percentile": round(100 * sum(value <= rows[-1][1] for _, value in rows) / len(rows), 1),
         })
 
-    if manifest.get("latest_common_reference_date") != min(
-            profile["last_reference_date"] for profile in profiles):
-        raise ValueError("Federal Reserve mortgage latest-quarter manifest does not reconcile")
+    latest_common = min(profile["last_reference_date"] for profile in profiles)
+    if manifest.get("latest_common_reference_date") != latest_common:
+        raise ValueError("Federal Reserve latest-common-quarter manifest does not reconcile")
     rows = [{"period": period, **values}
             for period, values in sorted(values_by_period.items())]
-    if any(set(row) != {"period", *SERIES} for row in rows):
-        raise ValueError("Federal Reserve mortgage series have mismatched quarter coverage")
     return {
-        "status": "AVAILABLE",
-        "source": manifest["source"],
-        "release": manifest["release"],
-        "release_url": manifest["release_url"],
-        "retrieved_at": manifest["retrieved_at"],
-        "completed_at": manifest["completed_at"],
-        "first_period": rows[0]["period"],
-        "last_period": rows[-1]["period"],
-        "quarter_count": len(rows),
-        "series": profiles,
-        "rows": rows,
+        "status": "AVAILABLE", "source": manifest["source"],
+        "release": manifest["release"], "release_url": manifest["release_url"],
+        "retrieved_at": manifest["retrieved_at"], "completed_at": manifest["completed_at"],
+        "first_period": rows[0]["period"], "last_period": latest_common,
+        "quarter_count": len(rows), "products": sorted({item["product"] for item in profiles}),
+        "series": profiles, "rows": rows,
         "limitations": [
-            "These are aggregate rates for insured U.S.-chartered commercial banks, not Freddie Mac, NSMO, or the full U.S. mortgage market.",
+            "These are aggregate rates for U.S. commercial banks, not borrower-level records or a complete census of all lenders.",
             "Delinquency is 30+ days past due and still accruing or nonaccrual, divided by end-of-period loans; charge-off is annualized net of recoveries divided by average loans.",
-            "Charge-off values can be negative when recoveries exceed charge-offs and are published rounded to two decimal places.",
-            "This is the latest revised snapshot, not an historical publication-vintage series or a qualified mortgage model predictor.",
-            "The series add bank-system context only; they do not add loan-level histories, borrowers, or target labels.",
+            "Not all product series begin on the same date; blank cells in earlier quarters mean the series was not yet published, not zero risk.",
+            "Commercial real estate measures exclude farmland; these product groups remain bank portfolios rather than homogeneous borrowers or loans.",
+            "This is a latest-revised snapshot, not a point-in-time publication-vintage series or a qualified model predictor.",
         ],
     }

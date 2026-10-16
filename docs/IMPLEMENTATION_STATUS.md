@@ -310,22 +310,23 @@ the selector, 98-quarter table, 4-market chart, workbook download and mobile
 layout. The aggregate is not a loan-level label source and does not resolve D02
 target/model gates.
 
-## 2026-10-16 continuation — Federal Reserve commercial-bank mortgage quality
+## 2026-10-16 continuation — Federal Reserve bank asset quality by product
 
-The Federal Reserve's public CHGDEL release provides a new, distinct aggregate
-context series: 30+ delinquency/nonaccrual on bank-held single-family mortgage
-loans and annualized net charge-offs. Downloaded both official FRED series,
-validated their schema, domains and uninterrupted quarterly dates, and retained
-their SHA-256 receipt privately. Each series has 142 observations, 1991Q1–
-2026Q2; latest values are 1.86% and 0.00% (two-decimal source precision).
-Negative charge-off values are valid when recoveries exceed current charge-offs.
+Expanded the official CHGDEL panel to ten FRED series across mortgage, credit
+card, other consumer, CRE excluding farmland, and business loans. All histories
+are uninterrupted quarterly series through 2026Q2 (142–166 rows); raw files,
+manifest and hashes remain private. At 2026Q2, delinquency/net charge-off are
+1.86%/0.00% for mortgages, 2.85%/3.82% for cards, 2.33%/1.21% for other
+consumer, 1.53%/0.14% for CRE, and 1.27%/0.58% for business loans.
 
-Added a digest-validating aggregate API, mortgage Sources panel and a separate
-three-sheet Excel workbook with all quarters, source definitions and receipts.
-The interface explains the different denominators and keeps this bank-booked
-population separate from Freddie, NSMO and NMDB. It is latest-revised context,
-not a loan-level performance source or qualified feature. See
-`docs/PUBLIC_MORTGAGE_CONTEXT.md`. The private workbook/data remain on D:.
-Focused source/parser/API/download tests pass 18/18; a live Edge smoke test
-verified the KPI panel, quarterly history and zero browser errors. Downloaded
-workbook SHA-256 matches the private template byte-for-byte.
+The validated API and Sources UI add same-quarter year-over-year changes,
+historical highs and current historical percentiles for each measure. Five
+domain panels show the paired histories and denominators; unobserved pre-start
+quarters stay null. The four-sheet private Excel workbook contains an overview
+with paired charts and KPIs, filterable quarter history, a series dictionary,
+and source/hash QA. It reopens cleanly and its fixed download endpoint returns
+the newly built 24 KB template. Focused API/parser/download tests pass 4/4;
+Edge smoke test passes for five products, high-history KPIs and zero JS errors.
+Bank aggregates remain context only: no loan-level histories, PD labels or
+qualified model features were added. D01 remains 26/50. Details and sources:
+`docs/PUBLIC_MORTGAGE_CONTEXT.md`.

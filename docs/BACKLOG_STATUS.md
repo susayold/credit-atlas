@@ -4,16 +4,20 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
-## Latest continuation — Federal Reserve mortgage asset-quality context
+## Latest continuation — Federal Reserve bank asset quality by product
 
-Added two official FRED series from the Federal Reserve CHGDEL release:
-single-family mortgage delinquency and net charge-off rates for insured U.S.
-commercial banks. Each contains 142 complete quarters from 1991Q1 to 2026Q2;
-the source was updated 2026-08-25. The hash-validated API, mortgage Sources
-panel and filterable three-sheet Excel workbook describe the denominators,
-negative net charge-off semantics and source/population limits. This adds bank
-system context, not a Freddie vintage, NSMO outcome, or model feature. Focused
-API and download tests are recorded in the current implementation checkpoint.
+Extended the Federal Reserve CHGDEL benchmark from mortgage-only to five bank
+lending domains: single-family mortgage, credit card, other consumer, CRE
+(excluding farmland), and business loans. Ten official FRED series now provide
+delinquency and annualized net charge-off rates to a common 2026Q2 endpoint;
+each has 142–166 complete quarters. The validated API and Sources panel show
+the latest rate, same-quarter year-over-year change, historical high and current
+historical percentile. The private four-sheet workbook includes product KPIs,
+five paired time-series charts, a filterable quarterly table, field dictionary,
+source URLs and per-file hashes. Earlier periods before publication remain
+blank, not zero. This is aggregate bank context, not loan-level history or a
+qualified predictor. Focused parser/API/download tests pass 4/4 and the live
+Edge smoke test shows all five products without browser errors.
 
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample

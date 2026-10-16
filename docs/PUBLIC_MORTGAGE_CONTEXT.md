@@ -111,35 +111,52 @@ Re-run from the private workspace root:
 .\.venv\Scripts\python.exe -X utf8 ..\credit-atlas-public\scripts\acquire_alfred_monthly_vintages.py --root . --headless
 ```
 
-## Federal Reserve commercial-bank mortgage asset quality — 2026-10-16
+## Federal Reserve commercial-bank asset quality by product — 2026-10-16
 
-Acquired the official FRED histories for `DRSFRMACBS` and `CORSFRMACBS`, both
-published by the Board of Governors in its Charge-Off and Delinquency Rates on
-Loans and Leases at Commercial Banks release. Each series has 142 complete
-quarterly observations from 1991Q1 through 2026Q2; the source release was last
-updated on August 25, 2026. Private CSVs and a SHA-256 receipt are stored in
-`data/private/public-context/fed-bank-mortgage-asset-quality-*`.
+Acquired 10 official FRED histories in the Federal Reserve's Charge-Off and
+Delinquency Rates on Loans and Leases at Commercial Banks release. The series
+cover single-family mortgage, credit card, other consumer, commercial real
+estate (excluding farmland), and business loans. Delinquency histories begin
+in 1987 or 1991; charge-off histories begin in 1985 or 1991. All have a common
+latest observation of 2026Q2, with 142–166 complete quarters per series. Private
+CSV snapshots and SHA-256 receipts are stored in
+`data/private/public-context/fed-bank-mortgage-asset-quality-20261016T005352Z`.
 
-`DRSFRMACBS` measures loans 30 or more days past due and still accruing, plus
-nonaccrual loans, divided by end-of-period loans. `CORSFRMACBS` is annualized
-charge-offs net of recoveries divided by average loans; its published series
-can be negative when recoveries exceed charge-offs. The latest 2026Q2 values
-are 1.86% delinquency and 0.00% charge-off at the source's two-decimal display
-precision. The local mortgage Sources view and separate Excel workbook expose
-the complete quarterly history, series definitions, download URLs and hashes.
+At 2026Q2, the displayed delinquency / annualized net charge-off rates are:
+single-family mortgage 1.86% / 0.00%; credit card 2.85% / 3.82%; other consumer
+2.33% / 1.21%; CRE 1.53% / 0.14%; and business loans 1.27% / 0.58%. These are
+source-reported percentages rounded to two decimals. Delinquency covers loans
+30 or more days past due and still accruing plus nonaccrual loans, divided by
+end-of-period loans. Charge-off is annualized net charge-offs after recoveries
+divided by average loans; negative values are possible when recoveries exceed
+charge-offs.
 
-These bank-booked mortgage rates are a distinct aggregate population from
-Freddie Mac, NSMO and NMDB. They strengthen system-level cycle and asset-quality
-context only; they are not a borrower dataset, a fixed-horizon default rate, or
-qualified predictor history. This acquisition uses the latest revised FRED
-snapshot and does not establish historical publication vintages.
+The Sources view displays five separate product panels, latest rates, 4-quarter
+changes, history and definitions. The Excel workbook
+`CreditAtlas-Fed-Bank-Asset-Quality.xlsx` contains Overview, Quarterly History,
+Series Dictionary, and Sources & QA. Earlier periods before a particular series
+begins are blank, not zero. Delinquency and charge-off are separate accounting
+measures with different denominators and timings; they should not be added,
+treated as a borrower PD, or compared without that caveat.
+
+These bank-booked rates are distinct aggregate populations from Freddie Mac,
+NSMO, NMDB, HMDA and Ginnie Mae. They add system-level portfolio context, not
+borrower or loan histories, fixed-horizon default labels, or qualified model
+predictors. This is the latest revised FRED snapshot, not point-in-time
+publication-vintage history.
 
 Sources: [Federal Reserve release and definitions](https://www.federalreserve.gov/releases/ChargeOff/),
-[FRED mortgage delinquency series](https://fred.stlouisfed.org/series/DRSFRMACBS),
-[FRED mortgage charge-off series](https://fred.stlouisfed.org/series/CORSFRMACBS).
+[FRED credit-card delinquency](https://fred.stlouisfed.org/series/DRCCLACBS),
+[FRED credit-card charge-off](https://fred.stlouisfed.org/series/CORCCACBS),
+[FRED other-consumer delinquency](https://fred.stlouisfed.org/series/DROCLACBS),
+[FRED CRE delinquency](https://fred.stlouisfed.org/series/DRCRELEXFACBS),
+[FRED CRE charge-off](https://fred.stlouisfed.org/series/CORCREXFACBS),
+[FRED business delinquency](https://fred.stlouisfed.org/series/DRBLACBS),
+[FRED business charge-off](https://fred.stlouisfed.org/series/CORBLACBS).
 
 Re-acquire from the private workspace root:
 
 ```powershell
 python ..\credit-atlas-public\scripts\acquire_fed_bank_mortgage_asset_quality.py --root .
+python ..\credit-atlas-public\scripts\build_fed_bank_asset_quality_workbook.py --root .
 ```

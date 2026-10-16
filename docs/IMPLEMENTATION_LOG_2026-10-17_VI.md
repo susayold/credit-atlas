@@ -19,7 +19,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 ### N03 — provenance và phương pháp
 
 - Ghi nhận bảy loại giá trị: reported, derived, publisher-imputed, model-preprocessing-imputed, model prediction, declared scenario và forecast.
-- Registry hiện có mười một method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA fixed-mix, P4 scenario/ECL và Toyota/Nissan/structured ABS reconciliation.
+- Registry hiện có mười hai method cards gắn dataset, target, cách tính/protocol, validation đã lưu, giới hạn và model/data evidence. Các card bao gồm D01 transitions, UCI350, UCI365, NMDB, HMDA fixed-mix, P4 scenario/ECL, Toyota/Nissan/structured ABS và Bondora 12-MOB support.
 - Các giả định P4 hiển thị đúng scope illustrative: lịch bullet 36 tháng, monthly EIR 0,004, weights 0,7/0,3; source expected loss vẫn unavailable. Không tạo biến dự phóng mới.
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
 
@@ -75,6 +75,16 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Thêm finding note, release contract, CSV/receipt, method card, dataset record và README Excel. Public release chỉ chứa aggregate period rows, không phát hành loan/asset-level records.
 - Acceptance N09 đủ: hợp nhất các deal với explicit contract, source-backed KPI, exception drilldown, SEC links, Excel và analyst finding đã có. Root cause vẫn mở; 83 recovery deltas chưa giải thích. N09 không đổi 26/50 capability acceptance.
 
+## N14 — Bondora 12-MOB label and maturity qualification
+
+- Kiểm tra lại file tải hiện hành bằng HTTP HEAD ngày 17/10: 162,618,206 bytes, Last-Modified 10/08/2026 và ETag trùng source đã pin; SHA-256 `a75db03e…e1a07bf`. Không có file mới để thay thế snapshot.
+- Thêm full-workbook aggregate audit, không xuất loan ID/dòng khoản vay. Reconcile 789,144 rows / 31 fields / hai sheets; tri-state labels là 86,618 true, 520,246 false và 182,280 NULL. Country × origination-year có 58 cell, bốn cell <50 được suppress trong workbook.
+- Kiểm tra maturity bằng proxy minh bạch: issue date +12 calendar months ≤ ngày Last-Modified 10/08/2026. 617,724 khoản proxy-mature; trong đó 10,860 label vẫn NULL. Cả 10,860 không có action date tại/sau anniversary: 7,996 không có action date và 2,864 action trước anniversary. Phần còn lại 171,420 đều NULL và chưa mature theo proxy. Không biến NULL thành false.
+- Phân tầng 10,860 proxy-mature NULLs: 7,178 Active; 2,864 Repaid; 818 Defaulted. `months_on_book`: dưới 12 là 9,150, 12+ là 1,657, missing 53. Đây là mô tả trạng thái; không giải thích nguyên nhân label hoặc thay đổi nhãn.
+- Nghiên cứu [2026 publisher transparency report](https://goandgrow.eu/en/blog/bondora-loan-portfolio-statistics-2026-a-transparency-report/): publisher dùng PD12 cho cohort đủ 12 tháng và mô tả default là >90 DPD kèm chấm dứt hợp đồng do arrears. Chưa có bằng chứng định nghĩa này khớp mọi lịch sử trong export. Không có feature set/model fit; post-booking fields bị loại khỏi underwriting use.
+- Thêm [N14 audit note](BONDORA_N14_LABEL_MATURITY_AUDIT_VI.md), script `scripts/audit_bondora_n14_readiness.py`, hai boundary/tri-state tests và Excel [Bondora label support](../apps/excel/templates/CreditAtlas-Bondora-N14-Label-Support.xlsx). Detailed report chỉ nằm trong private artifacts; workbook chứa aggregate counts và suppress small cells.
+- N14 còn partial: cần publisher xác nhận observation cutoff/label build và giải thích 10,860 NULLs. Không đủ để gọi PD/model-ready hay kết luận lỗi nguồn.
+
 ## Giao diện
 
 Trang **Tiến độ & registry** trong điều hướng chung hiển thị capability acceptance, D01 releases, dataset filters, quyền truy cập, method cards và giới hạn. Register JSON có thể tải xuống. Không đưa raw borrower rows hoặc private exposure values vào catalog.
@@ -83,7 +93,7 @@ Workbook plan ở `docs/reviews/` đã cập nhật trạng thái N01–N03 thà
 
 ## Trạng thái kiểm tra
 
-N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook builder recalculates và kiểm tra 103/3/86/83 cùng từng deal; Summary và Analyst finding đã render để QA. Node/Python/JSON syntax và `git diff --check` được kiểm tra trước publish. Đây chưa phải mở/recalculate bằng Microsoft Excel desktop. Browser/native Excel acceptance riêng của N06 vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước thay đổi này; kết quả đó không thay cho test mới.
+N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook N09 recalculates 103/3/86/83 và từng deal; Summary và Analyst finding được render để QA. N14: hai test label/calendar boundary pass; full source audit khớp SHA, rows/columns/labels và tạo private aggregate report; workbook formulas reconcile 789,144 / 86,618 / 520,246 / 182,280; Summary, country support và method notes được render. `node --check`, Python compile, JSON parse và `git diff --check` được kiểm tra trước publish. Chưa mở/recalculate workbook bằng Excel desktop. Browser/native Excel acceptance riêng của N06 vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước các thay đổi này; kết quả đó không thay cho test mới.
 
 ## Bước kế tiếp
 

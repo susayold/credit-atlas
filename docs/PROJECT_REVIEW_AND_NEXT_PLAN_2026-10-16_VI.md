@@ -1,6 +1,20 @@
 # CreditAtlas — Đánh giá hiện trạng và kế hoạch phát triển tiếp theo
 
-Ngày nghiên cứu: **16/10/2026**, múi giờ Asia/Bangkok. Baseline code: `b997c204c88a2773efac57137cf0b2ba5401e1b8`. Báo cáo này là đầu mối đọc hiện trạng và quyết định công việc tiếp theo; các kế hoạch và receipt cũ vẫn là bằng chứng lịch sử.
+Ngày nghiên cứu gốc: **16/10/2026**; trạng thái được cập nhật **17/10/2026**, múi giờ Asia/Bangkok. Baseline code của vòng rà soát gốc: `b997c204c88a2773efac57137cf0b2ba5401e1b8`. Báo cáo này là đầu mối đọc hiện trạng và quyết định công việc tiếp theo; các kế hoạch và receipt cũ vẫn là bằng chứng lịch sử.
+
+## Cập nhật trạng thái ngày 17/10/2026
+
+Plan gốc đã rà soát ledger 50 capability, D01/D02, các workflow trọng yếu, inventory code/test và nguồn nghiên cứu chính thức. Kết quả rà soát **không có nghĩa là đã đọc lại từng dòng của toàn bộ repo hoặc profile lại mọi raw dataset**; phạm vi, cách đếm và giới hạn đã nêu ở mục 2. Các kết quả mới sau baseline được cập nhật như sau:
+
+| Hạng mục | Trạng thái mới | Tác động lên plan |
+|---|---|---|
+| N09 — ABS surveillance | Acceptance của N09 đạt và đã phát hành; ba comparator vẫn giữ riêng theo hợp đồng. 83 recovery residual còn unresolved. | Đóng đầu ra surveillance của N09; giữ recovery/LGD qualification và mọi root-cause claim ở trạng thái mở. Không đổi 26/50 capability completion. |
+| N14 — Bondora label/maturity | Audit đầy đủ snapshot 789.144 dòng và companion Excel aggregate đã dựng; 10.860 nhãn NULL nằm trước maturity-date proxy nhưng không có action evidence tại/sau anniversary. | N14 chỉ partial. Giữ NULL, không fit model; cần lịch quan sát theo từng khoản và định nghĩa lịch sử từ publisher trước khi chốt maturity/target. |
+| N10 — Freddie annual sample | Downloader giới hạn theo manifest, kiểm host/archive/resource và receipt/hash đã có; chưa có phiên Clarity để tải annual sample. | Đây vẫn là đường găng R2/R3. Không giả lập dữ liệu và không tăng số Freddie vintage. |
+| N05/N06 — NMDB | Mart, API và query-scoped workbook đã được kiểm runtime; browser visual và mở/recalculate Excel desktop chưa nghiệm thu. | Giữ acceptance mở cho đến khi hoàn thành hai kiểm tra người dùng này. |
+| Tổng capability ledger | 26/50 (52%) theo định nghĩa 50 capability; các action N09/N14 không tự nâng tỷ lệ. | Không dùng số action/release mới để đổi mẫu số hay phần trăm completion. |
+
+**Thứ tự tác vụ được làm mới:** (1) hoàn tất kiểm tra/release hiện hành của N14, giữ phần aggregate công khai tách khỏi báo cáo chi tiết private; (2) đóng browser và Excel desktop acceptance của N05/N06; (3) chuẩn bị N10 pilot nhưng chỉ tải khi có Clarity session được phép; (4) sau khi có Freddie annual sample, làm N11 source/layout/label/support và temporal protocol trước bất kỳ model fit nào; (5) tiếp tục N15 Bondora descriptive cohort sau khi publisher cutoff/label maturity được giải quyết; (6) song song chọn một corporate facility có tài liệu executed để triển khai N16/N17. Không dùng Bondora thay Freddie R2, không dùng HMDA/NMDB aggregate làm performance label, và không dùng ABS recovery residual làm LGD.
 
 ## 1. Kết luận để quyết định hướng đi
 

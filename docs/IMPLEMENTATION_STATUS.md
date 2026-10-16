@@ -326,3 +326,6 @@ The interface explains the different denominators and keeps this bank-booked
 population separate from Freddie, NSMO and NMDB. It is latest-revised context,
 not a loan-level performance source or qualified feature. See
 `docs/PUBLIC_MORTGAGE_CONTEXT.md`. The private workbook/data remain on D:.
+Focused source/parser/API/download tests pass 18/18; a live Edge smoke test
+verified the KPI panel, quarterly history and zero browser errors. Downloaded
+workbook SHA-256 matches the private template byte-for-byte.

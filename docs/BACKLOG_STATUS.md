@@ -10,16 +10,19 @@ after explicit project authorization and completion of the official monitoring/t
 The 62,359-row, 587-column file passed structural, identifier, weight and
 performance-code-domain checks. It is held privately and remains a distinct
 source, not a new Freddie vintage; D02 target/state/censoring and field-level
-codebook audits remain. Three public macro series and retrospective context were
-acquired separately; they do not qualify the loan-level study. The FHFA state
+codebook audits remain. Three public macro series and 171 month-end ALFRED
+as-of snapshots (UNRATE 170 vintages, FHFA HPI 58, and mortgage rates 171) now
+cover the D01 macro window; they provide context but do not qualify the
+loan-level study. The FHFA state
 All-Transactions HPI pilot is now also acquired: 10,506 quarterly geography rows
 for 50 states/DC from 1975Q1 through 2026Q2, with its official dictionary and
 download specification. It is aggregate retrospective context only, not a
 point-in-time predictor or property-level valuation. The Release 47
 public example/layout audit confirms field widths but finds disjoint loan IDs;
 no new Freddie annual vintage was added. A Ginnie Mae loan-performance quarterly/
-annual release is now documented as a separate candidate MBS case; its Terms of
-Use require affirmative agreement, so the payload remains undownloaded. See
+annual release is documented as a separate candidate MBS case. The user reviewed
+and accepted its Terms of Use; production acquisition now awaits the user's local
+Netscape cookie-file path, without copying credentials into chat. See
 `docs/GINNIE_MAE_LOAN_PERFORMANCE_SOURCE_REVIEW_VI.md`. A terms-gated, streaming
 ZIP structure auditor was added from the official 59-field layout; its synthetic
 contract tests pass 6/6, but no production file has been checked yet.

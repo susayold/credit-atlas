@@ -167,7 +167,7 @@ function mortgageExcelLibraryPane(container){
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Các workbook chỉ giúp xem/lọc sample và codebook. Freddie Release 47 examples không làm tăng annual vintages; Fannie, Ginnie, NSMO, HMDA và Freddie giữ source/population riêng.',true));container.append(box);
 }
 async function mortgageMacroContextPane(container,generation){
- const box=card('Mortgage macro context · US national','FRED latest-revised snapshot · context for D01, not point-in-time features');box.id='mortgage-macro-context';container.append(box);
+ const box=card('Mortgage macro context · US national','FRED latest-revised history + ALFRED month-end snapshots · descriptive context, not qualified model features');box.id='mortgage-macro-context';container.append(box);
  try{
   const d=await api('/api/mortgage-macro-context');if(generation!==renderGeneration)return;
   if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Mortgage macro context unavailable.'));return;}
@@ -182,6 +182,18 @@ async function mortgageMacroContextPane(container,generation){
   const hpiRows=d.quarterly_hpi.slice(-8),hpiTable=card('FHFA house price index · native quarterly grain','No monthly interpolation · last '+number(d.case_alignment.hpi_quarters)+' quarters aligned to D01');
   hpiTable.append(table(['Quarter',{label:'Index · 1980 Q1 = 100',number:true}],hpiRows.map(r=>[r.period.slice(0,7),decimal(r.index_1980_q1_100,1)])));
   const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Source','Frequency','Latest reference date',{label:'Observations',number:true}],d.series.map(s=>[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count)])));
+  const pit=d.point_in_time_context;
+  if(pit?.status==='AVAILABLE'){
+   const rows=pit.monthly_history,pitBox=card('ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó',pit.coverage.first_month+' → '+pit.coverage.last_month+' · '+number(pit.coverage.monthly_rows)+' tháng · chốt cuối tháng');
+   const coverage=grid('three');append(coverage,
+    metric('UNRATE có sẵn',number(pit.coverage.unemployment_months_available)+' / '+number(pit.coverage.monthly_rows),'dùng quan sát mới nhất đã được công bố đến ngày chốt'),
+    metric('Lãi suất vay có sẵn',number(pit.coverage.mortgage_rate_months_available)+' / '+number(pit.coverage.monthly_rows),'trung bình các tuần trong tháng, theo vintage chốt tháng'),
+    metric('FHFA HPI có sẵn',number(pit.coverage.hpi_months_available)+' / '+number(pit.coverage.monthly_rows),'quý gần nhất đã phát hành; giữ nguyên grain quý'));
+   const pitChart=card('UNRATE và lãi suất mortgage theo vintage tại ngày chốt','Không lấy bản sửa đổi được công bố sau ngày chốt');
+   pitChart.append(lineChart(rows,[{key:'unemployment_percent',color:'primary'},{key:'mortgage30_monthly_mean_percent',color:'secondary'}],{label:'ALFRED point-in-time unemployment and mortgage rates, percent',suffix:'%'}),legend([['UNRATE đã phát hành tính đến cuối tháng','primary'],['Lãi suất 30 năm · trung bình tuần đã phát hành','secondary']]));
+   const latestPit=rows[rows.length-1];pitBox.append(coverage,pitChart,table(['Tháng','Ngày chốt',{label:'UNRATE %',number:true},{label:'Mortgage %',number:true},{label:'FHFA HPI',number:true}],rows.slice(-12).map(r=>[r.period.slice(0,7),r.as_of_date,decimal(r.unemployment_percent,2),decimal(r.mortgage30_monthly_mean_percent,2),decimal(r.hpi_index_1980_q1_100,1)])),note('Vintage dùng theo tháng: UNRATE '+latestPit.vintage_dates.UNRATE+' · mortgage '+latestPit.vintage_dates.MORTGAGE30US+' · HPI '+latestPit.vintage_dates.USSTHPI+'. '+pit.limitations.join(' ')));
+   box.append(pitBox);
+  }
  }catch(error){if(generation===renderGeneration)box.append(empty('Không tải được macro context: '+error.message));}
 }
 async function cfpbMortgageTrendsPane(container,generation){

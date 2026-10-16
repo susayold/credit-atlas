@@ -74,3 +74,39 @@ receipt output hashes and does not silently fall back to an older successful
 run if the newest run is corrupt. These are latest-revised retrospective
 context, not historical point-in-time predictors, and they do not add a loan
 performance vintage or open the D01 model gate.
+
+## ALFRED month-end snapshots — 2026-10-16
+
+The same three series were downloaded from the official [ALFRED download
+form](https://alfred.stlouisfed.org/help/downloaddata), selecting “Observations
+by Vintage Date, All Observations” and zipped CSV. The verified acquisition is
+`data/private/public-context/alfred-asof-20261015T235942Z/manifest.json` in the
+private workspace. It contains 41 ZIP files and 399 vintage columns across
+UNRATE (170), USSTHPI (58), and MORTGAGE30US (171). Each batch is CRC-checked and
+has a SHA-256 digest. A 12-month lookback is retained so the first D01 month can
+use previously released unemployment and HPI observations.
+
+For every D01 month from 2012-01 through 2026-03, the adapter chooses the latest
+actual ALFRED vintage date on or before that month's calendar end. The private
+API returns 171 monthly rows with complete availability for all three measures:
+UNRATE latest-known observation, the average of mortgage-rate weekly
+observations within the month that were present in the selected vintage, and
+the latest FHFA HPI quarter already published by the cutoff. The HPI remains
+quarterly; there is no interpolation. Raw zipped source exports and receipts
+remain private; only acquisition/verification code and aggregate UI outputs are
+in the public project.
+
+The Sources view labels this as point-in-time *context*, not as a model feature.
+A month-end cutoff can occur after an underwriting decision or a target event;
+the actual feature cutoff must be set to the decision's information date before
+training. ALFRED context adds neither Freddie loan-level history nor default
+labels, so it does not satisfy the missing annual-vintage or model-validation
+requirements. The two public series sources are [UNRATE](https://alfred.stlouisfed.org/series/downloaddata?seid=UNRATE),
+[FHFA US house price index](https://alfred.stlouisfed.org/series/downloaddata?seid=USSTHPI),
+and [Freddie Mac 30-year mortgage rate](https://alfred.stlouisfed.org/series/downloaddata?seid=MORTGAGE30US).
+
+Re-run from the private workspace root:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 ..\credit-atlas-public\scripts\acquire_alfred_monthly_vintages.py --root . --headless
+```

@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import csv
+import calendar
 import math
+import re
+import zipfile
 from datetime import date
 from pathlib import Path
 
@@ -32,6 +35,9 @@ SERIES = {
 }
 _MAX_CSV_BYTES = 2 * 1024 * 1024
 _MAX_CONTEXT_ROWS = 240
+_MAX_ALFRED_ZIP_BYTES = 50 * 1024 * 1024
+_MAX_ALFRED_CSV_BYTES = 40 * 1024 * 1024
+_MONTH_RE = re.compile(r"^\d{4}-\d{2}$")
 
 
 def _latest_successful_run(root: Path) -> tuple[Path, dict]:
@@ -99,6 +105,172 @@ def _read_series(folder: Path, metadata: dict) -> dict:
     }
 
 
+def _latest_alfred_run(root: Path) -> tuple[Path, dict] | None:
+    candidates = []
+    for folder in (root / "data/private/public-context").glob("alfred-asof-*"):
+        manifest_path = folder / "manifest.json"
+        if not manifest_path.is_file():
+            continue
+        manifest = read_json(manifest_path)
+        if manifest.get("status") == "DOWNLOADED_AND_VALIDATED":
+            candidates.append((str(manifest.get("completed_at", "")), folder, manifest))
+    if not candidates:
+        return None
+    _, folder, manifest = max(candidates, key=lambda item: item[0])
+    return folder, manifest
+
+
+def _read_alfred_snapshots(folder: Path, manifest: dict, series_id: str) -> dict:
+    """Read one verified value map per official ALFRED vintage, fail closed."""
+    if manifest.get("visibility") != "private" or manifest.get("predictor_qualified") is not False:
+        raise ValueError("ALFRED context has an invalid visibility or qualification state")
+    series = manifest.get("series", {}).get(series_id)
+    if not isinstance(series, dict):
+        raise ValueError("ALFRED context is missing a configured series")
+    expected_vintages = set(series.get("selected_vintages", []))
+    if not expected_vintages or not isinstance(series.get("batches"), list):
+        raise ValueError("ALFRED context has no selected vintage batches")
+    snapshots = {}
+    for batch in series["batches"]:
+        name = batch.get("file")
+        if not isinstance(name, str) or Path(name).name != name or not name.endswith(".zip"):
+            raise ValueError("ALFRED archive path is invalid")
+        archive_path = folder / name
+        if (not archive_path.is_file() or archive_path.stat().st_size > _MAX_ALFRED_ZIP_BYTES
+                or sha256(archive_path) != batch.get("sha256")):
+            raise ValueError("ALFRED archive is missing or failed its receipt digest")
+        with zipfile.ZipFile(archive_path) as archive:
+            if archive.testzip() is not None:
+                raise ValueError("ALFRED archive failed CRC validation")
+            members = [member for member in archive.infolist() if member.filename.lower().endswith(".csv")]
+            if (len(members) != 1 or members[0].file_size > _MAX_ALFRED_CSV_BYTES
+                    or Path(members[0].filename).name != members[0].filename):
+                raise ValueError("ALFRED archive has an unexpected CSV member")
+            with archive.open(members[0]) as stream:
+                text = stream.read(_MAX_ALFRED_CSV_BYTES + 1).decode("utf-8-sig")
+        if len(text.encode("utf-8")) > _MAX_ALFRED_CSV_BYTES:
+            raise ValueError("ALFRED CSV exceeds its configured bound")
+        reader = csv.DictReader(text.splitlines())
+        vintage_dates = batch.get("vintages")
+        if not isinstance(vintage_dates, list) or not vintage_dates:
+            raise ValueError("ALFRED batch has no vintage list")
+        columns = [f"{series_id}_{date.fromisoformat(value).strftime('%Y%m%d')}" for value in vintage_dates]
+        if reader.fieldnames != ["observation_date", *columns]:
+            raise ValueError("ALFRED vintage CSV schema does not match its manifest")
+        matrices = {value: {} for value in vintage_dates}
+        previous = None
+        row_count = 0
+        for row in reader:
+            if None in row or row.get("observation_date") is None:
+                raise ValueError("ALFRED vintage CSV contains a malformed row")
+            period = date.fromisoformat(row["observation_date"])
+            if previous is not None and period <= previous:
+                raise ValueError("ALFRED observation dates are not strictly ordered")
+            previous = period
+            for vintage, column in zip(vintage_dates, columns):
+                raw = row.get(column)
+                if raw is None:
+                    raise ValueError("ALFRED vintage CSV has a missing value column")
+                value = None if raw in ("", ".") else float(raw)
+                if value is not None and (not math.isfinite(value) or value < 0
+                                          or series_id != "USSTHPI" and value > 100):
+                    raise ValueError("ALFRED observation is outside its valid numeric domain")
+                matrices[vintage][period] = value
+            row_count += 1
+        if row_count != batch.get("observation_rows") or len(vintage_dates) != batch.get("vintage_columns"):
+            raise ValueError("ALFRED vintage CSV row or column count differs from its receipt")
+        snapshots.update(matrices)
+    if set(snapshots) != expected_vintages:
+        raise ValueError("ALFRED context vintage set differs from its manifest")
+    return snapshots
+
+
+def _read_point_in_time_context(root: Path, expected_months: list[str]) -> dict | None:
+    found = _latest_alfred_run(root)
+    if found is None:
+        return None
+    folder, manifest = found
+    if (manifest.get("status") != "DOWNLOADED_AND_VALIDATED"
+            or manifest.get("case_months") != expected_months
+            or manifest.get("model_training_performed") is not False):
+        raise ValueError("ALFRED case calendar or training status is invalid")
+    if any(not isinstance(month, str) or not _MONTH_RE.fullmatch(month) for month in expected_months):
+        raise ValueError("D01 reporting month is not valid YYYY-MM")
+    monthly_map = {}
+    values = {series_id: _read_alfred_snapshots(folder, manifest, series_id) for series_id in SERIES}
+    for series_id in SERIES:
+        mapping = manifest["series"][series_id].get("monthly_vintage_map")
+        if not isinstance(mapping, dict) or set(mapping) != set(expected_months):
+            raise ValueError("ALFRED monthly vintage map does not match the D01 calendar")
+        for month, vintage in mapping.items():
+            year, month_number = (int(part) for part in month.split("-"))
+            cutoff = date(year, month_number, calendar.monthrange(year, month_number)[1])
+            vintage_date = date.fromisoformat(vintage)
+            if vintage_date > cutoff or vintage not in values[series_id]:
+                raise ValueError("ALFRED vintage was not available at the D01 as-of date")
+        monthly_map[series_id] = mapping
+
+    output = []
+    for month in expected_months:
+        year, month_number = (int(part) for part in month.split("-"))
+        cutoff = date(year, month_number, calendar.monthrange(year, month_number)[1])
+        selected = {series_id: monthly_map[series_id][month] for series_id in SERIES}
+        asof: dict[str, dict] = {}
+        for series_id in SERIES:
+            snapshot = values[series_id][selected[series_id]]
+            eligible = [(period, value) for period, value in snapshot.items()
+                        if period <= cutoff and value is not None]
+            if series_id == "MORTGAGE30US":
+                in_month = [(period, value) for period, value in eligible
+                            if period.year == year and period.month == month_number]
+                asof[series_id] = {
+                    "monthly_mean_percent": round(sum(value for _, value in in_month) / len(in_month), 6)
+                    if in_month else None,
+                    "observation_count": len(in_month),
+                    "last_observation_date": max((period for period, _ in in_month), default=None).isoformat()
+                    if in_month else None,
+                }
+            else:
+                latest = max(eligible, key=lambda item: item[0]) if eligible else (None, None)
+                asof[series_id] = {"reference_date": latest[0].isoformat() if latest[0] else None,
+                                   "value": latest[1]}
+        output.append({
+            "period": month + "-01",
+            "as_of_date": cutoff.isoformat(),
+            "vintage_dates": selected,
+            "unemployment_reference_date": asof["UNRATE"]["reference_date"],
+            "unemployment_percent": asof["UNRATE"]["value"],
+            "mortgage30_monthly_mean_percent": asof["MORTGAGE30US"]["monthly_mean_percent"],
+            "mortgage30_observation_count": asof["MORTGAGE30US"]["observation_count"],
+            "mortgage30_last_observation_date": asof["MORTGAGE30US"]["last_observation_date"],
+            "hpi_reference_date": asof["USSTHPI"]["reference_date"],
+            "hpi_index_1980_q1_100": asof["USSTHPI"]["value"],
+        })
+    coverage = {
+        "monthly_rows": len(output),
+        "first_month": expected_months[0],
+        "last_month": expected_months[-1],
+        "unemployment_months_available": sum(row["unemployment_percent"] is not None for row in output),
+        "mortgage_rate_months_available": sum(row["mortgage30_monthly_mean_percent"] is not None for row in output),
+        "hpi_months_available": sum(row["hpi_index_1980_q1_100"] is not None for row in output),
+    }
+    return {
+        "status": "AVAILABLE",
+        "source": manifest["source"],
+        "source_help_url": manifest["source_help_url"],
+        "acquired_at": manifest.get("completed_at"),
+        "cutoff_rule": manifest["cutoff_rule"],
+        "coverage": coverage,
+        "monthly_history": output,
+        "limitations": [
+            "Each month uses the latest actual ALFRED vintage on or before that month-end; publication dates are source-specific.",
+            "This is point-in-time macro context, not a qualified PD predictor; underwriting or event-time cutoffs may be earlier than reporting-month end.",
+            "House-price index remains quarterly and uses the latest quarter actually published by each month-end; no monthly interpolation is used.",
+            "No mortgage borrower records, loan-performance vintages, or default labels are added by this macro dataset.",
+        ],
+    }
+
+
 def report(root: Path) -> dict:
     """Return verified aggregates and case-aligned context; never return source IDs."""
     folder, receipt = _latest_successful_run(root.resolve())
@@ -156,6 +328,8 @@ def report(root: Path) -> dict:
         previous = period
         quarterly.append({"period": period, "index_1980_q1_100": value})
 
+    point_in_time = _read_point_in_time_context(root.resolve(), expected_months)
+
     return {
         "status": "AVAILABLE",
         "case_id": receipt["case_id"],
@@ -172,6 +346,7 @@ def report(root: Path) -> dict:
         },
         "monthly_history": aligned,
         "quarterly_hpi": quarterly,
+        "point_in_time_context": point_in_time,
         "limitations": [
             "Latest revised FRED snapshots do not establish historical publication availability.",
             "Retrospective descriptive context only; no macro series is qualified as a model predictor.",

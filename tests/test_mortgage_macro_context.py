@@ -5,6 +5,8 @@ import hashlib
 import json
 import shutil
 import threading
+import zipfile
+from datetime import datetime, timezone
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from types import SimpleNamespace
@@ -107,7 +109,109 @@ def test_macro_report_verifies_latest_values_and_native_case_grains(macro_root):
         "hpi_quarters": 2,
     }
     assert result["monthly_history"][0]["period"] == "2026-02-01"
+    assert result["point_in_time_context"] is None
     assert result["limitations"] and "not establish historical publication availability" in result["limitations"][0]
+
+
+def _write_alfred_fixture(root: Path) -> Path:
+    folder = root / "data/private/public-context/alfred-asof-20261016T010000Z"
+    folder.mkdir(parents=True)
+    month_map = {
+        "UNRATE": {"2026-02": "2026-02-06", "2026-03": "2026-03-06"},
+        "MORTGAGE30US": {"2026-02": "2026-02-26", "2026-03": "2026-03-26"},
+        "USSTHPI": {"2026-02": "2026-02-24", "2026-03": "2026-03-24"},
+    }
+    matrices = {
+        "UNRATE": {
+            "2026-02-06": [("2026-01-01", "4.0")],
+            "2026-03-06": [("2026-01-01", "4.0"), ("2026-02-01", "4.1")],
+        },
+        "MORTGAGE30US": {
+            "2026-02-26": [("2026-02-05", "6.0"), ("2026-02-12", "6.2")],
+            "2026-03-26": [("2026-03-05", "6.4"), ("2026-03-12", "6.6")],
+        },
+        "USSTHPI": {
+            "2026-02-24": [("2025-10-01", "700.0")],
+            "2026-03-24": [("2025-10-01", "700.0"), ("2026-01-01", "705.0")],
+        },
+    }
+    series_receipts = {}
+    for series_id, monthly_vintage_map in month_map.items():
+        vintages = sorted(set(monthly_vintage_map.values()))
+        by_period = {}
+        for vintage, rows in matrices[series_id].items():
+            for period, value in rows:
+                by_period.setdefault(period, {})[vintage] = value
+        path = folder / f"{series_id.lower()}-001.zip"
+        csv_name = f"vintages_starting_{vintages[0]}.csv"
+        import io
+        out = io.StringIO(newline="")
+        writer = csv.writer(out, lineterminator="\n")
+        writer.writerow(["observation_date", *[f"{series_id}_{v.replace('-', '')}" for v in vintages]])
+        for period in sorted(by_period):
+            writer.writerow([period, *[by_period[period].get(v, ".") for v in vintages]])
+        with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr(csv_name, out.getvalue())
+        series_receipts[series_id] = {
+            "source_url": f"https://alfred.stlouisfed.org/series/downloaddata?seid={series_id}",
+            "selected_vintages": vintages,
+            "available_vintage_dates": len(vintages),
+            "monthly_vintage_map": monthly_vintage_map,
+            "batches": [{
+                "file": path.name,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "bytes": path.stat().st_size,
+                "vintages": vintages,
+                "csv_member": csv_name,
+                "observation_rows": len(by_period),
+                "vintage_columns": len(vintages),
+            }],
+        }
+    _write_json(folder / "manifest.json", {
+        "status": "DOWNLOADED_AND_VALIDATED",
+        "completed_at": "2026-10-16T01:00:00+00:00",
+        "visibility": "private",
+        "source": "ALFRED, Federal Reserve Bank of St. Louis",
+        "source_help_url": "https://alfred.stlouisfed.org/help/downloaddata",
+        "case_months": ["2026-02", "2026-03"],
+        "cutoff_rule": "Latest ALFRED vintage on or before month end",
+        "predictor_qualified": False,
+        "model_training_performed": False,
+        "series": series_receipts,
+    })
+    return folder
+
+
+def test_alfred_report_uses_only_values_available_by_each_month_end(macro_root):
+    _write_alfred_fixture(macro_root)
+    result = report(macro_root)["point_in_time_context"]
+    assert result["status"] == "AVAILABLE"
+    assert result["coverage"] == {
+        "monthly_rows": 2,
+        "first_month": "2026-02",
+        "last_month": "2026-03",
+        "unemployment_months_available": 2,
+        "mortgage_rate_months_available": 2,
+        "hpi_months_available": 2,
+    }
+    feb, mar = result["monthly_history"]
+    assert feb["as_of_date"] == "2026-02-28"
+    assert feb["unemployment_reference_date"] == "2026-01-01"
+    assert feb["unemployment_percent"] == 4.0
+    assert feb["mortgage30_monthly_mean_percent"] == 6.1
+    assert feb["mortgage30_observation_count"] == 2
+    assert feb["hpi_reference_date"] == "2025-10-01"
+    assert mar["unemployment_reference_date"] == "2026-02-01"
+    assert mar["mortgage30_monthly_mean_percent"] == 6.5
+    assert mar["hpi_reference_date"] == "2026-01-01"
+
+
+def test_alfred_report_fails_closed_on_archive_digest_mismatch(macro_root):
+    folder = _write_alfred_fixture(macro_root)
+    archive = folder / "unrate-001.zip"
+    archive.write_bytes(archive.read_bytes() + b"corrupt")
+    with pytest.raises(ValueError, match="failed its receipt digest"):
+        report(macro_root)
 
 
 def test_macro_report_fails_closed_on_source_digest_mismatch(macro_root):
@@ -163,4 +267,5 @@ def test_macro_api_is_unfiltered_and_sources_view_exposes_context(macro_api):
     with urlopen(macro_api + "/app.js", timeout=5) as response:
         source = response.read().decode("utf-8")
     assert "Mortgage macro context · US national" in source
+    assert "ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó" in source
     assert "/api/mortgage-macro-context" in source

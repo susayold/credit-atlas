@@ -181,6 +181,25 @@ runs, malformed coverage and unsupported query filters. This refresh adds no
 loan-performance vintage and does not qualify macro data as a point-in-time
 predictor; R2/R3 remain data-gated.
 
+## 2026-10-16 continuation — ALFRED point-in-time macro history
+
+Added the official ALFRED download path for the three macro series and acquired
+as-of snapshots for the complete 171-month D01 window (2012-01–2026-03): 170
+UNRATE vintages, 58 quarterly FHFA HPI vintages, and 171 Freddie Mac mortgage-
+rate vintages. Each reporting month maps to its latest actual ALFRED vintage on
+or before month-end. A 12-month observation lookback preserves the macro values
+that were already known before the first D01 month. The 41 private ZIP exports
+and per-batch SHA-256 receipts remain under `data/private/public-context/`.
+
+The verified macro API now returns a separate as-of history alongside the
+latest-revised context. The Sources panel shows coverage, rates, publication
+cutoff, and HPI at native quarterly grain. The adapter checks every ZIP digest,
+CSV vintage column, date order, row count, numeric domain and month mapping. The
+as-of history is still descriptive context: month-end may be later than an
+underwriting or outcome cutoff, and no macro predictor is qualified. This adds
+no Freddie loan-performance vintage and does not unlock R2/R3. Focused tests
+and Edge QA cover the actual private data path and the Sources panel.
+
 ## 2026-10-16 continuation — NSMO origination-aligned support
 
 The current FHFA NSMO v7.0 PUF was already present in the private workspace, so

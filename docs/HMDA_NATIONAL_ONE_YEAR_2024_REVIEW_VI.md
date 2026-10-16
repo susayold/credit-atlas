@@ -109,9 +109,10 @@ private source folder instead of pretending Excel contains the raw file.
 
 ## Next data-first steps
 
-The 2023 One-Year National release has now been acquired, audited, compared, and
-integrated as a separate app panel. See
-[`HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md).
+The 2022 and 2023 One-Year National releases have now also been acquired and
+audited, and the app compares 2022–2024 with a common action denominator. See
+[`HMDA_NATIONAL_ONE_YEAR_2022_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2022_REVIEW_VI.md)
+and [`HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2023_REVIEW_VI.md).
 Continue seeking authorized Freddie Clarity performance files and the
 user-provided Ginnie signed-in session artifact. Those remain the gating data
 for D01 R2/R3; public HMDA cannot substitute for them.

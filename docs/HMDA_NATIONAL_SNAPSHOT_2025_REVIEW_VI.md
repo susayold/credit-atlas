@@ -83,11 +83,30 @@ type, not the numeric score. Therefore this source cannot independently train
 or validate a PD model. Keep it as an application/decision case and connect it
 to an outcome source only when a documented, authorized, stable join exists.
 
-This acquisition does not increase the master completion ledger: the national
-data are not yet integrated into the app or accepted against a D08 product
-gate. The plan remains **26/50 complete (52%)**; 42/50 have at least some
-implementation or conditional coverage (84%), which is not the completion
-rate. It does not close D01's missing Freddie vintages or model-fit gates.
+## App integration checkpoint — 2026-10-16
+
+The national case now has a private aggregate-only app view, separate from the
+Maryland case. One DuckDB scan groups all 13,543,606 LAR records over 14
+allowlisted dimensions. The aggregate receipt pins the acquisition receipt,
+source archive/CSV hashes, method hashes and aggregate hash. Counts reconcile
+to the acquisition profile for all eight actions, reporters and total rows;
+quality checks find zero wrong-year, invalid-action or invalid-loan-amount
+rows. The UI shows a decision denominator of actions 1–3, keeps other actions
+separate, and labels the resulting denied share descriptive rather than PD.
+Blank source categories stay visible as `(SOURCE_BLANK)`; the credit-score
+field remains score-model type and is not a numerical score.
+
+Browser acceptance passes five checks on the local app: national summary and
+action totals; state and action-3 denial-reason breakdowns; exact private JSON
+export; byte-identical download of the reviewed Excel workbook; and 390px
+mobile visibility. No browser errors. The test receipt is kept privately at
+`artifacts/private/hmda-national-browser-qa-47aa438a0bd0/receipt.json`.
+
+The D01 master ledger remains **26/50 complete (52%)**; 42/50 have at least
+some implementation or conditional coverage (84%, not the completion rate).
+The new work closes no D01 mortgage performance or model gate. The national
+application/decision case remains separate from the D01 loan performance
+target and requires broader D08 product acceptance before it is called done.
 
 ## Workbook and next data-first steps
 
@@ -102,11 +121,10 @@ identifiers. Its formulas recalculate, the exported workbook reopens with all
 seven sheets/tables, and the formula-error scan is clear. The source age-field
 name mismatch is called out in the codebook.
 
-1. Build a separate nationwide D08 view behind the existing HMDA case model;
-   preserve the current Maryland case as its own scope. Add filter-aligned
-   numerators/denominators, product/lender/geography breakdowns, privacy and
-   missing/sentinel handling, and scoped Excel export. Validate aggregates
-   against the acquisition receipt before release.
+1. Extend the national D08 case with requested filters, row/measure metadata,
+   additional periods, and a fuller spreadsheet export contract; independently
+   reconcile each view/export. The current Excel workbook is an audited
+   source/codebook/KPI review workbook, not a filtered transaction-level export.
 2. Keep loan-performance acquisition separate. Freddie annual samples still
    require an authorized Clarity session; Ginnie download still requires the
    signed-in session file. Do not synthesize repayment outcomes from HMDA.

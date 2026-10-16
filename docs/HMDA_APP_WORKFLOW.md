@@ -1,5 +1,38 @@
 # P2 / D08 — HMDA Application Outcome Explorer
 
+## Nationwide 2025 application snapshot (separate case)
+
+The workspace now opens with a national 2025 public LAR panel above the
+existing Maryland case. It reads the source-bound private aggregate view
+`hmda-national-view-9a5e89600e3c`; it does not combine national data with the
+Maryland pilot. The snapshot has 13,543,606 records, 4,782 reporting LEIs, and
+the complete eight-action distribution. The descriptive denied share is action
+3 divided by actions 1+2+3 (2,115,090 / 9,360,942 = 22.5948%). Actions 4–8
+remain in the record totals but outside that denominator.
+
+Choose one of 14 national breakdowns: state, county, LEI, loan type, purpose,
+lien, occupancy, dwelling, public DTI, derived race/ethnicity/sex, applicant
+score-model type, or primary denial reason. Denial-reason counts only include
+action 3 and are not a model target. Source blanks are shown explicitly. The
+table shows up to 100 rows; **Tải breakdown JSON** exports every category for
+the selected dimension. **Tải Excel** downloads the separate 7-sheet audited
+codebook/source/KPI workbook. The Excel file is a review workbook, not a
+filtered loan-level export.
+
+Current API routes are `/api/hmda-national-views`, `/api/hmda-national-view`,
+`/api/hmda-national-aggregates`, and `/api/hmda-national-report`. The app
+re-verifies source receipt and hashes before serving and keeps the aggregate
+private. This source has applications and underwriting decisions, not monthly
+repayment/default labels; denied share is not PD.
+
+To rebuild the private aggregate after a deliberate re-acquisition, run:
+
+```powershell
+python scripts/prepare_hmda_national_view.py --root D:\data\Codex\credit-atlas --source-id hmda-national-snapshot-2025-9a5e89600e3c
+```
+
+Browser acceptance: `python scripts/browser_hmda_national_qa.py --root D:\data\Codex\credit-atlas`.
+
 Current verified view `hmda-view-89499c7d1d02`, từ case
 `hmda-case-94ca64da2e30` và source `hmda-source-979e0862af13`.
 Nguồn Maryland/home-purchase/site-built, ba năm 2023–2025, 347.056

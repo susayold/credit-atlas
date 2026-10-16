@@ -4,21 +4,28 @@ Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
 
-### Data-first continuation — HMDA national 2025 snapshot, 2026-10-16
+### Data-first continuation — HMDA national 2025 snapshot and D08 integration, 2026-10-16
 
 Downloaded and audited the official 2025 national HMDA LAR (13,543,606 rows,
 99 fields), Transmittal Sheet (4,782 institutions, LAR record count reconciles
-exactly), and MSA/MD reference (418 codes). The snapshot is application and
-underwriting-action data, not monthly repayment/default history. The 22.5948%
-denied share uses actions 1–3 only (2,115,090 / 9,360,942); it is not a PD or
-default rate. Raw files and the TS fields remain private on D:. This is a new
-D08 source case, not yet app-integrated, and changes no requirement count:
-**26/50 complete (52%)**, with 42/50 some implementation or conditional
-coverage. No forecasts, imputation, or model fitting were performed. See
+exactly), and MSA/MD reference (418 codes). Added a private, source-receipt-
+bound national view in the app. Its DuckDB aggregate reconciles 13,543,606 rows,
+all eight action counts, 4,782 reporters and data-quality checks; it serves
+55 state/territory groups, 3,224 counties, 4,782 LEIs, and 14 separate
+breakdown dimensions. The 22.5948% denied share uses actions 1–3 only
+(2,115,090 / 9,360,942); it is not a PD or default rate. Raw files and TS
+fields remain private on D:. Five live browser acceptance checks pass, with
+no browser errors, including exact private JSON export, Excel download and
+390px layout. This is D08 application/decision coverage, not repayment history.
+The D01 master requirement count remains **26/50 complete (52%)**, with 42/50
+some implementation or conditional coverage; this addition does not close a
+D01 outcome/model gate. No forecasts, imputation, or model fitting were
+performed. See
 [`HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md`](HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md).
 The private Excel review workbook is now complete with 7 sheets, 99-field
 official codebook, 55 state/territory aggregates, 418 MSA/MD reference rows,
 source hashes, and no loan-level or institution-tax-ID rows.
+The app workflow is documented in [`HMDA_APP_WORKFLOW.md`](HMDA_APP_WORKFLOW.md).
 
 ### Data-first continuation — Treasury HAMP supplement, 2026-10-16
 

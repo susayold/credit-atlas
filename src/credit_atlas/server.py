@@ -45,15 +45,23 @@ MORTGAGE_SAMPLE_WORKBOOKS = {
         "data/private/ginnie-mae/reference/CreditAtlas-Ginnie-LoanPerf-Reference.xlsx",
         "CreditAtlas-Ginnie-LoanPerf-Reference.xlsx",
     ),
+    "/downloads/hmda-national-2025-audit.xlsx": (
+        "data/private/hmda/hmda-national-snapshot-2025-9a5e89600e3c/CreditAtlas-HMDA-National-2025-Audit.xlsx",
+        "CreditAtlas-HMDA-National-2025-Audit.xlsx",
+    ),
 }
 
 
-def handler_for(service: ResearchService):
+def handler_for(service: ResearchService, web_root: Path | None = None):
     from .sec_read_cache import VerifiedSecReadCache
     from .sec_views import SecViews
     if isinstance(getattr(service, 'sec_views', None), SecViews) and not isinstance(service.sec_views, VerifiedSecReadCache):
         service.sec_views = VerifiedSecReadCache(service.sec_views)
-    web = service.root / "apps/web"
+    # Tests/custom deployments may pass a dedicated UI root. Otherwise keep the
+    # historical workspace-root behavior; serve() explicitly selects this
+    # checkout's UI when code and private data live in separate directories.
+    bundled_web = Path(__file__).resolve().parents[2] / "apps/web"
+    web = (web_root or (service.root / "apps/web" if (service.root / "apps/web").is_dir() else bundled_web)).resolve()
     from .nsmo_views import NsmoViews
     nsmo_views = NsmoViews(service.root)
     monitor_reviews = MonitorReviews(service)
@@ -358,6 +366,18 @@ def handler_for(service: ResearchService):
                 elif url.path == '/api/hmda-views':
                     if query: raise ValueError('HMDA catalog has no filters')
                     result = service.hmda_views.catalog()
+                elif url.path == '/api/hmda-national-views':
+                    if query: raise ValueError('HMDA national catalog has no filters')
+                    result = service.hmda_national_views.catalog()
+                elif url.path in {'/api/hmda-national-view', '/api/hmda-national-aggregates', '/api/hmda-national-report'}:
+                    if url.path == '/api/hmda-national-view':
+                        if set(query) != {'view_id'}: raise ValueError('HMDA national view accepts view_id only')
+                        result = service.hmda_national_views.view(query['view_id'])
+                    else:
+                        result = service.hmda_national_views.report(query.get('view_id', ''), query)
+                        if url.path == '/api/hmda-national-report':
+                            self.send(200, result, filename=f"CreditAtlas-{result['view_id']}-private-hmda-national.json", head=head)
+                            return
                 elif url.path == '/api/hmda-references':
                     if set(query) != {'source_id'}: raise ValueError('Reference catalog accepts source_id only')
                     result = service.hmda_reference_views.catalog(query['source_id'])
@@ -902,7 +922,9 @@ def serve(root: Path, port: int = 8770):
     service = ResearchService(root)
     # Warm verification before opening the listener. No raw data in browser bundles.
     service.runs()
-    with LocalResearchServer(("127.0.0.1", port), handler_for(service)) as server:
+    bundled_web = Path(__file__).resolve().parents[2] / "apps/web"
+    ui_root = bundled_web if bundled_web.is_dir() else root / "apps/web"
+    with LocalResearchServer(("127.0.0.1", port), handler_for(service, web_root=ui_root)) as server:
         server.daemon_threads = True
         print(f"CreditAtlas P2/D01 · local private research · http://127.0.0.1:{server.server_port}/", flush=True)
         server.serve_forever()

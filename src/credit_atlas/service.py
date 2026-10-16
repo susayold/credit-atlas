@@ -76,6 +76,8 @@ class ResearchService:
         self.abs_views = AbsViews(self.root)
         from .hmda_views import HmdaViews
         self.hmda_views = HmdaViews(self.root)
+        from .hmda_national_views import HmdaNationalViews
+        self.hmda_national_views = HmdaNationalViews(self.root)
         from .hmda_reference_views import HmdaReferenceViews
         self.hmda_reference_views = HmdaReferenceViews(self.root, self.hmda_views)
         from .hmda_cohort_views import HmdaCohortViews

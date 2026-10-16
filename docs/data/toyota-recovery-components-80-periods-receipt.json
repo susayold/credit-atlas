@@ -1,0 +1,74 @@
+{
+  "status": "PASS",
+  "dataset": "Toyota ABS-EE to SEC 10-D recovery component exception ledger",
+  "period_count": 80,
+  "deal_summary": {
+    "2022-B": {
+      "periods": 51,
+      "recovery_ties": 2,
+      "unresolved_periods": 49,
+      "asset_recovered_amount_signed_total": "16414508.06000000",
+      "certificate_aggregate_proceeds_total": "14355861.00",
+      "signed_residual_total": "2058647.06000000",
+      "all_unresolved_residuals_nonnegative": true,
+      "maximum_unresolved_monthly_residual": "123651.64000000",
+      "certificate_component_identity_passes": 51,
+      "certificate_net_loss_identity_passes": 51
+    },
+    "2024-B": {
+      "periods": 29,
+      "recovery_ties": 1,
+      "unresolved_periods": 28,
+      "asset_recovered_amount_signed_total": "13517164.16000000",
+      "certificate_aggregate_proceeds_total": "11752606.08",
+      "signed_residual_total": "1764558.08000000",
+      "all_unresolved_residuals_nonnegative": true,
+      "maximum_unresolved_monthly_residual": "151706.60000000",
+      "certificate_component_identity_passes": 29,
+      "certificate_net_loss_identity_passes": 29
+    }
+  },
+  "aggregate_summary": {
+    "periods": 80,
+    "recovery_ties": 3,
+    "unresolved_periods": 77,
+    "signed_residual_total": "3823205.14000000",
+    "component_formula_passes": 80,
+    "net_loss_formula_passes": 80
+  },
+  "field_definitions": {
+    "asset_recovered_amount_signed": "Monthly sum of ABS-EE EX-102 recoveredAmount from the receipt-bound existing audit; EX-103 says it covers amounts recovered on a Defaulted Receivable during the reporting period and includes repossession proceeds.",
+    "certificate_net_liquidation_proceeds_signed": "Current-period signed row from the SEC Servicer's Certificate; proceeds appear negative in its liquidations table.",
+    "certificate_recoveries_previously_liquidated_signed": "Current-period signed row for recoveries on previously liquidated contracts.",
+    "certificate_aggregate_net_liquidation_proceeds": "Positive collection amount. Exact identity checked as the negated sum of the two signed liquidation rows.",
+    "asset_minus_certificate_recovery_delta": "ABS-EE recoveredAmount sum less certificate Aggregate Net Liquidation Proceeds; no residual is allocated or forced to zero."
+  },
+  "method": "Exact Decimal arithmetic on source values. Certificate component identities are checked independently from the ABS-EE-to-certificate recovery residual. Missing values are not filled; no recovery rate, LGD, PD or forecast is computed.",
+  "limitations": [
+    "The two Toyota trusts share issuer/servicer family and are not two independent issuers.",
+    "All month-level ABS-EE versus certificate recovery residuals remain unresolved unless tied exactly; this ledger does not infer the cause.",
+    "The 2024-B certificate row and current-period recoveries are not assigned to asset-level certificate buckets without transaction-level evidence.",
+    "No asset identifiers or loan-level records are included in the output."
+  ],
+  "deal_evidence": {
+    "2022-B": {
+      "audit_status": "TOYOTA_2022B_ABSEE_TO_10D_CERTIFICATE_TIEOUT_AUDITED",
+      "audit_sha256": "7d1403ab1d2b1c602a8843cd1d7d9e353b423b78cf5c41ed80d798354238c41f",
+      "audit_receipt_sha256": "1cb69fe1d2287d926f4dc55246f3f7ab312b9f538dda000429e7b8145bd09be7",
+      "acquisition_receipt_sha256": "878498a6b96826b6beb2fe496b79e5698f50d4f13c4c4e580373f835dabe6924",
+      "periods": 51
+    },
+    "2024-B": {
+      "audit_status": "TOYOTA_2024B_ABSEE_TO_10D_CERTIFICATE_TIEOUT_AUDITED",
+      "audit_sha256": "2ecd94dbfadaeb2517e13ac9a8cd5a3ae23148ac77ff5778ec818ade8a9107b4",
+      "audit_receipt_sha256": "b70aa3b9be1b04f98280214d2a7eb57fb311c423aab8e22abccb394f9ed2b13f",
+      "acquisition_receipt_sha256": "8a8315939a9780563d870321b8f028de162efe2545a3d897f80ef71435adec64",
+      "periods": 29
+    }
+  },
+  "csv_file": "toyota-recovery-components-80-periods.csv",
+  "csv_sha256": "eb805524af41ced91dec49b936392171aeee2778f7242987e56aff92d4cbeeb5",
+  "visibility": "public aggregate only",
+  "forecast_or_imputation_used": false,
+  "loan_level_rows_published": false
+}

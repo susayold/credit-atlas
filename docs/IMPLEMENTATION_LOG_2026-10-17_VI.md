@@ -46,6 +46,15 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Query-scoped Excel export cho New annual và Outstanding quarterly đều trả HTTP 200. Đã đọc cấu trúc XLSX: bốn sheet; biểu đồ bind cột `Selected value` và nhãn kỳ dạng text, không che bảng dữ liệu. Workbook tham chiếu tải qua route HTTP 200, 389.862 bytes.
 - Đây là runtime/API/export check; chưa thay thế browser visual acceptance hay Excel desktop open/recalculate review.
 
+## N07 — Toyota recovery-component exception ledger
+
+- Tạo bridge aggregate công khai cho Toyota 2022-B (51 kỳ) và 2024-B (29 kỳ), gắn từng kỳ với collection-period start/end, calendar days, filing date, ABS-EE/10-D accession, certificate URL và certificate hash. Không phát hành contract/asset IDs.
+- Kiểm tra bằng Decimal: certificate aggregate-proceeds identity **80/80** và net-credit-loss identity **80/80**. So sánh ABS-EE `recoveredAmount` với certificate aggregate proceeds: **3/80 tied**, **77/80 unresolved**; residual tổng **+USD 3,823,205.14** (2022-B +USD 2,058,647.06; 2024-B +USD 1,764,558.08).
+- Ghi rõ hai trust đều có kỳ đầu 01/03–30/04 dài 61 ngày; không suy collection window từ report-month. Chưa có evidence xác định timing, population, amendment, correction hay field mapping là nguyên nhân. Không tính recovery rate/LGD/PD/forecast và không ép residual về 0.
+- Thêm [nghiên cứu chi tiết](TOYOTA_RECOVERY_COMPONENT_EXCEPTION_LEDGER_VI.md), [CSV aggregate ledger](data/toyota-recovery-components-80-periods.csv), [receipt/hash summary](data/toyota-recovery-components-80-periods-receipt.json) và workbook Excel lọc được tại `apps/excel/templates/CreditAtlas-Toyota-Recovery-Exception-Ledger.xlsx`. Công thức summary trong workbook đối chiếu lại 80/3/77 và tổng residual; ba sheet đã render để kiểm tra bố cục.
+- Theo tiêu chí N07, ledger/bridge và bằng chứng unresolved đạt. Việc xác định root cause và qualification cho LGD/cashflow vẫn mở. Excel desktop chưa mở/recalculate; kiểm tra vừa làm chỉ dùng artifact-tool/render.
+- N07 là một action trong kế hoạch, không phải một trong 50 capability acceptance; ledger toàn CreditAtlas vẫn **26/50 = 52%**.
+
 ## Giao diện
 
 Trang **Tiến độ & registry** trong điều hướng chung hiển thị capability acceptance, D01 releases, dataset filters, quyền truy cập, method cards và giới hạn. Register JSON có thể tải xuống. Không đưa raw borrower rows hoặc private exposure values vào catalog.
@@ -61,4 +70,4 @@ JSON/Python/JavaScript syntax và `git diff --check` được kiểm tra. Không
 1. Browser review N06 và Excel desktop open/recalculate; xác nhận bộ lọc, chart, bảng, missingness và lineage hiển thị đúng.
 2. Mở rộng N02 từ 24 nhóm trọng tâm tới nguồn thực sự cấp dữ liệu cho mỗi KPI, bind release/hash receipt khi có.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
-4. Tiếp tục N07–N09: Toyota/Nissan ABS reconciliation và surveillance finding/export theo plan tổng.
+4. Tiếp tục N08–N09: Nissan event/DPD/recovery exceptions rồi surveillance finding/export; giữ 77 Toyota recovery deltas unresolved cho tới khi có mapping evidence.

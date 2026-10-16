@@ -21,10 +21,37 @@ SERIES = {
     "CORCREXFACBS": {"product": "Commercial real estate", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter; excludes farmland", "allow_negative": True},
     "DRBLACBS": {"product": "Business loans", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "30+ days past due and still accruing, plus loans in nonaccrual status", "allow_negative": False},
     "CORBLACBS": {"product": "Business loans", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "A negative value can occur when recoveries exceed charge-offs in the quarter", "allow_negative": True},
-    "DRCCLT100S": {"product": "Credit card · Top 100 banks", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": False},
-    "CORCCT100S": {"product": "Credit card · Top 100 banks", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": True},
-    "DRCCLOBS": {"product": "Credit card · Other banks", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": False},
-    "CORCCOBS": {"product": "Credit card · Other banks", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRCCLT100S": {"product": "Credit card", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORCCT100S": {"product": "Credit card", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRCCLOBS": {"product": "Credit card", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORCCOBS": {"product": "Credit card", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRSFRMT100S": {"product": "Single-family mortgage", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORSFRMT100S": {"product": "Single-family mortgage", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRSFRMOBS": {"product": "Single-family mortgage", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORSFRMOBS": {"product": "Single-family mortgage", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRBLT100S": {"product": "Business loans", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORBLT100S": {"product": "Business loans", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRBLOBS": {"product": "Business loans", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": False},
+    "CORBLOBS": {"product": "Business loans", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": True},
+    "DROCLT100S": {"product": "Other consumer", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": False},
+    "COROCLT100S": {"product": "Other consumer", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets", "allow_negative": True},
+    "DROCLOBS": {"product": "Other consumer", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": False},
+    "COROCLOBS": {"product": "Other consumer", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets", "allow_negative": True},
+    "DRCRELEXFT100S": {"product": "Commercial real estate", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets; excludes farmland", "allow_negative": False},
+    "CORCREXFT100S": {"product": "Commercial real estate", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks ranked 1st to 100th by consolidated foreign and domestic assets; excludes farmland", "allow_negative": True},
+    "DRCRELEXFOBS": {"product": "Commercial real estate", "label": "Delinquency rate", "unit": "Percent", "frequency": "Quarterly, end of period", "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets; excludes farmland", "allow_negative": False},
+    "CORCREXFOBS": {"product": "Commercial real estate", "label": "Net charge-off rate", "unit": "Percent", "frequency": "Quarterly", "seasonal_adjustment": "Seasonally adjusted", "denominator": "Average loans; annualized net charge-offs after recoveries", "interpretation": "Banks not among the 100 largest by consolidated foreign and domestic assets; excludes farmland", "allow_negative": True},
+}
+BANK_SIZE_GROUPS = {
+    **{series_id: "All commercial banks" for series_id in (
+        "DRSFRMACBS", "CORSFRMACBS", "DRCCLACBS", "CORCCACBS", "DROCLACBS",
+        "COROCLACBS", "DRCRELEXFACBS", "CORCREXFACBS", "DRBLACBS", "CORBLACBS")},
+    **{series_id: "Top 100 banks" for series_id in (
+        "DRCCLT100S", "CORCCT100S", "DRSFRMT100S", "CORSFRMT100S", "DRBLT100S",
+        "CORBLT100S", "DROCLT100S", "COROCLT100S", "DRCRELEXFT100S", "CORCREXFT100S")},
+    **{series_id: "Other banks" for series_id in (
+        "DRCCLOBS", "CORCCOBS", "DRSFRMOBS", "CORSFRMOBS", "DRBLOBS", "CORBLOBS",
+        "DROCLOBS", "COROCLOBS", "DRCRELEXFOBS", "CORCREXFOBS")},
 }
 RELEASE = "Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks"
 RELEASE_URL = "https://www.federalreserve.gov/releases/ChargeOff/"
@@ -68,6 +95,8 @@ def report(root: Path) -> dict:
     profiles = []
     for series_id, definition in SERIES.items():
         info = metadata[series_id]
+        if info.get("bank_size_group") != BANK_SIZE_GROUPS[series_id]:
+            raise ValueError(f"Federal Reserve bank-size metadata failed for {series_id}")
         filename = f"{series_id}.csv"
         path = folder / filename
         if (not path.is_file() or path.stat().st_size > _MAX_CSV_BYTES
@@ -103,6 +132,7 @@ def report(root: Path) -> dict:
         profiles.append({
             **{key: value for key, value in definition.items() if key != "allow_negative"},
             "series_id": series_id,
+            "bank_size_group": BANK_SIZE_GROUPS[series_id],
             "source": manifest["source"],
             "source_url": info["source_url"],
             "metadata_url": info["metadata_url"],

@@ -312,24 +312,26 @@ target/model gates.
 
 ## 2026-10-16 continuation — Federal Reserve bank asset quality by product
 
-Expanded the official CHGDEL panel to fourteen FRED series across mortgage,
-credit card, other consumer, CRE excluding farmland, and business loans, with
-credit-card rates split between the top 100 banks by consolidated assets and
-other banks. All histories
-are uninterrupted quarterly series through 2026Q2 (142–166 rows); raw files,
-manifest and hashes remain private. At 2026Q2, delinquency/net charge-off are
-1.86%/0.00% for mortgages, 2.85%/3.82% for all-bank cards, 2.33%/1.21% for
-other consumer, 1.53%/0.14% for CRE, and 1.27%/0.58% for business loans. Card
-rates are 2.74%/3.70% for the top 100 and 6.49%/7.80% for other banks.
+Expanded the official CHGDEL panel to thirty FRED series across mortgage,
+credit card, other consumer, CRE excluding farmland, and business loans. Each
+domain now has all-bank, top-100-bank and other-bank delinquency and charge-off
+series. All histories are uninterrupted quarterly series through 2026Q2
+(142–166 rows); raw files, manifest and hashes remain private. In addition to
+the all-bank figures, 2026Q2 top-100/other-bank delinquency and charge-off are
+1.97%/0.00% and 1.47%/0.02% for mortgage; 2.74%/3.70% and 6.49%/7.80% for
+cards; 2.43%/1.17% and 1.75%/1.46% for other consumer; 1.70%/0.16% and
+1.27%/0.10% for CRE; 1.17%/0.60% and 1.85%/0.47% for business loans.
 
-The validated API and Sources UI add same-quarter year-over-year changes,
-historical highs and current historical percentiles for each measure. Five
-domain panels show the paired histories and denominators; unobserved pre-start
-quarters stay null. The four-sheet private Excel workbook contains an overview
-with seven paired charts and KPIs, filterable quarter history, a series dictionary,
-and source/hash QA. It reopens cleanly and its fixed download endpoint returns
-the newly built 24 KB template. Focused API/parser/download tests pass 4/4;
-Edge smoke test passes for seven product/size panels, high-history KPIs and zero JS errors.
+The validated API and Sources UI show the three groups side-by-side with
+same-quarter year-over-year changes, historical highs and current within-series
+percentiles. Each of five domain panels charts delinquency and charge-off
+separately; unobserved pre-start quarters stay null. The four-sheet private
+Excel workbook has a 15-row product/size KPI table, ten product/measure charts,
+filterable quarter history, a series dictionary and source/hash QA. It reopens
+cleanly and the fixed download endpoint returns the rebuilt workbook. Focused
+API/parser/download tests pass 18/18; Edge smoke test passes for the updated
+panel, historical KPIs and zero JS errors. Bank aggregates remain context only:
+no loan-level histories, PD labels or qualified model features were added.
 Bank aggregates remain context only: no loan-level histories, PD labels or
 qualified model features were added. D01 remains 26/50. Details and sources:
 `docs/PUBLIC_MORTGAGE_CONTEXT.md`.

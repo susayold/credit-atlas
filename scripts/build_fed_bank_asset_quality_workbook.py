@@ -71,8 +71,8 @@ def build(root: Path, output: Path) -> dict:
     sources = wb.create_sheet("Sources & QA")
 
     _style_title(overview, "CreditAtlas · Federal Reserve Bank Asset Quality",
-                 "Aggregate quarterly portfolio context for five products plus credit-card bank-size splits · latest revised public snapshot · context only",
-                 12)
+                 "Aggregate quarterly portfolio context for five products × three bank-size groups · latest revised public snapshot · context only",
+                 13)
     overview.append([])
     overview.append(["Latest common quarter", payload["last_period"], "Coverage starts", payload["first_period"],
                      "Quarterly dates", payload["quarter_count"], "Products", len(payload["products"])])
@@ -80,71 +80,78 @@ def build(root: Path, output: Path) -> dict:
         cell.fill = PatternFill("solid", fgColor=PALE)
         cell.font = Font(bold=True, color=NAVY)
     overview.append([])
-    overview.append(["Product", "Delinquency %", "Δ 4Q pp", "Delinquency high %", "High quarter", "Current percentile",
+    overview.append(["Product", "Bank size group", "Delinquency %", "Δ 4Q pp", "Delinquency high %", "High quarter", "Current percentile",
                      "Net charge-off %", "Δ 4Q pp", "Charge-off high %", "High quarter", "Current percentile", "Interpretation"])
-    _header(overview, 6, 12)
-    by_product = {product: {s["series_id"][:2]: s for s in payload["series"] if s["product"] == product}
-                  for product in payload["products"]}
+    _header(overview, 6, 13)
+    by_product = {
+        product: {
+            group: {s["series_id"][:2]: s for s in payload["series"]
+                    if s["product"] == product and s["bank_size_group"] == group}
+            for group in ("All commercial banks", "Top 100 banks", "Other banks")
+        } for product in payload["products"]
+    }
     current = next(r for r in payload["rows"] if r["period"] == payload["last_period"])
     previous_year = next((r for r in payload["rows"]
                           if r["period"][:4] == str(int(payload["last_period"][:4]) - 1)
                           and r["period"][5:] == payload["last_period"][5:]), {})
-    for product, pair in by_product.items():
+    for product, groups in by_product.items():
+      for group, pair in groups.items():
         d, c = pair["DR"], pair["CO"]
         d_now, c_now = current.get(d["series_id"]), current.get(c["series_id"])
         d_old, c_old = previous_year.get(d["series_id"]), previous_year.get(c["series_id"])
         row = overview.max_row + 1
-        overview.append([product, d_now, None if d_old is None else d_now - d_old,
+        overview.append([product, group, d_now, None if d_old is None else d_now - d_old,
                          d["historical_high_value"], d["historical_high_date"], d["historical_percentile"],
                          c_now, None if c_old is None else c_now - c_old,
                          c["historical_high_value"], c["historical_high_date"], c["historical_percentile"],
                          "Delinquency / net charge-off"])
-        for col in (2, 4, 7, 9):
+        for col in (3, 5, 8, 10):
             overview.cell(row, col).number_format = '0.00"%";[Red]-0.00"%";–'
-        overview.cell(row, 3).number_format = '+0.00" pp";[Red]-0.00" pp";–'
-        overview.cell(row, 8).number_format = '+0.00" pp";[Red]-0.00" pp";–'
-        overview.cell(row, 6).number_format = '0.0"%"'
-        overview.cell(row, 11).number_format = '0.0"%"'
-    _table(overview, "ProductSummary", f"A6:L{overview.max_row}")
+        overview.cell(row, 4).number_format = '+0.00" pp";[Red]-0.00" pp";–'
+        overview.cell(row, 9).number_format = '+0.00" pp";[Red]-0.00" pp";–'
+        overview.cell(row, 7).number_format = '0.0"%"'
+        overview.cell(row, 12).number_format = '0.0"%"'
+    _table(overview, "ProductSummary", f"A6:M{overview.max_row}")
     series_columns = {s["series_id"]: col for col, s in enumerate(payload["series"], 2)}
-    chart_slots = ["N3", "V3", "N21", "V21", "N39", "V39", "N57"]
-    for product, anchor in zip(payload["products"], chart_slots):
-        pair = by_product[product]
+    chart_slots = [(column, row) for row in (3, 21, 39, 57, 75) for column in ("N", "V")]
+    bank_colors = {"All commercial banks": "2268A0", "Top 100 banks": "39A37A", "Other banks": "E2A436"}
+    for product_index, product in enumerate(payload["products"]):
+      for measure_index, measure in enumerate(("DR", "CO")):
         chart = LineChart()
-        chart.title = product + " · delinquency vs net charge-off"
+        chart.title = product + (" · delinquency by bank size" if measure == "DR" else " · net charge-off by bank size")
         chart.style = 13
         chart.y_axis.title = "Percent"
         chart.x_axis.title = "Quarter"
         chart.height = 7.1
         chart.width = 14.2
-        for series_id, color in ((pair["DR"]["series_id"], "2268A0"),
-                                 (pair["CO"]["series_id"], "39A37A")):
+        for group, pair in by_product[product].items():
+            series_id = pair[measure]["series_id"]
             data = Reference(hist, min_col=series_columns[series_id], min_row=4, max_row=hist.max_row)
             chart.add_data(data, titles_from_data=True)
-            chart.series[-1].graphicalProperties.line.solidFill = color
+            chart.series[-1].graphicalProperties.line.solidFill = bank_colors[group]
             chart.series[-1].graphicalProperties.line.width = 22000
             chart.series[-1].smooth = False
         chart.set_categories(Reference(hist, min_col=1, min_row=5, max_row=hist.max_row))
         chart.legend.position = "b"
-        overview.add_chart(chart, anchor)
+        overview.add_chart(chart, f"{chart_slots[product_index * 2 + measure_index][0]}{chart_slots[product_index * 2 + measure_index][1]}")
     note_row = overview.max_row + 2
     overview.cell(note_row, 1, "How to read")
     overview.cell(note_row, 1).font = Font(bold=True, color=NAVY)
     overview.cell(note_row + 1, 1, "Delinquency is 30+ days past due and still accruing or nonaccrual. Charge-off is annualized net of recoveries.")
-    overview.merge_cells(start_row=note_row + 1, start_column=1, end_row=note_row + 1, end_column=12)
+    overview.merge_cells(start_row=note_row + 1, start_column=1, end_row=note_row + 1, end_column=13)
     overview.cell(note_row + 1, 1).alignment = Alignment(wrap_text=True)
     overview.cell(note_row + 2, 1, "Blank deltas mean no year-ago value is available; blank history cells mean the series had not begun. Never read blanks as zero.")
-    overview.merge_cells(start_row=note_row + 2, start_column=1, end_row=note_row + 2, end_column=12)
+    overview.merge_cells(start_row=note_row + 2, start_column=1, end_row=note_row + 2, end_column=13)
     overview.cell(note_row + 2, 1).fill = PatternFill("solid", fgColor=YELLOW)
     overview.cell(note_row + 2, 1).alignment = Alignment(wrap_text=True)
     overview.cell(note_row + 3, 1, "Historical percentile compares each latest rate only against its own full published series; it is not a bank peer rank, PD or cross-product risk score.")
-    overview.merge_cells(start_row=note_row + 3, start_column=1, end_row=note_row + 3, end_column=12)
+    overview.merge_cells(start_row=note_row + 3, start_column=1, end_row=note_row + 3, end_column=13)
     overview.cell(note_row + 3, 1).alignment = Alignment(wrap_text=True)
-    overview.cell(note_row + 4, 1, "Credit-card Top 100 banks and other banks are separate size groups alongside the all-bank aggregate; do not add or average their rates.")
-    overview.merge_cells(start_row=note_row + 4, start_column=1, end_row=note_row + 4, end_column=12)
+    overview.cell(note_row + 4, 1, "Top 100 banks and other banks are separate size groups alongside the all-bank aggregate for every product; do not add or average their rates.")
+    overview.merge_cells(start_row=note_row + 4, start_column=1, end_row=note_row + 4, end_column=13)
     overview.cell(note_row + 4, 1).alignment = Alignment(wrap_text=True)
-    for col, width in enumerate([25, 16, 15, 18, 16, 18, 18, 15, 18, 16, 18, 32], 1):
-        overview.column_dimensions[chr(64 + col)].width = width
+    for col, width in enumerate([25, 23, 16, 15, 18, 16, 18, 18, 15, 18, 16, 18, 32], 1):
+        overview.column_dimensions[get_column_letter(col)].width = width
     overview.freeze_panes = "A7"
 
     series_count = len(payload["series"])
@@ -167,19 +174,19 @@ def build(root: Path, output: Path) -> dict:
     hist.sheet_view.showGridLines = False
 
     _style_title(dictionary, "Series Dictionary · definitions and coverage",
-                 "Use series IDs for source traceability. Rates are percentage points (not decimal proportions).", 8)
-    dict_headers = ["Product", "Series ID", "Measure", "Frequency", "Adjustment", "Denominator", "Interpretation", "Coverage"]
+                 "Use series IDs for source traceability. Rates are percentage points (not decimal proportions).", 9)
+    dict_headers = ["Product", "Bank size group", "Series ID", "Measure", "Frequency", "Adjustment", "Denominator", "Interpretation", "Coverage"]
     dictionary.append([])
     dictionary.append(dict_headers)
     _header(dictionary, 4, len(dict_headers))
     for s in payload["series"]:
-        dictionary.append([s["product"], s["series_id"], s["label"], s["frequency"],
+        dictionary.append([s["product"], s["bank_size_group"], s["series_id"], s["label"], s["frequency"],
                            s["seasonal_adjustment"], s["denominator"], s["interpretation"],
                            f"{s['first_reference_date']} → {s['last_reference_date']} ({s['observation_count']} quarters)"])
-    _table(dictionary, "SeriesDictionary", f"A4:H{dictionary.max_row}")
+    _table(dictionary, "SeriesDictionary", f"A4:I{dictionary.max_row}")
     dictionary.freeze_panes = "A5"
-    for col, width in enumerate([25, 20, 22, 24, 24, 43, 56, 42], 1):
-        dictionary.column_dimensions[chr(64 + col)].width = width
+    for col, width in enumerate([25, 23, 20, 22, 24, 24, 43, 56, 42], 1):
+        dictionary.column_dimensions[get_column_letter(col)].width = width
     for row in dictionary.iter_rows(min_row=5):
         for cell in row:
             cell.alignment = Alignment(wrap_text=True, vertical="top")
@@ -237,7 +244,7 @@ def build(root: Path, output: Path) -> dict:
     assert check.sheetnames == ["Overview", "Quarterly History", "Series Dictionary", "Sources & QA"]
     assert check["Quarterly History"].max_row == len(payload["rows"]) + 4
     assert len(check["Quarterly History"].tables) == 1
-    assert len(check["Overview"]._charts) == len(payload["products"])
+    assert len(check["Overview"]._charts) == len(payload["products"]) * 2
     assert check["Sources & QA"].max_row > len(manifest["series"])
     return {"status": "BUILT_AND_REOPENED", "output": str(output), "bytes": output.stat().st_size,
             "sha256": sha256(output), "series": len(payload["series"]),

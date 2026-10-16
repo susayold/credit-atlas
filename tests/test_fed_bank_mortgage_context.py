@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 
 import pytest
 
-from credit_atlas.fed_bank_mortgage_context import RELEASE, SERIES as CONFIGURED_SERIES, report
+from credit_atlas.fed_bank_mortgage_context import BANK_SIZE_GROUPS, RELEASE, SERIES as CONFIGURED_SERIES, report
 from credit_atlas.server import handler_for
 
 
@@ -35,6 +35,7 @@ def _fixture_root(tmp_path: Path) -> Path:
             writer.writerows(zip(PERIODS, values))
         raw = path.read_bytes()
         metadata[series_id] = {
+            "bank_size_group": BANK_SIZE_GROUPS[series_id],
             "source_url": f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}",
             "metadata_url": f"https://fred.stlouisfed.org/series/{series_id}",
             "observations": len(values), "first_reference_date": PERIODS[0],
@@ -78,9 +79,11 @@ def test_fed_bank_mortgage_context_validates_native_quarterly_series(tmp_path):
     assert result["quarter_count"] == 4
     assert result["rows"][-1]["DRSFRMACBS"] == 1.3
     assert result["rows"][1]["CORSFRMACBS"] == -0.02
-    assert len(result["series"]) == 14
-    assert len(result["products"]) == 7
-    assert "Credit card · Top 100 banks" in result["products"]
+    assert len(result["series"]) == 30
+    assert len(result["products"]) == 5
+    assert {s["bank_size_group"] for s in result["series"]} == {
+        "All commercial banks", "Top 100 banks", "Other banks"
+    }
     mortgage = next(s for s in result["series"] if s["series_id"] == "DRSFRMACBS")
     assert mortgage["historical_high_value"] == 1.3
     assert mortgage["historical_high_date"] == "2025-10-01"
@@ -126,4 +129,4 @@ def test_fed_bank_quality_excel_library_entry_is_present(app_server):
         source = response.read().decode("utf-8")
     assert "/api/fed-bank-mortgage-context" in source
     assert "/downloads/fed-bank-mortgage-context.xlsx" in source
-    assert "14 quarterly series across five products, plus credit-card bank-size splits" in source
+    assert "30 quarterly series across five products and three bank-size groups" in source

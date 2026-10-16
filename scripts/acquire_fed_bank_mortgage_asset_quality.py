@@ -85,32 +85,72 @@ SERIES = {
         "denominator": "Average loans; annualized net charge-offs after recoveries",
     },
     "DRCCLT100S": {
-        "product": "Credit card · Top 100 banks",
+        "product": "Credit card",
         "title": "Delinquency rate on credit card loans, banks ranked 1st to 100th by consolidated assets",
         "unit": "Percent", "frequency": "Quarterly, end of period",
         "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
     },
     "CORCCT100S": {
-        "product": "Credit card · Top 100 banks",
+        "product": "Credit card",
         "title": "Charge-off rate on credit card loans, banks ranked 1st to 100th by consolidated assets",
         "unit": "Percent", "frequency": "Quarterly",
         "seasonal_adjustment": "Seasonally adjusted",
         "denominator": "Average loans; annualized net charge-offs after recoveries",
     },
     "DRCCLOBS": {
-        "product": "Credit card · Other banks",
+        "product": "Credit card",
         "title": "Delinquency rate on credit card loans, banks not among the 100 largest by assets",
         "unit": "Percent", "frequency": "Quarterly, end of period",
         "seasonal_adjustment": "Seasonally adjusted", "denominator": "End-of-period loans",
     },
     "CORCCOBS": {
-        "product": "Credit card · Other banks",
+        "product": "Credit card",
         "title": "Charge-off rate on credit card loans, banks not among the 100 largest by assets",
         "unit": "Percent", "frequency": "Quarterly",
         "seasonal_adjustment": "Seasonally adjusted",
         "denominator": "Average loans; annualized net charge-offs after recoveries",
     },
 }
+BANK_SIZE_GROUPS = {
+    **{series_id: "All commercial banks" for series_id in (
+        "DRSFRMACBS", "CORSFRMACBS", "DRCCLACBS", "CORCCACBS", "DROCLACBS",
+        "COROCLACBS", "DRCRELEXFACBS", "CORCREXFACBS", "DRBLACBS", "CORBLACBS")},
+    **{series_id: "Top 100 banks" for series_id in (
+        "DRCCLT100S", "CORCCT100S", "DRSFRMT100S", "CORSFRMT100S",
+        "DRBLT100S", "CORBLT100S", "DROCLT100S", "COROCLT100S",
+        "DRCRELEXFT100S", "CORCREXFT100S")},
+    **{series_id: "Other banks" for series_id in (
+        "DRCCLOBS", "CORCCOBS", "DRSFRMOBS", "CORSFRMOBS", "DRBLOBS",
+        "CORBLOBS", "DROCLOBS", "COROCLOBS", "DRCRELEXFOBS", "CORCREXFOBS")},
+}
+for _series_id, _product in (
+    ("DRSFRMT100S", "Single-family mortgage"), ("CORSFRMT100S", "Single-family mortgage"),
+    ("DRSFRMOBS", "Single-family mortgage"), ("CORSFRMOBS", "Single-family mortgage"),
+    ("DRBLT100S", "Business loans"), ("CORBLT100S", "Business loans"),
+    ("DRBLOBS", "Business loans"), ("CORBLOBS", "Business loans"),
+    ("DROCLT100S", "Other consumer"), ("COROCLT100S", "Other consumer"),
+    ("DROCLOBS", "Other consumer"), ("COROCLOBS", "Other consumer"),
+    ("DRCRELEXFT100S", "Commercial real estate"), ("CORCREXFT100S", "Commercial real estate"),
+    ("DRCRELEXFOBS", "Commercial real estate"), ("CORCREXFOBS", "Commercial real estate"),
+):
+    _is_delinquency = _series_id.startswith("DR")
+    _bank_group = "Top 100 banks" if "T100S" in _series_id else "Other banks"
+    _bank_label = (
+        "banks ranked 1st to 100th by consolidated foreign and domestic assets"
+        if _bank_group == "Top 100 banks"
+        else "banks not among the 100 largest by consolidated foreign and domestic assets"
+    )
+    _measurement = "Delinquency rate" if _is_delinquency else "Net charge-off rate"
+    SERIES[_series_id] = {
+        "product": _product,
+        "title": f"{_measurement} on {_product.lower()}, {_bank_label}"
+        + ("; excludes farmland" if _product == "Commercial real estate" else ""),
+        "unit": "Percent",
+        "frequency": "Quarterly, end of period" if _is_delinquency else "Quarterly",
+        "seasonal_adjustment": "Seasonally adjusted",
+        "denominator": "End-of-period loans" if _is_delinquency else "Average loans; annualized net charge-offs after recoveries",
+    }
+    BANK_SIZE_GROUPS[_series_id] = _bank_group
 FRED_DATA_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
 FED_RELEASE_URL = "https://www.federalreserve.gov/releases/ChargeOff/"
 
@@ -183,6 +223,7 @@ def main() -> None:
             target.write_bytes(raw)
             manifest["series"][series_id] = {
                 **definition,
+                "bank_size_group": BANK_SIZE_GROUPS[series_id],
                 **profile,
                 "source_url": FRED_DATA_URL.format(series_id=series_id),
                 "metadata_url": f"https://fred.stlouisfed.org/series/{series_id}",

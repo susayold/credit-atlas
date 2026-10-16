@@ -6,19 +6,19 @@ behavior it exercises; it does not qualify absent vintages or model performance.
 
 ## Latest continuation — Federal Reserve bank asset quality by product
 
-Extended the Federal Reserve CHGDEL benchmark from mortgage-only to five bank
-lending domains: single-family mortgage, credit card, other consumer, CRE
-(excluding farmland), and business loans. Fourteen official FRED series provide
-delinquency and annualized net charge-off rates, including a separate credit-
-card split for top-100 and other banks, to a common 2026Q2 endpoint; each has
-142–166 complete quarters. The validated API and Sources panel show
-the latest rate, same-quarter year-over-year change, historical high and current
-historical percentile. The private four-sheet workbook includes product KPIs,
-five paired time-series charts, a filterable quarterly table, field dictionary,
-source URLs and per-file hashes. Earlier periods before publication remain
-blank, not zero. This is aggregate bank context, not loan-level history or a
-qualified predictor. Focused parser/API/download tests pass 4/4 and the live
-Edge smoke test shows all seven product/size panels without browser errors.
+Extended the Federal Reserve CHGDEL benchmark to 30 official FRED series:
+delinquency and annualized net charge-off for five products and three bank-size
+groups (all commercial banks, top 100 by consolidated assets, and other banks).
+All share a common 2026Q2 endpoint and have 142–166 uninterrupted quarterly
+observations. The API and five Sources panels now show all three groups with
+latest rates, four-quarter changes, historical highs and within-series
+percentiles. The private four-sheet workbook contains a 15-row product/size KPI
+table, ten charts (delinquency and charge-off separately for each product),
+quarterly history, series dictionary, source URLs and hashes. Blank pre-start
+periods remain null. Rates are bank-group ratios with distinct denominators and
+are not additive. This is aggregate context, not loan-level history or a
+qualified predictor. Focused parser/API/download tests pass 18/18; live Edge
+smoke test passes for the updated panel with no browser errors.
 
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample

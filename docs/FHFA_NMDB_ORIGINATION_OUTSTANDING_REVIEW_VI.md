@@ -12,7 +12,7 @@ cookies:
 | File | Grain / kỳ | Rows | Field | Kết quả kiểm tra |
 |---|---|---:|---:|---|
 | New Residential Mortgage Statistics — All Geographic Areas, Annual | Geography × market × series × year; 1998–2025 | 3.038.100 | 14 | 3.038.100 khóa duy nhất; 60 series; 26 market labels; 4.980 dòng suppressed; 135.084 VALUE1 và 337.292 VALUE2 trống/`.` |
-| Outstanding Residential Mortgage Statistics — All Geographic Areas, Quarterly | Geography × market × series × quarter; 2013Q1–2026Q2 | 535.464 | 14 | 535.464 khóa duy nhất; 38 series; 4 market labels; không có dòng suppressed; 57.888 VALUE2 trống/`.` |
+| Outstanding Residential Mortgage Statistics — All Geographic Areas, Quarterly | Geography × market × series × quarter; 2013Q1–2026Q2 | 535.464 | 14 | 535.464 khóa duy nhất; **37 series**; 4 market labels; không có dòng suppressed; 57.888 VALUE2 trống/`.` |
 
 Hai file bao phủ National, Rural/Non-Rural, Census Region, Census Division và
 State. Tất cả kỳ dự kiến đều có mặt và liên tục; header, member name, ZIP CRC,
@@ -83,3 +83,40 @@ python scripts/acquire_fhfa_nmdb_mortgage_statistics.py `
 
 Official sources: [FHFA NMDB Aggregate Statistics catalog](https://www.fhfa.gov/data/nmdb)
 and [Data Dictionary and Technical Notes dated 26/06/2026](https://www.fhfa.gov/document/d/nmdb/nmdb-aggregate-statistics-data-dictionary-technical-notes-2026q1.pdf).
+
+## Mart, API, app và Excel — 17/10/2026
+
+Đã dựng mart canonical trong private workspace tại
+`D:\data\Codex\credit-atlas\data\derived\fhfa-nmdb-market-statistics\market-statistics.parquet`.
+Mart có 3.573.564 hàng: 3.038.100 New annual và 535.464 Outstanding quarterly.
+Receipt mart gắn SHA-256 của hai ZIP, CSV member, source receipt và parquet; đối soát
+cho kết quả 4.980 hàng New suppressed, 135.084/337.292 hàng New thiếu VALUE1/VALUE2,
+57.888 hàng Outstanding thiếu VALUE2, không có ô số không parse được. VALUE raw
+được giữ cả chuỗi nguồn lẫn numeric nullable; không phát sinh forecast hoặc imputation.
+
+**Đính chính:** profile nguồn chứa 37, không phải 38, Outstanding series IDs. Workbook
+reference vì vậy có 60 New + 37 Outstanding định nghĩa series. Đếm 38 trong bảng
+acquisition cũ là sai.
+
+API code mới cung cấp catalog theo product và report theo geography, market, series,
+measure và năm. Workspace P2 có đường dẫn riêng `?view=nmdb`; có biểu đồ theo thời gian,
+KPI kỳ mới nhất, delta chỉ giữa hai kỳ liền kề có giá trị, bảng suppression/missing,
+và export Excel theo đúng filter. Workbook reference
+`apps/excel/templates/CreditAtlas-NMDB-Market-Statistics.xlsx` dùng scope National / USA /
+All Mortgages để có thể mở ngay trong Excel: 1.680 annual observations + 1.998 quarterly
+observations, latest KPIs, codebook 97 series và quality/lineage. Workbook này không chứa
+toàn bộ 3,57 triệu hàng; export theo filter đưa các hàng kỳ đã chọn vào file riêng.
+
+Trọng số được giới hạn theo FHFA Appendix B/C: New `TOT_ORIG`, `TOT_LOANAMT` và
+Outstanding `TOT_LOANS`, `PCT_LOANS`, `TOT_UPB`, `PCT_UPB`, `TOT_LOANAMT`, `AVE_PAYMENT`
+chỉ dùng VALUE1 theo dictionary. Với series khác, VALUE2 được mô tả rõ là origination
+amount weighting (New) hoặc quarter-end UPB weighting (Outstanding). Raw VALUE2 vẫn
+được giữ để trace khi FHFA có xuất ô đó, nhưng không hiện như một estimand được chọn cho
+series VALUE1-only.
+
+**Trạng thái:** mart đã dựng và reconciled. Ngày 17/10, live API trả đúng product counts,
+series counts và 28 năm New / 54 quý Outstanding trong hai query mẫu; endpoint từ chối
+VALUE2 cho Outstanding `TOT_UPB`. Hai dynamic workbook exports và workbook tham chiếu đều
+tải HTTP 200. Cấu trúc export đã được đối chiếu: chart dùng cột Selected value và nhãn kỳ
+dạng text. Browser visual acceptance và mở/tính lại trong Excel desktop chưa làm; N06 vẫn
+mở cho hai bước đó. Không thay đổi completion flag 26/50.

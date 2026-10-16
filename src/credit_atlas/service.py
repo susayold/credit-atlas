@@ -203,6 +203,14 @@ class ResearchService:
         from .nmdb_aggregate import read
         return read(self.root)
 
+    def nmdb_mortgage_statistics_catalog(self):
+        from .nmdb_mortgage_statistics import catalog
+        return catalog(self.root)
+
+    def nmdb_mortgage_statistics(self, query):
+        from .nmdb_mortgage_statistics import report
+        return report(self.root, query)
+
     def cfpb_mortgage_trends(self, query=None):
         from .cfpb_mortgage_trends import read
         return read(self.root, query)

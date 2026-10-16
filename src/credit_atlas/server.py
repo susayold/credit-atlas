@@ -183,6 +183,19 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-NMDB-Performance.xlsx", head=head)
                     return
+                if url.path == "/downloads/nmdb-market-statistics.xlsx":
+                    if query:
+                        raise ValueError("NMDB market-statistics reference workbook accepts no filters")
+                    workbook = Path(__file__).resolve().parents[2] / "apps/excel/templates/CreditAtlas-NMDB-Market-Statistics.xlsx"
+                    if not workbook.is_file():
+                        workbook = service.root / "apps/excel/templates/CreditAtlas-NMDB-Market-Statistics.xlsx"
+                    if not workbook.is_file():
+                        self.send(404, {"error": "NMDB market-statistics Excel reference is not built"}, head=head)
+                        return
+                    self.send(200, workbook.read_bytes(),
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="CreditAtlas-NMDB-Market-Statistics.xlsx", head=head)
+                    return
                 if url.path == "/downloads/alfred-macro-context.xlsx":
                     if query:
                         raise ValueError("ALFRED macro context workbook accepts no filters")
@@ -364,6 +377,24 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                         raise ValueError("NMDB performance aggregate accepts no filters")
                     from .nmdb_performance import nmdb_performance_report
                     self.send(200, nmdb_performance_report(service.root), head=head)
+                    return
+                if url.path == "/api/nmdb-mortgage-statistics-catalog":
+                    if query:
+                        raise ValueError("NMDB mortgage-statistics catalog accepts no filters")
+                    self.send(200, service.nmdb_mortgage_statistics_catalog(), head=head)
+                    return
+                if url.path == "/api/nmdb-mortgage-statistics":
+                    self.send(200, service.nmdb_mortgage_statistics(query), head=head)
+                    return
+                if url.path == "/api/nmdb-mortgage-statistics-excel":
+                    from .nmdb_mortgage_statistics_excel import workbook_bytes
+                    result = workbook_bytes(service, query)
+                    self.send(
+                        200, result,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        filename="CreditAtlas-NMDB-" + query.get("product", "selection") + "-selection.xlsx",
+                        head=head,
+                    )
                     return
                 if url.path == "/api/nmdb-state-performance":
                     if set(query) - {"state"}:

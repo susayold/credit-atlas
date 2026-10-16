@@ -51,11 +51,12 @@ valid ZIP structure, four sheets and ten charts, plus simulated 503 JSON and
 47 sample workbook, Fannie sample and layout workbooks, Ginnie sample and layout
 workbooks, and ALFRED macro workbook: each keeps the server filename, matches
 the private local bytes, and passes XLSX ZIP/workbook-manifest checks. The full
-real-data browser suite passes 104/104 on verified case `d01-202610150931`,
-with no browser errors; receipt:
-`artifacts/private/browser-qa-ad7a73d5f217/receipt.json`. M01-028 remains Partial
-while the broader route inventory still has other workspace-specific delivery
-paths to audit.
+real-data browser suite also injects HTTP 503 into the macro and Fed bank-quality
+context APIs and confirms the failed panels show no stale metrics or tables. It
+passes 106/106 on verified case `d01-202610150931`, with no browser errors;
+receipt: `artifacts/private/browser-qa-6c4663c4fcbb/receipt.json`. M01-028
+remains Partial while the broader route inventory still has other
+workspace-specific delivery paths to audit.
 
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample

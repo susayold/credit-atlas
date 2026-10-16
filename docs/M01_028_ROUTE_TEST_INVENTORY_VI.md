@@ -76,7 +76,7 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/exposure-tail-studies` | `apps/web/app.js` | `tests/test_exposure_catalog_http.py` | — |
 | `/api/fannie-samples` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_fannie_samples_qa.py`, `scripts/browser_qa.py` |
 | `/api/fannie-samples-report` | `apps/web/app.js` | `tests/test_http_boundary.py` | `scripts/browser_qa.py` |
-| `/api/fed-bank-mortgage-context` | `apps/web/app.js` | `tests/test_fed_bank_mortgage_context.py` | — |
+| `/api/fed-bank-mortgage-context` | `apps/web/app.js` | `tests/test_fed_bank_mortgage_context.py` | `scripts/browser_qa.py` |
 | `/api/fhfa-nmdb-performance` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
 | `/api/fhfa-nmdb-performance-report` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
 | `/api/fhfa-pudb-profile` | `apps/web/app.js` | — | `scripts/browser_qa.py` |
@@ -115,7 +115,7 @@ route đã được kiểm thử đầy đủ, đúng payload hay đã qua brows
 | `/api/monitor-review-report` | `apps/web/monitor-reviews.js` | `tests/test_monitor_reviews.py` | — |
 | `/api/monitor-reviews` | `apps/web/monitor-reviews.js` | `tests/test_monitor_reviews.py` | `scripts/browser_monitor_review_qa.py` |
 | `/api/monitoring` | `apps/web/app.js`, `apps/web/monitor.js` | — | `scripts/browser_panel_quality_acceptance.py`, `scripts/browser_qa.py` |
-| `/api/mortgage-macro-context` | `apps/web/app.js` | `tests/test_mortgage_macro_context.py` | — |
+| `/api/mortgage-macro-context` | `apps/web/app.js` | `tests/test_mortgage_macro_context.py` | `scripts/browser_qa.py` |
 | `/api/mortgage-provenance` | `apps/web/app.js` | — | `scripts/browser_mortgage_provenance.py`, `scripts/browser_qa.py` |
 | `/api/mortgage-provenance-report` | `apps/web/app.js` | — | — |
 | `/api/nmdb-performance` | `apps/web/nsmo.js` | `tests/test_nsmo_views.py` | — |

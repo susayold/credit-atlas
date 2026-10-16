@@ -257,6 +257,26 @@ def run(root: Path):
                     assert fed_failed_downloads == []
                     checks.append("Federal Reserve workbook rejects HTTP 200 HTML and creates no fake Excel download")
                     fed_error_page.close()
+                    source_error_page = context.new_page()
+                    source_error_page.route("**/api/mortgage-macro-context*", lambda route: route.fulfill(
+                        status=503, content_type="application/json",
+                        body=json.dumps({"error": "Synthetic mortgage macro outage"})))
+                    source_error_page.route("**/api/fed-bank-mortgage-context*", lambda route: route.fulfill(
+                        status=503, content_type="application/json",
+                        body=json.dumps({"error": "Synthetic Fed bank-quality outage"})))
+                    source_error_page.goto(base + "/?view=sources", wait_until="networkidle")
+                    macro_box = source_error_page.locator("#mortgage-macro-context")
+                    expect(macro_box).to_contain_text("Synthetic mortgage macro outage")
+                    assert macro_box.locator(".metric").count() == 0
+                    assert not any(value in macro_box.inner_text() for value in ("UNRATE", "MORTGAGE30US", "FHFA HPI"))
+                    checks.append("Mortgage macro HTTP 503 is visible and leaves no stale or partial metrics")
+                    fed_box = source_error_page.locator("#fed-bank-mortgage-context")
+                    expect(fed_box).to_contain_text("Synthetic Fed bank-quality outage")
+                    assert fed_box.locator(".metric").count() == 0
+                    assert fed_box.locator("table").count() == 0
+                    assert "1.86%" not in fed_box.inner_text()
+                    checks.append("Federal Reserve context HTTP 503 is visible without rendering stale rates or tables")
+                    source_error_page.close()
                 if view == "transitions":
                     expect(page.locator("#content")).to_contain_text("Episode follow-up support", timeout=15000)
                     checks.append("real episode follow-up support view")

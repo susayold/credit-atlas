@@ -6,6 +6,12 @@ Nguồn Maryland/home-purchase/site-built, ba năm 2023–2025, 347.056
 public records. [Source/canonical workflow](HMDA_APPLICATION_WORKFLOW.md)
 giữ 99 fields, 7.477 mart rows và independent SQL audit 24 checks PASS.
 
+The separate official nationwide 2025 snapshot has now been acquired and
+aggregate-audited, but is not yet connected to this Maryland-only app case.
+Keep the scopes separate until the national view has its own filters, privacy
+qualification, denominators, export contract, and independent acceptance. See
+[`HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md`](HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md).
+
 ## Quy trình đọc trên app
 
 Mở `http://127.0.0.1:8770/?view=hmda&hmda_view_id=hmda-view-89499c7d1d02`.

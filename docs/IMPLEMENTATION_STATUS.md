@@ -309,3 +309,20 @@ forbearance 0.5%). Focused source/workbook and NSMO integration tests pass
 the selector, 98-quarter table, 4-market chart, workbook download and mobile
 layout. The aggregate is not a loan-level label source and does not resolve D02
 target/model gates.
+
+## 2026-10-16 continuation — Federal Reserve commercial-bank mortgage quality
+
+The Federal Reserve's public CHGDEL release provides a new, distinct aggregate
+context series: 30+ delinquency/nonaccrual on bank-held single-family mortgage
+loans and annualized net charge-offs. Downloaded both official FRED series,
+validated their schema, domains and uninterrupted quarterly dates, and retained
+their SHA-256 receipt privately. Each series has 142 observations, 1991Q1–
+2026Q2; latest values are 1.86% and 0.00% (two-decimal source precision).
+Negative charge-off values are valid when recoveries exceed current charge-offs.
+
+Added a digest-validating aggregate API, mortgage Sources panel and a separate
+three-sheet Excel workbook with all quarters, source definitions and receipts.
+The interface explains the different denominators and keeps this bank-booked
+population separate from Freddie, NSMO and NMDB. It is latest-revised context,
+not a loan-level performance source or qualified feature. See
+`docs/PUBLIC_MORTGAGE_CONTEXT.md`. The private workbook/data remain on D:.

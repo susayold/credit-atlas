@@ -3,6 +3,18 @@
 Checkpoint: 2026-10-16. Specification: PLAN_MODULE_01.md, section 47.18.
 This tracks the entire module scope. An engineering check is evidence for the
 behavior it exercises; it does not qualify absent vintages or model performance.
+
+## Latest continuation — Federal Reserve mortgage asset-quality context
+
+Added two official FRED series from the Federal Reserve CHGDEL release:
+single-family mortgage delinquency and net charge-off rates for insured U.S.
+commercial banks. Each contains 142 complete quarters from 1991Q1 to 2026Q2;
+the source was updated 2026-08-25. The hash-validated API, mortgage Sources
+panel and filterable three-sheet Excel workbook describe the denominators,
+negative net charge-off semantics and source/population limits. This adds bank
+system context, not a Freddie vintage, NSMO outcome, or model feature. Focused
+API and download tests are recorded in the current implementation checkpoint.
+
 Data acquisition resumed. Additional Clarity annual ZIPs require a login session
 that is not available. The FHFA/CFPB NSMO v7.0 public-use mortgage sample
 (2013–2024 originations; quarterly performance through 2025 Q3) was downloaded

@@ -73,7 +73,7 @@ def test_mortgage_source_view_exposes_excel_library_downloads(app_server):
     assert "/downloads/alfred-macro-context.xlsx" in source
     assert "95,395 vintage" in source
     assert "không phải annual vintage" in source
-    assert "giữ source/population riêng" in source
+    assert "giữ population riêng" in source
 
 
 def test_alfred_macro_context_workbook_download_is_fixed_local_file(app_server, tmp_path):

@@ -110,3 +110,36 @@ Re-run from the private workspace root:
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 ..\credit-atlas-public\scripts\acquire_alfred_monthly_vintages.py --root . --headless
 ```
+
+## Federal Reserve commercial-bank mortgage asset quality — 2026-10-16
+
+Acquired the official FRED histories for `DRSFRMACBS` and `CORSFRMACBS`, both
+published by the Board of Governors in its Charge-Off and Delinquency Rates on
+Loans and Leases at Commercial Banks release. Each series has 142 complete
+quarterly observations from 1991Q1 through 2026Q2; the source release was last
+updated on August 25, 2026. Private CSVs and a SHA-256 receipt are stored in
+`data/private/public-context/fed-bank-mortgage-asset-quality-*`.
+
+`DRSFRMACBS` measures loans 30 or more days past due and still accruing, plus
+nonaccrual loans, divided by end-of-period loans. `CORSFRMACBS` is annualized
+charge-offs net of recoveries divided by average loans; its published series
+can be negative when recoveries exceed charge-offs. The latest 2026Q2 values
+are 1.86% delinquency and 0.00% charge-off at the source's two-decimal display
+precision. The local mortgage Sources view and separate Excel workbook expose
+the complete quarterly history, series definitions, download URLs and hashes.
+
+These bank-booked mortgage rates are a distinct aggregate population from
+Freddie Mac, NSMO and NMDB. They strengthen system-level cycle and asset-quality
+context only; they are not a borrower dataset, a fixed-horizon default rate, or
+qualified predictor history. This acquisition uses the latest revised FRED
+snapshot and does not establish historical publication vintages.
+
+Sources: [Federal Reserve release and definitions](https://www.federalreserve.gov/releases/ChargeOff/),
+[FRED mortgage delinquency series](https://fred.stlouisfed.org/series/DRSFRMACBS),
+[FRED mortgage charge-off series](https://fred.stlouisfed.org/series/CORSFRMACBS).
+
+Re-acquire from the private workspace root:
+
+```powershell
+python ..\credit-atlas-public\scripts\acquire_fed_bank_mortgage_asset_quality.py --root .
+```

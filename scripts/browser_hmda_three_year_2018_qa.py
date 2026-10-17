@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from credit_atlas.server import handler_for
 from credit_atlas.service import ResearchService
-from credit_atlas.workspace import timestamp, write_new
+from credit_atlas.workspace import sha256, timestamp, write_new
 
 
 def main() -> int:
@@ -91,6 +91,9 @@ def main() -> int:
             raise AssertionError("Browser errors: " + "; ".join(errors))
         receipt = {"status": "PASS", "completed_at": timestamp(), "view_id": view_id,
             "source_id": snapshot["source_id"], "checks": checks, "browser_errors": errors,
+            "app_js_sha256": sha256(ROOT / "apps/web/app.js"),
+            "style_css_sha256": sha256(ROOT / "apps/web/style.css"),
+            "qa_script_sha256": sha256(Path(__file__)),
             "screenshot": screenshot.name, "visibility": "private", "public_release_approved": False}
         write_new(output / "receipt.json", receipt)
         print(json.dumps({"status": "PASS", "receipt": str(output / "receipt.json"), "checks": checks,

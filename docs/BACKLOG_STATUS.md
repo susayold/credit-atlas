@@ -883,3 +883,25 @@ performance, so the master 26/50 count and D01 model gates do not change.
 Reproducible acquisition/audit scripts are `scripts/acquire_hmda_browser_2018.py`
 and `scripts/audit_hmda_browser_2018.py`; detailed evidence is in
 `docs/HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`.
+
+## 2026-10-17 HMDA current-checkout acceptance follow-up
+
+After the lazy-load UI change, reran the browser suites on the current checkout:
+National 2025 Snapshot/Dynamic and One-Year 2020–2024 (21 checks), Three-Year
+2018 (4), One-Year 2019 (4), and legacy cohort/reference (17). All 46 checks
+passed with no page/console errors; receipts bind the current `app.js` hash.
+The QA harness now imports the repository `src/` and hashes the actual checkout
+UI/backend files instead of a package copy in the private environment. The
+related HMDA source/view/API/cohort test set passed 146 tests with pytest temp
+files on D:.
+
+All nine receipt-bound HMDA audit workbooks (2018 Three-Year, One-Year
+2019–2024, 2025 Snapshot and Dynamic) were reopened read-only in Excel 16.0 and
+recalculated: 177 formula cells, no formula errors or external links; downloaded
+bytes matched their receipt-bound source workbooks and were unchanged after
+closing without save. Sanitized receipts: `docs/data/hmda-current-browser-qa-2026-10-17.json`
+and `docs/data/hmda-native-excel-qa-2026-10-17.json`.
+
+Remaining HMDA work is release-window comparability, reuse-rights and KPI
+lineage. These files remain application/decision data, not repayment/default
+performance. No forecast was added, and capability completion remains 26/50.

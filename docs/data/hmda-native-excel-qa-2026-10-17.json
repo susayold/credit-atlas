@@ -1,0 +1,28 @@
+{
+  "qa_date": "2026-10-17",
+  "application": "Microsoft Excel desktop 16.0",
+  "method": "Read-only open, CalculateFullRebuild, macros disabled, external-link updates disabled, close without saving",
+  "status": "PASS",
+  "workbooks_tested": 9,
+  "downloads_match_receipt_bound_source_bytes": true,
+  "workbook_bytes_unchanged_after_close": true,
+  "formula_cells_recalculated": 177,
+  "formula_errors": 0,
+  "external_links": 0,
+  "results": [
+    {"release": "2025 National Snapshot", "sheets": 7, "formula_cells": 69, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "2025 National Dynamic", "sheets": 5, "formula_cells": 26, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "2018 Three-Year", "sheets": 5, "formula_cells": 10, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2019", "sheets": 8, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2020", "sheets": 8, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2021", "sheets": 8, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2022", "sheets": 8, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2023", "sheets": 8, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"},
+    {"release": "One-Year 2024", "sheets": 7, "formula_cells": 12, "formula_errors": 0, "external_links": 0, "status": "PASS"}
+  ],
+  "limitations": [
+    "This checks nine receipt-bound workbooks, not every possible UI filter or query export.",
+    "HMDA is application and decision data, not repayment/default performance.",
+    "Full source receipts, hashes, downloaded workbooks, and raw rows remain private."
+  ]
+}

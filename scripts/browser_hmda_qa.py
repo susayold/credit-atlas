@@ -5,9 +5,13 @@ import threading
 import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+import sys
 
 import duckdb
 from playwright.sync_api import expect, sync_playwright
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'src'))
 
 from browser_navigation import navigate_workspace, select_task
 from credit_atlas.server import handler_for
@@ -30,6 +34,15 @@ def run(root, web_root=None):
     names = service.hmda_reference_views.reference(reference_id, snapshot['source_id'])
     cohort_id = next(row['cohort_id'] for row in service.hmda_cohort_views.catalog(snapshot['case_id'])['cohorts'] if row['status'] == 'verified')
     path = root / 'artifacts/private' / snapshot['case_id'] / 'applications.parquet'
+    code_paths = {
+        'apps/web/app.js': web_root / 'app.js',
+        'apps/web/style.css': web_root / 'style.css',
+        'scripts/browser_hmda_qa.py': ROOT / 'scripts' / 'browser_hmda_qa.py',
+        'src/credit_atlas/hmda_views.py': ROOT / 'src' / 'credit_atlas' / 'hmda_views.py',
+        'src/credit_atlas/hmda_cohorts.py': ROOT / 'src' / 'credit_atlas' / 'hmda_cohorts.py',
+        'src/credit_atlas/hmda_cohort_views.py': ROOT / 'src' / 'credit_atlas' / 'hmda_cohort_views.py',
+        'src/credit_atlas/server.py': ROOT / 'src' / 'credit_atlas' / 'server.py',
+    }
     connection = duckdb.connect(); connection.from_parquet(str(path)).create_view('applications')
     lender = connection.execute("SELECT lei,count(*) n FROM applications WHERE activity_year=2024 AND county_code='24031' AND loan_type='2' AND dti_public_category='45' GROUP BY 1 ORDER BY n DESC,lei LIMIT 1").fetchone()[0]
     seen = set(connection.execute('SELECT DISTINCT county_code,loan_type,dti_public_category FROM applications WHERE activity_year=2024 AND lei=?', [lender]).fetchall())
@@ -141,8 +154,7 @@ def run(root, web_root=None):
             assert not errors, errors; checks.append('No JavaScript/console errors')
             browser.close()
         write_new(output / 'receipt.json', {'status':'PASS','completed_at':timestamp(),'view_id':identifier,'reference_id':reference_id,'cohort_id':cohort_id,
-            'checks':checks,'browser_errors':errors,'methods':{name:sha256(root/name) for name in
-                ('apps/web/app.js','apps/web/style.css','src/credit_atlas/hmda_views.py','src/credit_atlas/hmda_cohorts.py','src/credit_atlas/hmda_cohort_views.py','src/credit_atlas/server.py')},
+            'checks':checks,'browser_errors':errors,'methods':{name:sha256(path) for name,path in code_paths.items()},
             'visibility':'private','public_release_approved':False})
         return {'status':'PASS','checks':len(checks),'directory':str(output)}
     except Exception as error:

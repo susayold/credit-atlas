@@ -24,9 +24,15 @@
     "total_capabilities": 50,
     "completion_ratio": 0.52
   },
-  "scope": "N03, N05, N06 and N20 progress notes were updated with the verified NMDB query and state-reference acceptance evidence. The completion ledger was not changed.",
+  "updated_progress_notes": {
+    "N02": "46 current-code HMDA browser checks; 146 focused HMDA tests; nine HMDA workbook exports verified",
+    "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
+  },
+  "scope": "N02 and N03 progress notes now include the HMDA current-code browser suite results, native Excel workbook results and independent fixed-2023-mix source audit. The N03 row was expanded to show the full note. The existing capability ledger was not changed.",
   "limitations": [
-    "This confirms the plan workbook's native Excel behavior and formulas, not completion of the listed work items.",
-    "Hashes and local file paths are intentionally omitted from this public evidence record."
+    "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
+    "HMDA is application and decision data, not repayment/default performance.",
+    "Release comparability, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
+    "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
   ]
 }

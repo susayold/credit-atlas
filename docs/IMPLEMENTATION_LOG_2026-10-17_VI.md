@@ -102,13 +102,13 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - **21 checks pass, không ghi nhận page/console errors:** 2025 National Snapshot và Dynamic weekly snapshot; One-Year 2020–2024; state/action-3 denial-reason JSON so khớp API; workbook Excel mỗi release tải từ route trùng byte với source workbook; national summary hiển thị tại viewport 390px.
 - National Snapshot 2025: **13.543.606 records / 4.782 reporters / 9.360.942 quyết định / 22,5948%** descriptive denied share. Dynamic as-of 2026-10-11: **13.558.306 / 4.794 / 9.373.448 / 22,5718%**. Giữ snapshot/version riêng; không gộp thành cùng một sample.
 - One-Year 2020–2024 đã hiển thị riêng theo release. Counts lần lượt **25.666.745 / 26.227.364 / 16.099.307 / 11.564.178 / 12.259.199**; descriptive denied shares **15,8829% / 15,6948% / 22,0795% / 25,2792% / 24,2844%** trên action 1–3 decision denominator. Đây là tỷ lệ mô tả theo từng release, không phải trend chuẩn hóa hoặc PD; thay đổi window/definition cần được đánh giá trước so sánh thời gian.
-- HMDA vẫn là application/decision data, không chứa repayment/default outcomes. Mọi route HMDA khác, quyền tái sử dụng phần mềm/toàn bộ release harmonization và Excel desktop open/recalculate vẫn chưa nghiệm thu. Giữ privacy/release gates và không đổi ledger **26/50 = 52%**.
+- HMDA vẫn là application/decision data, không chứa repayment/default outcomes. Tại checkpoint này còn mở browser route One-Year 2019 và native Excel; các follow-up bên dưới đã đóng hai acceptance đó. Quyền tái sử dụng phần mềm và harmonization/comparability giữa release vẫn cần đánh giá riêng. Giữ privacy/release gates và không đổi ledger **26/50 = 52%**.
 
 ### Browser acceptance HMDA 2018 Three-Year — 17/10/2026
 
 - **4 checks pass, không có page/console errors:** nguồn khớp **15.138.510 records**, quarantined **1.961** hồ sơ action `-1`, decision denominator **10.623.751**, tám action categories và 57 state categories. Bộ lọc LTV đổi breakdown theo nguồn.
 - Route tải workbook riêng tư đúng tên `CreditAtlas-HMDA-2018-Three-Year-Analysis.xlsx`; mobile 390px không overflow. Receipt và workbook ở D:, `public_release_approved=false`.
-- Cộng với national QA, HMDA đã có **25 browser checks** trên 2025 Snapshot/Dynamic, One-Year 2020–2024 và Three-Year 2018. Chưa kiểm tra các HMDA routes còn lại, Excel desktop open/recalculate hoặc comparability giữa các loại release; không xem đây là performance/PD sample.
+- Ở checkpoint này, HMDA có **25 browser checks** trên 2025 Snapshot/Dynamic, One-Year 2020–2024 và Three-Year 2018. Các lượt bổ sung sau đó đưa tổng acceptance lên 46 checks; native Excel được nghiệm thu cho đủ chín workbook release-bound. Comparability giữa loại release vẫn cần nghiên cứu riêng; đây không phải performance/PD sample.
 
 ### HMDA release selector và tải theo module — 17/10/2026
 
@@ -116,7 +116,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Thêm menu **HMDA release / analysis** với lựa chọn URL-persistent: 2025 Snapshot/Dynamic, 2018 Three-Year, từng One-Year 2019–2024, và legacy lender/geography/cohort analysis. Trang mặc định chỉ gọi module National; các module còn lại chỉ gọi khi người dùng chọn. Giữ query deep link legacy qua `hmda_view_id`.
 - Cập nhật `scripts/browser_hmda_qa.py` để nhận data `--root` và UI `--web-root` riêng; QA giờ chạy code public checkout trên private D: data, không phụ thuộc app copy ở data root.
 - Chạy lại suite trên code hiện tại: national **21/21 checks pass**, 2018 Three-Year **4/4**, legacy cohort/reference **17/17**; không browser errors. Coverage gồm release summaries, source denominator, state/LTV/denial-reason breakdowns, API/JSON parity, byte-identical XLSX downloads, responsive 390px và điều hướng các workspace. Receipt và downloaded outputs lưu private trên D:.
-- Đây là chia tải theo module, không xóa nguồn hay gộp sample. One-Year 2019 browser acceptance vẫn mở; native Excel desktop, toàn bộ release comparability/rights và các HMDA route khác chưa đóng. Ledger vẫn **26/50 = 52%**.
+- Đây là chia tải theo module, không xóa nguồn hay gộp sample. Follow-up đã đóng browser acceptance One-Year 2019 và native Excel cho cả chín workbook HMDA release-bound; release comparability/rights và KPI/outcome nằm ngoài application LAR vẫn mở. Ledger vẫn **26/50 = 52%**.
 
 ### Browser acceptance HMDA One-Year 2019 — 17/10/2026
 
@@ -124,7 +124,22 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - **4 checks pass, không page/console errors:** 17.563.200 LAR records, 5.565 reporters, action 1–3 denominator **12.280.699**, action-3 numerator **2.535.710**, denied share mô tả **20,6479%**. Giữ nguyên publisher caveat: release có hơn 12 tháng updates và không phải cutoff chuẩn 12 tháng.
 - Action-3 denial-reason JSON khớp chính xác private aggregate; Excel KPI/codebook/source-audit tải từ route byte-identical với workbook private đã receipt-bind; viewport 390px không overflow.
 - 2019 là application/decision data, không có repayment/default target. Không forecast, impute, hoặc ghép thành performance panel. Receipt, downloaded artifacts và screenshot chỉ nằm trên D:, `public_release_approved=false`.
-- HMDA browser acceptance hiện ghi nhận **21 national + 4 Three-Year 2018 + 4 One-Year 2019 + 17 legacy = 46 checks**. Các HMDA route còn lại, comparability/rights review và Excel desktop open/recalculate vẫn mở; capability ledger giữ **26/50 = 52%**.
+- HMDA browser acceptance hiện ghi nhận **21 national + 4 Three-Year 2018 + 4 One-Year 2019 + 17 legacy = 46 checks**. Native Excel cho toàn bộ chín workbook HMDA được ghi ở mục follow-up bên dưới. Release comparability/rights review vẫn mở; capability ledger giữ **26/50 = 52%**.
+
+### HMDA browser acceptance trên current checkout — 17/10/2026
+
+- Rerun trên `app.js` hiện tại: national **21/21**, Three-Year 2018 **4/4**, One-Year 2019 **4/4**, legacy cohort/reference **17/17**; tổng **46 checks**, 0 page/console errors. Bốn receipt đều hash-match `app.js` hiện tại; 2018 và legacy receipts còn bind stylesheet, legacy receipt bind cả server/module paths.
+- Sửa legacy QA harness để ưu tiên `src/` của checkout thay vì bản package cũ trong private virtualenv; receipt giờ hash đúng `web_root` và code trong repo. 2018 harness bổ sung hash app/CSS/QA script. Đã rerun sau sửa.
+- HMDA source/view/API/cohort tests: **146 passed** với pytest basetemp trên D:. Không đổi action denominator, không forecast và không nâng capability ledger.
+- Browser QA xác nhận behavior của module/filters/exports đã test; HMDA vẫn là application/decision data, chưa có repayment/default target. Release comparability và rights review còn mở. Evidence summary: [current HMDA browser QA](data/hmda-current-browser-qa-2026-10-17.json).
+
+### Native Excel acceptance HMDA — 17/10/2026
+
+- Microsoft Excel desktop **16.0** đã mở read-only và chạy `CalculateFullRebuild()` cho cả chín workbook tải qua app: 2025 National Snapshot, 2025 Dynamic, 2018 Three-Year và One-Year 2019–2024.
+- **9/9 PASS; 177 công thức; 0 formula errors; 0 external links.** Mỗi bản tải khớp byte với workbook nguồn receipt-bound; macros bị tắt, external link updates bị tắt, đóng mà không lưu và hash file sau khi đóng không đổi.
+- Số sheet/công thức theo release: Snapshot 7/69; Dynamic 5/26; 2018 Three-Year 5/10; 2019 8/12; 2020 8/12; 2021 8/12; 2022 8/12; 2023 8/12; 2024 7/12.
+- Bằng chứng sanitized: [HMDA native Excel QA](data/hmda-native-excel-qa-2026-10-17.json). Receipt/hash đầy đủ ở private workspace; không phát hành workbook hoặc loan-level rows.
+- Đây là nghiệm thu file export của chín release hiện có, không chứng minh mọi filter/query, reuse rights, cross-release comparability hay credit-performance labels. Không forecast; capability ledger vẫn **26/50 = 52%**.
 
 ## N07 — Toyota recovery-component exception ledger
 
@@ -173,11 +188,11 @@ Workbook plan ở `docs/reviews/` đã cập nhật trạng thái N01–N03 thà
 
 ## Trạng thái kiểm tra
 
-N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook N09 recalculates 103/3/86/83 và từng deal; Summary và Analyst finding được render để QA. N14: hai test label/calendar boundary pass; full source audit khớp SHA, rows/columns/labels và tạo private aggregate report; workbook formulas reconcile 789,144 / 86,618 / 520,246 / 182,280. `node --check`, Python compile, JSON parse và `git diff --check` được kiểm tra trước publish. N06 New/Outstanding Edge acceptance pass 8 checks, PUDB 5 checks, HMDA national 21 + Three-Year 4 + One-Year 2019 4 + legacy cohort/reference 17 checks; native Excel open/recalculate và các route/source khác vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước các thay đổi này; kết quả đó không thay cho test mới.
+N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook N09 recalculates 103/3/86/83 và từng deal; Summary và Analyst finding được render để QA. N14: hai test label/calendar boundary pass; full source audit khớp SHA, rows/columns/labels và tạo private aggregate report; workbook formulas reconcile 789,144 / 86,618 / 520,246 / 182,280. `node --check`, Python compile, JSON parse và `git diff --check` được kiểm tra trước publish. N06 New/Outstanding Edge acceptance pass 8 checks, PUDB 5 checks, HMDA current-code browser QA pass 46 checks and native Excel pass for all nine HMDA release-bound workbooks; native Excel and route/source acceptance for PUDB, NMDB query combinations, HUD and HAMP remain open. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước các thay đổi này; kết quả đó không thay cho test mới.
 
 ## Bước kế tiếp
 
-1. Mở/recalculate workbook N06, PUDB và HMDA trong Excel desktop; nghiệm thu browser/query parity cho các HMDA routes còn lại và các route NMDB.
+1. Hoàn tất native Excel cho query-scoped N06, PUDB, HUD và HAMP exports; tiếp tục trace KPI N03 còn thiếu, cùng release comparability/rights cho HMDA và browser/query parity cho các route NMDB khác.
 2. Hoàn thiện N02 theo crosswalk mới: tách source families đang thiếu record, bind mọi release/hash receipt và kiểm tra source rights/date-grain cho từng KPI.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
 4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.

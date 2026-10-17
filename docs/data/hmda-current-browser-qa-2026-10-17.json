@@ -1,0 +1,19 @@
+{
+  "qa_date": "2026-10-17",
+  "status": "PASS",
+  "current_app_js_hash_matches_each_receipt": true,
+  "suite_count": 4,
+  "checks_total": 46,
+  "browser_errors_total": 0,
+  "suites": [
+    {"suite": "National 2025 Snapshot/Dynamic and One-Year 2020-2024", "checks": 21, "browser_errors": 0, "status": "PASS"},
+    {"suite": "Three-Year 2018", "checks": 4, "browser_errors": 0, "status": "PASS"},
+    {"suite": "One-Year 2019", "checks": 4, "browser_errors": 0, "status": "PASS"},
+    {"suite": "Legacy cohort/reference", "checks": 17, "browser_errors": 0, "status": "PASS"}
+  ],
+  "limitations": [
+    "Receipt-bound browser checks cover the listed modules and cases, not every possible filter/query combination.",
+    "HMDA contains application and decision records, not repayment/default performance outcomes.",
+    "Detailed receipts, loan-level data, and downloaded workbooks remain private."
+  ]
+}

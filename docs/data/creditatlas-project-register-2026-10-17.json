@@ -232,7 +232,7 @@
       "status": "12 source-level release/supporting objects receipt-crosswalked; HMDA national 2025 Snapshot/Dynamic + One-Year 2020–2024 pass 21 browser checks, 2018 Three-Year passes 4, One-Year 2019 passes 4, and legacy cohort/reference passes 17; modules load on selection; release comparability and privacy/rights review remain",
       "access": "Public modified loan application register with annual release conditions",
       "use": "Application decisions, lender, geography and product mix; no repayment/default target",
-      "next": "Keep 2018 Three-Year, 2019–2024 One-Year, 2025 Snapshot and 2025 Dynamic separate; maintain 1,961 quarantined 2018 rows; run browser acceptance for remaining HMDA routes, then native Excel open/recalculate. Establish release-window comparability, validate source/action denominators and privacy fence before cross-release trend. HMDA is not repayment/default performance.",
+      "next": "Keep 2018 Three-Year, 2019–2024 One-Year, 2025 Snapshot and 2025 Dynamic separate; maintain 1,961 quarantined 2018 rows; current-code browser acceptance (46 checks) and native Excel QA for all nine release-bound workbooks are complete. Next, establish release-window comparability, validate source/action denominators and privacy fence before cross-release trend. HMDA is not repayment/default performance.",
       "evidence": "docs/HMDA_APP_WORKFLOW.md; docs/N02_SOURCE_TO_KPI_TRACEABILITY_2026-10-17_VI.md; source IDs hmda-2018-three-year-national through hmda-2025-dynamic-transmittal-sheet in docs/data/creditatlas-source-release-register-2026-10-17.json",
       "publisher": "https://ffiec.cfpb.gov/data-publication/",
       "rights_review": "Public modified data; follow FFIEC release-specific terms and privacy controls."

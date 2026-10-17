@@ -56,7 +56,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Thêm P2 view `nmdb` với product, geography level/id, market, series, trọng số và year filters; có time-series chart, latest-period KPI, liền-kề delta, missing/suppression, provenance và use limits.
 - Thêm API catalog/report và query-scoped `.xlsx` endpoint. Workbook reference National / USA / All Mortgages có 1.680 New annual + 1.998 Outstanding quarterly rows, 97 codebook definitions, latest KPIs và quality/lineage.
 - Export giữ VALUE1/VALUE2 raw, giá trị đã parse, suppression, selected measure, filter context, source release và mart SHA-256. Excel không nhồi toàn bộ 3,57 triệu aggregate rows vào một sheet.
-- N05/N06 chưa đóng acceptance tổng: API và download đã có smoke check runtime ngày 17/10; browser acceptance và mở workbook trong Excel desktop vẫn còn mở. Không tăng completion 26/50 chỉ vì thêm implementation.
+- N05/N06 chưa đóng acceptance tổng: runtime/API/export đã có; browser QA hiện pass cho NMDB performance và representative New/Outstanding filters/query-scoped exports. Native Excel desktop và các route khác vẫn còn mở. Không tăng completion 26/50 chỉ vì thêm implementation.
 
 ### Runtime review N05/N06 — 17/10/2026
 
@@ -65,6 +65,13 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - VALUE2 cho Outstanding `TOT_UPB` bị từ chối HTTP 400 theo quy tắc VALUE1-only của FHFA.
 - Query-scoped Excel export cho New annual và Outstanding quarterly đều trả HTTP 200. Đã đọc cấu trúc XLSX: bốn sheet; biểu đồ bind cột `Selected value` và nhãn kỳ dạng text, không che bảng dữ liệu. Workbook tham chiếu tải qua route HTTP 200, 389.862 bytes.
 - Đây là runtime/API/export check; chưa thay thế browser visual acceptance hay Excel desktop open/recalculate review.
+
+### Edge browser acceptance N05/N06 New/Outstanding — 17/10/2026
+
+- Thêm `scripts/browser_nmdb_market_statistics_qa.py`; chạy Edge headless qua test server, public UI checkout và private receipt-bound mart `89fae54538e3…` (3.573.564 aggregate rows). QA receipt, hai workbook tải và output đầy đủ được giữ ngoài public repo trong thư mục scratch riêng.
+- **8 checks pass, 0 page/console errors:** New annual 1998–2025, AVE_INTRATE VALUE1 = 6,3% năm 2025; Outstanding quarterly AVE_MTMLTV VALUE2 = 54,2% năm 2026Q2, đủ 54 quý; URL filters survive reload; selected `TOT_UPB` chỉ mở VALUE1 và API trả HTTP 400 khi ép VALUE2; mobile 390px không overflow.
+- State Alaska × Jumbo Market × AVE_INTRATE có 27 annual observations; 7 suppressed cells giữ unavailable và chart tách thành 4 observed segments. Hai query-scoped workbooks được kiểm bằng openpyxl: filters/weighting, 27/54 observation rows, missing/suppression flags, latest values, bốn sheet và chart đều khớp API report.
+- Kiểm tra workbook này là đọc package/XLSX theo cấu trúc và data values; **không** khẳng định Microsoft Excel desktop mở/recalculate thành công. Không xuất raw loan-level records. N05/N06 tổng vẫn mở cho Excel desktop, PUDB/HMDA/route parity còn lại và các KPI chưa trace; capability ledger giữ **26/50 = 52%**.
 
 ## N07 — Toyota recovery-component exception ledger
 
@@ -113,11 +120,11 @@ Workbook plan ở `docs/reviews/` đã cập nhật trạng thái N01–N03 thà
 
 ## Trạng thái kiểm tra
 
-N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook N09 recalculates 103/3/86/83 và từng deal; Summary và Analyst finding được render để QA. N14: hai test label/calendar boundary pass; full source audit khớp SHA, rows/columns/labels và tạo private aggregate report; workbook formulas reconcile 789,144 / 86,618 / 520,246 / 182,280; Summary, country support và method notes được render. `node --check`, Python compile, JSON parse và `git diff --check` được kiểm tra trước publish. Chưa mở/recalculate workbook bằng Excel desktop. Browser/native Excel acceptance riêng của N06 vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước các thay đổi này; kết quả đó không thay cho test mới.
+N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_boundary.py` chạy với basetemp trên D: cho **20 passed, 5 skipped**; các test mới về hash/summary/filters/API/report/XLSX đều pass. Năm skip thuộc fixtures cần machine-local/private inputs. Workbook N09 recalculates 103/3/86/83 và từng deal; Summary và Analyst finding được render để QA. N14: hai test label/calendar boundary pass; full source audit khớp SHA, rows/columns/labels và tạo private aggregate report; workbook formulas reconcile 789,144 / 86,618 / 520,246 / 182,280; Summary, country support và method notes được render. `node --check`, Python compile, JSON parse và `git diff --check` được kiểm tra trước publish. N06 New/Outstanding representative Edge acceptance hiện pass 8 checks; Excel desktop open/recalculate và các route/source khác vẫn mở. N01–N03 cũng chưa được nghiệm thu cuối. Lượt trước có public regression 1.670 passed/196 skipped trước các thay đổi này; kết quả đó không thay cho test mới.
 
 ## Bước kế tiếp
 
-1. Browser review N06 và Excel desktop open/recalculate; xác nhận bộ lọc, chart, bảng, missingness và lineage hiển thị đúng.
+1. Mở/recalculate các workbook N06 trong Excel desktop; tiếp tục browser/query parity cho PUDB, HMDA và các route NMDB còn lại.
 2. Hoàn thiện N02 theo crosswalk mới: tách source families đang thiếu record, bind mọi release/hash receipt và kiểm tra source rights/date-grain cho từng KPI.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
 4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.

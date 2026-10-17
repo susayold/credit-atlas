@@ -112,6 +112,7 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-National-2025-Dynamic-Review.xlsx") == sha256(expected_dynamic_book)
             checks.append("Dynamic 2025 as-of release renders its own counts and rate; dated 5-sheet Excel review downloads byte-identically")
 
+            page.get_by_label("HMDA release or analysis").select_option("one_year_2024")
             one_year_panel = page.locator("#hmda-one-year-2024")
             expect(one_year_panel).to_contain_text("One-Year 2024")
             expect(page.locator("#hmda-one-year-2024-summary .metric-value").nth(0)).to_have_text("12,259,199")
@@ -142,6 +143,7 @@ def run(root):
                 root / "data/private/hmda/hmda-national-one-year-2024-002bab12cd71/CreditAtlas-HMDA-One-Year-2024-Audit.xlsx")
             checks.append("2024 Excel workbook download matches the private seven-sheet audit workbook byte-for-byte")
 
+            page.get_by_label("HMDA release or analysis").select_option("one_year_2020")
             one_year_2020_panel = page.locator("#hmda-one-year-2020")
             expect(one_year_2020_panel).to_contain_text("One-Year 2020")
             expect(one_year_2020_panel).to_contain_text("30/04/2022")
@@ -174,6 +176,7 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-One-Year-2020-Audit.xlsx") == sha256(expected_workbook)
             checks.append("2020 One-Year workbook downloads byte-identically from its verified private source")
 
+            page.get_by_label("HMDA release or analysis").select_option("one_year_2021")
             one_year_2021_panel = page.locator("#hmda-one-year-2021")
             expect(one_year_2021_panel).to_contain_text("One-Year 2021")
             expect(one_year_2021_panel).to_contain_text("01/05/2023")
@@ -207,6 +210,7 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-One-Year-2021-Audit.xlsx") == sha256(expected_workbook)
             checks.append("2021 One-Year workbook downloads byte-identically from its verified private source")
 
+            page.get_by_label("HMDA release or analysis").select_option("one_year_2022")
             one_year_2022_panel = page.locator("#hmda-one-year-2022")
             expect(one_year_2022_panel).to_contain_text("One-Year 2022")
             expect(one_year_2022_panel).to_contain_text("01/05/2024")
@@ -239,6 +243,7 @@ def run(root):
             assert sha256(output / "CreditAtlas-HMDA-One-Year-2022-Audit.xlsx") == sha256(expected_workbook)
             checks.append("2022 One-Year workbook downloads byte-identically from the verified private source")
 
+            page.get_by_label("HMDA release or analysis").select_option("one_year_2023")
             one_year_2023_panel = page.locator("#hmda-one-year-2023")
             expect(one_year_2023_panel).to_contain_text("One-Year 2023")
             expect(one_year_2023_panel).to_contain_text("19/05/2025")
@@ -280,14 +285,10 @@ def run(root):
             checks.append("2023 Excel codebook/KPI/source-audit workbook downloads byte-identically")
 
             page.set_viewport_size({"width": 390, "height": 844})
-            expect(page.locator("#hmda-national-summary")).to_be_visible()
-            expect(page.locator("#hmda-one-year-2024-summary")).to_be_visible()
-            expect(page.locator("#hmda-one-year-2020-summary")).to_be_visible()
-            expect(page.locator("#hmda-one-year-2021-summary")).to_be_visible()
-            expect(page.locator("#hmda-one-year-2022-summary")).to_be_visible()
             expect(page.locator("#hmda-one-year-2023-summary")).to_be_visible()
+            expect(page.get_by_label("HMDA release or analysis")).to_have_value("one_year_2023")
             page.screenshot(path=str(output / "hmda-national-mobile.png"), full_page=True)
-            checks.append("National summary remains visible at 390px mobile width")
+            checks.append("Selected release summary and module selector remain usable at 390px; other vintages load on demand")
             assert not errors, errors
             browser.close()
         view_receipt = json.loads((root / "artifacts/private" / view_id / "view-complete.json").read_text(encoding="utf-8"))

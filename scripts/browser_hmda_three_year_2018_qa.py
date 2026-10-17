@@ -46,7 +46,7 @@ def main() -> int:
             page.set_default_timeout(60_000)
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
-            page.goto(base + "/?view=hmda", wait_until="domcontentloaded", timeout=60_000)
+            page.goto(base + "/?view=hmda&hmda_panel=three_year_2018", wait_until="domcontentloaded", timeout=60_000)
             panel = page.locator("#hmda-three-year-2018")
             try:
                 expect(panel).to_contain_text("Three-Year 2018")

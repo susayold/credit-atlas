@@ -1592,15 +1592,25 @@ async function renderHmdaOneYear2023(container,generation){
   }catch(error){if(generation===renderGeneration)panel.append(callout(error.message));}
 }
 async function hmdaWorkspace(container,generation){
-  $("context-note").textContent="Đang xác minh HMDA source; lần đọc đầu của phiên có thể mất vài phút.";
-  await renderHmdaNational(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaThreeYear2018(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear2019(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear2020(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear2021(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear2022(container,generation);if(generation!==renderGeneration)return;
-  await renderHmdaOneYear2023(container,generation);if(generation!==renderGeneration)return;
+  const params=new URLSearchParams(location.search);
+  const modules={national:renderHmdaNational,three_year_2018:renderHmdaThreeYear2018,one_year_2019:renderHmdaOneYear2019,
+    one_year_2020:renderHmdaOneYear2020,one_year_2021:renderHmdaOneYear2021,one_year_2022:renderHmdaOneYear2022,
+    one_year_2023:renderHmdaOneYear2023,one_year_2024:renderHmdaOneYear};
+  const labels={national:"2025 · Snapshot + Dynamic",three_year_2018:"2018 · Three-Year",
+    one_year_2019:"2019 · One-Year",one_year_2020:"2020 · One-Year",one_year_2021:"2021 · One-Year",
+    one_year_2022:"2022 · One-Year",one_year_2023:"2023 · One-Year",one_year_2024:"2024 · One-Year",legacy:"2025 · Lender, geography & cohort analysis"};
+  const selected=params.get("hmda_panel")||(params.has("hmda_view_id")?"legacy":"national");
+  const nav=card("HMDA release / analysis","Mỗi release được xác minh riêng. Chỉ tải dữ liệu khi mở module tương ứng; HMDA là dữ liệu hồ sơ, không có nhãn repayment/default.");nav.id="hmda-release-navigation";
+  const moduleSelector=el("select");moduleSelector.setAttribute("aria-label","HMDA release or analysis");
+  Object.entries(labels).forEach(([value,label])=>{const option=el("option","",label);option.value=value;moduleSelector.append(option);});
+  moduleSelector.value=Object.hasOwn(labels,selected)?selected:"national";
+  moduleSelector.addEventListener("change",()=>{const query=new URLSearchParams(location.search);query.set("hmda_panel",moduleSelector.value);history.replaceState(null,"","?"+query);render();});
+  nav.append(append(el("label","toolbar","Chọn release hoặc phân tích"),moduleSelector));container.append(nav);
+  $("context-note").textContent="Chọn một release HMDA để tải và xem nguồn, định nghĩa, KPI cùng giới hạn riêng.";
+  if(moduleSelector.value!=="legacy"){
+    const renderPanel=modules[moduleSelector.value];if(renderPanel)await renderPanel(container,generation);
+    return;
+  }
   const catalog=await api("/api/hmda-views");if(generation!==renderGeneration)return;const valid=catalog.views.filter(row=>row.status==="verified");
   if(!valid.length){container.append(empty("Chưa có HMDA aggregate snapshot đã xác minh."));return;}if(!hmdaState.view_id)hmdaState.view_id=valid[0].view_id;
   const selector=el("select");selector.setAttribute("aria-label","HMDA snapshot");valid.forEach(row=>{const o=el("option","",row.view_id);o.value=row.view_id;selector.append(o);});selector.value=hmdaState.view_id;

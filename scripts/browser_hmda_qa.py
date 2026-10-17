@@ -1,8 +1,10 @@
 """Actual scoped HMDA intersections, unavailable rates, private exports and UI QA."""
+import argparse
 import json
 import threading
 import uuid
 from http.server import ThreadingHTTPServer
+from pathlib import Path
 
 import duckdb
 from playwright.sync_api import expect, sync_playwright
@@ -15,7 +17,11 @@ from credit_atlas.workspace import app_root, read_json, sha256, timestamp, write
 expect.set_options(timeout=60000)
 
 
-def run(root):
+def run(root, web_root=None):
+    root = root.resolve()
+    web_root = (web_root or (Path(__file__).resolve().parents[1] / 'apps' / 'web')).resolve()
+    if root.drive.upper() != 'D:':
+        raise ValueError('Private HMDA browser QA data must remain on D:')
     output = root / 'artifacts/private' / ('hmda-browser-qa-' + uuid.uuid4().hex[:12]); output.mkdir(parents=True)
     service = ResearchService(root, review_path=output / 'qa-reviews.sqlite3')
     identifier = next(row['view_id'] for row in service.hmda_views.catalog()['views'] if row['status'] == 'verified')
@@ -29,7 +35,7 @@ def run(root):
     seen = set(connection.execute('SELECT DISTINCT county_code,loan_type,dti_public_category FROM applications WHERE activity_year=2024 AND lei=?', [lender]).fetchall())
     impossible = next((county, loan, dti) for county in snapshot['options']['county'] for loan in snapshot['options']['loan_type'] for dti in snapshot['options']['dti'] if (county,loan,dti) not in seen)
     connection.close()
-    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service))
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service, web_root=web_root))
     thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
     base = 'http://127.0.0.1:' + str(server.server_port); checks, errors = [], []
     try:
@@ -38,7 +44,7 @@ def run(root):
             page = browser.new_page(viewport={'width': 1440, 'height': 1000}); page.set_default_timeout(60000)
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
-            url = base + '/?view=hmda&hmda_view_id=' + identifier
+            url = base + '/?view=hmda&hmda_panel=legacy&hmda_view_id=' + identifier
             page.goto(url, wait_until='networkidle')
             expect(page.locator('#context-note')).to_contain_text('347,056 public records · 99 fields')
             expect(page.locator('#hmda-summary .metric-value').nth(0)).to_have_text('117,817')
@@ -147,4 +153,8 @@ def run(root):
 
 
 if __name__ == '__main__':
-    print(json.dumps(run(app_root()), indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, default=app_root(), help='Private data root on D: (defaults to the checkout root)')
+    parser.add_argument('--web-root', type=Path, default=Path(__file__).resolve().parents[1] / 'apps' / 'web', help='UI checkout to serve')
+    args = parser.parse_args()
+    print(json.dumps(run(args.root, args.web_root), indent=2))

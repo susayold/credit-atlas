@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-18",
-  "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved.",
-  "record_count": 123,
+  "scope_note": "124 source records: 20 public-suite objects and 104 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved. Direct FHFA U.S./Census-divisions All-Transactions HPI was added on 2026-10-18 after 206/206 exact quarterly parity against the private FRED USSTHPI snapshot; no historical vintage was established.",
+  "record_count": 124,
   "source_records": [
     {
       "source_id": "bondora-public-loan-dataset-investor-xlsx",
@@ -800,7 +800,7 @@
     },
     {
       "source_id": "fhfa-state-all-transactions-hpi-2026q2",
-      "registry_group_id": null,
+      "registry_group_id": "fhfa-hpi-geographic-context",
       "publisher": "Federal Housing Finance Agency",
       "publisher_page_url": "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data",
       "source_object_url": "https://www.fhfa.gov/house-price-index",
@@ -837,8 +837,46 @@
       "missing_cell_count": null,
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
-      "scope_note": "Separate from FHFA PUDB/NMDB and FRED/ALFRED USSTHPI.",
+      "scope_note": "Separate state/DC All-Transactions HPI context within the FHFA HPI group; no current API route or borrower-level outcome.",
       "missing_cell_count_basis": "Source profile confirms dimensions/coverage; missing-cell count not recorded in the release receipt."
+    },
+    {
+      "source_id": "fhfa-us-census-all-transactions-hpi-2026q2",
+      "registry_group_id": "fhfa-hpi-geographic-context",
+      "publisher": "Federal Housing Finance Agency",
+      "publisher_page_url": "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data",
+      "source_object_url": "https://www.fhfa.gov/hpi/download/quarterly_datasets/hpi_at_us_and_census.csv",
+      "format": "Headerless CSV",
+      "release_label": "U.S. and Census Divisions All-Transactions HPI (NSA), through 2026Q2",
+      "publisher_publication_date": null,
+      "publication_date_status": "Observation endpoint is 2026Q2; exact publication calendar date not recorded.",
+      "snapshot_as_of": "2026Q2",
+      "observed_period_start": "1975Q1",
+      "observed_period_end": "2026Q2",
+      "native_row_count": 2060,
+      "grain": "Geography × quarter; 10 geographies (U.S. + 9 Census divisions), 206 quarters each.",
+      "modules": [
+        "P2",
+        "P4"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_public_mortgage_context.py:fetch_fhfa_us_hpi -> normalized USSTHPI.csv -> src/credit_atlas/mortgage_macro_context.py -> /api/mortgage-macro-context; all-geography source also retained privately for source QA."
+      ],
+      "kpi_or_output": "Quarterly U.S. All-Transactions HPI, index 1980Q1=100; descriptive latest-release macro context.",
+      "method_card_ids": [],
+      "rights_use_gate": "FHFA HPI FAQ says HPI data are freely available and recommends attribution; preserve product/geography/NSA definitions. This is technical source review, not a legal opinion.",
+      "rights_review_status": "FHFA_SAYS_DATA_FREELY_AVAILABLE_WITH_ATTRIBUTION; DIRECT_SOURCE; NO_HISTORICAL_VINTAGE",
+      "receipt_status": "DIRECT_SOURCE_BYTES_ACQUIRED; EXACT_206_QUARTER_PARITY_WITH_FRED_SNAPSHOT",
+      "retrieved_at_utc": "2026-10-17T20:20:58.823917+00:00",
+      "receipt_completed_at_utc": null,
+      "receipt_reference": "local-private-id:fhfa-us-census-hpi-2026q2",
+      "sha256_prefix": "580d761c3488",
+      "component_sha256_prefixes": {},
+      "missing_cell_count": 0,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "Direct FHFA current snapshot, not a historical-vintage series. USA-only normalized panel matches the local FRED USSTHPI snapshot on 206/206 overlapping quarters with zero value differences; this establishes snapshot parity only, not point-in-time availability or model qualification.",
+      "missing_cell_count_basis": "The 10-geography panel has 2,060 complete geography-quarter rows; comparison is USA-only on 206 quarters."
     },
     {
       "registry_group_id": "fred-alfred-macro-market-context",
@@ -6081,5 +6119,5 @@
       "scope_note": "This record describes a receipt-backed SEC filing set, not a redistributed dataset. Individual accessions, URLs, attachment hashes and downloaded payloads remain in local private evidence ID woart-absee-history-948a4d8e4f18. EX-102/EX-103 asset data and 10-D certificate comparators remain separate. No cross-deal summation, forecast or imputation is implied."
     }
   ],
-  "supplemental_source_records": 103
+  "supplemental_source_records": 104
 }

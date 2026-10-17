@@ -1,16 +1,16 @@
 {
   "evidence_type": "project_register_api_runtime_acceptance",
   "status": "PASS",
-  "created_at_utc": "2026-10-17T20:15:03.795657+00:00",
+  "created_at_utc": "2026-10-17T20:35:47.923150+00:00",
   "scope": "Actual server handler, project-register API, reciprocal method/source lineage, evidence paths, and served static assets with an empty mortgage-run catalog. Browser visual/render acceptance is not claimed.",
   "checks": 12,
   "check_details": [
     "GET /?view=register: 200, 5897 bytes",
-    "GET /app.js: 200, 537375 bytes",
+    "GET /app.js: 200, 538048 bytes",
     "GET /project-register.js: 200, 17628 bytes",
     "GET /style.css: 200, 57290 bytes",
     "GET /api/runs: 200, empty verified-run catalog",
-    "GET /api/project-register: 200; 28 dataset groups, 123 source records, 15 method cards, 50 capabilities; 10 FRED/ALFRED records bound to rights-gated group",
+    "GET /api/project-register: 200; 29 dataset groups, 124 source records, 15 method cards, 50 capabilities; 10 FRED/ALFRED and 2 FHFA HPI records bound to source groups",
     "All 15 method cards have repository evidence paths; source-to-method lineage is reciprocal across 50 links and 33 source rows",
     "LendingClub card exposes three existing evidence documents; structured ABS scope excludes World Omni from the 103-period finding",
     "Progress reconciles to authoritative ledger: 26/50 (52%); P1 6/10, P2 9/10, P3 8/10, P4 3/10, P5 0/10",
@@ -19,8 +19,8 @@
     "Frontend init includes register in both no-run and run-error fallbacks"
   ],
   "api_summary": {
-    "datasets": 28,
-    "source_records": 123,
+    "datasets": 29,
+    "source_records": 124,
     "method_cards": 15,
     "method_cards_with_source_lineage": 15,
     "method_source_links": 50,
@@ -63,16 +63,21 @@
   "private_data_loaded": false,
   "raw_rows_or_credentials_in_receipt": false,
   "source_sha256": {
-    "apps/web/app.js": "b4627d186f73b3583cfe09b6a9693b292a42005fd3f1dc8a6314a0cb087d0189",
+    "apps/web/app.js": "0994ba7e84352243c1ca2cc2e8a03e89cf980e344766f47aad58fe6fe492517f",
     "apps/web/project-register.js": "4ac6f3e6f68e195b3710f6d93beff1c1db5939ec0b886dd49f6c5044aea8d0ae",
     "src/credit_atlas/project_register.py": "de540ffba1f008eaadf7587fc173c7092427b1718fbf9517ff62d6855de8248f",
     "src/credit_atlas/server.py": "d4c283f9693d0d4d6f76e6f7c90ef09c0dc0d43488d3e400de09898c663ffdbd",
     "docs/COMPLETION_REQUIREMENTS_50.json": "17f8e656b0a3e1b2dc19aa02d5d72763fbc9178fe5e49db2ad6f381f901ccea4",
-    "docs/data/creditatlas-project-register-2026-10-17.json": "c87a770a000f73f0700b6bf5484dd3fad189a6482be76e4781b9bbe0a504e16e",
-    "docs/data/creditatlas-source-release-register-2026-10-17.json": "04270d7169de2c4a2be123d40c715157a18652b812b02020110978a192688302",
-    "docs/data/n02-source-to-kpi-map-2026-10-17.json": "2698c5146f14f389106d25df7ad175e58b7dfae0927cfb2a4045994435f17c7f",
-    "docs/N02_SOURCE_TO_KPI_TRACEABILITY_2026-10-17_VI.md": "13c04e2ad985b5e5d101d4729b41fec4c36542c5c1ef12fca016dd6e12dc7d11",
-    "docs/PROJECT_REVIEW_RESEARCH_ADDENDUM_2026-10-18_VI.md": "35d8ef517aa8327b32d87c1595726e3f45db82bfed9ab34310c6c447f095ff6b",
-    "tests/test_project_register.py": "87ff6350171ff738b1a7764518a76f93ae25c78a8d8c7a1077f2244db4751d30"
+    "docs/data/creditatlas-project-register-2026-10-17.json": "09828509e53495b4b44caf6f7968c5a1f8b73c85408256b1e1f4659e1c732729",
+    "docs/data/creditatlas-source-release-register-2026-10-17.json": "18559faeed383d73c216a68e280ee5f8e3620a739da365b880299a03ff328a0d",
+    "docs/data/n02-source-to-kpi-map-2026-10-17.json": "33409afa5a868825e2797b63ffabd0a63e4f2722ff5e16ad9f5d7ab856a42cc4",
+    "docs/N02_SOURCE_TO_KPI_TRACEABILITY_2026-10-17_VI.md": "306501cb0f5b76b37b251d5197a2232c765f94d2b76f32e12984990f4a2fed8f",
+    "docs/PROJECT_REVIEW_RESEARCH_ADDENDUM_2026-10-18_VI.md": "2a642b19cf0de830d4c3a760ac1a1b23f8291f779ddff7572771c1d503cbf659",
+    "docs/FHFA_US_CENSUS_HPI_DIRECT_SOURCE_REVIEW_VI.md": "9d29ce2962e38bfdf6b67b2304037a42d8ace927e831178bc981b74351b67ed0",
+    "scripts/acquire_public_mortgage_context.py": "cf665fa5f5487dfa5579b89325ec25a35e1a03be96a07ec93150e082a7454b7b",
+    "scripts/compare_fhfa_us_hpi_to_fred.py": "fcab35562e370278cf696a60d12986ef6ab19c7016dd8bd90b5508b6b0833425",
+    "src/credit_atlas/fhfa_hpi.py": "fa644ed4a8e670df43792be5283559ce1eb28d46143352d141c2d2c32deb3cef",
+    "src/credit_atlas/mortgage_macro_context.py": "6952f97ace32839852b4ef8cb76dfb007731f220d0c4a697cd48e2b98ea1b273",
+    "tests/test_project_register.py": "c2abc8cb1a1b65e980552c8644d778369e8a6fdb9401a9d413636f6512e54449"
   }
 }

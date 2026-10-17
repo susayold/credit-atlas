@@ -179,21 +179,27 @@ function mortgageExcelLibraryPane(container){
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Workbook có sample, codebook và lịch sử aggregate. Sample Release 47 không thay annual vintage; Fannie, Ginnie, NSMO, HMDA, NMDB và bank rates giữ population riêng. Aggregate context không phải loan-level target hay predictor đã qualified.',true));container.append(box);
 }
 async function mortgageMacroContextPane(container,generation){
- const box=card('Mortgage macro context · US national','FRED latest-revised history + ALFRED month-end snapshots · descriptive context, not qualified model features');box.id='mortgage-macro-context';container.append(box);
+ const box=card('Mortgage macro context · US national','FHFA direct current HPI + FRED UNRATE/PMMS snapshots · ALFRED vintages are separate · descriptive only, no qualified model features');box.id='mortgage-macro-context';container.append(box);
  try{
   const d=await api('/api/mortgage-macro-context');if(generation!==renderGeneration)return;
   if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Mortgage macro context unavailable.'));return;}
   const byId=Object.fromEntries(d.series.map(s=>[s.series_id,s])),u=byId.UNRATE,m=byId.MORTGAGE30US,h=byId.USSTHPI;
   const metrics=grid('three');append(metrics,
-   metric('Unemployment · '+u.last_known_reference_date,decimal(u.last_known_value,2)+'%','BLS monthly · seasonally adjusted'),
-   metric('30-year mortgage · '+m.last_known_reference_date,decimal(m.last_known_value,2)+'%','Freddie Mac weekly observation'),
-   metric('U.S. house price index · '+h.last_known_reference_date,decimal(h.last_known_value,1),'FHFA quarterly · 1980 Q1 = 100'));
+   metric('Unemployment · '+u.last_known_reference_date,decimal(u.last_known_value,2)+'%','FRED distributor · BLS monthly, seasonally adjusted'),
+   metric('30-year mortgage · '+m.last_known_reference_date,decimal(m.last_known_value,2)+'%','FRED distributor · Freddie Mac PMMS weekly'),
+   metric('U.S. house price index · '+h.last_known_reference_date,decimal(h.last_known_value,1),'FHFA direct · All-Transactions NSA · 1980 Q1 = 100'));
   const history=d.monthly_history,chart=card('Case-aligned monthly context',d.case_alignment.first_month+' → '+d.case_alignment.last_month+' · '+number(d.case_alignment.monthly_rows)+' months');
   chart.append(lineChart(history,[{key:'unemployment_percent',color:'primary'},{key:'mortgage30_monthly_mean_percent',color:'secondary'}],{label:'Unemployment and 30-year mortgage rates in percent, case-aligned',suffix:'%'}),legend([['Unemployment · latest revised','primary'],['30-year mortgage · within-month weekly mean','secondary']]));
   chart.append(table(['Month',{label:'Unemployment %',number:true},{label:'30-year mortgage monthly mean %',number:true},{label:'Weekly observations',number:true}],history.slice(-12).map(r=>[r.period.slice(0,7),decimal(r.unemployment_percent,2),decimal(r.mortgage30_monthly_mean_percent,2),number(r.mortgage30_observation_count)])));
   const hpiRows=d.quarterly_hpi.slice(-8),hpiTable=card('FHFA house price index · native quarterly grain','No monthly interpolation · last '+number(d.case_alignment.hpi_quarters)+' quarters aligned to D01');
   hpiTable.append(table(['Quarter',{label:'Index · 1980 Q1 = 100',number:true}],hpiRows.map(r=>[r.period.slice(0,7),decimal(r.index_1980_q1_100,1)])));
-  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Source','Frequency','Latest reference date',{label:'Observations',number:true}],d.series.map(s=>[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count)])));
+  const sourceRows=d.series.map(s=>{
+   const sourceLink=el('a','source-link','Official source ↗');sourceLink.href=s.source_url||s.metadata_url||'#';sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';
+   const rightsLink=el('a','source-link',(s.rights_review_status||'Rights review unavailable').replaceAll('_',' ').toLowerCase());
+   rightsLink.href=s.rights_evidence_url||s.metadata_url||'#';rightsLink.target='_blank';rightsLink.rel='noopener noreferrer';
+   return[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count),sourceLink,rightsLink,s.attribution||'—'];
+  });
+  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Publisher / distributor','Frequency','Latest reference date',{label:'Observations',number:true},'Source URL','Rights / vintage status','Attribution'],sourceRows));
   const pit=d.point_in_time_context;
   if(pit?.status==='AVAILABLE'){
    const rows=pit.monthly_history,pitBox=card('ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó',pit.coverage.first_month+' → '+pit.coverage.last_month+' · '+number(pit.coverage.monthly_rows)+' tháng · chốt cuối tháng');

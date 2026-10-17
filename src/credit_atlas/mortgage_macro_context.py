@@ -22,7 +22,7 @@ SERIES = {
     },
     "USSTHPI": {
         "label": "U.S. house price index",
-        "source": "Federal Housing Finance Agency via FRED",
+        "source": "Federal Housing Finance Agency (direct)",
         "unit": "Index (1980 Q1 = 100)",
         "frequency": "Quarterly, not seasonally adjusted",
     },
@@ -91,8 +91,16 @@ def _read_series(folder: Path, metadata: dict) -> dict:
     return {
         **SERIES[series_id],
         "series_id": series_id,
+        "source": metadata.get("source", SERIES[series_id]["source"]),
         "source_url": metadata.get("source_url"),
         "metadata_url": metadata.get("metadata_url"),
+        "rights_evidence_url": metadata.get("rights_evidence_url"),
+        "rights_review_status": metadata.get(
+            "rights_review_status", "FRED_DISTRIBUTOR_OR_SERIES_OWNER_REVIEW_OPEN; NO_PUBLIC_USE_APPROVAL"
+        ),
+        "attribution": metadata.get("attribution"),
+        "information_availability": metadata.get("information_availability"),
+        "snapshot_as_of": metadata.get("snapshot_as_of"),
         "observation_count": len(rows),
         "missing_count": sum(value is None for _, value in rows),
         "first_reference_date": rows[0][0],
@@ -348,9 +356,10 @@ def report(root: Path) -> dict:
         "quarterly_hpi": quarterly,
         "point_in_time_context": point_in_time,
         "limitations": [
-            "Latest revised FRED snapshots do not establish historical publication availability.",
+            "Latest-revised snapshots and current FHFA releases do not establish historical publication availability.",
             "Retrospective descriptive context only; no macro series is qualified as a model predictor.",
             "Quarterly HPI remains quarterly; no monthly interpolation is used.",
             "Macro series do not add mortgage loan-performance vintages or borrower-level labels.",
+            "ALFRED point-in-time output is a separate vintage product with unresolved retention/use rights.",
         ],
     }

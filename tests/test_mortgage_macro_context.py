@@ -45,12 +45,25 @@ def macro_root(tmp_path):
         hashes[path.name] = digest
         metadata.append({
             "series_id": series_id,
-            "source": "official source via FRED",
+            "source": "Federal Housing Finance Agency (direct)" if series_id == "USSTHPI" else "official source via FRED",
             "units": "Index" if series_id == "USSTHPI" else "Percent",
             "frequency": "source native",
             "seasonal_adjustment": "source native",
-            "source_url": f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}",
-            "metadata_url": f"https://fred.stlouisfed.org/series/{series_id}",
+            "source_url": (
+                "https://www.fhfa.gov/hpi/download/quarterly_datasets/hpi_at_us_and_census.csv"
+                if series_id == "USSTHPI" else f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+            ),
+            "metadata_url": (
+                "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data"
+                if series_id == "USSTHPI" else f"https://fred.stlouisfed.org/series/{series_id}"
+            ),
+            **({
+                "rights_evidence_url": "https://www.fhfa.gov/document/hpi-faqs",
+                "rights_review_status": "FHFA_SAYS_DATA_FREELY_AVAILABLE; ATTRIBUTION_RECOMMENDED; NO_HISTORICAL_RELEASE_VINTAGES",
+                "attribution": "Source: FHFA HPI® (all-transactions, U.S., not seasonally adjusted, nominal).",
+                "information_availability": "Current FHFA release; historical release vintage/publication availability not preserved",
+                "snapshot_as_of": "2026Q2",
+            } if series_id == "USSTHPI" else {}),
             "retrieved_at": "2026-10-16T00:00:00+00:00",
             "bytes": path.stat().st_size,
             "sha256": digest,
@@ -100,6 +113,9 @@ def test_macro_report_verifies_latest_values_and_native_case_grains(macro_root):
     assert by_id["MORTGAGE30US"]["last_known_reference_date"] == "2026-10-15"
     assert by_id["MORTGAGE30US"]["last_known_value"] == 6.2
     assert by_id["USSTHPI"]["last_known_reference_date"] == "2026-04-01"
+    assert by_id["USSTHPI"]["source"] == "Federal Housing Finance Agency (direct)"
+    assert by_id["USSTHPI"]["rights_review_status"].startswith("FHFA_SAYS_DATA_FREELY_AVAILABLE")
+    assert "FHFA HPI" in by_id["USSTHPI"]["attribution"]
     assert result["case_alignment"] == {
         "monthly_rows": 2,
         "first_month": "2026-02",
@@ -261,11 +277,22 @@ def test_macro_api_is_unfiltered_and_sources_view_exposes_context(macro_api):
         result = json.loads(response.read())
     assert result["status"] == "AVAILABLE"
     assert len(result["series"]) == 3
+    hpi = next(row for row in result["series"] if row["series_id"] == "USSTHPI")
+    assert hpi["source"] == "Federal Housing Finance Agency (direct)"
+    assert hpi["rights_evidence_url"] == "https://www.fhfa.gov/document/hpi-faqs"
+    assert hpi["snapshot_as_of"] == "2026Q2"
     with pytest.raises(HTTPError) as error:
         urlopen(macro_api + "/api/mortgage-macro-context?series=UNRATE", timeout=5)
     assert error.value.code == 400
     with urlopen(macro_api + "/app.js", timeout=5) as response:
         source = response.read().decode("utf-8")
     assert "Mortgage macro context · US national" in source
+    assert "FHFA direct current HPI + FRED UNRATE/PMMS snapshots" in source
+    assert "FRED latest-revised history + ALFRED month-end snapshots" not in source
+    assert "Publisher / distributor" in source
+    assert "Rights / vintage status" in source
+    assert "Attribution" in source
+    assert "rights_evidence_url" in source or "s.rights_evidence_url" in source
+    assert "FHFA direct · All-Transactions NSA" in source
     assert "ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó" in source
     assert "/api/mortgage-macro-context" in source

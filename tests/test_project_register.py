@@ -10,8 +10,8 @@ from credit_atlas import project_register as module
 def test_project_register_exposes_the_source_and_plan_inventory():
     result = module.project_register()
 
-    assert len(result["source_records"]) == 123
-    assert len(result["datasets"]) == 28
+    assert len(result["source_records"]) == 124
+    assert len(result["datasets"]) == 29
     assert len(result["method_cards"]) == 15
     assert len(result["capabilities"]) == 50
     assert result["progress"]["completed"] == 26
@@ -36,6 +36,19 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     assert all(row["registry_group_id"] == macro_group["id"] for row in macro_sources.values())
     assert all("NO_PUBLIC" in row["rights_review_status"] or "WRITTEN_THIRD_PARTY" in row["rights_review_status"]
                for row in macro_sources.values())
+    fhfa_group = next(row for row in result["datasets"] if row["id"] == "fhfa-hpi-geographic-context")
+    fhfa_sources = {row["source_id"]: row for row in result["source_records"]
+                    if row["source_id"].startswith("fhfa-") and row["registry_group_id"] == fhfa_group["id"]}
+    assert set(fhfa_group["source_release_record_ids"]) == {
+        "fhfa-state-all-transactions-hpi-2026q2",
+        "fhfa-us-census-all-transactions-hpi-2026q2",
+    }
+    assert set(fhfa_sources) == set(fhfa_group["source_release_record_ids"])
+    direct_hpi = fhfa_sources["fhfa-us-census-all-transactions-hpi-2026q2"]
+    assert direct_hpi["native_row_count"] == 2060
+    assert direct_hpi["retrieved_at_utc"] == "2026-10-17T20:20:58.823917+00:00"
+    assert direct_hpi["model_qualified_in_receipt"] is False
+    assert direct_hpi["sha256_prefix"] == "580d761c3488"
     freddie = next(row for row in result["source_records"]
                    if row["source_id"] == "freddie-sfll-2012-user-supplied")
     assert freddie["registry_group_id"] == "freddie-2012"
@@ -110,13 +123,20 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     trace_map = json.loads((repo / "docs/data/n02-source-to-kpi-map-2026-10-17.json").read_text(encoding="utf-8"))
     project_register = json.loads((repo / "docs/data/creditatlas-project-register-2026-10-17.json").read_text(encoding="utf-8"))
     crosswalk = trace_map["supplemental_source_record_crosswalk"]
-    assert source_register["record_count"] == len(source_register["source_records"]) == 123
-    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 103
-    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 103
+    fhfa_trace = next(row for row in trace_map["registered_record_trace"]
+                      if row["registry_id"] == "fhfa-hpi-geographic-context")
+    assert set(fhfa_trace["source_release_record_ids"]) == set(fhfa_group["source_release_record_ids"])
+    hpi_lineage = next(row for row in fhfa_trace["kpi_formula_lineage"]
+                       if row["output_id"] == "d01_macro.fhfa_quarterly_hpi_context")
+    assert "Do not interpolate to months" in hpi_lineage["transform"]
+    assert "does not qualify a model feature" in hpi_lineage["limitations"]
+    assert source_register["record_count"] == len(source_register["source_records"]) == 124
+    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 104
+    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 104
     assert trace_map["source_release_register"]["supplemental_source_families"] == 17
-    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 103
-    assert trace_map["counts"]["registered_dataset_domain_records"] == 28
-    assert trace_map["counts"]["registry_groups_with_source_objects"] == 23
+    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 104
+    assert trace_map["counts"]["registered_dataset_domain_records"] == 29
+    assert trace_map["counts"]["registry_groups_with_source_objects"] == 24
     assert trace_map["counts"]["source_catalog_ids_with_parent_record"] == 20
     assert trace_map["counts"]["source_catalog_ids_without_parent_record"] == 0
     assert project_register["source_group_disposition_summary"] == result["source_group_disposition_summary"]

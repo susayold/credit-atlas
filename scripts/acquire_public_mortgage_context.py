@@ -10,23 +10,28 @@ import subprocess
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
+from urllib.request import Request, urlopen
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 from credit_atlas.service import ResearchService
+from credit_atlas.fhfa_hpi import normalize_us_census_hpi_csv
 from credit_atlas.workspace import app_root, sha256, timestamp, write_new
 
 SPECS = {
     "UNRATE": {"source": "U.S. Bureau of Labor Statistics via FRED", "units": "Percent",
                "frequency": "Monthly", "seasonal_adjustment": "Seasonally Adjusted"},
-    "USSTHPI": {"source": "U.S. Federal Housing Finance Agency via FRED",
+    "USSTHPI": {"source": "Federal Housing Finance Agency (direct)",
                 "units": "Index 1980:Q1=100", "frequency": "Quarterly",
                 "seasonal_adjustment": "Not Seasonally Adjusted"},
     "MORTGAGE30US": {"source": "Freddie Mac via FRED", "units": "Percent",
                      "frequency": "Weekly, Ending Thursday", "seasonal_adjustment": "Not Seasonally Adjusted"},
 }
 LIMIT = 2 * 1024**2
+FHFA_US_CENSUS_HPI_URL = "https://www.fhfa.gov/hpi/download/quarterly_datasets/hpi_at_us_and_census.csv"
+FHFA_HPI_DATASET_URL = "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data"
+FHFA_HPI_FAQ_URL = "https://www.fhfa.gov/document/hpi-faqs"
 
 
 def parse_csv(raw, series):
@@ -97,6 +102,77 @@ def fetch(series, folder):
     return records, metadata
 
 
+def fetch_fhfa_us_hpi(folder):
+    """Acquire the official national All-Transactions HPI and normalize USA rows."""
+    request = Request(FHFA_US_CENSUS_HPI_URL, headers={
+        "User-Agent": "CreditAtlas public-data research/1.0",
+        "Accept": "text/csv",
+    })
+    with urlopen(request, timeout=45) as response:
+        if response.status != 200 or response.geturl() != FHFA_US_CENSUS_HPI_URL:
+            raise ValueError("FHFA HPI request returned an unexpected status or redirect")
+        content_type = response.headers.get("Content-Type", "").lower()
+        if "text/csv" not in content_type:
+            raise ValueError("FHFA HPI response is not CSV")
+        raw = response.read(LIMIT + 1)
+        headers = {name: response.headers.get(name) for name in ("ETag", "Last-Modified", "Content-Length")
+                   if response.headers.get(name) is not None}
+    if not raw or len(raw) > LIMIT:
+        raise ValueError("FHFA HPI source is empty or exceeds the download bound")
+
+    source_path = folder / "fhfa-us-census-hpi-source.csv"
+    with source_path.open("xb") as stream:
+        stream.write(raw)
+    parsed = normalize_us_census_hpi_csv(source_path)
+    national = [row for row in parsed.records if row[0] == "USA"]
+    if len(national) != parsed.period_count:
+        raise ValueError("FHFA national HPI series is not balanced")
+
+    normalized_path = folder / "USSTHPI.csv"
+    normalized = io.StringIO(newline="")
+    writer = csv.writer(normalized, lineterminator="\n")
+    writer.writerow(["observation_date", "USSTHPI"])
+    records = []
+    for _, year, quarter, value in national:
+        observed = date(year, (quarter - 1) * 3 + 1, 1)
+        writer.writerow([observed.isoformat(), f"{value:.2f}"])
+        records.append({"series_id": "USSTHPI", "observation_date": observed, "value": value})
+    normalized_bytes = normalized.getvalue().encode("utf-8")
+    with normalized_path.open("xb") as stream:
+        stream.write(normalized_bytes)
+
+    metadata = {
+        **SPECS["USSTHPI"],
+        "series_id": "USSTHPI",
+        "source_url": FHFA_US_CENSUS_HPI_URL,
+        "metadata_url": FHFA_HPI_DATASET_URL,
+        "rights_evidence_url": FHFA_HPI_FAQ_URL,
+        "rights_review_status": "FHFA_SAYS_DATA_FREELY_AVAILABLE; ATTRIBUTION_RECOMMENDED; NO_HISTORICAL_RELEASE_VINTAGES",
+        "attribution": "Source: FHFA HPI® (all-transactions, U.S., not seasonally adjusted, nominal).",
+        "retrieved_at": timestamp(),
+        "http_status": 200,
+        "http_transport": "python_urllib_https_no_redirect",
+        "response_headers": headers,
+        "source_object_file": source_path.name,
+        "source_object_bytes": len(raw),
+        "source_object_sha256": sha256(source_path),
+        "bytes": normalized_path.stat().st_size,
+        "sha256": sha256(normalized_path),
+        "observations": len(records),
+        "missing_values": 0,
+        "first_reference_date": records[0]["observation_date"].isoformat(),
+        "last_reference_date": records[-1]["observation_date"].isoformat(),
+        "snapshot_as_of": parsed.latest_period,
+        "index_type": "All-Transactions",
+        "geography": "U.S. national (FHFA code USA)",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "index_base": "1980Q1=100",
+        "information_availability": "Current FHFA release; historical release vintage/publication availability not preserved",
+        "model_predictor_qualified": False,
+    }
+    return records, metadata
+
+
 def monthly_context(months, records):
     unemployment = {row["observation_date"].isoformat()[:7]: row["value"]
                     for row in records if row["series_id"] == "UNRATE"}
@@ -121,7 +197,12 @@ def run(root, case_id="d01-a24484b21a21"):
               "intent": "download_and_run_retrospective_macro_context", "series_ids": list(SPECS)})
     try:
         with ThreadPoolExecutor(max_workers=3) as pool:
-            downloads = list(pool.map(lambda series: fetch(series, folder), SPECS))
+            downloads = [
+                pool.submit(fetch, "UNRATE", folder),
+                pool.submit(fetch_fhfa_us_hpi, folder),
+                pool.submit(fetch, "MORTGAGE30US", folder),
+            ]
+            downloads = [future.result() for future in downloads]
         records = [row for result, _ in downloads for row in result]
         metadata = [info for _, info in downloads]
         schema = pa.schema([("series_id", pa.string()), ("observation_date", pa.date32()), ("value", pa.float64())])

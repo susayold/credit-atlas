@@ -66,8 +66,8 @@ def main() -> int:
             status, payload = get(base_url, "/api/project-register")
             assert status == 200
             data = json.loads(payload)
-            assert len(data["datasets"]) == 28
-            assert len(data["source_records"]) == 123
+            assert len(data["datasets"]) == 29
+            assert len(data["source_records"]) == 124
             assert len(data["method_cards"]) == 15
             assert len(data["capabilities"]) == 50
             method_by_id = {row["id"]: row for row in data["method_cards"]}
@@ -77,6 +77,14 @@ def main() -> int:
             assert len(macro_group["source_release_record_ids"]) == 10
             assert all(source_by_id[source_id]["registry_group_id"] == macro_group["id"]
                        for source_id in macro_group["source_release_record_ids"])
+            fhfa_group = next(row for row in data["datasets"]
+                              if row["id"] == "fhfa-hpi-geographic-context")
+            assert len(fhfa_group["source_release_record_ids"]) == 2
+            assert all(source_by_id[source_id]["registry_group_id"] == fhfa_group["id"]
+                       for source_id in fhfa_group["source_release_record_ids"])
+            direct_hpi = source_by_id["fhfa-us-census-all-transactions-hpi-2026q2"]
+            assert direct_hpi["native_row_count"] == 2060
+            assert direct_hpi["model_qualified_in_receipt"] is False
             assert all(row["source_release_record_ids"] for row in method_by_id.values())
             assert sum(len(row["source_release_record_ids"]) for row in method_by_id.values()) == 50
             assert sum(bool(row["method_card_ids"]) for row in source_by_id.values()) == 33
@@ -101,7 +109,7 @@ def main() -> int:
             gates = [[row["id"], row["status"]] for row in progress["d01_release_gates"]]
             assert gates == [["R0", "Partial"], ["R1", "Accepted with scope"], ["R2", "Open"], ["R3", "Open"], ["R4", "Partial"]]
             checks.extend((
-                "GET /api/project-register: 200; 28 dataset groups, 123 source records, 15 method cards, 50 capabilities; 10 FRED/ALFRED records bound to rights-gated group",
+                "GET /api/project-register: 200; 29 dataset groups, 124 source records, 15 method cards, 50 capabilities; 10 FRED/ALFRED and 2 FHFA HPI records bound to source groups",
                 "All 15 method cards have repository evidence paths; source-to-method lineage is reciprocal across 50 links and 33 source rows",
                 "LendingClub card exposes three existing evidence documents; structured ABS scope excludes World Omni from the 103-period finding",
                 "Progress reconciles to authoritative ledger: 26/50 (52%); P1 6/10, P2 9/10, P3 8/10, P4 3/10, P5 0/10",
@@ -127,6 +135,11 @@ def main() -> int:
                 "docs/data/n02-source-to-kpi-map-2026-10-17.json",
                 "docs/N02_SOURCE_TO_KPI_TRACEABILITY_2026-10-17_VI.md",
                 "docs/PROJECT_REVIEW_RESEARCH_ADDENDUM_2026-10-18_VI.md",
+                "docs/FHFA_US_CENSUS_HPI_DIRECT_SOURCE_REVIEW_VI.md",
+                "scripts/acquire_public_mortgage_context.py",
+                "scripts/compare_fhfa_us_hpi_to_fred.py",
+                "src/credit_atlas/fhfa_hpi.py",
+                "src/credit_atlas/mortgage_macro_context.py",
                 "tests/test_project_register.py",
             )
             receipt = {
@@ -136,7 +149,7 @@ def main() -> int:
                 "scope": "Actual server handler, project-register API, reciprocal method/source lineage, evidence paths, and served static assets with an empty mortgage-run catalog. Browser visual/render acceptance is not claimed.",
                 "checks": len(checks),
                 "check_details": checks,
-                "api_summary": {"datasets": 28, "source_records": 123, "method_cards": 15, "method_cards_with_source_lineage": 15, "method_source_links": 50, "source_records_with_method_links": 33, "capabilities": 50, "completed": 26, "requirements": 50, "fraction": 0.52, "domain_counts": domain_counts, "d01_gates": gates},
+                "api_summary": {"datasets": 29, "source_records": 124, "method_cards": 15, "method_cards_with_source_lineage": 15, "method_source_links": 50, "source_records_with_method_links": 33, "capabilities": 50, "completed": 26, "requirements": 50, "fraction": 0.52, "domain_counts": domain_counts, "d01_gates": gates},
                 "empty_run_catalog": True,
                 "private_data_loaded": False,
                 "raw_rows_or_credentials_in_receipt": False,

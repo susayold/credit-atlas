@@ -76,10 +76,15 @@ def test_nmdb_geography_workbook_contains_query_lineage_and_keeps_blank(receipt_
         "geo_level": "National", "geo_id": "USA", "series_id": "PFORB", "period": "2002Q1",
     })
     workbook = load_workbook(io.BytesIO(module.workbook_bytes(report)), data_only=True)
+    selected = workbook["Selected data"]
 
     assert workbook.sheetnames == ["Start Here", "Selected data", "Definitions", "Quality & lineage"]
-    assert workbook["Selected data"].cell(2, 10).value is None
-    assert workbook["Selected data"].cell(2, 12).value == "unavailable_before_series_start"
+    assert selected.cell(2, 10).value is None
+    assert selected.cell(2, 12).value == "unavailable_before_series_start"
+    assert selected.auto_filter.ref is None
+    table = selected.tables["NMDBGeographySelection"]
+    assert table.ref == "A1:L2"
+    assert table.autoFilter.ref == "A1:L2"
     assert "test-archive-sha" in workbook["Quality & lineage"][9][1].value
 
 

@@ -1,0 +1,47 @@
+{
+  "evidence_type": "native_excel_query_export_acceptance",
+  "verified_on": "2026-10-17",
+  "status": "PASS",
+  "data_source": "FHFA NMDB full-geography aggregate release",
+  "release_date": "2026-09-30",
+  "data_through": "2026Q2",
+  "query": {
+    "geography_level": "State",
+    "geography_id": "VT",
+    "market": "Government / Non-Conventional",
+    "series_id": "P3089DL",
+    "period": "all"
+  },
+  "selection": {
+    "period_start": "2002Q1",
+    "period_end": "2026Q2",
+    "rows": 98,
+    "suppressed_rows": 17,
+    "unavailable_rows": 17,
+    "suppression_overlaps_unavailable": true
+  },
+  "excel": {
+    "version": "16.0",
+    "read_only": true,
+    "macros_disabled": true,
+    "external_links_updated": false,
+    "full_rebuild": true,
+    "sheets": [
+      "Start Here",
+      "Selected data",
+      "Definitions",
+      "Quality & lineage"
+    ],
+    "report_to_cell_parity": "98/98 rows x 12 columns",
+    "formula_cells": 0,
+    "formula_errors": 0,
+    "external_links": 0,
+    "workbook_bytes_unchanged_after_read_only_open": true
+  },
+  "issue_resolved": "Removed duplicate worksheet-level AutoFilter; the Excel Table retains its own filter.",
+  "limitations": [
+    "Native Excel acceptance covers this query only; other query combinations remain untested.",
+    "This is aggregate performance context, not loan-level PD or portfolio ownership evidence.",
+    "Hashes and private file paths are intentionally omitted from this public evidence record."
+  ]
+}

@@ -339,7 +339,6 @@ def workbook_bytes(result: dict) -> bytes:
     table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True, showColumnStripes=False)
     detail.add_table(table)
     detail.freeze_panes = "A2"
-    detail.auto_filter.ref = f"A1:L{detail.max_row}"
     for cell in detail[1]:
         cell.fill = PatternFill("solid", fgColor=navy)
         cell.font = Font(bold=True, color="FFFFFF")

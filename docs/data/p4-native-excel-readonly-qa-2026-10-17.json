@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "title": "P4 native Excel desktop acceptance",
+  "status": "PASS",
+  "application": "Microsoft Excel desktop 16.0",
+  "scope": "One receipt-bound private Freddie-sample P4 portfolio workbook; opened read-only, macros and link updates disabled, recalculated in Excel, and not saved.",
+  "workbook_check": {
+    "sheets": 7,
+    "formula_cells_recalculated": 19,
+    "formula_errors": 0,
+    "external_workbook_links": 0,
+    "file_unchanged_after_close": true,
+    "checks": [
+      "ScenarioModel total equals the Summary total and saved research result within $0.000001.",
+      "Source amount reconciles to the Audit control; rounded amount difference is zero.",
+      "Adverse scenario selection remains explicit; source research EL remains Unavailable.",
+      "SourceScope receipt, metadata, and four import-output hashes match the local verified import.",
+      "39/39 relative upstream lineage path/hash pairs match metadata and the referenced local files.",
+      "SourceScope records ownership_certified=No, reported amount is EAD=No, visibility=private, public_release_approved=No."
+    ]
+  },
+  "private_receipt_sha256": "17a3da398dba1f19a984f5aed27424c28d04f8073cafda80433fdd2f4a3632e5",
+  "decision_boundary": [
+    "This verifies one P4 Excel export and does not qualify every workbook or route in CreditAtlas.",
+    "It does not authenticate Freddie publisher provenance, terms, redistribution rights, portfolio ownership, PD/LGD calibration, or ECL accounting use.",
+    "Capability completion remains 26/50 (52%)."
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "issuer": {
+    "name": "Apple Inc.",
+    "cik": "0000320193"
+  },
+  "filing": {
+    "form": "10-K",
+    "accession": "0000320193-25-000079",
+    "filed_date": "2025-10-31",
+    "period_end": "2025-09-27",
+    "sec_index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.html",
+    "sec_primary_document_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+  },
+  "application_path": {
+    "source_family": "SEC CompanyFacts and submissions snapshot",
+    "source_record_ids": [
+      "apple-2025-10k-issuer-html",
+      "apple-2025-inline-xbrl-issuer-html",
+      "apple-2025-xbrl-issuer-zip"
+    ],
+    "relationship_note": "The three source records are issuer-hosted artifacts for one filing. The P3 financial-statement route separately consumes a current SEC CompanyFacts/submissions acquisition; this crosswalk joins it to the filing by CIK, accession, form, filing date, period end, concept, unit and context. It does not assert that issuer-hosted and SEC-hosted files are byte-identical.",
+    "code_trace": [
+      "src/credit_atlas/sec_financials.py: FIELDS and statement()",
+      "src/credit_atlas/sec_views.py: report() and verified view checks",
+      "src/credit_atlas/sec_trends.py: report() and annual report selection",
+      "apps/web/kpi-analysis.js: P3 issuer ratio definitions and KPI traces",
+      "apps/web/app.js: SEC statement KPI display"
+    ],
+    "report_cutoff_used_for_local_readback": "2026-10-10"
+  },
+  "kpis": [
+    {
+      "id": "apple_fy2025_current_ratio",
+      "label": "Current ratio",
+      "status": "supported",
+      "formula": "current_assets / current_liabilities",
+      "numerator": {
+        "field": "current_assets",
+        "us_gaap_concept": "AssetsCurrent",
+        "value_exact_usd": "147957000000",
+        "display_value_usd_millions": "147957",
+        "context_type": "instant",
+        "start_date": null,
+        "end_date": "2025-09-27",
+        "unit": "USD"
+      },
+      "denominator": {
+        "field": "current_liabilities",
+        "us_gaap_concept": "LiabilitiesCurrent",
+        "value_exact_usd": "165631000000",
+        "display_value_usd_millions": "165631",
+        "context_type": "instant",
+        "start_date": null,
+        "end_date": "2025-09-27",
+        "unit": "USD"
+      },
+      "result_exact_decimal": "0.893292922218666795467032137703690734222458356225585790099679",
+      "display": "0.893292922x"
+    },
+    {
+      "id": "apple_fy2025_liabilities_to_assets",
+      "label": "Liabilities / assets",
+      "status": "supported",
+      "formula": "liabilities / assets",
+      "numerator": {
+        "field": "liabilities",
+        "us_gaap_concept": "Liabilities",
+        "value_exact_usd": "285508000000",
+        "display_value_usd_millions": "285508",
+        "context_type": "instant",
+        "start_date": null,
+        "end_date": "2025-09-27",
+        "unit": "USD"
+      },
+      "denominator": {
+        "field": "assets",
+        "us_gaap_concept": "Assets",
+        "value_exact_usd": "359241000000",
+        "display_value_usd_millions": "359241",
+        "context_type": "instant",
+        "start_date": null,
+        "end_date": "2025-09-27",
+        "unit": "USD"
+      },
+      "result_exact_decimal": "0.794753382826570463839038417107178746301229536717690909445191",
+      "display": "79.475338283%"
+    },
+    {
+      "id": "apple_fy2025_net_income_margin",
+      "label": "Net income margin",
+      "status": "supported",
+      "formula": "net_income / revenue",
+      "numerator": {
+        "field": "net_income",
+        "us_gaap_concept": "NetIncomeLoss",
+        "value_exact_usd": "112010000000",
+        "display_value_usd_millions": "112010",
+        "context_type": "annual_duration",
+        "start_date": "2024-09-29",
+        "end_date": "2025-09-27",
+        "duration_days_inclusive": 364,
+        "unit": "USD"
+      },
+      "denominator": {
+        "field": "revenue",
+        "us_gaap_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "value_exact_usd": "416161000000",
+        "display_value_usd_millions": "416161",
+        "context_type": "annual_duration",
+        "start_date": "2024-09-29",
+        "end_date": "2025-09-27",
+        "duration_days_inclusive": 364,
+        "unit": "USD"
+      },
+      "result_exact_decimal": "0.269150641218182386143824144982350580664694673455705844613022",
+      "display": "26.915064122%"
+    },
+    {
+      "id": "apple_fy2025_operating_cashflow_to_revenue",
+      "label": "Operating cashflow / revenue",
+      "status": "supported",
+      "formula": "operating_cashflow / revenue",
+      "numerator": {
+        "field": "operating_cashflow",
+        "us_gaap_concept": "NetCashProvidedByUsedInOperatingActivities",
+        "value_exact_usd": "111482000000",
+        "display_value_usd_millions": "111482",
+        "context_type": "annual_duration",
+        "start_date": "2024-09-29",
+        "end_date": "2025-09-27",
+        "duration_days_inclusive": 364,
+        "unit": "USD"
+      },
+      "denominator": {
+        "field": "revenue",
+        "us_gaap_concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "value_exact_usd": "416161000000",
+        "display_value_usd_millions": "416161",
+        "context_type": "annual_duration",
+        "start_date": "2024-09-29",
+        "end_date": "2025-09-27",
+        "duration_days_inclusive": 364,
+        "unit": "USD"
+      },
+      "result_exact_decimal": "0.267881901475630825569911644772095414995638707134979010527176",
+      "display": "26.788190148%"
+    }
+  ],
+  "interest_coverage": {
+    "status": "unavailable",
+    "formula": "OperatingIncomeLoss / InterestExpenseNonoperating",
+    "selected_interest_expense_concept": "InterestExpenseNonoperating",
+    "period_end": "2025-09-27",
+    "unit": "USD",
+    "reason": "The saved P3 source snapshot has no candidate for this concept in the selected filing. The code keeps the ratio unavailable and does not substitute another expense concept or cash interest paid automatically.",
+    "qualification": {
+      "standard_ebit_interest_coverage": false,
+      "dscr": false,
+      "covenant_compliance": false,
+      "issuer_pd": false
+    }
+  },
+  "availability_and_method_limits": {
+    "filing_publication_date": "2025-10-31",
+    "reporting_period_end": "2025-09-27",
+    "historical_availability_qualified": false,
+    "reason": "The application selects facts from a current SEC API snapshot and filters filings by filing date. It does not preserve a daily historical API snapshot or qualify a point-in-time backtest. A filing date is not the same as the reporting period end or local retrieval time.",
+    "missing_values": "Remain unavailable; no imputation, forecast or fallback was applied.",
+    "interpretation": "These are consolidated issuer financial ratios, not borrower PD, LGD, EAD, expected loss, portfolio ownership or credit approval decisions.",
+    "filing_specific_debt_limit": "The FY2025 filing and debt-note dimensional audit do not establish individual series balances, actual payments, a complete coupon/payment calendar, contractual debt service, EAD, DSCR or covenant status."
+  },
+  "sources": [
+    {
+      "title": "SEC EDGAR filing index",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.html"
+    },
+    {
+      "title": "SEC-filed Apple FY2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm"
+    },
+    {
+      "title": "SEC EDGAR API documentation",
+      "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+    }
+  ]
+}

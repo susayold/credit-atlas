@@ -460,13 +460,15 @@
       "registry_id": "sec-filings-financials",
       "code_and_consumer": "`sec_views.py`, issuer financial/debt modules; P3 Issuer Financials; `/api/sec-*`, `/api/utility-debt-service`",
       "kpi_or_output": "Filing-specific balance sheet, debt maturity/service, coverage and reconciliation diagnostics",
-      "status_and_limits": "Three receipt-verified Apple FY2025 issuer-hosted artifacts bind to CIK 0000320193 / accession 0000320193-25-000079. They are one filing, not a complete issuer panel; byte parity to SEC-hosted copies is not verified, and debt-service/payment qualification remains open.",
+      "status_and_limits": "Three receipt-verified Apple FY2025 issuer-hosted artifacts bind to CIK 0000320193 / accession 0000320193-25-000079. Four P3 statement ratios now have a detailed source-to-KPI crosswalk. They are one filing, not a full issuer panel; issuer/SEC byte parity is unverified, current CompanyFacts snapshot is not point-in-time qualified, and debt-service/payment/covenant qualification remains open.",
       "evidence_type": "receipt_bound_issuer_filing_artifacts_crosswalked_to_sec_edgar",
       "source_release_record_ids": [
         "apple-2025-10k-issuer-html",
         "apple-2025-inline-xbrl-issuer-html",
         "apple-2025-xbrl-issuer-zip"
-      ]
+      ],
+      "kpi_trace_artifact": "docs/APPLE_FY2025_KPI_TRACE_VI.md",
+      "kpi_trace_scope": "Four Apple FY2025 P3 statement ratios traced to SEC CompanyFacts concept, accession, filing/report dates, context, USD unit and exact formula; interest coverage remains unavailable."
     },
     {
       "registry_id": "sovereign-archive",

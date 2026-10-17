@@ -53,6 +53,24 @@ try {
     }
     $n05Status=[string]$plan.Range('F22').Value2
     $n06Status=[string]$plan.Range('F23').Value2
+    $n01Status=[string]$plan.Range('F18').Value2
+    $n01Progress=[string]$plan.Range('G18').Value2
+    $n01Acceptance=[string]$plan.Range('E18').Value2
+    if($n01Status -ne 'Đang làm' -or $n01Progress -notlike '*API/static runtime PASS (12 checks)*' -or $n01Progress -notlike '*50 reciprocal links across 33 source rows*' -or $n01Acceptance -notlike '*ledger P1–P5*'){
+        throw 'Excel does not show the latest N01 runtime status and scope correction'
+    }
+    $n02Status=[string]$plan.Range('F19').Value2
+    $n02Acceptance=[string]$plan.Range('E19').Value2
+    $n02Progress=[string]$plan.Range('G19').Value2
+    $n03Status=[string]$plan.Range('F20').Value2
+    $n03Acceptance=[string]$plan.Range('E20').Value2
+    $n03Progress=[string]$plan.Range('G20').Value2
+    if($n02Status -ne 'Đang làm' -or $n02Acceptance -notlike '*15/15 cards*' -or $n02Acceptance -notlike '*50 reciprocal links*' -or $n02Progress -notlike '*not presumed invalid*'){
+        throw 'Excel does not show the scoped N02 method/source linkage update'
+    }
+    if($n03Status -ne 'Đang làm' -or $n03Acceptance -notlike '*15/15 cards*' -or $n03Progress -notlike '*material numeric outputs*' -or $n03Progress -notlike '*26/50*'){
+        throw 'Excel does not show the scoped N03 evidence and remaining-output update'
+    }
     $links=$book.LinkSources(1)
     $externalLinks=if($null -eq $links){0}else{@($links).Count}
     if($externalLinks -ne 0){throw 'Plan workbook has external links'}
@@ -63,6 +81,9 @@ try {
         verified_at_utc=[DateTime]::UtcNow.ToString('o');file=[IO.Path]::GetFileName($path)
         excel_version=$version;read_only=$true;macros_disabled=$true;external_links_updated=$false
         sheets=$names;formula_cells=$formulaCount;formula_errors=@($formulaErrors);external_links=$externalLinks
+        n01_status=$n01Status;n01_progress_note=$n01Progress
+        n02_status=$n02Status;n02_progress_note=$n02Progress
+        n03_status=$n03Status;n03_acceptance=$n03Acceptance;n03_progress_note=$n03Progress
         n05_n06_status=@($n05Status,$n06Status)
         ledger=@{achieved=$achieved;total=$total;ratio=$ratio}
         workbook_sha256_before=$before;workbook_sha256_after=$before;workbook_bytes_unchanged=$true

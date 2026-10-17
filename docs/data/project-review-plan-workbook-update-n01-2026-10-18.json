@@ -1,0 +1,36 @@
+{
+  "evidence_type": "project_review_plan_workbook_n01_update",
+  "status": "PASS",
+  "updated_at_utc": "2026-10-17T19:28:29.8388467Z",
+  "workbook": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
+  "changed_cells": [
+    "Ke hoach!E18",
+    "Ke hoach!G18"
+  ],
+  "change_summary": "Refreshed N01 completion-scope criterion and API/static runtime evidence; retained N01 as in progress because browser render and stale-label scan remain open.",
+  "validation": {
+    "artifact_tool_import_edit_export": true,
+    "rendered_changed_rows_and_visually_reviewed": true,
+    "all_other_cell_values_unchanged": true,
+    "formula_cells_unchanged": true,
+    "style_ids_unchanged": true,
+    "sheets_merges_tables_freeze_panes_unchanged": true,
+    "only_row_18_height_adjusted_for_wrapping": true,
+    "formula_count": 18,
+    "formula_error_matches": 0,
+    "external_links": 0,
+    "native_excel_version": "16.0",
+    "native_excel_read_only_full_rebuild": true,
+    "n01_status": "Đang làm",
+    "native_excel_bytes_unchanged": true
+  },
+  "ledger": {
+    "ratio": 0.52,
+    "achieved": 26.0,
+    "total": 50.0
+  },
+  "previous_workbook_sha256": "ea449e5a23178da7455cab2bd532c8ea795bfa03074ef054197d5c8ab5dc1e5f",
+  "current_workbook_sha256": "612e8646422321701147b3e69f9e0dbecd34061f5d1b51ac0dbfcffd16bdd284",
+  "file_size_bytes": 31275,
+  "browser_ui_render_accepted": false
+}

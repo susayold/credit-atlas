@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of": "2026-10-17",
+  "as_of": "2026-10-18",
   "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private.",
   "record_count": 123,
   "source_records": [
@@ -676,7 +676,9 @@
         "`fhfa_pudb.py` schema/field labels; mortgage workspace dictionary references"
       ],
       "kpi_or_output": "Defines the 66 source fields and category values; not a separate observation dataset.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "fhfa-pudb-acquisition-composition"
+      ],
       "rights_use_gate": "Public FHFA document; preserve attribution and source definitions.",
       "rights_review_status": "PUBLIC_REFERENCE; PUBLIC_BUNDLING_REVIEW_REQUIRED",
       "receipt_status": "PASS; official dictionary bytes/hash recorded in PUDB receipt.",
@@ -713,7 +715,9 @@
         "`fhfa_pudb.py` source-profile reconciliation; mortgage workspace"
       ],
       "kpi_or_output": "Official category/Enterprise totals reconcile to 2,093,767 records.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "fhfa-pudb-acquisition-composition"
+      ],
       "rights_use_gate": "Public FHFA document; preserve attribution.",
       "rights_review_status": "PUBLIC_REFERENCE; PUBLIC_BUNDLING_REVIEW_REQUIRED",
       "receipt_status": "PASS; official record-count workbook bytes/hash recorded in PUDB receipt.",
@@ -1269,14 +1273,19 @@
       "native_row_count": null,
       "grain": "Origination file: one row per sampled loan (50,000); performance file: one row per loan-month (4,510,559); 50,000 distinct loan identifiers in each population.",
       "modules": [
-        "P2"
+        "P2",
+        "P4"
       ],
       "consumer_trace": [
         "D01 source provenance: /api/mortgage-provenance",
         "D01 descriptive outputs: /api/snapshot, /api/report, /api/period-transitions, /api/monitoring, /api/loans, /api/timeline"
       ],
       "kpi_or_output": "2012-cohort descriptive loan-month stock, delinquency states, transitions/cure and count/UPB denominators; not multi-vintage model qualification.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "d01-adjacent-transition-share",
+        "p4-declared-ecl",
+        "p4-pd-lgd-ead-sensitivity"
+      ],
       "rights_use_gate": "Receipt declares research use, but individual archive identity and accepted dataset-specific terms are unverified. Freddie Mac directs users to register/sign in to Clarity, allows non-commercial academic/research use subject to applicable terms and requires licensing for commercial redistribution. Keep raw data private; no public redistribution or commercial derived use without terms review.",
       "rights_review_status": "USER_DECLARED_RESEARCH_USE; RELEASE_AUTHENTICITY_AND_DATASET_TERMS_UNVERIFIED; PRIVATE_RAW; NO_REDISTRIBUTION_APPROVAL",
       "receipt_status": "Local source-use receipt and archive hash rechecked; declared Release 47 is not publisher-authenticated.",
@@ -1311,7 +1320,7 @@
           "crc_verified_by_full_read": true
         }
       ],
-      "scope_note": "Private user-supplied archive, received 2026-09-09; exact archive SHA-256 and source-use receipt were independently rechecked. Data shape and counts match the local D01 audit; the local receipt declares Release 47 but explicitly says it is not authenticated by Freddie Mac's hash registry. The observed monthly range is 2012-01 through 2026-03. The official product page describes a 50,000-loan sample per full vintage and current data through 2026-03, which is consistent with these facts but does not authenticate this file. D01 remains descriptive-only; no actual model fit or public release approval."
+      "scope_note": "Private user-supplied archive, received 2026-09-09; exact archive SHA-256 and source-use receipt were independently rechecked. Data shape and counts match the local D01 audit; the local receipt declares Release 47 but explicitly says it is not authenticated by Freddie Mac's hash registry. The observed monthly range is 2012-01 through 2026-03. The official product page describes a 50,000-loan sample per full vintage and current data through 2026-03, which is consistent with these facts but does not authenticate this file. D01 remains descriptive-only; no actual model fit or public release approval. The source is also an upstream input to the March 2026 sample-derived UPB diagnostic in P4; this does not establish portfolio ownership."
     },
     {
       "source_id": "hmda-2018-three-year-national",
@@ -5587,7 +5596,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Deal-level pool, delinquency, charge-off and recovery source observations for surveillance and validation; not a consumer-loan origination PD label.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "toyota-recovery-reconciliation",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 51 ABS-EE report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",
@@ -5647,7 +5659,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Certificate comparator for deal-specific balance, delinquency, charge-off and recovery tie-outs; not a loan-level outcome dataset.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "toyota-recovery-reconciliation",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 51 10-D report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",
@@ -5706,7 +5721,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Deal-level pool, delinquency, charge-off and recovery source observations for surveillance and validation; not a consumer-loan origination PD label.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "toyota-recovery-reconciliation",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 29 ABS-EE report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",
@@ -5766,7 +5784,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Certificate comparator for deal-specific balance, delinquency, charge-off and recovery tie-outs; not a loan-level outcome dataset.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "toyota-recovery-reconciliation",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 29 10-D report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",
@@ -5825,7 +5846,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Deal-level pool, delinquency, charge-off and recovery source observations for surveillance and validation; not a consumer-loan origination PD label.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "nissan-event-exception-review",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 23 ABS-EE report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",
@@ -5885,7 +5909,10 @@
         "docs/ABS_APP_WORKFLOW.md"
       ],
       "kpi_or_output": "Certificate comparator for deal-specific balance, delinquency, charge-off and recovery tie-outs; not a loan-level outcome dataset.",
-      "method_card_ids": [],
+      "method_card_ids": [
+        "nissan-event-exception-review",
+        "structured-abs-surveillance"
+      ],
       "rights_use_gate": "Official filing links are listed for provenance. Raw SEC payloads remain in local private storage and are not approved for redistribution; review source and depositor terms before bundling or wider use.",
       "rights_review_status": "SOURCE_LINKED_RAW_PAYLOAD_PRIVATE_REVIEW_REQUIRED",
       "receipt_status": "PASS: 23 10-D report-period records; constituent accession and attachment hashes are retained only in the local private receipt.",

@@ -1,0 +1,45 @@
+{
+  "evidence_type": "project_review_plan_workbook_update",
+  "status": "PASS",
+  "updated_at_utc": "2026-10-17T19:37:12.149294+00:00",
+  "file": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
+  "scope": "Updated the Ke hoach task tracker with N01 12-check API status and N02/N03 reciprocal method-source linkage, explicit sample-only Freddie scope, and remaining output-level trace work.",
+  "updated_cells": [
+    "Ke hoach!G18",
+    "Ke hoach!E19",
+    "Ke hoach!G19",
+    "Ke hoach!E20",
+    "Ke hoach!G20"
+  ],
+  "artifact_tool_checks": {
+    "target_range": "Ke hoach!A17:G20",
+    "rendered_and_inspected": true,
+    "formula_error_scan": "0 matches"
+  },
+  "preserved_structure": {
+    "sheets": [
+      "Ke hoach",
+      "50 yeu cau",
+      "Du lieu",
+      "Phuong phap"
+    ],
+    "formula_cells": 18,
+    "only_intended_cells_changed": true,
+    "style_and_number_format_changes": 0
+  },
+  "lineage_summary": {
+    "method_cards": 15,
+    "method_cards_with_source_records": 15,
+    "reciprocal_method_source_links": 50,
+    "source_records_with_method_links": 33,
+    "source_records_total": 123,
+    "capability_ledger_completed": 26,
+    "capability_ledger_total": 50
+  },
+  "native_excel_qa": "docs/data/plan-workbook-native-excel-qa-2026-10-18.json",
+  "previous_sha256": "612e8646422321701147b3e69f9e0dbecd34061f5d1b51ac0dbfcffd16bdd284",
+  "staged_sha256": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
+  "final_sha256": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
+  "excel_read_only_recalc_pass": true,
+  "raw_private_data_in_workbook_or_public_receipt": false
+}

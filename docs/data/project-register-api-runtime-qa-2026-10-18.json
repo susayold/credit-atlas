@@ -1,0 +1,75 @@
+{
+  "evidence_type": "project_register_api_runtime_acceptance",
+  "status": "PASS",
+  "created_at_utc": "2026-10-17T19:38:06.011992+00:00",
+  "scope": "Actual server handler, project-register API, reciprocal method/source lineage, evidence paths, and served static assets with an empty mortgage-run catalog. Browser visual/render acceptance is not claimed.",
+  "checks": 12,
+  "check_details": [
+    "GET /?view=register: 200, 5897 bytes",
+    "GET /app.js: 200, 537375 bytes",
+    "GET /project-register.js: 200, 17628 bytes",
+    "GET /style.css: 200, 57290 bytes",
+    "GET /api/runs: 200, empty verified-run catalog",
+    "GET /api/project-register: 200; 27 dataset groups, 123 source records, 15 method cards, 50 capabilities",
+    "All 15 method cards have repository evidence paths; source-to-method lineage is reciprocal across 50 links and 33 source rows",
+    "LendingClub card exposes three existing evidence documents; structured ABS scope excludes World Omni from the 103-period finding",
+    "Progress reconciles to authoritative ledger: 26/50 (52%); P1 6/10, P2 9/10, P3 8/10, P4 3/10, P5 0/10",
+    "D01 R0-R4 statuses match the project register",
+    "GET /api/project-register with unsupported filter: 400",
+    "Frontend init includes register in both no-run and run-error fallbacks"
+  ],
+  "api_summary": {
+    "datasets": 27,
+    "source_records": 123,
+    "method_cards": 15,
+    "method_cards_with_source_lineage": 15,
+    "method_source_links": 50,
+    "source_records_with_method_links": 33,
+    "capabilities": 50,
+    "completed": 26,
+    "requirements": 50,
+    "fraction": 0.52,
+    "domain_counts": {
+      "P1": "6/10",
+      "P2": "9/10",
+      "P3": "8/10",
+      "P4": "3/10",
+      "P5": "0/10"
+    },
+    "d01_gates": [
+      [
+        "R0",
+        "Partial"
+      ],
+      [
+        "R1",
+        "Accepted with scope"
+      ],
+      [
+        "R2",
+        "Open"
+      ],
+      [
+        "R3",
+        "Open"
+      ],
+      [
+        "R4",
+        "Partial"
+      ]
+    ]
+  },
+  "empty_run_catalog": true,
+  "private_data_loaded": false,
+  "raw_rows_or_credentials_in_receipt": false,
+  "source_sha256": {
+    "apps/web/app.js": "b4627d186f73b3583cfe09b6a9693b292a42005fd3f1dc8a6314a0cb087d0189",
+    "apps/web/project-register.js": "4ac6f3e6f68e195b3710f6d93beff1c1db5939ec0b886dd49f6c5044aea8d0ae",
+    "src/credit_atlas/project_register.py": "de540ffba1f008eaadf7587fc173c7092427b1718fbf9517ff62d6855de8248f",
+    "src/credit_atlas/server.py": "d4c283f9693d0d4d6f76e6f7c90ef09c0dc0d43488d3e400de09898c663ffdbd",
+    "docs/COMPLETION_REQUIREMENTS_50.json": "17f8e656b0a3e1b2dc19aa02d5d72763fbc9178fe5e49db2ad6f381f901ccea4",
+    "docs/data/creditatlas-project-register-2026-10-17.json": "70da01924fc5ddcf32e8d435082978c0c596a94c527755457095a75ad9fc7629",
+    "docs/data/creditatlas-source-release-register-2026-10-17.json": "a9a032709fec8f4ecf4b40dfc77d671c07ee82692186131e2fb948fd332a0f7c",
+    "docs/data/n02-source-to-kpi-map-2026-10-17.json": "20322730cc149ba1ebad2cbfb0bb926a1b33e7f6db4e78372c5509ca5a644647"
+  }
+}

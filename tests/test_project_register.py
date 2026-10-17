@@ -146,6 +146,36 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     assert len(nmdb_method["source_release_record_ids"]) == 2
     assert "VALUE1" in nmdb_method["method"] and "VALUE2" in nmdb_method["method"]
     assert (Path(__file__).resolve().parents[1] / nmdb_method["evidence"]).is_file()
+    method_by_id = {row["id"]: row for row in result["method_cards"]}
+    source_by_id = {row["source_id"]: row for row in result["source_records"]}
+    assert len(method_by_id) == 15
+    assert all(row["source_release_record_ids"] for row in method_by_id.values())
+    for method in method_by_id.values():
+        assert method["evidence_refs"]
+        assert all((repo / ref).is_file() for ref in method["evidence_refs"])
+        for source_id in method["source_release_record_ids"]:
+            assert method["id"] in source_by_id[source_id]["method_card_ids"]
+    for source in source_by_id.values():
+        for method_id in source["method_card_ids"]:
+            assert source["source_id"] in method_by_id[method_id]["source_release_record_ids"]
+    assert method_by_id["d01-adjacent-transition-share"]["source_release_record_ids"] == [
+        "freddie-sfll-2012-user-supplied"
+    ]
+    assert method_by_id["uci350-next-month-benchmark"]["source_release_record_ids"] == [
+        "uci-retail", "uci-retail-metadata"
+    ]
+    assert method_by_id["uci365-bankruptcy-one-year"]["source_release_record_ids"] == [
+        "uci-bankruptcy", "uci-bankruptcy-metadata"
+    ]
+    assert method_by_id["p4-declared-ecl"]["source_linkage_note"].startswith("Freddie 2012 sample is upstream")
+    assert "World Omni" in method_by_id["structured-abs-surveillance"]["source_linkage_note"]
+    assert "P4" in source_by_id["freddie-sfll-2012-user-supplied"]["modules"]
+    lendingclub = method_by_id["lendingclub-source-population-and-label-readiness"]
+    assert lendingclub["evidence_refs"] == [
+        "docs/LENDINGCLUB_FULL_SOURCE_VI.md",
+        "docs/LENDINGCLUB_SOURCE_PROFILE_VI.md",
+        "docs/LENDINGCLUB_DICTIONARY_REVIEW_VI.md",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -155,6 +185,21 @@ def test_project_register_exposes_the_source_and_plan_inventory():
             "creditatlas-project-register-2026-10-17.json",
             lambda data: data["datasets"][0].update(source_release_record_ids=["missing-source"]),
             "Dataset registry references unknown IDs",
+        ),
+        (
+            "creditatlas-project-register-2026-10-17.json",
+            lambda data: data["method_cards"][0].update(source_release_record_ids=["missing-source"]),
+            "Method cards references unknown IDs",
+        ),
+        (
+            "creditatlas-project-register-2026-10-17.json",
+            lambda data: data["method_cards"][0].update(evidence="docs/missing-evidence.md"),
+            "Method card evidence path is missing",
+        ),
+        (
+            "creditatlas-source-release-register-2026-10-17.json",
+            lambda data: data["source_records"][0].update(method_card_ids=[]),
+            "trace is not reciprocal",
         ),
         (
             "creditatlas-source-release-register-2026-10-17.json",

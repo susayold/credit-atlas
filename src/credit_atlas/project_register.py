@@ -57,6 +57,22 @@ def project_register() -> dict:
     method_cards = register.get("method_cards")
     if not isinstance(method_cards, list) or len(method_cards) < 8 or len({row.get("id") for row in method_cards}) != len(method_cards):
         raise ValueError("Method registry must contain concrete documented method cards")
+    normalized_method_cards = []
+    for row in method_cards:
+        primary_evidence = row.get("evidence")
+        if not isinstance(primary_evidence, str) or not primary_evidence.strip():
+            raise ValueError("Method card must have a repository evidence path")
+        refs = row.get("evidence_refs", [])
+        if not isinstance(refs, list) or any(not isinstance(ref, str) or not ref.strip() for ref in refs):
+            raise ValueError("Method card evidence references must be non-empty repository paths")
+        refs = list(dict.fromkeys([primary_evidence, *refs]))
+        for ref in refs:
+            evidence_path = Path(ref)
+            if (evidence_path.is_absolute() or ".." in evidence_path.parts
+                    or not (repo / evidence_path).is_file()):
+                raise ValueError(f"Method card evidence path is missing or outside the repository: {ref}")
+        normalized_method_cards.append({**row, "evidence_refs": refs})
+    method_cards = normalized_method_cards
     method_card_ids = {row["id"] for row in method_cards}
     dataset_ids = {row["id"] for row in datasets}
     if any(not set(row.get("datasets", [])).issubset(dataset_ids) for row in method_cards):
@@ -79,6 +95,22 @@ def project_register() -> dict:
     validate_refs(datasets, "source_release_record_ids", "Dataset registry", source_ids)
     validate_refs(method_cards, "source_release_record_ids", "Method cards", source_ids)
     validate_refs(source_records, "method_card_ids", "Source release register", method_card_ids)
+    method_sources = {
+        row["id"]: set(row.get("source_release_record_ids", []))
+        for row in method_cards
+    }
+    source_methods = {
+        row["source_id"]: set(row.get("method_card_ids", []))
+        for row in source_records
+    }
+    for method_id, linked_sources in method_sources.items():
+        for source_id in linked_sources:
+            if method_id not in source_methods[source_id]:
+                raise ValueError(f"Method/source trace is not reciprocal: {method_id} -> {source_id}")
+    for source_id, linked_methods in source_methods.items():
+        for method_id in linked_methods:
+            if source_id not in method_sources[method_id]:
+                raise ValueError(f"Source/method trace is not reciprocal: {source_id} -> {method_id}")
     validate_refs(source_records, "registry_group_id", "Source release register", dataset_ids, singular=True)
     validate_refs(trace_map.get("registered_record_trace"), "source_release_record_ids", "N02 registered-record trace", source_ids)
     validate_refs(trace_map.get("registered_record_trace"), "registry_id", "N02 registered-record trace", dataset_ids, singular=True)

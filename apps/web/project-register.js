@@ -128,8 +128,13 @@ async function projectRegisterWorkspace(container, generation) {
       link.href = "https://github.com/susayold/credit-atlas/blob/main/" + (source?.evidence || "docs/PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md");
       link.target = "_blank"; link.rel = "noopener noreferrer"; return link;
     });
-    const evidence = el("a", "", "Mở method card đầy đủ ↗"); evidence.href = "https://github.com/susayold/credit-atlas/blob/main/" + row.evidence; evidence.target = "_blank"; evidence.rel = "noopener noreferrer";
-    detail.append(summary, append(el("div", "project-method-detail"), el("strong", "", "Dataset input"), append(el("div"), ...sourceLinks), el("strong", "", "Target / mục tiêu"), para(row.target), el("strong", "", "Cách tính / protocol"), para(row.method), el("strong", "", "Bằng chứng kiểm định"), para(row.validation), el("strong", "", "Giới hạn"), para(row.limits), evidence));
+    const evidenceRefs = [...new Set([...(row.evidence_refs || []), row.evidence].filter(Boolean))];
+    const evidenceLinks = evidenceRefs.map(ref => {
+      const link = el("a", "", ref.split("/").pop().replace(/\.md$/i, "") + " ↗");
+      link.href = "https://github.com/susayold/credit-atlas/blob/main/" + ref;
+      link.target = "_blank"; link.rel = "noopener noreferrer"; return link;
+    });
+    detail.append(summary, append(el("div", "project-method-detail"), el("strong", "", "Dataset input"), append(el("div"), ...sourceLinks), el("strong", "", "Target / mục tiêu"), para(row.target), el("strong", "", "Cách tính / protocol"), para(row.method), el("strong", "", "Bằng chứng kiểm định"), para(row.validation), el("strong", "", "Giới hạn"), para(row.limits), row.source_linkage_note ? append(el("div"), el("strong", "", "Ghi chú liên kết nguồn"), para(row.source_linkage_note)) : el("span"), el("strong", "", "Tài liệu / evidence"), append(el("div"), ...evidenceLinks)));
     methods.append(detail);
   });
   section(container, methods);

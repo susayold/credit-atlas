@@ -1,7 +1,8 @@
 {
   "evidence_type": "native_excel_project_review_plan_workbook_acceptance",
   "status": "PASS",
-  "verified_at_utc": "2026-10-17T19:07:35.6964320Z",
+  "verified_at_utc": "2026-10-17T19:36:56.6648712Z",
+  "file": "CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
   "excel_version": "16.0",
   "read_only": true,
   "macros_disabled": true,
@@ -13,18 +14,26 @@
     "Phuong phap"
   ],
   "formula_cells": 18,
-  "formula_errors": 0,
+  "formula_errors": [],
   "external_links": 0,
-  "n05_n06_task_status": [
+  "n01_status": "Đang làm",
+  "n01_progress_note": "API/static runtime PASS (12 checks): 27 dataset groups, 123 source records, 15 method cards; 15/15 source-linked with 50 reciprocal links across 33 source rows. Ledger remains 26/50; D01 gates are separate. Browser rendering and stale-label scan remain open.",
+  "n02_status": "Đang làm",
+  "n02_progress_note": "N02 lineage: D01 → Freddie; UCI 350/365 → UCI source and metadata; P4 → Freddie upstream sample-derived UPB only (not owned portfolio); Toyota/Nissan filings → recovery studies and the 103-period ABS finding. LendingClub now has three valid evidence documents. Still open: five group dispositions, Freddie release/rights, and KPI-to-field/output parity. 90 source records without method-card links are not presumed invalid.",
+  "n03_status": "Đang làm",
+  "n03_acceptance": "15/15 cards have target, method, validation, limits, valid evidence paths and reciprocal source-release links. Still map each material KPI/output to exact fields, filters, units, code and assumptions; distinguish publisher/app imputation.",
+  "n03_progress_note": "Focused tests: 10 passed; API/static + lineage acceptance: 12/12. 50 reciprocal method ↔ source links across 33 source rows; LendingClub broken evidence path fixed. P4 explicitly says Freddie is upstream sample-derived UPB only. N03 remains open until material numeric outputs, units and assumptions trace through code and source data; ledger stays 26/50.",
+  "n05_n06_status": [
     "Đang làm",
     "Đang làm"
   ],
   "ledger": {
-    "achieved": 26.0,
+    "total": 50.0,
     "ratio": 0.52,
-    "total": 50.0
+    "achieved": 26.0
   },
-  "workbook_sha256": "ea449e5a23178da7455cab2bd532c8ea795bfa03074ef054197d5c8ab5dc1e5f",
-  "workbook_bytes_unchanged_after_read_only_open": true,
-  "scope": "Current four-sheet plan workbook after N05/N06 query-grid notes were refreshed; no capability status or ledger formula changed."
+  "workbook_sha256_before": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
+  "workbook_sha256_after": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
+  "workbook_bytes_unchanged": true,
+  "scope": "Read-only Microsoft Excel 16.0 full recalculation of the public review-plan workbook; 18 formulas, 0 formula errors, 0 external links, and no byte changes. N01/N02/N03 notes match current API and linkage acceptance."
 }

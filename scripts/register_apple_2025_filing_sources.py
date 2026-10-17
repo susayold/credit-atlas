@@ -240,12 +240,13 @@ def main() -> None:
 
     counts = trace_map["counts"]
     remaining = trace_map["source_group_dispositions"]
+    group_count = len(project_register["datasets"])
     bound_groups = sum(bool(row.get("source_release_record_ids")) for row in trace_map["registered_record_trace"])
     counts.update({
         "source_level_records": len(crosswalk_rows),
         "supplemental_source_records": len(crosswalk_rows),
         "registry_groups_with_source_objects": bound_groups,
-        "registry_groups_without_source_objects": 27 - bound_groups,
+        "registry_groups_without_source_objects": group_count - bound_groups,
         "registry_groups_with_explicit_disposition": len(remaining),
         "disposition_private_source_or_input_present": sum(row["classification"] in {"source_data", "private_input"} for row in remaining),
         "disposition_derived_output_present": sum(row["classification"] == "derived_output" for row in remaining),
@@ -263,10 +264,10 @@ def main() -> None:
         f"{counts['disposition_derived_output_present']} derived outputs with upstream groups, and "
         f"{counts['disposition_access_pending_no_production']} access-pending group(s). The exposure input is now traced to the Freddie 2012 sample, "
         "but does not evidence owned portfolio positions. The Freddie source record remains publisher-unauthenticated. "
-        f"This does not change {bound_groups}/27 source-object coverage or the 26/50 capability ratio."
+        f"This does not change {bound_groups}/{group_count} source-object coverage or the 26/50 capability ratio."
     )
     trace_map["scope_note"] = (
-        "N02 maps 27 parent groups to source/release evidence, receipts, code consumers, KPI scope and limits. "
+        f"N02 maps {group_count} parent groups to source/release evidence, receipts, code consumers, KPI scope and limits. "
         f"{bound_groups} groups have source-level objects, including one Apple FY2025 filing with three issuer-hosted artifacts "
         "crosswalked to a single SEC accession and one Freddie 2012 private cohort with publisher-authentication caveats. "
         f"The other {len(remaining)} groups have explicit dispositions; source status is not capability completion."
@@ -275,13 +276,13 @@ def main() -> None:
     n02 = next(row for row in project_register["current_plan_implementation"] if row["id"] == "N02")
     n02["status"] = f"In progress: {len(source_register['source_records'])}-record source register; one Apple FY2025 filing bound through three issuer-hosted artifacts; Freddie release and terms unresolved."
     n02["scope"] = (
-        f"27 dataset/domain groups traced; {len(source_register['source_records'])} source records "
+        f"{group_count} dataset/domain groups traced; {len(source_register['source_records'])} source records "
         f"(20 public-suite +{len(crosswalk_rows)} supplemental across 17 broad families); 7 SEC auto-ABS filing-set records plus three Apple artifacts for one accession. "
-        f"{bound_groups}/27 groups have source objects; {len(remaining)} retain explicit dispositions. Freddie 2012 remains local/private and release-unauthenticated. "
+        f"{bound_groups}/{group_count} groups have source objects; {len(remaining)} retain explicit dispositions. Freddie 2012 remains local/private and release-unauthenticated. "
         "Apple issuer copy bytes are not identical in size to SEC-hosted objects, so byte parity remains unverified."
     )
     n02["remaining"] = (
-        f"{len(remaining)} groups remain without standalone source objects: {counts['disposition_private_source_or_input_present']} private source/input, "
+        f"{len(remaining)} of {group_count} groups remain without standalone source objects: {counts['disposition_private_source_or_input_present']} private source/input, "
         f"{counts['disposition_derived_output_present']} derived outputs and {counts['disposition_access_pending_no_production']} Ginnie access-pending/no production. "
         "The exposure import is Freddie-sample-derived, not owned portfolio data. Continue filing-level KPI trace, route/UI/export parity, rights review and direct-source parity checks."
     )

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-18",
-  "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private.",
+  "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved.",
   "record_count": 123,
   "source_records": [
     {
@@ -841,7 +841,7 @@
       "missing_cell_count_basis": "Source profile confirms dimensions/coverage; missing-cell count not recorded in the release receipt."
     },
     {
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "format": "ZIP/CSV vintage batches",
       "publisher_publication_date": null,
       "publication_date_status": "Each vintage has its own date; no single batch publication date.",
@@ -853,8 +853,8 @@
       ],
       "kpi_or_output": "Macro context at declared information cutoff; not a loan-level outcome or qualified borrower predictor.",
       "method_card_ids": [],
-      "rights_use_gate": "FRED/ALFRED general terms and upstream series-owner restrictions apply; software/ML compatibility requires review.",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Freddie Mac series copyright/republication scope and FRED/ALFRED storage/software terms require review; do not assume FRED reprint permission covers CreditAtlas caching, derived outputs or redistribution.",
+      "rights_review_status": "FREDDIE_MAC_OWNER_PERMISSION_SCOPE_REQUIRED; FRED_ALFRED_SERVICE_REVIEW_OPEN; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_VALIDATED",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": "2026-10-16T00:00:42.405537+00:00",
@@ -887,10 +887,18 @@
         "P2"
       ],
       "scope_note": "Use as point-in-time context only after rights/source route resolves; monthly cutoff uses latest vintage on or before month-end. Observation calendar is a case window, not an assertion of non-null values for every date.",
-      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=MORTGAGE30US"
+      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=MORTGAGE30US",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.freddiemac.com/pmms/pmms_archives",
+        "https://www.freddiemac.com/terms"
+      ],
+      "current_use_status": "Local receipt-bound context exists; retain private and do not use in public software/model/output until owner/distributor rights are confirmed."
     },
     {
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "format": "ZIP/CSV vintage batches",
       "publisher_publication_date": null,
       "publication_date_status": "Each vintage has its own date; no single batch publication date.",
@@ -902,8 +910,8 @@
       ],
       "kpi_or_output": "Macro context at declared information cutoff; not a loan-level outcome or qualified borrower predictor.",
       "method_card_ids": [],
-      "rights_use_gate": "FRED/ALFRED general terms and upstream series-owner restrictions apply; software/ML compatibility requires review.",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "ALFRED vintage retention and FRED service terms, plus the underlying publisher’s restrictions, require review; do not reconstruct historical vintages from latest-revised snapshots.",
+      "rights_review_status": "ALFRED_VINTAGE_RETENTION_AND_OWNER_RIGHTS_REVIEW_OPEN; NO_PUBLIC_SOFTWARE_OR_MODEL_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_VALIDATED",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": "2026-10-16T00:00:42.405537+00:00",
@@ -936,10 +944,18 @@
         "P2"
       ],
       "scope_note": "Use as point-in-time context only after rights/source route resolves; monthly cutoff uses latest vintage on or before month-end. Observation calendar is a case window, not an assertion of non-null values for every date.",
-      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=UNRATE"
+      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=UNRATE",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.bls.gov/developers/",
+        "https://fred.stlouisfed.org/series/UNRATE"
+      ],
+      "current_use_status": "Point-in-time vintage batches are locally validated but not rights-cleared for software/model use; no revised-series substitution."
     },
     {
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "format": "ZIP/CSV vintage batches",
       "publisher_publication_date": null,
       "publication_date_status": "Each vintage has its own date; no single batch publication date.",
@@ -951,8 +967,8 @@
       ],
       "kpi_or_output": "Macro context at declared information cutoff; not a loan-level outcome or qualified borrower predictor.",
       "method_card_ids": [],
-      "rights_use_gate": "FRED/ALFRED general terms and upstream series-owner restrictions apply; software/ML compatibility requires review.",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "ALFRED vintage retention and FRED service terms, plus the underlying publisher’s restrictions, require review; do not reconstruct historical vintages from latest-revised snapshots.",
+      "rights_review_status": "ALFRED_VINTAGE_RETENTION_AND_OWNER_RIGHTS_REVIEW_OPEN; NO_PUBLIC_SOFTWARE_OR_MODEL_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_VALIDATED",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": "2026-10-16T00:00:42.405537+00:00",
@@ -985,11 +1001,19 @@
         "P2"
       ],
       "scope_note": "Use as point-in-time context only after rights/source route resolves; monthly cutoff uses latest vintage on or before month-end. Observation calendar is a case window, not an assertion of non-null values for every date.",
-      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=USSTHPI"
+      "distributor_url": "https://alfred.stlouisfed.org/series/downloaddata?seid=USSTHPI",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data",
+        "https://fred.stlouisfed.org/series/USSTHPI"
+      ],
+      "current_use_status": "Point-in-time vintage batches are locally validated but not rights-cleared for software/model use; no revised-series substitution."
     },
     {
       "source_id": "fred-bamlc0a0cm",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "ICE Data Indices, LLC",
       "publisher_page_url": null,
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLC0A0CM",
@@ -1010,8 +1034,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "ICE copyrighted: internal use only; no redistribution",
-      "rights_review_status": "INTERNAL_ONLY_NO_REDISTRIBUTION; source terms review required",
+      "rights_use_gate": "ICE Top Level Data is marked internal-use only; do not publish/distribute/furnish to third parties without written ICE approval. FRED service/content and retention terms also require review.",
+      "rights_review_status": "ICE_INTERNAL_USE_ONLY; WRITTEN_THIRD_PARTY_APPROVAL_REQUIRED; FRED_SERVICE_REVIEW_OPEN; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:19.216563+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1023,11 +1047,18 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM"
+      "distributor_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://fred.stlouisfed.org/series/BAMLC0A0CM"
+      ],
+      "current_use_status": "Private historical snapshot exists; rights for local retention, derived OAS, software/model use and third-party output are not approved in this register."
     },
     {
       "source_id": "fred-dgs10",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "Board of Governors of the Federal Reserve System",
       "publisher_page_url": "https://www.federalreserve.gov/releases/h15/",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10",
@@ -1048,8 +1079,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Public domain; citation requested",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:19.106831+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1061,11 +1092,19 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/DGS10"
+      "distributor_url": "https://fred.stlouisfed.org/series/DGS10",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H15",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?page=0&type=daily_treasury_yield_curve"
+      ],
+      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
     },
     {
       "source_id": "fred-dgs2",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "Board of Governors of the Federal Reserve System",
       "publisher_page_url": "https://www.federalreserve.gov/releases/h15/",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS2",
@@ -1086,8 +1125,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Public domain; citation requested",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:18.816282+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1099,11 +1138,19 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/DGS2"
+      "distributor_url": "https://fred.stlouisfed.org/series/DGS2",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H15",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?page=0&type=daily_treasury_yield_curve"
+      ],
+      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
     },
     {
       "source_id": "fred-dgs30",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "Board of Governors of the Federal Reserve System",
       "publisher_page_url": "https://www.federalreserve.gov/releases/h15/",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS30",
@@ -1124,8 +1171,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Public domain; citation requested",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:19.208559+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1137,11 +1184,19 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/DGS30"
+      "distributor_url": "https://fred.stlouisfed.org/series/DGS30",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H15",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?page=0&type=daily_treasury_yield_curve"
+      ],
+      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
     },
     {
       "source_id": "fred-mortgage30us",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "Freddie Mac",
       "publisher_page_url": "https://www.freddiemac.com/pmms/pmms_archives",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US",
@@ -1164,8 +1219,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Freddie Mac copyright; internal research and citation",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Freddie Mac series copyright/republication scope and FRED/ALFRED storage/software terms require review; do not assume FRED reprint permission covers CreditAtlas caching, derived outputs or redistribution.",
+      "rights_review_status": "FREDDIE_MAC_OWNER_PERMISSION_SCOPE_REQUIRED; FRED_ALFRED_SERVICE_REVIEW_OPEN; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:18.903351+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1177,11 +1232,19 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/MORTGAGE30US"
+      "distributor_url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.freddiemac.com/pmms/pmms_archives",
+        "https://www.freddiemac.com/terms"
+      ],
+      "current_use_status": "Local receipt-bound context exists; retain private and do not use in public software/model/output until owner/distributor rights are confirmed."
     },
     {
       "source_id": "fred-unrate",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "U.S. Bureau of Labor Statistics",
       "publisher_page_url": "https://data.bls.gov/timeseries/LNS14000000",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE",
@@ -1203,8 +1266,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Public domain; citation requested",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:18.382186+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1216,11 +1279,19 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/UNRATE"
+      "distributor_url": "https://fred.stlouisfed.org/series/UNRATE",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.bls.gov/developers/",
+        "https://fred.stlouisfed.org/series/UNRATE"
+      ],
+      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
     },
     {
       "source_id": "fred-ussthpi",
-      "registry_group_id": null,
+      "registry_group_id": "fred-alfred-macro-market-context",
       "publisher": "Federal Housing Finance Agency",
       "publisher_page_url": "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data",
       "source_object_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=USSTHPI",
@@ -1241,8 +1312,8 @@
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
-      "rights_use_gate": "Public domain; citation requested",
-      "rights_review_status": "REVIEW_REQUIRED_BEFORE_PUBLIC_SOFTWARE_OR_MODEL_USE",
+      "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:18.684609+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1254,7 +1325,15 @@
       "scope_note": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes Source origin and FRED distributor are separate; source snapshot was retrieved through FRED.",
       "missing_cell_count_basis": "Sum of field-level null counts in the source profile; not a count of unique records with missingness.",
       "distributor": "Federal Reserve Bank of St. Louis — FRED",
-      "distributor_url": "https://fred.stlouisfed.org/series/USSTHPI"
+      "distributor_url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://fred.stlouisfed.org/docs/api/terms_of_use.html",
+        "https://fred.stlouisfed.org/legal/fraud-awareness",
+        "https://www.fhfa.gov/data/hpi/datasets?tab=master-hpi-data",
+        "https://www.fhfa.gov/faqs/hpi"
+      ],
+      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
     },
     {
       "source_id": "freddie-sfll-2012-user-supplied",

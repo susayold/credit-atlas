@@ -331,18 +331,19 @@ def main() -> None:
     derived_count = trace_map["counts"]["disposition_derived_output_present"]
     pending_count = trace_map["counts"]["disposition_access_pending_no_production"]
     bound_count = trace_map["counts"]["registry_groups_with_source_objects"]
+    group_count = len(project_register["datasets"])
     remaining_count = len(remaining)
     trace_map["disposition_scope_note"] = (
         f"{remaining_count} groups without bound source objects remain explicitly classified: "
         f"{private_count} private source/input objects, {derived_count} derived aggregate outputs with upstream groups, "
         f"and {pending_count} access-pending group(s) with no production data. The Freddie 2012 user-supplied cohort "
         "is bound to a local receipt and exact private archive hash, but its declared publisher release is not authenticated. "
-        f"This status coverage does not change the {bound_count}/27 source-object binding count or the 26/50 capability "
+        f"This status coverage does not change the {bound_count}/{group_count} source-object binding count or the 26/50 capability "
         "completion ratio. Opaque local-private evidence IDs resolve only in the private D: workspace; no private receipt "
         "paths, raw rows or full hashes are published."
     )
     trace_map["scope_note"] = (
-        "N02 review maps 27 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, "
+        f"N02 review maps {group_count} parent dataset groups and records concrete source objects, local receipt IDs, code consumers, "
         "KPI scope and limitations. "
         f"{bound_count} groups have source-level objects bound, including one private user-supplied Freddie cohort with "
         "explicit publisher-authentication and terms caveats. The remaining "
@@ -369,7 +370,7 @@ def main() -> None:
         "Freddie publisher authentication and terms remain unresolved."
     )
     n02["scope"] = (
-        f"27 dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. "
+        f"{group_count} dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. "
         f"Source-release register has {len(source_register['source_records'])} records "
         f"(20 public-suite +{len(supplemental)} supplemental across {SUPPLEMENTAL_BROAD_FAMILY_COUNT} broad families). "
         "The private Freddie 2012 cohort is bound to a local archive hash/receipt: 50,000 origination loans and "
@@ -378,13 +379,13 @@ def main() -> None:
         "Seven receipt-backed SEC filing-set records cover Toyota 2022-B (51 ABS-EE +51 10-D periods), "
         "Toyota 2024-B (29+29), Nissan 2024-B (23+23), and World Omni 2025-A (20 ABS-EE). "
         "Three Apple FY2025 issuer-hosted artifacts bind to one SEC accession; byte parity to SEC-hosted copies is not verified. "
-        f"{bound_count} parent groups have source-object records; {remaining_count} remain explicitly classified "
+        f"{bound_count} of {group_count} parent groups have source-object records; {remaining_count} remain explicitly classified "
         f"({private_count} private source/input, {derived_count} derived outputs, {pending_count} Ginnie access-pending/no production)."
     )
     n02["remaining"] = (
-        f"{remaining_count} of 27 parent groups remain without bound source objects: {private_count} private source/input "
+        f"{remaining_count} of {group_count} parent groups remain without bound source objects: {private_count} private source/input "
         f"groups, {derived_count} derived outputs with upstream links, and {pending_count} Ginnie production access-pending; "
-        "7 FRED IDs remain without parent groups. For Freddie, release authenticity, original download channel, cutoff evidence "
+        "FRED/ALFRED macro-market parent binding is present but owner/distributor rights and direct-source parity remain open. For Freddie, release authenticity, original download channel, cutoff evidence "
         "and dataset-specific terms remain open; keep 2012 descriptive/private and acquire later vintages only through "
         "authorized Clarity access. Finish source-specific API/UI/Excel parity, remaining KPI formula links and rights review. "
         "HAMP activity gaps remain unexplained; do not forecast or impute. WDI and Sovereign Archive remain context, not "

@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "as_of": "2026-10-17",
+  "as_of": "2026-10-18",
   "reviewed_public_commit": "dd7d34d0130f64a6425aa0023db21fd975d70e80",
-  "scope_note": "N02 review maps 27 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 22 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion.",
+  "scope_note": "N02 review maps 28 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 23 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion. On 2026-10-18, one explicit macro-market group was added for seven FRED catalog series and three ALFRED vintage records; the 27 original parent groups and 50-item capability ledger remain unchanged in meaning.",
   "counts": {
-    "registered_dataset_domain_records": 27,
-    "mapped_registry_records": 27,
+    "registered_dataset_domain_records": 28,
+    "mapped_registry_records": 28,
     "source_catalog_ids": 20,
-    "source_catalog_ids_with_parent_record": 13,
-    "source_catalog_ids_without_parent_record": 7,
+    "source_catalog_ids_with_parent_record": 20,
+    "source_catalog_ids_without_parent_record": 0,
     "unregistered_or_underregistered_source_families": 8,
     "source_catalog_ids_receipt_matched": 20,
     "source_level_records": 103,
     "supplemental_source_records": 103,
-    "registry_groups_with_source_objects": 22,
+    "registry_groups_with_source_objects": 23,
     "registry_groups_without_source_objects": 5,
     "registry_groups_with_explicit_disposition": 5,
     "disposition_private_source_or_input_present": 1,
@@ -187,88 +187,88 @@
     },
     {
       "source_id": "fred-unrate",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P2",
         "P4"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/UNRATE",
-      "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-unrate"
     },
     {
       "source_id": "fred-ussthpi",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P2"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/USSTHPI",
-      "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-ussthpi"
     },
     {
       "source_id": "fred-mortgage30us",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P2",
         "P5"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
-      "rights": "Freddie Mac copyright; internal research and citation",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-mortgage30us"
     },
     {
       "source_id": "fred-dgs2",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P5"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS2",
-      "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-dgs2"
     },
     {
       "source_id": "fred-dgs10",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P5"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS10",
-      "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-dgs10"
     },
     {
       "source_id": "fred-dgs30",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P5"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/DGS30",
-      "rights": "Public domain; citation requested",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-dgs30"
     },
     {
       "source_id": "fred-bamlc0a0cm",
-      "parent_registry_id": null,
+      "parent_registry_id": "fred-alfred-macro-market-context",
       "modules": [
         "P5"
       ],
       "kind": "csv",
       "metadata_url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
-      "rights": "ICE copyrighted: internal use only; no redistribution",
-      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes",
+      "rights": "FRED/ALFRED and series-owner rights review required; see source release register.",
+      "scope": "Native-frequency latest snapshot; not historical as-of availability or security-level quotes; rights/retention/software use not cleared.",
       "source_release_record_id": "fred-bamlc0a0cm"
     }
   ],
@@ -361,6 +361,152 @@
         "fhfa-pudb-2025-data-dictionary",
         "fhfa-pudb-2025-record-counts"
       ]
+    },
+    {
+      "registry_id": "fred-alfred-macro-market-context",
+      "source_release_record_ids": [
+        "fred-unrate",
+        "fred-ussthpi",
+        "fred-mortgage30us",
+        "fred-dgs2",
+        "fred-dgs10",
+        "fred-dgs30",
+        "fred-bamlc0a0cm",
+        "fred-alfred-unrate-pit",
+        "fred-alfred-ussthpi-pit",
+        "fred-alfred-mortgage30us-pit"
+      ],
+      "code_and_consumer": "`public_sources.py` → public-suite acquisition; `market_data.py` → private Parquet/aligned/monthly summaries → `market_views.py` → `/api/market-view`, `/api/market-report`, Market & Bond UI and JSON export; `mortgage_macro_context.py` → `/api/mortgage-macro-context` and D01 macro context; ALFRED batches feed point-in-time context separately.",
+      "kpi_or_output": "P5 native-date rates, yield slopes, OAS and monthly summaries; P2/P4 latest-revised macro context; D01 month-end-selected ALFRED vintages; user-entered bond scenario price/duration/convexity/DV01. None is a borrower-level performance label or a qualified risk predictor.",
+      "status_and_limits": "All 10 FRED/ALFRED records are parent-bound and have per-record rights evidence/status. Existing local receipts are historical and private; FRED content storage/software restrictions and underlying owner permissions are not resolved. FRED latest-revised data are not historical availability. ALFRED selected vintages have no per-file retrieval timestamp; preserve PIT separation. DGS30 2002-02-18–2006-02-08 remains quarantined; MORTGAGE30US methodology changed 2022-11-17; ICE OAS is not cleared for third-party output. No data was reacquired or changed in this registry update.",
+      "evidence_type": "static_code_trace_plus_receipt_bound_source_inventory_and_official_terms_review",
+      "kpi_formula_lineage": [
+        {
+          "output_id": "market.native_observations",
+          "code": "src/credit_atlas/market_data.py:native_rows, prepare_market",
+          "source_fields": [
+            "observation_date",
+            "DGS2",
+            "DGS10",
+            "DGS30",
+            "BAMLC0A0CM",
+            "MORTGAGE30US"
+          ],
+          "transform": "Parse source percent values to DECIMAL(18,6); blank and dot become null; observation dates must be strictly ordered. Preserve original DGS30 source value but set usable value null on 2002-02-18 <= date < 2006-02-09.",
+          "output_fields": [
+            "series",
+            "observation_date",
+            "source_value_percent",
+            "value_percent",
+            "source_value",
+            "documented_discontinuation_conflict"
+          ],
+          "consumer": "market_views.py:report → /api/market-report → Market & Bond chart/table and private JSON download",
+          "limitations": "One selected series, native source dates. PMMS stays weekly. Does not establish release-time availability or quote semantics."
+        },
+        {
+          "output_id": "market.aligned_daily_context",
+          "code": "src/credit_atlas/market_data.py:prepare_market; src/credit_atlas/market_views.py:daily",
+          "source_fields": [
+            "DGS2.value_percent",
+            "DGS10.value_percent",
+            "DGS30.value_percent",
+            "BAMLC0A0CM.value_percent"
+          ],
+          "transform": "Sparse same-date outer alignment over native daily dates; no fill/interpolation; weekly MORTGAGE30US excluded. slope_10y_2y_bps=(DGS10-DGS2)*100; slope_30y_10y_bps=(DGS30-DGS10)*100; corporate_index_oas_bps=BAMLC0A0CM*100. Derived only when required values exist.",
+          "output_fields": [
+            "slope_10y_2y_bps",
+            "slope_30y_10y_bps",
+            "corporate_index_oas_bps",
+            "treasury_three_tenors_known",
+            "native-present flags",
+            "quarantine flags"
+          ],
+          "consumer": "/api/market-daily; private report data path",
+          "limitations": "Percent × 100 yields basis points. ICE OAS rights remain unresolved; DGS30 interval remains quarantined."
+        },
+        {
+          "output_id": "market.monthly_series_summary",
+          "code": "src/credit_atlas/market_data.py:prepare_market",
+          "source_fields": [
+            "series",
+            "observation_date",
+            "value_percent",
+            "source_value_percent",
+            "documented_discontinuation_conflict"
+          ],
+          "transform": "Group by series and calendar month; count native, known, missing, quarantined, raw-missing rows; min/max/avg usable value; latest usable observation date/value.",
+          "output_fields": [
+            "native_rows",
+            "known_rows",
+            "missing_rows",
+            "quarantined_rows",
+            "source_missing_rows",
+            "min_percent",
+            "max_percent",
+            "mean_percent",
+            "last_known_date",
+            "last_known_percent"
+          ],
+          "consumer": "Private market case receipt and summary artifact",
+          "limitations": "Summaries of available observations, not proof of complete calendar-month coverage; no imputation or full-month assertion."
+        },
+        {
+          "output_id": "d01_macro.latest_revised_monthly_context",
+          "code": "scripts/acquire_public_mortgage_context.py:monthly_context; src/credit_atlas/mortgage_macro_context.py:report",
+          "source_fields": [
+            "UNRATE.observation_date/value",
+            "MORTGAGE30US.observation_date/value",
+            "USSTHPI.observation_date/value"
+          ],
+          "transform": "UNRATE maps by YYYY-MM (latest-revised value); MORTGAGE30US is arithmetic mean of nonmissing weekly source observations within YYYY-MM, with observation count; USSTHPI stays quarterly. No monthly HPI interpolation.",
+          "output_fields": [
+            "unemployment_percent",
+            "mortgage30_monthly_mean_percent",
+            "mortgage30_observation_count",
+            "quarterly_hpi.period",
+            "quarterly_hpi.index_1980_q1_100"
+          ],
+          "consumer": "/api/mortgage-macro-context → D01 macro context UI",
+          "limitations": "Retrospective descriptive context only. Latest-revised FRED values do not prove historical publication availability or predictor availability; PMMS methodology changed 2022-11-17."
+        },
+        {
+          "output_id": "d01_macro.point_in_time_monthly_context",
+          "code": "src/credit_atlas/mortgage_macro_context.py:_read_point_in_time_context",
+          "source_fields": [
+            "ALFRED vintage date",
+            "series observation period/value",
+            "monthly_vintage_map"
+          ],
+          "transform": "Per D01 reporting month, choose latest actual ALFRED vintage date <= calendar month-end; within that snapshot choose latest nonmissing observation period <= month-end. PMMS additionally averages available weekly observations whose observation month equals the reporting month.",
+          "output_fields": [
+            "vintage_dates",
+            "unemployment_reference_date",
+            "unemployment_percent",
+            "mortgage30_monthly_mean_percent",
+            "mortgage30_observation_count",
+            "hpi_reference_date",
+            "hpi_index_1980_q1_100"
+          ],
+          "consumer": "/api/mortgage-macro-context.point_in_time_context",
+          "limitations": "Vintage-date cutoff is not proof exact publication timestamp <= borrower event/underwriting cutoff; 3 series rights and per-ZIP retrieval timestamps remain unresolved. No historical macro predictor is qualified."
+        },
+        {
+          "output_id": "p5.assumption_only_bond_scenario",
+          "code": "src/credit_atlas/bond_scenario.py:bond_scenario; src/credit_atlas/market_views.py:bond",
+          "source_fields": [
+            "user-entered face_usd",
+            "coupon_percent",
+            "yield_percent",
+            "years",
+            "frequency"
+          ],
+          "transform": "Fixed coupon, regular equal periods, coupon-date settlement, zero accrued interest, bullet principal; discount each cashflow by (1+y/frequency)^(-period). Modified duration=-dP/dy/P; convexity=(d2P/dy2)/P; DV01=-dP/dy*1bp. Exact repricing tested with finite difference.",
+          "consumer": "/api/bond-scenario → Market & Bond UI/private JSON report",
+          "limitations": "No market series used for price; no security quote, default, recovery, prepayment, embedded option, stub/day-count or deal cashflow. Scenario inputs are analyst assumptions, not forecast."
+        }
+      ],
+      "output_lineage_status": "STATIC_FORMULA_AND_ROUTE_TRACE_ADDED_2026-10-18; route/browser/export parity remains incomplete; rights remain open."
     },
     {
       "registry_id": "freddie-2012",
@@ -617,10 +763,11 @@
   ],
   "unregistered_or_underregistered_source_families": [
     {
-      "source_family": "FRED/ALFRED macro, source-version records",
+      "source_family": "FRED/ALFRED macro, source-version and rights-gated records",
       "code_and_route_evidence": "`public_sources.py`, `market_data.py`, `mortgage_macro_context.py`; `/api/market-report`, `/api/mortgage-macro-context`",
       "output": "Native-frequency rates/spreads; latest-revised context; separate point-in-time vintage context",
-      "registry_action": "Source-level rows for all seven FRED catalog IDs and three ALFRED point-in-time series are now present. Still resolve FRED/ALFRED rights, parent-group assignment, source terms and direct-publisher parity before software/model use; do not reconstruct vintages from revised data."
+      "registry_action": "All seven FRED catalog IDs and three ALFRED point-in-time records now bind to fred-alfred-macro-market-context. This resolves the orphan-parent mapping only. FRED/ALFRED retention/software terms, series-owner permissions, route consumers and direct-publisher parity remain open; do not use/reacquire for software/model/public output until the applicable gate is resolved. Do not reconstruct vintages from revised data.",
+      "status_as_of": "2026-10-18: parent binding complete; rights review open"
     },
     {
       "source_family": "CFPB mortgage delinquency geography series",
@@ -671,7 +818,8 @@
     "receipt_bound_public_source_ids": 20,
     "supplemental_source_families": 17,
     "note": "20 public-suite objects plus 103 supplemental source objects across 17 broad families. This includes 22 World Bank WDI objects, 12 HMDA files, 9 FHFA PUDB/NMDB/NSMO objects, 5 LendingClub/Bondora objects, 22 Treasury HAMP objects, 12 BoC–BoE Sovereign Archive objects, 7 receipt-bound SEC auto-ABS filing sets, three issuer-hosted artifacts for one Apple FY2025 SEC accession, one private Freddie 2012 cohort bound to a local receipt but not publisher-authenticated, and separate HUD/Fed/FHFA/Fannie records. Publication, observation, received and retrieval dates remain distinct; raw private payloads and full hashes are not published.",
-    "supplemental_source_records": 103
+    "supplemental_source_records": 103,
+    "macro_market_group_added": "fred-alfred-macro-market-context"
   },
   "supplemental_source_record_crosswalk": [
     {
@@ -1629,5 +1777,5 @@
       "next_action": "Keep deal-specific comparators and source links; use this ledger for exception triage, not as an LGD benchmark."
     }
   ],
-  "disposition_scope_note": "5 groups without bound source objects remain explicitly classified: 1 private source/input objects, 3 derived aggregate outputs with upstream groups, and 1 access-pending group(s) with no production data. The Freddie 2012 user-supplied cohort is bound to a local receipt and exact private archive hash, but its declared publisher release is not authenticated. This status coverage does not change the 22/27 source-object binding count or the 26/50 capability completion ratio. Opaque local-private evidence IDs resolve only in the private D: workspace; no private receipt paths, raw rows or full hashes are published."
+  "disposition_scope_note": "5 groups without bound source objects remain explicitly classified: 1 private source/input objects, 3 derived aggregate outputs with upstream groups, and 1 access-pending group(s) with no production data. The Freddie 2012 user-supplied cohort is bound to a local receipt and exact private archive hash, but its declared publisher release is not authenticated. This status coverage does not change the 23/28 source-object binding count or the 26/50 capability completion ratio. Opaque local-private evidence IDs resolve only in the private D: workspace; no private receipt paths, raw rows or full hashes are published."
 }

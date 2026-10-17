@@ -11,7 +11,7 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     result = module.project_register()
 
     assert len(result["source_records"]) == 123
-    assert len(result["datasets"]) == 27
+    assert len(result["datasets"]) == 28
     assert len(result["method_cards"]) == 15
     assert len(result["capabilities"]) == 50
     assert result["progress"]["completed"] == 26
@@ -22,6 +22,20 @@ def test_project_register_exposes_the_source_and_plan_inventory():
         "access_pending_no_production": 1,
     }
     assert len(result["source_group_dispositions"]) == 5
+    macro_group = next(row for row in result["datasets"]
+                       if row["id"] == "fred-alfred-macro-market-context")
+    macro_sources = {row["source_id"]: row for row in result["source_records"]
+                     if row["source_id"].startswith(("fred-", "fred-alfred-"))}
+    expected_macro_sources = {
+        "fred-unrate", "fred-ussthpi", "fred-mortgage30us", "fred-dgs2", "fred-dgs10",
+        "fred-dgs30", "fred-bamlc0a0cm", "fred-alfred-unrate-pit",
+        "fred-alfred-ussthpi-pit", "fred-alfred-mortgage30us-pit",
+    }
+    assert set(macro_group["source_release_record_ids"]) == expected_macro_sources
+    assert set(macro_sources) == expected_macro_sources
+    assert all(row["registry_group_id"] == macro_group["id"] for row in macro_sources.values())
+    assert all("NO_PUBLIC" in row["rights_review_status"] or "WRITTEN_THIRD_PARTY" in row["rights_review_status"]
+               for row in macro_sources.values())
     freddie = next(row for row in result["source_records"]
                    if row["source_id"] == "freddie-sfll-2012-user-supplied")
     assert freddie["registry_group_id"] == "freddie-2012"
@@ -101,7 +115,10 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 103
     assert trace_map["source_release_register"]["supplemental_source_families"] == 17
     assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 103
-    assert trace_map["counts"]["registry_groups_with_source_objects"] == 22
+    assert trace_map["counts"]["registered_dataset_domain_records"] == 28
+    assert trace_map["counts"]["registry_groups_with_source_objects"] == 23
+    assert trace_map["counts"]["source_catalog_ids_with_parent_record"] == 20
+    assert trace_map["counts"]["source_catalog_ids_without_parent_record"] == 0
     assert project_register["source_group_disposition_summary"] == result["source_group_disposition_summary"]
     freddie_trace = next(row for row in trace_map["registered_record_trace"]
                          if row["registry_id"] == "freddie-2012")

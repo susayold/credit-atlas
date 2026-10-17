@@ -1,6 +1,6 @@
 # Treasury HAMP Performance Supplemental — data review
 
-**Checkpoint:** 16/10/2026. Đây là một nguồn phụ trợ về servicing/loss mitigation,
+**Checkpoint:** 17/10/2026. Đây là một nguồn phụ trợ về servicing/loss mitigation,
 được giữ tách khỏi Freddie D01 và không làm thay đổi số vintage Freddie.
 
 ## Nguồn và phạm vi
@@ -61,9 +61,65 @@ chỉ được đưa vào khi reporting được yêu cầu trong khoảng ngày
 ra rằng 2018–2021 là zero, không có khoản vay, hoặc không có vỡ nợ. Phải giữ là
 **chưa quan sát trong archive đã kiểm tra**.
 
-Trang Treasury chính thức xác nhận file tĩnh 2009–2017 là activity từ program inception đến 2017-12; URL dẫn tới `https://mhadatafile.treasury.gov/Prod/reports/HMP_Govt_Agency_Perf_Data_20090101_20171201.zip`. Lượt kiểm ngày 2026-10-17 timeout cả khi mở link qua browser research và khi gọi `curl` trực tiếp (connection timeout sau 10 giây). Chưa tìm được mirror được xác minh là bản sao byte-identical chính thức, nên không tải từ nguồn thứ cấp. Tiếp tục thử lại endpoint Treasury; sau khi có file, kiểm hash/metadata và profile activity periods trước khi đánh giá khả năng nối các giai đoạn. Nguồn Treasury mô tả monthly update bắt đầu 2018-01; local archive hiện chỉ có 2022-01–2023-02.
+Đã đọc lại [trang dữ liệu MHA chính thức của Treasury](https://home.treasury.gov/data/troubled-assets-relief-program/reports/mha-public-file): trang mô tả bản tĩnh 2009–2017 và monthly update từ 2018-01 đến tháng công bố mới nhất. Link monthly trên trang là [HMP_Govt_Agency_Perf_Data.zip](https://home.treasury.gov/system/files/256/HMP_Govt_Agency_Perf_Data.zip). Kiểm tra HEAD ngày 2026-10-17 trả HTTP 200, `application/zip`, 75.367.977 bytes, Last-Modified `Wed, 19 Aug 2026 15:33:17 GMT`; các metadata này khớp acquisition receipt trên D: và SHA-256 của ZIP đã được tính lại, khớp `c3057bee9c94…`. ZIP có CSV member `HMP_Govt_Agency_Perf_Data_20220101_20230201.csv` và `.meta`; metadata ghi 9.872.074 records, còn audit trên CSV chỉ thấy 14 activity dates 2022-01–2023-02. Vì vậy đã xác nhận file đúng URL hiện hành, nhưng payload không cung cấp payment activity 2018–2021; giữ đây là phần chưa quan sát trong release, không suy là zero hay forecast.
+
+Bản tĩnh 2009–2017 có link chính thức `https://mhadatafile.treasury.gov/Prod/reports/HMP_Govt_Agency_Perf_Data_20090101_20171201.zip`; lần kiểm HEAD mới hết timeout sau 25 giây. Đường dẫn thử trên `home.treasury.gov/system/files/256/` trả 404. Chưa có mirror byte-identical, nên chưa lấy được archive này. Kết quả hiện được lưu trong receipt private `local-private-id:treasury-hamp-linkage-20261017-070338:receipt`.
+
+Profile bổ sung trực tiếp trên toàn bộ CSV 1,110,749,182-byte bằng DuckDB, chỉ xuất aggregate: 14 kỳ payment liên tiếp từ 2022-01 đến 2023-02, mỗi kỳ có hai trạng thái `Reported`/`Not Reported`:
+
+| Activity period | Reported rows | Not Reported rows |
+|---|---:|---:|
+| 2022-01 | 392,746 | 203,734 |
+| 2022-02 | 387,458 | 203,791 |
+| 2022-03 | 375,319 | 211,037 |
+| 2022-04 | 369,676 | 211,279 |
+| 2022-05 | 363,966 | 212,501 |
+| 2022-06 | 364,785 | 207,810 |
+| 2022-07 | 326,636 | 241,907 |
+| 2022-08 | 323,135 | 242,844 |
+| 2022-09 | 321,770 | 241,405 |
+| 2022-10 | 312,346 | 247,913 |
+| 2022-11 | 314,418 | 243,665 |
+| 2022-12 | 311,525 | 244,673 |
+| 2023-01 | 305,527 | 248,541 |
+| 2023-02 | 304,051 | 248,382 |
+
+Các số trên là số dòng payment activity do Treasury công bố, không phải số borrower, không phải tỷ lệ trả đúng hạn, và không cho biết riêng nguyên nhân `Not Reported`. Cùng payload có modification effective dates từ 2009-07-01 đến 2017-12-01; đây là ngày hiệu lực của sửa đổi, không phải các kỳ payment activity bị thiếu. Coverage trước 2022 vẫn **unresolved**; không tạo zero, projection hay imputation.
+
+## Quarterly cohort summaries bổ sung — không thay thế monthly activity
+
+Trang [MHA Performance Report của Treasury](https://home.treasury.gov/data/troubled-assets-relief-program/reports/making-home-affordable-program-performance-report) nói các quarterly summary hiển thị tổng số HAMP permanent modifications đã bắt đầu và tỷ lệ delinquency theo loại chương trình, tại các mốc mà modification đã đạt hoặc vượt tuổi tháng được báo cáo. Trang hiện liệt kê 20 PDF từ 2018-Q1 đến 2023-Q1; **không có 2021-Q3**. Ngày phát hành trên trang và ngày dữ liệu “updated through” trong từng PDF được lưu riêng, không đồng nhất hai mốc này.
+
+Đã tải 20 PDF từ host chính thức `home.treasury.gov` vào thư mục private trên D:, lưu SHA-256 từng file và kiểm tra mỗi file có đúng một trang, đúng báo cáo HAMP, ngày `Updated through` khớp source index. Parser đọc ba bảng: HAMP Tier 1, HAMP Tier 2, Streamline HAMP; giữ cohort effective-year 2009–2017 (Tier 1), 2012–2017 (Tier 2), 2016–2017 (Streamline) và bảy tuổi 6/12/24/36/48/60/72 tháng. Mỗi tuổi có hai chỉ số 60+ và 90+ delinquency.
+
+Tạo được **2.485** dòng dạng report × program × cohort × tuổi tháng; trong đó **2.142** cặp tỷ lệ hiện diện trong PDF và **343** cặp vẫn trống vì không có giá trị ở bảng xuất bản. Không đổi trống thành 0, không nội suy theo tuổi/vintage, không backfill quý 3/2021. Các số trong bộ này được chép nguyên dạng phần trăm đã làm tròn đến một chữ số thập phân; không tự dựng numerator hay denominator.
+
+Định nghĩa của Treasury có ảnh hưởng trực tiếp tới cách đọc số. Hướng dẫn trong báo cáo nói trạng thái payment không còn được servicer báo sau khi khoản vay bị disqualify ở 90+ ngày delinquent; các khoản đó vẫn được giữ trong 90+ metric của các kỳ tuổi tương lai, kể cả khi sau đó cured hoặc paid off. Ngược lại, khoản được ghi paid-off hoặc withdrawn không còn ở các kỳ tương lai. Vì vậy đây là các **snapshot cohort theo tuổi sửa đổi với mẫu số thay đổi**, không phải cumulative default probability, không phải PD dự báo, không phải transition/cure rate, và không thể ghép thành lịch sử payment loan-month. Report Q1 2023 còn ghi cụ thể các caveat này; Tier 1 “All” ở tháng 72 là 45,5% cho 60+ và 44,6% cho 90+.
+
+Các file đầu ra hiện lưu local/private trên D:, chưa đưa aggregate CSV/XLSX vào public bundle. Workbook analyst gồm `Cohort KPIs`, `Source Index`, `Read Me`; có source URL, source hash, publication quarter, updated-through date, program segment, modification-year, tháng tuổi, hai tỷ lệ, cùng trạng thái blank. Test parser kiểm tra ngày cutoff, cohort set, quan hệ 90+ ≤ 60+ và giữ blank; spot-check các ô của PDF Q1 2018, Q2 2018, Q4 2022 và Q1 2023.
+
+**Kết luận về khoảng trống:** ta đã bổ sung nguồn tổng hợp chính thức để mô tả hiệu quả HAMP theo tuổi cohort, nhưng chưa tìm được monthly loan activity 2018–2021 trong ZIP và chưa lấy được static 2009–2017 ZIP. Khoảng trống monthly vẫn mở; bảng quarterly không được dùng làm đại diện hay giá trị thay thế cho phần bị thiếu.
 
 ## Sử dụng trong CreditAtlas
+
+### Dedicated HAMP cohort explorer — 17/10/2026
+
+Đã nối riêng bộ quarterly aggregate đã kiểm tra vào local app qua
+`src/credit_atlas/treasury_hamp_quarterly.py` và read-only route
+`GET /api/treasury-hamp-quarterly`. Màn `?view=hamp` lọc publication quarter,
+program segment, modification effective-year và modification age; hiển thị
+snapshot trend khi giữ một segment/vintage/age cố định, bảng cohort, source URL,
+updated-through date và SHA-256. Excel export theo đúng filter dùng route
+`/api/treasury-hamp-quarterly-excel`, giữ blank trong các rate cell và kèm sheet
+source index cùng method/limitations.
+
+Màn hình không gộp rate qua nhiều vintage/chương trình và không tạo rate bình
+quân giả. Tỷ lệ headline chỉ hiện khi chọn một segment, một vintage và một mốc
+tuổi; nó luôn gắn với snapshot gần nhất trong phạm vi lọc. Missing 2021-Q3 tạo
+khoảng trên chart. Nếu bộ dữ liệu private chưa được cài trong một workspace,
+API trả trạng thái unavailable thay vì dựng dữ liệu mẫu. CSV cohort, PDFs và
+analyst workbook vẫn nằm private trên D:; public checkout chỉ có source index,
+code và method documentation.
 
 Nguồn này phù hợp để nghiên cứu lịch sử loss mitigation sau sửa đổi, trạng thái
 modification và completeness của payment reporting. Nó **không** đại diện cho
@@ -85,11 +141,13 @@ dòng mỗi worksheet Excel nên được giữ CSV/Parquet riêng; workbook kh�
 loan-level rows.
 
 - Audit receipt: aggregate-only private receipt dated 2026-10-17; no acquisition timestamp receipt was found, so retrieved-at stays null.
-- Downloader: `scripts/download_treasury_hamp_performance.py`
-- Aggregate-only auditor: `scripts/audit_treasury_hamp_source.py`
-- Focused tests: `tests/test_treasury_hamp_audit.py`
+- Monthly file downloader: `scripts/download_treasury_hamp_performance.py`
+- Monthly aggregate-only auditor: `scripts/audit_treasury_hamp_source.py`
+- Quarterly PDF downloader/parser: `scripts/download_treasury_hamp_quarterly_summaries.py` and `scripts/build_treasury_hamp_quarterly_summary.py`
+- Quarterly source index: `docs/data/treasury-hamp-quarterly-summary-sources-2026-10-17.json`
+- Focused tests: `tests/test_treasury_hamp_audit.py`, `tests/test_treasury_hamp_performance_audit.py`, `tests/test_treasury_hamp_quarterly_summary.py`
 
-The current N02 register binds the Treasury archive and official guide as two separate source records. The application still has no dedicated HAMP KPI route. This source addition does not change the master 50-capability completion count.
+The current N02 register binds the Treasury archive, official guide and 20 quarterly PDFs as separate source records. The 20 quarterly PDFs now feed the separate local HAMP cohort explorer and filtered Excel export described above. The monthly loan-activity archive remains aggregate-audit-only and has no loan-level KPI route. This integration does not change the master 50-capability completion count.
 The current **26/50 = 52% complete** and **42/50 = 84% with some implementation or
 conditional coverage** remain unchanged; the new Treasury case is supplemental
 evidence outside the Freddie D01 vintage/model acceptance gates.

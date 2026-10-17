@@ -36,3 +36,6 @@ node scripts/build_hud_fha_workbook.mjs . apps/excel/templates/CreditAtlas-HUD-F
 ```
 
 Refresh only after opening the current official report and checking month coverage, table definitions, publication date, and values. Keep the source PDF available in the workbook/report lineage when normal access permits. Never infer missing rows or join these totals to NSMO/Freddie loan records.
+# Separate companion source: FHA Production Report
+
+HUD's August 2026 FHA Single Family Production Report Table 2 provides a separate monthly serious-delinquency transition series. It is not one of the six FHA Loan Performance Trends tables below. The series and its flow/late-posting checks are documented in [HUD_FHA_PRODUCTION_TRANSITIONS_2026-08_VI.md](HUD_FHA_PRODUCTION_TRANSITIONS_2026-08_VI.md). Keep the two HUD reports separate because HUD warns their serious-delinquency inventories may not fully reconcile.

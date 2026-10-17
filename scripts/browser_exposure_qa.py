@@ -14,7 +14,7 @@ from credit_atlas.workspace import app_root, read_json, timestamp, write_new
 expect.set_options(timeout=60000)
 
 
-def run(root):
+def run(root, web_root=None):
     output = root / 'artifacts/private' / ('exposure-browser-qa-' + uuid.uuid4().hex[:12])
     output.mkdir(parents=True)
     service = ResearchService(root, review_path=output / 'qa-reviews.sqlite3')
@@ -24,7 +24,7 @@ def run(root):
     assert source['records'] == 9698
     assert source['currencies'][0]['reported_amount_major_exact'] == '915208989.12'
     assert source['currencies'][0]['zero_amount_records'] == 141
-    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service))
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service, web_root=web_root))
     thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
     base = 'http://127.0.0.1:' + str(server.server_port)
     checks, errors = [], []
@@ -38,8 +38,14 @@ def run(root):
             page.route('**/api/runs', lambda route: route.fulfill(json={'runs': []}))
             url = base + '/?view=exposure&exposure_import_id=' + identifier
             page.goto(url, wait_until='networkidle')
+            expect(page.locator('#page-title')).to_have_text('Freddie Mac Sample UPB Diagnostics')
+            expect(page.locator('#freddie-sample-scope-banner')).to_contain_text('không chứng minh danh mục thuộc sở hữu bên cho vay')
+            expect(page.locator('#freddie-sample-scope-banner')).to_have_attribute('role', 'note')
+            expect(page.locator('#source-badge')).to_contain_text('not owned portfolio / EAD')
+            checks.append('Freddie sample is explicitly labeled as raw UPB observations, not an owned portfolio/EAD')
             select_task(page, 'Tổng quan')
             expect(page.locator('#exposure-summary')).to_contain_text('9,698')
+            expect(page.locator('#exposure-summary')).to_contain_text('Reported sample UPB')
             select_task(page, 'Tổng quan')
             expect(page.locator('#exposure-summary')).to_contain_text('2026-03')
             select_task(page, 'Nguồn & contract')
@@ -53,14 +59,14 @@ def run(root):
             select_task(page, 'Excel')
             expect(page.locator('#exposure-excel')).to_contain_text('Nhập Excel')
             assert page.locator('#run-select').is_disabled()
-            checks.append('Actual 9698 source observations, 141 zero UPBs, exact USD 915208989.12 and unavailable EL; no mortgage-run dependency')
+            checks.append('9,698 Freddie sample observations, 141 zero UPBs, exact USD 915208989.12 and unavailable EL; no mortgage-run dependency')
             select_task(page, 'Biến động')
             expect(page.locator('#exposure-movement')).to_contain_text('106 opening-only')
             select_task(page, 'Biến động')
             expect(page.locator('#exposure-movement')).to_contain_text('USD -13,037,124.22')
             select_task(page, 'Biến động')
             expect(page.locator('#exposure-movement')).to_contain_text('2026-02 → 2026-03')
-            checks.append('Actual paired source snapshots: 9698 continuing, 106 opening-only, native change and explicit no inferred exit reason')
+            checks.append('Paired Freddie sample snapshots: 9,698 continuing, 106 opening-only, native change and explicit no inferred exit reason')
             select_task(page, 'Scenarios')
             expect(page.locator('#exposure-scenario-scope')).to_contain_text('9,602')
             select_task(page, 'Scenarios')
@@ -117,7 +123,7 @@ def run(root):
             assert page.locator('#exposure-tail-comparison tbody tr').count()==4
             select_task(page, 'Tail risk')
             assert page.locator('#exposure-tail-quantiles tbody tr').count()==8
-            checks.append('Actual seeded 4096-draw dependence/recovery sensitivity, finite 99% tail mass and assumption disclosure')
+            checks.append('Seeded 4,096-draw dependence/recovery sensitivity, finite 99% tail mass and assumption disclosure')
             select_task(page, 'Tail risk')
             expect(page.locator('#exposure-convergence')).to_contain_text('20261011')
             select_task(page, 'Tail risk')
@@ -294,5 +300,52 @@ def run(root):
         server.shutdown(); server.server_close(); thread.join(timeout=5)
 
 
+def run_scope_smoke(root, web_root=None):
+    """Fast UI-scope acceptance for Freddie sample UPB labels and limitations."""
+    output = root / 'artifacts/private' / ('exposure-scope-browser-qa-' + uuid.uuid4().hex[:12])
+    output.mkdir(parents=True)
+    service = ResearchService(root, review_path=output / 'qa-reviews.sqlite3')
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service, web_root=web_root))
+    thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+    checks, errors = [], []
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(channel='msedge', headless=True)
+            page = browser.new_page(viewport={'width': 1440, 'height': 1000})
+            page.set_default_timeout(30000)
+            page.on('pageerror', lambda error: errors.append(str(error)))
+            page.route('**/api/runs', lambda route: route.fulfill(json={'runs': []}))
+            page.goto('http://127.0.0.1:' + str(server.server_port) + '/?view=exposure&exposure_import_id=exposure-import-57b88e00bedb', wait_until='networkidle')
+            page.locator('#navigation [data-view="exposure"]').click()
+            expect(page.locator('#page-title')).to_have_text('Freddie Mac Sample UPB Diagnostics')
+            expect(page.locator('#freddie-sample-scope-banner')).to_contain_text('không chứng minh danh mục thuộc sở hữu bên cho vay')
+            expect(page.locator('#freddie-sample-scope-banner')).to_have_attribute('role', 'note')
+            expect(page.locator('#source-badge')).to_contain_text('not owned portfolio / EAD')
+            page.screenshot(path=str(output / 'p4-scope-desktop.png'), full_page=True)
+            checks.append('Title identifies the Freddie Mac 2012 sample and raw-UPB diagnostic')
+            checks.append('Prominent scope banner disclaims lender ownership, borrower exposure, EAD and empirical expected loss')
+            checks.append('Scope banner is exposed with the accessible note role')
+            checks.append('Source badge identifies raw UPB and excludes owned-portfolio/EAD interpretation')
+            page.get_by_role('tab', name='Tổng quan').click()
+            expect(page.locator('#exposure-summary')).to_contain_text('Reported sample UPB')
+            expect(page.locator('#context-note')).to_contain_text('Freddie Mac 2012 sample')
+            checks.append('Summary metric and context bar retain the sample-UPB source label')
+            checks.append('No browser JavaScript errors')
+            assert not errors, errors
+            browser.close()
+        write_new(output / 'receipt.json', {'status': 'PASS', 'completed_at': timestamp(), 'import_id': 'exposure-import-57b88e00bedb',
+            'source_namespace': 'Freddie-Mac-2012-annual-sample', 'checks': checks, 'browser_errors': errors,
+            'visibility': 'private', 'public_release_approved': False})
+        return {'status': 'PASS', 'checks': len(checks), 'directory': str(output)}
+    except Exception as error:
+        write_new(output / 'failed.json', {'status': 'FAIL', 'exception_type': type(error).__name__,
+            'checks_completed': checks, 'browser_errors': errors})
+        raise
+    finally:
+        server.shutdown(); server.server_close(); thread.join(timeout=5)
+
+
 if __name__ == '__main__':
-    print(json.dumps(run(app_root()), indent=2))
+    import sys
+    runner = run_scope_smoke if len(sys.argv) > 1 and sys.argv[1] == '--scope-only' else run
+    print(json.dumps(runner(app_root()), indent=2))

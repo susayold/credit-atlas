@@ -65,14 +65,14 @@
       "source_csv": "toyota-recovery-components-80-periods.csv",
       "source_csv_sha256": "eb805524af41ced91dec49b936392171aeee2778f7242987e56aff92d4cbeeb5",
       "source_receipt": "toyota-recovery-components-80-periods-receipt.json",
-      "source_receipt_sha256": "e74997cdcc55971c75d09b2fd29dc92661c0ead1160652c4a825bc05eb2937ae",
+      "source_receipt_sha256": "bd17d46b4c01441e09cfbbc7f8ba3ed1497a94fcf775355eca3543f675773cf4",
       "period_count_expected": 51
     },
     "TOYOTA-2024-B": {
       "source_csv": "toyota-recovery-components-80-periods.csv",
       "source_csv_sha256": "eb805524af41ced91dec49b936392171aeee2778f7242987e56aff92d4cbeeb5",
       "source_receipt": "toyota-recovery-components-80-periods-receipt.json",
-      "source_receipt_sha256": "e74997cdcc55971c75d09b2fd29dc92661c0ead1160652c4a825bc05eb2937ae",
+      "source_receipt_sha256": "bd17d46b4c01441e09cfbbc7f8ba3ed1497a94fcf775355eca3543f675773cf4",
       "period_count_expected": 29
     },
     "NISSAN-2024-B": {

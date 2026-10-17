@@ -18,9 +18,15 @@ from credit_atlas.server import handler_for
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--web-root", type=Path, help="Optional public checkout root or apps/web directory when code and private data use separate roots")
     parser.add_argument("--receipt", required=True, type=Path)
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=args.root.resolve())))
+    web_root = args.web_root.resolve() if args.web_root else None
+    if web_root and (web_root / "apps" / "web").is_dir():
+        web_root = web_root / "apps" / "web"
+    if web_root and not web_root.is_dir():
+        parser.error("--web-root must be a public checkout or its apps/web directory")
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=args.root.resolve()), web_root=web_root))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
     worker.start()
@@ -41,6 +47,19 @@ def main() -> None:
             if source_link.get_attribute("href") != "https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf":
                 raise AssertionError("Official HUD report citation is not linked from the panel")
             checks.append("official HUD report is directly linked")
+
+            transition_state = page.locator("#hud-transitions-state")
+            transition_state.get_by_text("HUD Production Report · Table 2", exact=False).wait_for(timeout=15_000)
+            transition_link = page.get_by_role("link", name="HUD Production Report · Aug 2026")
+            if transition_link.get_attribute("href") != "https://www.hud.gov/sites/default/files/Housing/documents/FHAProd_AUG2026.pdf":
+                raise AssertionError("Official HUD Production Report citation is not linked")
+            transition_metrics = page.locator("#hud-transitions-metrics").inner_text()
+            if not all(value in transition_metrics for value in ("65,811", "57,893", "540,410", "88.0%")):
+                raise AssertionError("HUD Production Report Table 2 latest metrics do not match the source")
+            transition_rows = page.locator("#hud-transitions-table tbody tr").all_inner_texts()
+            if len(transition_rows) != 13 or "108.0%" not in transition_rows[7] or "0" not in transition_rows[-1]:
+                raise AssertionError("HUD serious-delinquency transition rows or reconciliation checks are wrong")
+            checks.append("separate HUD Production Report Table 2 displays 13 transitions, source link and checked latest KPIs")
 
             metrics = page.locator("#hud-fha-metrics").inner_text()
             if "8,416,639" not in metrics or "6.42%" not in metrics:
@@ -80,18 +99,21 @@ def main() -> None:
             checks.append("HUD Tables 2, 4, 5 and 6 render all source rows with scoped KPI summaries")
 
             with page.expect_download() as download_info:
-                page.get_by_role("link", name="Tải Excel HUD FHA · đủ 6 bảng").click()
+                page.get_by_role("link", name="Tải Excel HUD FHA · 7 bảng").click()
             download = download_info.value
             if download.suggested_filename != "CreditAtlas-HUD-FHA-Performance.xlsx":
                 raise AssertionError("HUD benchmark Excel filename is wrong")
             if download.path().read_bytes()[:2] != b"PK":
                 raise AssertionError("HUD benchmark Excel download is not an XLSX package")
-            checks.append("six-table HUD benchmark workbook downloads from the app")
+            checks.append("seven-table HUD benchmark workbook downloads from the app")
 
             page.set_viewport_size({"width": 390, "height": 844})
             dimensions = page.evaluate("({w:document.querySelector('.hud-context-panel').clientWidth,s:document.querySelector('.hud-context-panel').scrollWidth,cols:getComputedStyle(document.querySelector('#hud-fha-metrics')).gridTemplateColumns.split(' ').length})")
             if dimensions["s"] > dimensions["w"] or dimensions["cols"] != 2:
                 raise AssertionError(f"HUD panel has mobile overflow: {dimensions}")
+            flow_dimensions = page.evaluate("({w:document.querySelector('.hud-flow-panel').clientWidth,s:document.querySelector('.hud-flow-panel').scrollWidth,cols:getComputedStyle(document.querySelector('#hud-transitions-metrics')).gridTemplateColumns.split(' ').length})")
+            if flow_dimensions["s"] > flow_dimensions["w"] or flow_dimensions["cols"] != 2:
+                raise AssertionError(f"HUD transition panel has mobile overflow: {flow_dimensions}")
             checks.append("HUD panel remains within mobile viewport")
             browser.close()
     finally:

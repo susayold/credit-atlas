@@ -9,6 +9,8 @@ from urllib.error import HTTPError
 from urllib.request import Request,urlopen
 
 import pytest
+from credit_atlas.excel_workbench import ExcelWorkbench
+from credit_atlas.exposure_views import ExposureViews
 from credit_atlas.exposure_tail_views import ExposureTailViews
 from credit_atlas.server import handler_for
 from tests.test_exposure_tail import frozen
@@ -57,13 +59,21 @@ def test_independent_tail_audit_detects_es_fault(fixture,monkeypatch):
 
 def test_http_private_report_exact_contract(fixture):
     root,receipt,views=fixture; source=receipt['source_import_id']
-    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(SimpleNamespace(root=root,exposure_tail_views=views)))
+    service=SimpleNamespace(root=root,exposure_tail_views=views,exposure_views=ExposureViews(root))
+    service.excel_workbench=ExcelWorkbench(service)
+    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service))
     thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
     base='http://127.0.0.1:'+str(server.server_port); query='?tail_id='+receipt['tail_id']+'&source_import_id='+source
     try:
         for endpoint in ('/api/exposure-tail','/api/exposure-tail-report'):
             with urlopen(base+endpoint+query) as response:
-                assert json.load(response)==views.report({'tail_id':receipt['tail_id'],'source_import_id':source})
+                report=json.load(response); expected=views.report({'tail_id':receipt['tail_id'],'source_import_id':source})
+                if endpoint.endswith('-report'):
+                    provenance=report.pop('export_provenance')
+                    assert provenance['derived_artifacts'][0]['artifact_id']==receipt['tail_id']
+                    assert len(provenance['derived_artifacts'][0]['receipt_sha256'])==64
+                    assert provenance['source_imports'][0]['import_id']==source
+                assert report==expected
                 assert 'no-store' in response.headers['Cache-Control']
         for suffix in ('&seed=0','&tail_id='+receipt['tail_id'],'&dimension=position_id','&currency=GBP'):
             with pytest.raises(HTTPError) as error: urlopen(base+'/api/exposure-tail'+query+suffix)

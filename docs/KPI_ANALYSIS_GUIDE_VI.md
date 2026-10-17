@@ -1061,30 +1061,32 @@ SBA six source files, retained source-record grain; SEC controls theo issuer ri�
 
 Mở cohorts/program/vintage filters; cần matured event/censoring definitions để xây fixed-horizon credit target. SEC financials và UCI bankruptcy là sources riêng.
 
-## 6. P4: Portfolio — exposure anatomy, concentration và movement
+## 6. P4: Freddie sample — UPB anatomy, concentration và movement
 
-2026-03 · USD · region · pinned source observations, not owned positions
+2026-03 · Freddie Mac 2012 sample · USD · region · loan-month source observations; reported raw UPB, not owned positions/EAD. Publisher release and applicable terms remain unverified.
+
+Trong mục này, “Actual” chỉ có nghĩa giá trị được ghi trong sample import, không có nghĩa actual lender portfolio. Những tỷ lệ tập trung dưới đây là descriptive sample diagnostics; không phải borrower concentration, EAD, empirical PD hay expected loss.
 
 ### Nhận xét từ dữ liệu
 
-- Largest bucket CA = 20.48%; top five = 40.16%. Đây là region shares trong cùng USD total.
-- Reported principal đổi -$13,037,124 (-1.40%) từ 2026-02. Snapshot delta gồm entries/exits/balance movement; không đồng nghĩa realized loss.
+- Largest bucket CA = 20.48%; top five = 40.16%. Đây là region shares trên cùng sample-UPB total.
+- Reported sample UPB đổi -$13,037,124 (-1.40%) từ 2026-02. Snapshot delta gồm entries/exits/balance movement; không đồng nghĩa realized loss.
 - EL vẫn unavailable khi thiếu risk inputs. P2/P4 có source overlap; không cộng balances thành total suite exposure.
-- Vùng giảm nhiều nhất: CA -$2,728,148; NY -$691,944; MA -$664,288. Vùng tăng nhiều nhất: không có. Bridge khớp tổng đến cent; đây là đóng góp số học.
+- Vùng sample UPB giảm nhiều nhất: CA -$2,728,148; NY -$691,944; MA -$664,288. Vùng tăng nhiều nhất: không có. Bridge khớp tổng đến cent; đây là đóng góp số học, không chỉ ra lý do rời mẫu.
 
 ### Định nghĩa và actual của từng KPI
 
-#### 1. Reported principal
+#### 1. Reported sample UPB
 
-**Actual:** 915,208,989.12 USD. **Công thức/support:** Σ known source principal.
+**Sample value:** 915,208,989.12 USD. **Công thức/support:** Σ known reported raw UPB trong loan-month observations.
 
-**Diễn giải:** Không mặc định EAD.
+**Diễn giải:** Số dư trong sample; không chứng minh owned exposure, borrower balance hay EAD.
 
-**So sánh 2026-02:** baseline 928,246,113.34 USD; thay đổi tuyệt đối -13,037,124.22 USD; tương đối -1.4045%.
+**So sánh sample 2026-02:** baseline 928,246,113.34 USD; thay đổi tuyệt đối -13,037,124.22 USD; tương đối -1.4045%.
 
 #### 2. Observations
 
-**Actual:** 9,698. **Công thức/support:** Source rows in selected import.
+**Sample value:** 9,698. **Công thức/support:** Freddie loan-month source rows in selected import; chưa borrower count.
 
 **Diễn giải:** Observation grain; chưa borrower count.
 
@@ -1098,9 +1100,9 @@ Mở cohorts/program/vintage filters; cần matured event/censoring definitions 
 
 **So sánh:** chưa lưu kỳ/metric tương thích trong readout này; không tự tạo baseline.
 
-#### 4. Average positive balance
+#### 4. Average positive sample UPB
 
-**Actual:** 95,763.21 USD. **Công thức/support:** Reported principal / nonzero-balance records.
+**Sample value:** 95,763.21 USD. **Công thức/support:** Reported sample UPB / nonzero-balance observations.
 
 **Diễn giải:** Arithmetic average của observations; không borrower exposure.
 
@@ -1144,7 +1146,7 @@ Mở cohorts/program/vintage filters; cần matured event/censoring definitions 
 
 Grouped snapshot arithmetic; không xác định nguyên nhân hoặc tách entries/exits/shared-loan movements. Bucket vắng trong complete partition có subtotal 0, không gán missing amount thành zero.
 
-Prior 2026-02: 928246113.34 USD; current 2026-03: 915208989.12 USD; delta -13037124.22 USD. Đối soát EXACT_CENTS_PASS bằng integer cents. Contribution dùng prior total để các vùng cộng ra total relative change, không chia cho net delta.
+Prior Freddie-sample UPB 2026-02: 928246113.34 USD; current 2026-03: 915208989.12 USD; delta -13037124.22 USD. Đối soát EXACT_CENTS_PASS bằng integer cents. Contribution dùng prior sample total để các vùng cộng ra total relative change, không chia cho net delta; đây không phải lender book movement.
 
 ### Tất cả geographic buckets — exact source amounts
 

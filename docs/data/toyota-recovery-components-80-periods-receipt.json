@@ -36,6 +36,211 @@
     "component_formula_passes": 80,
     "net_loss_formula_passes": 80
   },
+  "reconciliation_diagnostics": {
+    "scope_note": "Descriptive reconciliation diagnostics only; a residual ratio is not a recovery rate, LGD, PD, loss estimate, or causal attribution.",
+    "quantile_method": "Hyndman-Fan Type 7 linear interpolation: h=1+(n-1)p; interpolated dollar outputs rounded to cents using ROUND_HALF_UP.",
+    "overall": {
+      "periods": 80,
+      "ties": 3,
+      "periods_with_zero_abs_ee_recovered_amount": 1,
+      "unresolved_periods": 77,
+      "positive_unresolved_periods": 77,
+      "negative_unresolved_periods": 0,
+      "unresolved_residual_usd": "3823205.14000000",
+      "residual_share_of_abs_ee_recovered_amount_percent": "12.77",
+      "unresolved_residual_quantiles_usd": {
+        "minimum": "2277.60000000",
+        "p25": "30348.66",
+        "median": "42938.42",
+        "p75": "62473.10",
+        "maximum": "151706.60000000"
+      },
+      "top_five_unresolved_share_of_unresolved_residual_percent": "16.25",
+      "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+      "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+        "eligible_periods": 77,
+        "median": "12.52",
+        "p75": "15.81"
+      }
+    },
+    "by_deal": {
+      "2022-B": {
+        "periods": 51,
+        "ties": 2,
+        "periods_with_zero_abs_ee_recovered_amount": 0,
+        "unresolved_periods": 49,
+        "positive_unresolved_periods": 49,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "2058647.06000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "12.54",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "2277.60000000",
+          "p25": "28987.38",
+          "median": "40027.00",
+          "p75": "53670.20",
+          "maximum": "123651.64000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "20.43",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 49,
+          "median": "12.39",
+          "p75": "15.15"
+        }
+      },
+      "2024-B": {
+        "periods": 29,
+        "ties": 1,
+        "periods_with_zero_abs_ee_recovered_amount": 1,
+        "unresolved_periods": 28,
+        "positive_unresolved_periods": 28,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "1764558.08000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "13.05",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "11530.32000000",
+          "p25": "38805.34",
+          "median": "60415.95",
+          "p75": "79994.56",
+          "maximum": "151706.60000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "33.86",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 28,
+          "median": "12.75",
+          "p75": "17.86"
+        }
+      }
+    },
+    "by_report_year_combined_deals": [
+      {
+        "report_year": "2022",
+        "periods": 9,
+        "ties": 2,
+        "periods_with_zero_abs_ee_recovered_amount": 0,
+        "unresolved_periods": 7,
+        "positive_unresolved_periods": 7,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "121475.84000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "7.77",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "2277.60000000",
+          "p25": "11549.56",
+          "median": "15816.90",
+          "p75": "26127.77",
+          "maximum": "28026.68000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "88.94",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 7,
+          "median": "8.26",
+          "p75": "10.18"
+        }
+      },
+      {
+        "report_year": "2023",
+        "periods": 12,
+        "ties": 0,
+        "periods_with_zero_abs_ee_recovered_amount": 0,
+        "unresolved_periods": 12,
+        "positive_unresolved_periods": 12,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "545774.40000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "11.34",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "28143.18000000",
+          "p25": "39389.33",
+          "median": "45577.23",
+          "p75": "51534.24",
+          "maximum": "63113.26000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "51.07",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 12,
+          "median": "12.18",
+          "p75": "14.04"
+        }
+      },
+      {
+        "report_year": "2024",
+        "periods": 21,
+        "ties": 1,
+        "periods_with_zero_abs_ee_recovered_amount": 1,
+        "unresolved_periods": 20,
+        "positive_unresolved_periods": 20,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "1158380.66000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "14.03",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "11530.32000000",
+          "p25": "40299.52",
+          "median": "54394.79",
+          "p75": "70516.56",
+          "maximum": "123651.64000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "42.66",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 20,
+          "median": "13.41",
+          "p75": "19.05"
+        }
+      },
+      {
+        "report_year": "2025",
+        "periods": 24,
+        "ties": 0,
+        "periods_with_zero_abs_ee_recovered_amount": 0,
+        "unresolved_periods": 24,
+        "positive_unresolved_periods": 24,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "1460385.36000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "13.17",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "10142.38000000",
+          "p25": "35708.38",
+          "median": "55592.15",
+          "p75": "69977.26",
+          "maximum": "151706.60000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "39.68",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 24,
+          "median": "13.50",
+          "p75": "17.68"
+        }
+      },
+      {
+        "report_year": "2026",
+        "periods": 14,
+        "ties": 0,
+        "periods_with_zero_abs_ee_recovered_amount": 0,
+        "unresolved_periods": 14,
+        "positive_unresolved_periods": 14,
+        "negative_unresolved_periods": 0,
+        "unresolved_residual_usd": "537188.88000000",
+        "residual_share_of_abs_ee_recovered_amount_percent": "12.76",
+        "unresolved_residual_quantiles_usd": {
+          "minimum": "17472.74000000",
+          "p25": "29782.99",
+          "median": "36016.29",
+          "p75": "40389.16",
+          "maximum": "72506.62000000"
+        },
+        "top_five_unresolved_share_of_unresolved_residual_percent": "49.45",
+        "unresolved_periods_with_zero_abs_ee_recovered_amount": 0,
+        "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+          "eligible_periods": 14,
+          "median": "12.56",
+          "p75": "14.89"
+        }
+      }
+    ]
+  },
   "field_definitions": {
     "asset_recovered_amount_signed": "Monthly sum of ABS-EE EX-102 recoveredAmount from the receipt-bound existing audit; EX-103 says it covers amounts recovered on a Defaulted Receivable during the reporting period and includes repossession proceeds.",
     "certificate_net_liquidation_proceeds_signed": "Current-period signed row from the SEC Servicer's Certificate; proceeds appear negative in its liquidations table.",

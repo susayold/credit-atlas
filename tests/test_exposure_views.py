@@ -12,6 +12,7 @@ from urllib.request import Request, urlopen
 import pytest
 
 from credit_atlas.exposure_imports import import_exposures
+from credit_atlas.excel_workbench import ExcelWorkbench
 from credit_atlas.exposure_views import ExposureViews
 from credit_atlas.server import handler_for
 from credit_atlas.workspace import write_new
@@ -64,7 +65,9 @@ def test_preserved_timestamp_corruption_rejected_after_cache_warm(imported):
 
 def test_http_private_export_and_parameter_origin_guards(imported):
     root, receipt, service = imported
-    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(SimpleNamespace(root=root, exposure_views=service)))
+    app = SimpleNamespace(root=root, exposure_views=service)
+    app.excel_workbench = ExcelWorkbench(app)
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(app))
     thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
     base = 'http://127.0.0.1:' + str(server.server_port)
     endpoint = '/api/exposure-report?import_id=' + receipt['import_id'] + '&currency=USD&dimension=region'
@@ -80,8 +83,15 @@ def test_http_private_export_and_parameter_origin_guards(imported):
         with urlopen(base + endpoint) as response:
             assert response.headers['Cache-Control'] == 'no-store' and 'attachment' in response.headers['Content-Disposition']
             result = json.load(response)
+            provenance = result.pop('export_provenance')
+            assert provenance['visibility'] == 'private' and provenance['public_release_approved'] is False
+            assert provenance['report_filters'] == {'currency': 'USD', 'dimension': 'region'}
+            assert 'full verified input' in provenance['source_scope_note']
+            assert provenance['source_imports'][0]['import_id'] == receipt['import_id']
+            assert provenance['source_imports'][0]['receipt_sha256'] == service.evidence(receipt['import_id'])[2]
             assert result == service.report({'import_id': receipt['import_id'], 'currency': 'USD', 'dimension': 'region'})
             assert 'position_id' not in json.dumps(result) and str(root) not in json.dumps(result)
+            assert str(root) not in json.dumps(provenance)
         for suffix in ('&pd=1', '&currency=VND', '&dimension=position_id'):
             with pytest.raises(HTTPError) as error: urlopen(base + endpoint + suffix)
             assert error.value.code == 400

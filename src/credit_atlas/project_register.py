@@ -90,11 +90,52 @@ def project_register() -> dict:
         raise ValueError("N02 source-release count does not match the source register")
     if trace_map.get("source_release_register", {}).get("supplemental_source_records") != len(supplemental):
         raise ValueError("N02 supplemental count does not match its crosswalk")
+    dispositions = trace_map.get("source_group_dispositions")
+    unbound_registry_ids = {
+        row["registry_id"] for row in trace_map.get("registered_record_trace", [])
+        if not row.get("source_release_record_ids")
+    }
+    if not isinstance(dispositions, list) or {
+            row.get("registry_id") for row in dispositions if isinstance(row, dict)
+    } != unbound_registry_ids:
+        raise ValueError("N02 source-group dispositions must cover every unbound registry group exactly once")
+    disposition_ids = [row.get("registry_id") for row in dispositions]
+    if len(disposition_ids) != len(set(disposition_ids)):
+        raise ValueError("N02 source-group disposition IDs must be unique")
+    allowed_disposition_classes = {"source_data", "private_input", "derived_output", "access_pending"}
+    for row in dispositions:
+        if (row.get("classification") not in allowed_disposition_classes
+                or not isinstance(row.get("data_state"), str)
+                or not isinstance(row.get("formal_binding"), str)
+                or not isinstance(row.get("evidence_refs"), list)
+                or not row["evidence_refs"]
+                or any(not isinstance(ref, str) for ref in row["evidence_refs"])):
+            raise ValueError("N02 source-group dispositions require a classified state and evidence references")
+    validate_refs(dispositions, "upstream_registry_ids", "N02 source-group dispositions", dataset_ids)
+    disposition_counts = {
+        "groups": len(dispositions),
+        "private_source_or_input_present": sum(
+            row["classification"] in {"source_data", "private_input"} for row in dispositions
+        ),
+        "derived_output_present": sum(row["classification"] == "derived_output" for row in dispositions),
+        "access_pending_no_production": sum(row["classification"] == "access_pending" for row in dispositions),
+    }
+    disposition_metadata = trace_map.get("counts", {})
+    expected_disposition_counts = {
+        "groups": disposition_metadata.get("registry_groups_with_explicit_disposition"),
+        "private_source_or_input_present": disposition_metadata.get("disposition_private_source_or_input_present"),
+        "derived_output_present": disposition_metadata.get("disposition_derived_output_present"),
+        "access_pending_no_production": disposition_metadata.get("disposition_access_pending_no_production"),
+    }
+    if disposition_counts != expected_disposition_counts:
+        raise ValueError("N02 source-group disposition counts do not match the source-to-KPI map")
     return {
         "schema_version": 1,
         "as_of": register["as_of"],
         "scope_note": register["scope_note"],
         "current_plan_implementation": register["current_plan_implementation"],
+        "source_group_dispositions": dispositions,
+        "source_group_disposition_summary": disposition_counts,
         "progress": {
             "source_of_truth": "docs/COMPLETION_REQUIREMENTS_50.json",
             "completed": sum(counts.values()),

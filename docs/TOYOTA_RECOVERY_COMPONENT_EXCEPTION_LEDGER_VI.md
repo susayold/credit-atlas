@@ -12,6 +12,18 @@ Tôi ghép tổng `recoveredAmount` theo tháng trong ABS-EE EX-102 với `Aggre
 | Toyota 2024-B | 29 | 1 | 28 | USD 13,517,164.16 | USD 11,752,606.08 | +USD 1,764,558.08 |
 | **Tổng** | **80** | **3** | **77** | **USD 29,931,672.22** | **USD 26,108,467.08** | **+USD 3,823,205.14** |
 
+### Phân bố residual — thống kê đối soát, không phải KPI tổn thất
+
+Tính trên đúng 80 dòng aggregate đã kiểm chứng, dùng `Decimal`; phân vị dùng Type 7, `h=1+(n−1)p`, nội suy tuyến tính rồi làm tròn đến cent. Ba kỳ tie được giữ riêng; thống kê phân bố unresolved dùng 77 kỳ còn lại. Residual cộng dồn là **12,77%** tổng `recoveredAmount` ABS-EE của hai deal. Tỷ lệ này chỉ mô tả khoảng cách giữa hai nguồn trên cùng mẫu kỳ, **không phải recovery rate, loss rate hay LGD**.
+
+| Phạm vi | Kỳ / tie / unresolved | Residual unresolved | Residual ÷ tổng ABS-EE `recoveredAmount` | Median / P75 residual mỗi kỳ | Max residual | Top 5 / tổng residual unresolved |
+|---|---:|---:|---:|---:|---:|---:|
+| Gộp hai deal | 80 / 3 / 77 | USD 3,823,205.14 | 12.77% | USD 42,938.42 / USD 62,473.10 | USD 151,706.60 | 16.25% |
+| Toyota 2022-B | 51 / 2 / 49 | USD 2,058,647.06 | 12.54% | USD 40,027.00 / USD 53,670.20 | USD 123,651.64 | 20.43% |
+| Toyota 2024-B | 29 / 1 / 28 | USD 1,764,558.08 | 13.05% | USD 60,415.95 / USD 79,994.56 | USD 151,706.60 | 33.86% |
+
+Toàn bộ **77/77 unresolved residual đều dương**; median và P75 của residual từng kỳ, chia cho ABS-EE `recoveredAmount` cùng kỳ (77 kỳ đều có mẫu số khác 0), lần lượt là 12.52% và 15.81%. Kỳ lớn nhất là Toyota 2024-B tháng 04/2025 (+USD 151,706.60), tiếp theo Toyota 2022-B tháng 11/2024 (+USD 123,651.64). Đây là thứ tự ưu tiên kiểm tra hồ sơ, không phải bằng chứng về nguyên nhân chung. Các nhóm năm trong receipt cộng hai deal có cửa sổ quan sát khác nhau và năm 2026 chưa đủ năm, nên không dùng làm xu hướng cùng-cohort.
+
 Mỗi kỳ có hai phép kiểm tra riêng trên certificate. Công thức component `Aggregate Net Liquidation Proceeds = −(Net Liquidation Proceeds Received During the Collection Period + Recoveries on Previously Liquidated Contracts)` khớp **80/80**. Công thức `Net Credit Losses = Gross Principal of Liquidated Receivables + signed Principal of Repurchased Contracts, previously charged-off + hai dòng proceeds có dấu` cũng khớp **80/80**. Hai phép kiểm tra này chỉ xác nhận phép cộng các dòng certificate; chúng không giải thích chênh lệch giữa hai nguồn.
 
 Ví dụ tháng 04/2025 của 2024-B: ABS-EE `recoveredAmount` là USD 834,540.77; certificate aggregate proceeds là USD 682,834.17; residual là +USD 151,706.60. Certificate tạo aggregate từ hai dòng signed −USD 150,252.40 và −USD 532,581.77. [SEC filing 2022-B](https://www.sec.gov/Archives/edgar/data/1914281/000095013122002459/d346874dex991.htm) minh họa cấu trúc gốc: collection period, hai dòng liquidation/recovery có dấu và aggregate proceeds. Tài liệu này ghi collection period đầu là **1/3/2022–30/4/2022, 61 ngày lịch**. Kỳ đầu 2024-B cũng là 1/3/2024–30/4/2024, 61 ngày theo certificate đã thu thập. Vì vậy, chỉ dùng nhãn report month sẽ làm mất thông tin về độ dài cửa sổ thu thập. [SEC filing 2024-B tháng 04/2025](https://www.sec.gov/Archives/edgar/data/2012786/000095013125002267/d923232dex991.htm) là ví dụ kỳ có residual lớn nêu trên.

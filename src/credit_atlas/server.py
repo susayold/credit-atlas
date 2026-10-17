@@ -25,6 +25,13 @@ STATIC = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js",
           **{f"/assets/credit-{name}-banner-v2.png": f"assets/credit-{name}-banner-v2.png"
              for name in ("retail", "mortgage", "business", "portfolio", "structured")}}
 
+
+def private_p4_export(service, report):
+    """Attach source-complete provenance to downloadable P4 JSON snapshots."""
+    workbench = getattr(service, 'excel_workbench', None)
+    if workbench is None: return report
+    return {**report, 'export_provenance': workbench.export_provenance(report)}
+
 MORTGAGE_SAMPLE_WORKBOOKS = {
     "/downloads/freddie-release47-samples.xlsx": (
         "data/private/mortgage/freddie-public-reference-f317b6c98c28/CreditAtlas-Freddie-Release47-Public-Samples.xlsx",
@@ -432,11 +439,35 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     state_code = query.get("state", "CA").upper()
                     self.send(200, nmdb_state_performance_report(service.root, state_code), head=head)
                     return
+                if url.path in {"/api/treasury-hamp-quarterly", "/api/treasury-hamp-quarterly-excel"}:
+                    from .treasury_hamp_quarterly import report, workbook_bytes
+                    result = report(service.root, query)
+                    if not result.get("available"):
+                        if url.path.endswith("-excel"):
+                            self.send(404, {"error": result.get("reason", "Treasury HAMP workbook is unavailable")}, head=head)
+                        else:
+                            self.send(200, result, head=head)
+                        return
+                    if url.path.endswith("-excel"):
+                        self.send(
+                            200, workbook_bytes(result),
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            filename="CreditAtlas-Treasury-HAMP-Quarterly-Selection.xlsx", head=head,
+                        )
+                        return
+                    self.send(200, result, head=head)
+                    return
                 if url.path == "/api/hud-fha-performance":
                     if query:
                         raise ValueError("HUD FHA aggregate accepts no filters")
                     from .hud_fha_performance import hud_fha_performance_report
                     self.send(200, hud_fha_performance_report(service.root), head=head)
+                    return
+                if url.path == "/api/hud-fha-production-transitions":
+                    if query:
+                        raise ValueError("HUD FHA production transitions accept no filters")
+                    from .hud_fha_production_transitions import hud_fha_production_transitions
+                    self.send(200, hud_fha_production_transitions(service.root), head=head)
                     return
                 if url.path == "/api/mortgage-macro-context":
                     if query:
@@ -722,6 +753,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-convergence','/api/exposure-convergence-report'}:
                     result=service.exposure_convergence_views.report(query)
                     if url.path=='/api/exposure-convergence-report':
+                        result=private_p4_export(service,result)
                         self.send(200,result,filename=f"CreditAtlas-{result['convergence_id']}-private.json",head=head)
                         return
                 elif url.path == '/api/portfolio-reviews':
@@ -731,6 +763,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     if set(query)-{'source_import_id','id','revision'} or not {'source_import_id','id'}<=set(query): raise ValueError('Review requires bound source/id')
                     result=service.portfolio_reviews.report(query['source_import_id'],query['id'],int(query['revision']) if 'revision' in query else None)
                     if url.path=='/api/portfolio-review-report':
+                        result=private_p4_export(service,result)
                         self.send(200,result,filename=f"CreditAtlas-{result['id']}-revision-{result['revision']}-private.json",head=head)
                         return
                 elif url.path == '/api/exposure-tail-studies':
@@ -739,6 +772,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-tail', '/api/exposure-tail-report'}:
                     result = service.exposure_tail_views.report(query)
                     if url.path == '/api/exposure-tail-report':
+                        result=private_p4_export(service,result)
                         self.send(200, result, filename=f"CreditAtlas-{result['tail_id']}-private-tail-research.json", head=head)
                         return
                 elif url.path == '/api/exposure-ecl-studies':
@@ -747,6 +781,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-ecl', '/api/exposure-ecl-report'}:
                     result = service.exposure_ecl_views.report(query)
                     if url.path == '/api/exposure-ecl-report':
+                        result=private_p4_export(service,result)
                         self.send(200, result, filename=f"CreditAtlas-{result['ecl_id']}-private-research-cash-shortfalls.json", head=head)
                         return
                 elif url.path == '/api/exposure-scenarios':
@@ -755,6 +790,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-scenario', '/api/exposure-scenario-report'}:
                     result = service.exposure_scenario_views.report(query)
                     if url.path == '/api/exposure-scenario-report':
+                        result=private_p4_export(service,result)
                         self.send(200, result, filename=f"CreditAtlas-{result['scenario_id']}-private-declared-scenarios.json", head=head)
                         return
                 elif url.path == '/api/exposure-movements':
@@ -763,6 +799,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-movement', '/api/exposure-movement-report'}:
                     result = service.exposure_movement_views.report(query)
                     if url.path == '/api/exposure-movement-report':
+                        result=private_p4_export(service,result)
                         self.send(200, result, filename=f"CreditAtlas-{result['movement_id']}-private-observation-bridge.json", head=head)
                         return
                 elif url.path == '/api/exposure-imports':
@@ -771,6 +808,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 elif url.path in {'/api/exposure-aggregates', '/api/exposure-report'}:
                     result = service.exposure_views.report(query)
                     if url.path == '/api/exposure-report':
+                        result=private_p4_export(service,result)
                         self.send(200, result, filename=f"CreditAtlas-{result['import_id']}-private-exposure-aggregates.json", head=head)
                         return
                 elif url.path in {'/api/hmda-cohort', '/api/hmda-cohort-report'}:
@@ -1039,6 +1077,19 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     if url.path.endswith("-report"):
                         self.send(200, result, filename="FHFA-NMDB-public-aggregate-performance.json", head=head)
                         return
+                elif url.path == "/api/fhfa-nmdb-performance-geographies":
+                    result = service.fhfa_nmdb_performance_geographies(query)
+                elif url.path == "/api/fhfa-nmdb-performance-geographies-excel":
+                    result = service.fhfa_nmdb_performance_geographies(query)
+                    if not result.get("available"):
+                        self.send(404, {"error": result.get("reason", "Full-geography FHFA NMDB data is unavailable")}, head=head)
+                        return
+                    from .nmdb_performance_geographies import workbook_bytes
+                    output = workbook_bytes(result)
+                    self.send(200, output,
+                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                              filename="FHFA-NMDB-geography-selection.xlsx", head=head)
+                    return
                 elif url.path in {"/api/cfpb-mortgage-trends", "/api/cfpb-mortgage-trends-report"}:
                     result = service.cfpb_mortgage_trends(query)
                     if url.path.endswith("-report"):

@@ -1,0 +1,54 @@
+{
+  "schema_version": "creditatlas-plan-workbook-update-v1",
+  "updated_date": "2026-10-17",
+  "workbook_path": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
+  "previous_sha256": "c1eebad4ea52cec39e7a71cd08a7efa24452968eb0ae99183fa6d9f2f9cc11b0",
+  "sha256": "bb9a387d412615780414a894832c959546e824193d9b75875786d48ed4fcbcd1",
+  "sheets": [
+    "Ke hoach",
+    "50 yeu cau",
+    "Du lieu",
+    "Phuong phap"
+  ],
+  "tables": 4,
+  "updated_task_ids": [
+    "N02",
+    "N03"
+  ],
+  "completion_formula": {
+    "completed": 26,
+    "total": 50,
+    "ratio": 0.52,
+    "formulas": [
+      "=SUM(B6:B10)",
+      "=SUM(C6:C10)",
+      "=B11/C11"
+    ]
+  },
+  "verification": {
+    "artifact_tool_recalculation": "PASS: updated N02 scope/status cells in the existing four-sheet workbook, preserved the plan layout, recalculated, exported and reimported.",
+    "formula_cache_validation": "PASS: 18 formula cells across Ke hoach; 0 formula errors after recalculation; B11=26, C11=50 and D11=52% remain unchanged.",
+    "visual_review": "PASS: Ke hoach rows 17–20 rendered after update; N02 text is legible and row height autofitted. P4 private XLSX SourceScope was rendered/read back with 39 upstream hashes and Freddie sample-UPB warning. Seven JSON report families carry source/artifact provenance and 32 focused tests pass. Six targeted Edge checks pass; broader browser suite stops before browser on Convergence receipt changed.",
+    "status_dropdown": "Not changed; existing F18:F41 list validation was retained.",
+    "native_excel_desktop": "Not verified; requires Microsoft Excel desktop."
+  },
+  "scope_note": "Synced N02 to 123 source records (20 public-suite +103 supplemental) across 17 curated broad families, 22/27 parent groups with source objects, and 5 remaining dispositions. Added three receipt/hash-verified Apple FY2025 issuer-hosted artifacts bound to one SEC accession; official filing identity confirmed, but byte parity to SEC-hosted copies, complete issuer panel and debt-service qualification remain open. Reconciled both private February/March Freddie-sample exposure imports: 39/39 upstream lineage hashes and 4/4 output hashes match for each; amounts are sample UPB, not owned portfolio, EAD, PD or ECL. Removed the private-derived exposure total from the public review workbook. Freddie Release 47 and dataset terms remain unauthenticated; no forecast or imputation was made. Capability remains 26/50. The source objects and scope review are recorded in docs/SEC_APPLE_2025_FILING_AND_EXPOSURE_ORIGIN_REVIEW_VI.md. P4 workspace/KPI/monitor labels now identify Freddie-sample raw UPB and exclude ownership/EAD interpretation; six targeted Edge UI checks pass with no browser errors. A private P4 XLSX export now includes exact import/output hashes, selected scope and all 39 upstream lineage path/hash pairs; formula-error scan and XLSX read-back pass. P4 JSON report downloads now carry source receipt/output/lineage hashes and derived artifact receipt SHA-256; 32 focused tests cover seven JSON report families, and the live private Freddie aggregate route returned all 39 lineage hashes without an absolute path. The XLSX was not validated in native Excel desktop. Full legacy browser acceptance could not start because a frozen convergence receipt fails code-hash verification; the receipt was not regenerated. No numeric model outputs or assumptions changed.",
+  "revision_history": [
+    {
+      "sha256": "c1eebad4ea52cec39e7a71cd08a7efa24452968eb0ae99183fa6d9f2f9cc11b0",
+      "note": "Added source receipt/output hashes and derived artifact receipt hashes to the seven private P4 JSON report families, with source-relative upstream lineage. Added 32 focused export tests; kept capability at 26/50."
+    },
+    {
+      "sha256": "9946d6e5fbcd135807135e37983d10f19598721af6c7d9fd3061cb94acb48cae",
+      "note": "Added a private P4 Excel SourceScope sheet with verified import/output hashes, selected scope, Freddie sample-UPB warning and all 39 pinned upstream lineage hashes. Kept the 26/50 completion ledger and its formulas unchanged. JSON report exports and native Excel desktop verification remain open."
+    },
+    {
+      "sha256": "89d0186f53660e3d3d708f8d8b9f76e3b5b3b79db43ed1cb8063a2d939470d82",
+      "note": "Synced N02 to 120 source records (20 public-suite +100 supplemental), 21/27 source-object bindings and 6 remaining dispositions; added seven receipt-backed SEC auto-ABS filing-set records across four deals and one private Freddie 2012 archive bound to its local hash/receipt. The Freddie receipt declares Release 47 but is not publisher-authenticated; source URL and terms remain unresolved. Treasury HAMP current monthly URL still matches the existing archive; payload contains only 14 activity dates (2022-01–2023-02), leaving 2018–2021 unobserved and the 2009–2017 archive unavailable. N03 includes receipt-verified NMDB all-geography API/UI/filter/export: 15 focused tests and 9 Edge checks pass. Native Excel desktop and remaining KPI links remain open. Capability stays 26/50; no projection or imputation was made."
+    },
+    {
+      "sha256": "6f383db56a026ebe448a710f36adf536496133a092c2e6661f47f8aaa8601046",
+      "note": "Updated P4 N02 plan status after source-aware Freddie-sample UPB labels were implemented. Six targeted Edge UI checks passed; broad browser suite remains blocked by a frozen convergence receipt mismatch. Capability remains 26/50."
+    }
+  ]
+}

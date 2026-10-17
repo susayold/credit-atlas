@@ -3,16 +3,25 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import sys
 import threading
 from datetime import datetime, timezone
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from types import SimpleNamespace
 
+from openpyxl import load_workbook
 from playwright.sync_api import sync_playwright
 
+# The private venv may have an editable install of the private checkout. Pin this
+# QA runner to the source tree whose UI and route contract it is validating.
+REPO_SRC = Path(__file__).resolve().parents[1] / "src"
+sys.path.insert(0, str(REPO_SRC))
+
 from credit_atlas.server import handler_for
+from credit_atlas.nmdb_performance_geographies import report as nmdb_geography_report
 
 
 def main() -> None:
@@ -22,7 +31,9 @@ def main() -> None:
     parser.add_argument("--receipt", required=True, type=Path)
     args = parser.parse_args()
     web_root = args.web_root.resolve() if args.web_root else None
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=args.root.resolve()), web_root=web_root))
+    root = args.root.resolve()
+    service = SimpleNamespace(root=root, fhfa_nmdb_performance_geographies=lambda query: nmdb_geography_report(root, query))
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(service, web_root=web_root))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
     worker.start()
@@ -96,6 +107,58 @@ def main() -> None:
             if dimensions["s"] > dimensions["w"] or dimensions["cols"] != 2:
                 raise AssertionError(f"NMDB panel has mobile overflow: {dimensions}")
             checks.append("NMDB chart and KPI panel fit a mobile viewport")
+
+            explorer = page.locator("#nmdb-all-geographies")
+            explorer.wait_for(timeout=20_000)
+            level = explorer.locator("#nmdb-all-geo-level")
+            level.select_option("Metro")
+            metro_rows = explorer.locator("#nmdb-all-geo-table tbody tr")
+            metro_rows.nth(99).wait_for(timeout=20_000)
+            if metro_rows.count() != 100:
+                raise AssertionError(f"Metro filter returned {metro_rows.count()} rows, expected 100")
+            if "100" not in explorer.inner_text():
+                raise AssertionError("Metro filter does not expose all 100 source geographies")
+            checks.append("all 100 metro geographies load for the selected FHFA quarter and series")
+
+            level.select_option("State")
+            geography = explorer.locator("#nmdb-all-geo-id")
+            geography.select_option("CA")
+            explorer.locator("#nmdb-all-geo-period").select_option("all")
+            state_rows = explorer.locator("#nmdb-all-geo-table tbody tr")
+            state_rows.nth(97).wait_for(timeout=20_000)
+            if state_rows.count() != 98:
+                raise AssertionError(f"Single-state trend returned {state_rows.count()} rows, expected 98")
+            explorer.locator("#nmdb-all-geo-trend .nmdb-line").first.wait_for(timeout=20_000)
+            if explorer.locator("#nmdb-all-geo-trend .nmdb-line").count() < 1:
+                raise AssertionError("Single-state quarterly performance trend is not charted")
+            quarter_ticks = explorer.locator("#nmdb-all-geo-trend text").all_text_contents()
+            if "2002Q1" not in quarter_ticks or "2026Q2" not in quarter_ticks:
+                raise AssertionError(f"Trend chart quarter ticks do not show the full source range: {quarter_ticks}")
+            checks.append("state selector returns all 98 quarters with correct source-quarter chart ticks")
+
+            geography.select_option("VT")
+            explorer.locator("#nmdb-all-geo-market").select_option("Government / Non-Conventional")
+            explorer.locator("#nmdb-all-geo-period").select_option("2004Q1")
+            result_rows = explorer.locator("#nmdb-all-geo-table tbody tr")
+            result_rows.first.wait_for(timeout=20_000)
+            if result_rows.count() != 1:
+                raise AssertionError(f"Suppressed Vermont filter returned {result_rows.count()} rows, expected 1")
+            result_row = explorer.locator("#nmdb-all-geo-table tbody tr").inner_text()
+            if "suppressed" not in result_row or "Yes" not in result_row or "—" not in result_row:
+                raise AssertionError(f"FHFA-suppressed Vermont row is not visibly preserved: {result_row}")
+            with page.expect_download() as geo_download_info:
+                explorer.locator("#nmdb-all-geo-excel").click()
+            geo_download = geo_download_info.value
+            geo_workbook = args.receipt.parent / "CreditAtlas-NMDB-geography-browser-qa.xlsx"
+            geo_workbook.parent.mkdir(parents=True, exist_ok=True)
+            geo_download.save_as(geo_workbook)
+            geo_bytes = geo_workbook.read_bytes()
+            workbook = load_workbook(geo_workbook, data_only=True)
+            if workbook.sheetnames != ["Start Here", "Selected data", "Definitions", "Quality & lineage"]:
+                raise AssertionError("Filtered NMDB geography Excel workbook is missing expected sheets")
+            if workbook["Selected data"].cell(2, 10).value is not None or workbook["Selected data"].cell(2, 11).value != "Yes":
+                raise AssertionError("Filtered Excel workbook changed the source-suppressed value")
+            checks.append("filtered Excel export preserves Vermont suppression and source lineage")
             browser.close()
     finally:
         server.shutdown()
@@ -104,11 +167,18 @@ def main() -> None:
     if errors:
         raise AssertionError(f"Browser page errors: {errors}")
     receipt = {
-        "schema_version": "nmdb-context-browser-qa-v1",
+        "schema_version": "nmdb-context-browser-qa-v2",
         "status": "PASS",
         "checked_at_utc": datetime.now(timezone.utc).isoformat(),
         "checks": checks,
         "page_errors": errors,
+        "filtered_xlsx": {
+            "filename": "CreditAtlas-NMDB-geography-browser-qa.xlsx",
+            "bytes": len(geo_bytes),
+            "sha256": hashlib.sha256(geo_bytes).hexdigest(),
+            "selected_rows": 1,
+            "suppressed_cell_preserved": True,
+        },
         "privacy": "No PUF IDs, row-level mortgage data or screenshots captured.",
     }
     args.receipt.parent.mkdir(parents=True, exist_ok=True)

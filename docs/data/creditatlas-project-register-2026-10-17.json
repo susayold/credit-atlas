@@ -43,9 +43,9 @@
     },
     {
       "id": "N02",
-      "status": "In progress: 91-record source-release register; FHFA (9), LendingClub/Bondora (5), Treasury HAMP (2), World Bank WDI (22), Sovereign Archive (12) tranches bound",
-      "scope": "27 dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. Source-release register has 91 records (20 public-suite +71 supplemental across 16 broad families), including 12 HMDA, 9 FHFA PUDB/NMDB/NSMO, 5 LendingClub/Bondora, 2 Treasury HAMP, 22 World Bank WDI API/reference and 12 BoC–BoE Sovereign Archive objects. Sixteen parent groups have source-level records. WDI has 122,892 observations and 64,452 source NULLs. Sovereign archive has 42,519 entity-year rows over four editions, 680,304 selected metric positions, 515,678 missing, 72,509 zero, 1,341 source markers, 9,954 schema-absent and 68 count conflicts. HAMP has only 14 local activity dates. These aggregate/context sources do not provide compatible retail borrower PD labels. Public tests validate lineage while raw private evidence stays excluded.",
-      "remaining": "11 of 27 parent groups still need object-level records or explicit no-data/access state; 7 FRED IDs remain source-layer without parent groups. Prioritize eligible loan-level Freddie/Ginnie only within access/terms and source groups with usable outcomes; finish source-specific API/UI/Excel parity. PUDB and NMDB New/Outstanding representative browser acceptance pass; HMDA national releases pass 21, 2018 Three-Year 4, One-Year 2019 4, and legacy cohort/reference 17 checks. The HMDA workspace now loads only the selected release/module. Next validate remaining routes, then open/recalculate approved workbooks in native Excel. Their N03 formula traces and HMDA denominator trace are documented; continue other KPI formula links and dataset-specific third-party rights checks. HAMP 2009–2017 archive endpoint times out; local 2018–2021 gap is unresolved. WDI is latest-revised macro context; do not project or impute. Sovereign archive is revised sovereign-government default stock context, not retail/corporate PD/LGD."
+      "status": "In progress: 123-record source-release register; 7 receipt-backed SEC auto-ABS filing-set records and three Apple FY2025 issuer-hosted artifacts for one accession; plus private Freddie 2012 receipt/hash binding; Freddie publisher authentication and terms remain unresolved.",
+      "scope": "27 dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. Source-release register has 123 records (20 public-suite +103 supplemental across 17 broad families). The private Freddie 2012 cohort is bound to a local archive hash/receipt: 50,000 origination loans and 4,510,559 monthly performance rows through 2026-03. The receipt declares Release 47 and research use but says publisher release is not authenticated; exact dataset terms remain unverified and raw data remain private. Seven receipt-backed SEC filing-set records cover Toyota 2022-B (51 ABS-EE +51 10-D periods), Toyota 2024-B (29+29), Nissan 2024-B (23+23), and World Omni 2025-A (20 ABS-EE). Three Apple FY2025 issuer-hosted artifacts bind to one SEC accession; byte parity to SEC-hosted copies is not verified. 22 parent groups have source-object records; 5 remain explicitly classified (1 private source/input, 3 derived outputs, 1 Ginnie access-pending/no production).",
+      "remaining": "5 of 27 parent groups remain without bound source objects: 1 private source/input groups, 3 derived outputs with upstream links, and 1 Ginnie production access-pending; 7 FRED IDs remain without parent groups. For Freddie, release authenticity, original download channel, cutoff evidence and dataset-specific terms remain open; keep 2012 descriptive/private and acquire later vintages only through authorized Clarity access. Finish source-specific API/UI/Excel parity, remaining KPI formula links and rights review. HAMP activity gaps remain unexplained; do not forecast or impute. WDI and Sovereign Archive remain context, not retail/corporate PD or LGD. HUD Table 2 PDF binary returned HTTP 403; report-specific third-party notices remain uninspected."
     },
     {
       "id": "N03",
@@ -106,10 +106,13 @@
       "status": "Local restricted sample; additional vintages access-gated",
       "access": "Clarity account and publisher terms; no public redistribution",
       "use": "D01 descriptive lifecycle; does not support temporal model by itself",
-      "next": "Authenticate, pilot one annual archive and reconcile release 47 layout before batch acquisition.",
+      "next": "Use only as a private descriptive cohort until publisher identity, release/cutoff and dataset terms are evidenced; acquire later vintages only through authorized Clarity access.",
       "evidence": "docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md",
       "publisher": "https://www.freddiemac.com/research/datasets/sf-loanlevel-dataset",
-      "rights_review": "Publisher access terms govern; do not redistribute raw loans."
+      "rights_review": "Publisher access terms govern; do not redistribute raw loans.",
+      "source_release_record_ids": [
+        "freddie-sfll-2012-user-supplied"
+      ]
     },
     {
       "id": "uci-350",
@@ -268,13 +271,18 @@
       "domain": "P3",
       "grain": "Filing fact / issuer statement; 105,441 source facts in reviewed profile",
       "period": "Filing-specific snapshot; 67 annual research statements across four issuers in reviewed audit",
-      "status": "Acquired and normalized for selected issuers",
+      "status": "Selected issuer filing analysis; Apple FY2025 filing objects are receipt-bound to one SEC accession; not a complete as-filed panel.",
       "access": "Public EDGAR APIs and issuer filings",
       "use": "Financial ratios, trends, debt schedule and source-linked credit memo",
-      "next": "Continue one executed instrument/facility chain; preserve filing and amendment dates.",
+      "next": "Bind each additional issuer filing/amendment and map each KPI to accession, period, unit and availability date; finish the facility/payment evidence chain.",
       "evidence": "docs/SEC_ISSUER_FINANCIALS_WORKFLOW.md",
       "publisher": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
-      "rights_review": "Public filing data; observe SEC fair-access and attribution guidance."
+      "rights_review": "Public filing data; observe SEC fair-access and attribution guidance.",
+      "source_release_record_ids": [
+        "apple-2025-10k-issuer-html",
+        "apple-2025-inline-xbrl-issuer-html",
+        "apple-2025-xbrl-issuer-zip"
+      ]
     },
     {
       "id": "fdic-bank-panel",
@@ -292,17 +300,17 @@
     },
     {
       "id": "exposure-actual-2026-03",
-      "name": "Actual portfolio exposure intake",
+      "name": "Freddie 2012 sample-derived exposure diagnostic",
       "domain": "P4",
-      "grain": "Position observation; 9,698 observations",
-      "period": "As of March 2026",
-      "status": "Imported privately; local evidence",
+      "grain": "Loan-month UPB sample observations; 9,804 February 2026 and 9,698 March 2026 records, not owned portfolio positions",
+      "period": "Freddie 2012 sample observed through 2026-02 and 2026-03",
+      "status": "Private cohort-derived UPB diagnostic; origin bound to Freddie 2012 sample; actual ownership is not evidenced",
       "access": "User-provided/private business data; not public",
-      "use": "Native-currency concentration and movement; declared risk inputs kept separate",
-      "next": "Add valid obligor/group IDs, contractual schedule, EIR and governed FX treatment before EL/ECL.",
+      "use": "Sample-level UPB movement/concentration diagnostics only; not an actual lender book, EAD, PD or ECL",
+      "next": "Keep private; rename legacy Actual labeling; require owner/source evidence, obligor identity and contract terms before actual-book or ECL analysis.",
       "evidence": "docs/EXPOSURE_IMPORT_WORKFLOW.md",
-      "publisher": "",
-      "rights_review": "Private; do not publish source rows or identifying information."
+      "publisher": "Freddie Mac sample, upstream local receipt-bound record; not an independently sourced portfolio",
+      "rights_review": "Private; no redistribution approval; upstream Freddie release authentication and terms remain unresolved."
     },
     {
       "id": "toyota-2022b-absee",
@@ -316,7 +324,11 @@
       "next": "Retain all 49 unresolved monthly recovery deltas; do not infer cause or LGD without field/cutoff/amendment mapping.",
       "evidence": "docs/TOYOTA_RECOVERY_COMPONENT_EXCEPTION_LEDGER_VI.md",
       "publisher": "https://www.sec.gov/edgar/search/",
-      "rights_review": "Public SEC filings; definitions and servicer correction history remain source-specific."
+      "rights_review": "Public SEC filings; definitions and servicer correction history remain source-specific.",
+      "source_release_record_ids": [
+        "sec-toyota-2022b-abs-ee-history",
+        "sec-toyota-2022b-10d-certificates"
+      ]
     },
     {
       "id": "toyota-2024b-absee",
@@ -330,7 +342,11 @@
       "next": "Trace recovery component, timing and correction definitions; keep 28 nonzero comparisons unresolved pending evidence.",
       "evidence": "docs/TOYOTA_RECOVERY_COMPONENT_EXCEPTION_LEDGER_VI.md",
       "publisher": "https://www.sec.gov/edgar/search/",
-      "rights_review": "Public SEC filings; keep issuer/deal qualification explicit."
+      "rights_review": "Public SEC filings; keep issuer/deal qualification explicit.",
+      "source_release_record_ids": [
+        "sec-toyota-2024b-abs-ee-history",
+        "sec-toyota-2024b-10d-certificates"
+      ]
     },
     {
       "id": "toyota-recovery-components-ledger-80-periods",
@@ -358,7 +374,11 @@
       "next": "Retain unresolved source differences; investigate issuer-specific event/cutoff mapping only if dated servicer evidence becomes available.",
       "evidence": "docs/NISSAN_2024B_EXCEPTION_LEDGER_VI.md",
       "publisher": "https://www.sec.gov/edgar/search/",
-      "rights_review": "Public SEC filings; field definitions and correction timing remain issuer-specific."
+      "rights_review": "Public SEC filings; field definitions and correction timing remain issuer-specific.",
+      "source_release_record_ids": [
+        "sec-nissan-2024b-abs-ee-history",
+        "sec-nissan-2024b-10d-certificates"
+      ]
     },
     {
       "id": "nissan-2024b-exception-ledger-23-periods",
@@ -400,7 +420,10 @@
       "next": "Establish executed terms, amendments and effective dates before full legal qualification.",
       "evidence": "docs/WOART_2025A_EXECUTED_AGREEMENTS_RESEARCH_VI.md",
       "publisher": "https://www.sec.gov/edgar/search/",
-      "rights_review": "Public issuer filings; legal effectiveness is case-specific."
+      "rights_review": "Public issuer filings; legal effectiveness is case-specific.",
+      "source_release_record_ids": [
+        "sec-woart-2025a-abs-ee-history"
+      ]
     },
     {
       "id": "world-bank-wdi",
@@ -475,18 +498,38 @@
       "id": "treasury-hamp",
       "name": "U.S. Treasury HAMP supplemental performance",
       "domain": "P2",
-      "grain": "9,872,074 mixed-grain records: 1,889,234 modifications + 7,982,840 monthly activity records; not loans",
-      "period": "Observed activity: 14 dates, 2022-01–2023-02; modification effective dates 2009-07–2017-12",
-      "status": "Acquired; supplemental case only",
+      "grain": "9,872,074 mixed-grain monthly-file records plus 20 Treasury cohort-summary PDFs curated as 2,485 program × vintage × age rows; aggregates, not loans.",
+      "period": "Monthly-file activity: 14 dates 2022-01–2023-02; mod effective 2009-07–2017-12. Quarterly cohort summaries: 2018-Q1–2023-Q1, 20 reports; 2021-Q3 not listed.",
+      "status": "Acquired; aggregate-only supplemental case; no dedicated app KPI route.",
       "access": "Public Treasury file release",
-      "use": "Loss-mitigation context; does not extend Freddie annual vintages",
-      "next": "Acquire/verify the separate 2009–2017 activity file and establish 2018–2021 coverage; research outcome semantics and censoring before temporal KPI/model work.",
+      "use": "HAMP loss-mitigation cohort surveillance; source-defined 60+/90+ delinquency by months since modification. No general mortgage PD.",
+      "next": "Keep 2018–2021 monthly activity unresolved; retry official static ZIP when reachable; complete KPI/Excel acceptance and assess attributed-public release separately.",
       "evidence": "docs/TREASURY_HAMP_DATA_REVIEW_VI.md",
       "publisher": "https://home.treasury.gov/data/troubled-assets-relief-program/reports/mha-public-file",
       "rights_review": "Public federal data; retain source-version caveats.",
       "source_release_record_ids": [
         "treasury-hamp-performance-update-2023-02",
-        "treasury-hamp-performance-user-guide-v1"
+        "treasury-hamp-performance-user-guide-v1",
+        "treasury-hamp-summary-2023q1",
+        "treasury-hamp-summary-2022q4",
+        "treasury-hamp-summary-2022q3",
+        "treasury-hamp-summary-2022q2",
+        "treasury-hamp-summary-2022q1",
+        "treasury-hamp-summary-2021q4",
+        "treasury-hamp-summary-2021q2",
+        "treasury-hamp-summary-2021q1",
+        "treasury-hamp-summary-2020q4",
+        "treasury-hamp-summary-2020q3",
+        "treasury-hamp-summary-2020q2",
+        "treasury-hamp-summary-2020q1",
+        "treasury-hamp-summary-2019q4",
+        "treasury-hamp-summary-2019q3",
+        "treasury-hamp-summary-2019q2",
+        "treasury-hamp-summary-2019q1",
+        "treasury-hamp-summary-2018q4",
+        "treasury-hamp-summary-2018q3",
+        "treasury-hamp-summary-2018q2",
+        "treasury-hamp-summary-2018q1"
       ]
     },
     {
@@ -509,10 +552,10 @@
       "domain": "P2",
       "grain": "Quarterly aggregate cell; 261,856 rows",
       "period": "2002 Q1–2026 Q2",
-      "status": "Three source packages receipt-bound; actual readers/API paths present; descriptive aggregate context",
+      "status": "Three source packages receipt-bound; all-geography API and filtered XLSX expose the 261,856-cell package by source dimensions. National/state/full-geography Edge QA passes 9 checks; 15 focused tests pass, including 100 metro geographies, 98-quarter state trend and preserved Vermont suppression. Descriptive context only.",
       "access": "Public FHFA aggregate release",
       "use": "Market-level performance context; not loan-level outcomes",
-      "next": "Finish browser and workbook acceptance for all-geographies, national/census-area and state paths separately; preserve preliminary/suppressed cells and avoid cohort/PD interpretation.",
+      "next": "Open/recalculate filtered workbook in native Excel; trace remaining mortgage KPIs and finish representative N05/N06 route parity. Preserve preliminary/suppressed values and avoid cohort/PD interpretation.",
       "evidence": "docs/FHFA_NMDB_AGGREGATE_PERFORMANCE_VI.md",
       "publisher": "https://www.fhfa.gov/data/nmdb",
       "rights_review": "Public aggregate release; preserve suppression and source definitions."
@@ -829,5 +872,11 @@
       "limits": "Contributor and merged-source original issuer fidelity remain unverified; Kaggle uploader CC0 and Mendeley CC BY 4.0 do not by themselves resolve all upstream/third-party rights. Data vintages/populations are not interchangeable. Dictionary does not prove application-time availability. Current-status/terminal-status fields do not define a common fixed-horizon PD; rejected applications have no repayment outcome. Keep source files private and all approval/default/model claims unavailable until gates pass.",
       "evidence": "docs/LENDINGCLUB_FULL_SOURCE_VI.md; docs/LENDINGCLUB_SOURCE_AND_DICTIONARY_REVIEW_VI.md"
     }
-  ]
+  ],
+  "source_group_disposition_summary": {
+    "groups": 5,
+    "private_source_or_input_present": 1,
+    "derived_output_present": 3,
+    "access_pending_no_production": 1
+  }
 }

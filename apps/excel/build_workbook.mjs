@@ -22,9 +22,38 @@ if(mode==='template'){
   c.getRange('A1:A13').format.columnWidth=31;c.getRange('B1:B13').format.columnWidth=45;c.getRange('B2:B13').format.font.color='#0000FF';c.getRange('D1').values=[['Nhập danh mục công ty']];c.getRange('D1').format.font.bold=true;
   c.getRange('D2').write([['Thay 3 dòng EXAMPLE bằng dữ liệu của bạn.'],['Giữ nguyên tên sheet và hàng tiêu đề.'],['Mỗi file dùng cùng as_of và date_grain.'],['Không cộng USD và VND thành một tổng.'],['Giữ PD/LGD/EAD trống khi risk_contract là null.'],['Mã dài và số tiền >15 chữ số: nhập dạng text.'],['InputPositions và InputControl chỉ nhận values, không formulas.'],['Nhập thêm records bằng cách mở rộng Excel Table.'],['Upload XLSX trên trang Exposure; app kiểm tra và tạo version mới.'],['Chỉ hỗ trợ .xlsx; không VBA, external links hoặc Power Query connections.']]);c.getRange('D1:D11').format.columnWidth=80;
 }else{
-  const {inventory,scenario,ecl,tail,review}=data;const currency=inventory.currencies[0].currency;const total=inventory.currencies[0];
+  const {inventory,source_provenance,scenario,ecl,tail,review}=data;const currency=inventory.currencies[0].currency;const total=inventory.currencies[0];
   const summary=sheet('Summary','CreditAtlas portfolio review');const model=sheet('ScenarioModel','Declared expected-loss model');const results=sheet('ResearchResults','Saved research results');const actual=sheet('Inventory','Source portfolio aggregates');const reviews=sheet('Review','Portfolio review notes');const audit=sheet('Audit','Source reconciliation');
+  const sourceScope=sheet('SourceScope','Verified source and analytical scope',44);
   summary.tabColor='#243B53';model.tabColor='#486581';actual.tabColor='#E8DCC4';
+  sourceScope.tabColor='#D9EAF7';
+  const scopeRows=[
+    ['Import ID',source_provenance.import_id],['Import receipt SHA-256',source_provenance.receipt_sha256],
+    ['Import completed at (UTC)',source_provenance.completed_at],['Import metadata SHA-256',source_provenance.metadata_sha256],
+    ['Imported source CSV SHA-256',source_provenance.source_csv_sha256],['Normalized positions SHA-256',source_provenance.positions_sha256],
+    ['Import report SHA-256',source_provenance.import_report_sha256],['Dataset kind',source_provenance.dataset_kind],
+    ['Amount kind',source_provenance.amount_kind],['Source namespace',source_provenance.source_namespace],
+    ['Source description',source_provenance.source_description],['Observation date / grain',`${source_provenance.as_of} / ${source_provenance.date_grain}`],
+    ['Export filter',`${source_provenance.currency_scope} currency · ${source_provenance.dimension} dimension`],
+    ['Records in selected scope',source_provenance.record_count],['Records across source currencies',source_provenance.all_currency_record_count],
+    ['Risk contract',source_provenance.risk_contract===null?'Not declared':JSON.stringify(source_provenance.risk_contract)],
+    ['Ownership certified',source_provenance.ownership_certified?'Yes':'No'],['Reported amount is EAD',source_provenance.amount_is_ead?'Yes':'No'],
+    ['Visibility',source_provenance.visibility],['Public release approved',source_provenance.public_release_approved?'Yes':'No'],
+    ['Interpretation / use limit',source_provenance.scope_warning]
+  ];
+  grid(sourceScope,5,['Source control','Verified value'],scopeRows,'SourceControls');
+  const scopeEnd=5+scopeRows.length;const warningRow=scopeEnd;
+  sourceScope.getRange(`A5:A${scopeEnd}`).format.columnWidth=34;sourceScope.getRange(`B5:B${scopeEnd}`).format.columnWidth=100;
+  sourceScope.getRange(`A6:B${scopeEnd}`).format.wrapText=true;sourceScope.getRange(`A6:B${scopeEnd}`).format.rowHeight=30;
+  sourceScope.getRange('B16').format.rowHeight=68;sourceScope.getRange(`B${warningRow}`).format={fill:'#FFF1CC',font:{bold:true,color:'#7A3E00'},wrapText:true,rowHeight:88};
+  sourceScope.getRange('B8').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  const lineageStart=scopeEnd+3;const lineageRows=source_provenance.source_lineage.length?source_provenance.source_lineage.map(row=>[row.path,row.sha256]):[['No upstream lineage objects recorded','']];
+  sourceScope.getRange(`A${lineageStart}`).values=[['Pinned upstream source lineage']];sourceScope.getRange(`A${lineageStart}`).format={font:{bold:true,size:12,color:'#243B53'}};
+  grid(sourceScope,lineageStart+1,['Project-relative input path','SHA-256'],lineageRows,'SourceLineage');
+  sourceScope.getRange(`A${lineageStart+1}:A${lineageStart+1+lineageRows.length}`).format.columnWidth=88;
+  sourceScope.getRange(`B${lineageStart+1}:B${lineageStart+1+lineageRows.length}`).format.columnWidth=68;
+  sourceScope.getRange(`A${lineageStart+2}:B${lineageStart+1+lineageRows.length}`).format.wrapText=true;
+  sourceScope.freezePanes.freezeRows(5);
   titleNote(summary,`${inventory.as_of} · ${currency} · ${inventory.filters.dimension}`);
   grid(summary,5,['Metric','Value'],[['Source observations',total.records],['Reported amount',Number(total.reported_amount_major_exact)],['Source research EL',total.research_el_major_exact===null?'Unavailable':Number(total.research_el_major_exact)],['Zero amounts',total.zero_amount_records],['Source version',inventory.import_id],['Source EL status',total.el_status]],'PortfolioSummary');summary.getRange('A5:A11').format.columnWidth=31;summary.getRange('B5:B11').format.columnWidth=48;summary.getRange('B7:B8').setNumberFormat(money);summary.getRange('B6').setNumberFormat(integer);summary.getRange('B9').setNumberFormat(integer);
   summary.getRange('A14').values=[['Excel model result']];link(summary,'B14',"='ScenarioModel'!G20");summary.getRange('B14').setNumberFormat(money);summary.getRange('B14').format.font.color='#243B53';summary.getRange('A15').values=[['Scenario selected']];link(summary,'B15',"='ScenarioModel'!B5");summary.getRange('A18').values=[['PD/LGD/EAD and correlation/recovery are declared assumptions.']];summary.getRange('A19').values=[['Editing Excel formulas does not rerun saved Monte Carlo or ECL. Recompute in the app.']];summary.getRange('A20').values=[['Source totals use native currency. No borrower linkage or accounting/capital approval.']];
@@ -55,6 +84,6 @@ if(!scan.ndjson.includes('matched 0 entries'))throw new Error('Workbook formula 
 await fs.mkdir(path.dirname(outputPath),{recursive:true});
 const inspected=await wb.inspect({kind:'sheet',include:'id,name',maxChars:2000});
 await fs.writeFile(outputPath+'.qa.json',JSON.stringify({sheets:inspected.ndjson,formulaErrors:scan.ndjson,mode},null,2));
-for(const s of wb.worksheets.items){const preview=await wb.render({sheetName:s.name,range:mode==='template'?(s.name==='InputPositions'?'A1:M9':'A1:H14'):'A1:H25',scale:1,format:'png'});await fs.writeFile(outputPath+'.'+s.name+'.png',new Uint8Array(await preview.arrayBuffer()));}
+for(const s of wb.worksheets.items){const range=mode==='template'?(s.name==='InputPositions'?'A1:M9':'A1:H14'):s.name==='SourceScope'?'A1:B30':'A1:H25';const preview=await wb.render({sheetName:s.name,range,scale:1,format:'png'});await fs.writeFile(outputPath+'.'+s.name+'.png',new Uint8Array(await preview.arrayBuffer()));}
 const output=await SpreadsheetFile.exportXlsx(wb);await output.save(outputPath);
 console.log(JSON.stringify({status:'exported',mode,output:outputPath}));

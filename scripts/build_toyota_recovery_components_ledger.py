@@ -13,7 +13,7 @@ import hashlib
 import json
 import re
 import sys
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 
@@ -43,6 +43,7 @@ DEALS = {
     },
 }
 ZERO = Decimal("0.00")
+CENT = Decimal("0.01")
 CSV_NAME = "toyota-recovery-components-80-periods.csv"
 RECEIPT_NAME = "toyota-recovery-components-80-periods-receipt.json"
 
@@ -61,6 +62,94 @@ def contained(root: Path, *parts: str) -> Path:
     if not candidate.is_relative_to(root.resolve()):
         raise ValueError("A Toyota audit or source path escaped the selected D: workspace")
     return candidate
+
+
+def _linear_quantile(values: list[Decimal], probability: Decimal) -> Decimal | None:
+    """Return the Type-7 linear-interpolated quantile for exact Decimal inputs."""
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = Decimal(len(ordered) - 1) * probability
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    fraction = position - lower
+    return ordered[lower] + (ordered[upper] - ordered[lower]) * fraction
+
+
+def _percent(numerator: Decimal, denominator: Decimal) -> str | None:
+    if denominator == ZERO:
+        return None
+    return str((numerator / denominator * Decimal("100")).quantize(CENT, rounding=ROUND_HALF_UP))
+
+
+def summarize_reconciliation(rows: list[dict[str, str]]) -> dict:
+    """Create aggregate-only diagnostics without interpreting residual causes."""
+
+    def distribution(selected: list[dict[str, str]]) -> dict:
+        selected_unresolved = [row for row in selected if row["recovery_reconciliation_status"] == "UNRESOLVED"]
+        values = [Decimal(row["asset_minus_certificate_recovery_delta"]) for row in selected_unresolved]
+        amount = sum((Decimal(row["asset_recovered_amount_signed"]) for row in selected), ZERO)
+        delta = sum((Decimal(row["asset_minus_certificate_recovery_delta"]) for row in selected), ZERO)
+        nonzero_denominator_shares = [
+            Decimal(row["asset_minus_certificate_recovery_delta"])
+            / Decimal(row["asset_recovered_amount_signed"])
+            * Decimal("100")
+            for row in selected_unresolved
+            if Decimal(row["asset_recovered_amount_signed"]) != ZERO
+        ]
+        def q(probability: Decimal) -> Decimal | None:
+            return _linear_quantile(values, probability)
+        unresolved_total = sum(values, ZERO)
+        top_five_share = (
+            _percent(sum(sorted(values, reverse=True)[:5], ZERO), unresolved_total)
+            if unresolved_total > ZERO and all(value >= ZERO for value in values)
+            else None
+        )
+        return {
+            "periods": len(selected),
+            "ties": sum(row["recovery_reconciliation_status"] == "TIED" for row in selected),
+            "periods_with_zero_abs_ee_recovered_amount": sum(
+                Decimal(row["asset_recovered_amount_signed"]) == ZERO for row in selected
+            ),
+            "unresolved_periods": len(selected_unresolved),
+            "positive_unresolved_periods": sum(value > ZERO for value in values),
+            "negative_unresolved_periods": sum(value < ZERO for value in values),
+            "unresolved_residual_usd": str(unresolved_total),
+            "residual_share_of_abs_ee_recovered_amount_percent": _percent(delta, amount),
+            "unresolved_residual_quantiles_usd": {
+                "minimum": str(min(values)) if values else None,
+                "p25": str(q(Decimal("0.25")).quantize(CENT, rounding=ROUND_HALF_UP)) if values else None,
+                "median": str(q(Decimal("0.50")).quantize(CENT, rounding=ROUND_HALF_UP)) if values else None,
+                "p75": str(q(Decimal("0.75")).quantize(CENT, rounding=ROUND_HALF_UP)) if values else None,
+                "maximum": str(max(values)) if values else None,
+            },
+            "top_five_unresolved_share_of_unresolved_residual_percent": top_five_share,
+            "unresolved_periods_with_zero_abs_ee_recovered_amount": sum(
+                Decimal(row["asset_recovered_amount_signed"]) == ZERO for row in selected_unresolved
+            ),
+            "per_period_unresolved_residual_share_of_abs_ee_amount_percent": {
+                "eligible_periods": len(nonzero_denominator_shares),
+                "median": str(_linear_quantile(nonzero_denominator_shares, Decimal("0.50")).quantize(CENT, rounding=ROUND_HALF_UP)) if nonzero_denominator_shares else None,
+                "p75": str(_linear_quantile(nonzero_denominator_shares, Decimal("0.75")).quantize(CENT, rounding=ROUND_HALF_UP)) if nonzero_denominator_shares else None,
+            },
+        }
+
+    by_deal = {
+        deal: distribution([row for row in rows if row["deal"] == deal])
+        for deal in sorted({row["deal"] for row in rows})
+    }
+    by_report_year = []
+    for year in sorted({row["report_month"][:4] for row in rows}):
+        selected = [row for row in rows if row["report_month"].startswith(year)]
+        by_report_year.append({"report_year": year, **distribution(selected)})
+
+    return {
+        "scope_note": "Descriptive reconciliation diagnostics only; a residual ratio is not a recovery rate, LGD, PD, loss estimate, or causal attribution.",
+        "quantile_method": "Hyndman-Fan Type 7 linear interpolation: h=1+(n-1)p; interpolated dollar outputs rounded to cents using ROUND_HALF_UP.",
+        "overall": distribution(rows),
+        "by_deal": by_deal,
+        "by_report_year_combined_deals": by_report_year,
+    }
 
 
 def first_numeric_field(path: Path, label_prefix: str) -> tuple[Decimal | None, bool]:
@@ -226,6 +315,8 @@ def build(workspace_root: Path, output_dir: Path) -> dict:
             "certificate_net_loss_identity_passes": len(selected),
         }
 
+    reconciliation_diagnostics = summarize_reconciliation(rows)
+
     output_dir.mkdir(parents=True, exist_ok=True)
     csv_path = output_dir / CSV_NAME
     fields = list(rows[0])
@@ -246,6 +337,7 @@ def build(workspace_root: Path, output_dir: Path) -> dict:
             "component_formula_passes": sum(row["certificate_component_identity_status"] == "PASS" for row in rows),
             "net_loss_formula_passes": sum(row["certificate_net_loss_identity_status"] == "PASS" for row in rows),
         },
+        "reconciliation_diagnostics": reconciliation_diagnostics,
         "field_definitions": {
             "asset_recovered_amount_signed": "Monthly sum of ABS-EE EX-102 recoveredAmount from the receipt-bound existing audit; EX-103 says it covers amounts recovered on a Defaulted Receivable during the reporting period and includes repossession proceeds.",
             "certificate_net_liquidation_proceeds_signed": "Current-period signed row from the SEC Servicer's Certificate; proceeds appear negative in its liquidations table.",

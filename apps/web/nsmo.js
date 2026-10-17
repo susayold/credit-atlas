@@ -11,8 +11,8 @@ function drawChart(svg,series,label){
   for(let i=0;i<=4;i++){const value=limit-i*nice,y=t+i*ih/4;const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',l);line.setAttribute('x2',w-r);line.setAttribute('y1',y);line.setAttribute('y2',y);line.setAttribute('class','grid-line');svg.append(line);const tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',l-10);tx.setAttribute('y',y+4);tx.setAttribute('text-anchor','end');tx.setAttribute('class','axis-label');tx.textContent=n(value);svg.append(tx);}
   const points=series.map((x,i)=>({x:l+(series.length===1?iw/2:i*iw/(series.length-1)),y:t+ih-(x.value/limit)*ih,...x}));
   const path=document.createElementNS('http://www.w3.org/2000/svg','polyline');path.setAttribute('points',points.map(p=>`${p.x},${p.y}`).join(' '));path.setAttribute('class','series-line');svg.append(path);
-  points.forEach((p,i)=>{if(i%Math.ceil(points.length/18)===0||i===points.length-1){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','4');c.setAttribute('class','series-point');const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=`${p.quarter}: ${n(p.value)}`;c.append(title);svg.append(c);const tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',p.x);tx.setAttribute('y',h-17);tx.setAttribute('text-anchor','middle');tx.setAttribute('class','axis-label');const qmatch=p.quarter.match(/^(\d{4})-Q([1-4])$/);tx.textContent=qmatch?`${qmatch[1]}Q${qmatch[2]}`:p.quarter.slice(0,4)+'Q'+(Math.floor((Number(p.quarter.slice(5,7))-1)/3)+1);svg.append(tx);}});
-  svg.setAttribute('aria-label',`${label}. Counts from ${series[0].quarter} to ${series.at(-1).quarter}.`);
+  points.forEach((p,i)=>{if(i%Math.ceil(points.length/18)===0||i===points.length-1){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','4');c.setAttribute('class','series-point');const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=`${p.quarter}: ${n(p.value)}`;c.append(title);svg.append(c);const tx=document.createElementNS('http://www.w3.org/2000/svg','text');tx.setAttribute('x',p.x);tx.setAttribute('y',h-17);tx.setAttribute('text-anchor','middle');tx.setAttribute('class','axis-label');const monthQuarter=p.quarter.match(/^(\d{4})-Q([1-4])$/),quarter=p.quarter.match(/^(\d{4})Q([1-4])$/);tx.textContent=monthQuarter?`${monthQuarter[1]}Q${monthQuarter[2]}`:quarter?`${quarter[1]}Q${quarter[2]}`:p.quarter;svg.append(tx);}});
+  svg.setAttribute('aria-label',`${label}. Quarterly rates from ${series[0].quarter} to ${series.at(-1).quarter}.`);
 }
 function render(profile){
   const sample=profile.sample,perf=profile.performance,weights=profile.analysis_weight;
@@ -53,8 +53,10 @@ function render(profile){
   loadFirstObservedTransitionSupport();
   loadFirstEntryRiskSetFeasibility();
   loadHudFhaBenchmark();
+  loadHudFhaProductionTransitions();
   loadNmdbContext();
   loadNmdbStateContext();
+  loadNmdbAllGeographies();
   loadSurveyReturns();
 }
 async function loadHudFhaBenchmark(){
@@ -152,6 +154,33 @@ async function loadHudFhaBenchmark(){
     state.className='domain-state ok';state.textContent='HUD August 2026 report loaded · Tables 1–6 · 13 monthly observations × NSA/SA · 60 subgroup rows · reason, foreclosure and REO detail · aggregate only.';
   }catch(error){state.className='domain-state error';state.textContent=`HUD FHA benchmark unavailable: ${error.message}`;}
 }
+async function loadHudFhaProductionTransitions(){
+  const state=$('hud-transitions-state');
+  try{
+    const response=await fetch('/api/hud-fha-production-transitions',{cache:'no-store',headers:{Accept:'application/json'}});
+    const data=await response.json();if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+    const latest=data.latest;
+    $('hud-transitions-metrics').replaceChildren(
+      metric('Serious-delinquency entries',n(latest.serious_delinquency_entries),'HUD Table 2 · Aug 2026'),
+      metric('Cured and leaving 90+',n(latest.cures_leaving_serious_delinquency),'Monthly count · aggregate'),
+      metric('Ending inventory',n(latest.ending_serious_delinquency_inventory),'End of Aug 2026'),
+      metric('HUD cure ratio',latest.cure_ratio_pct.toFixed(1)+'%','Cures ÷ entries · not a probability')
+    );
+    const rows=data.monthly.map(row=>[
+      row.period,n(row.beginning_serious_delinquency_inventory),n(row.serious_delinquency_entries),
+      n(row.cures_leaving_serious_delinquency),n(row.claims),n(row.prepayments_from_serious_delinquency_inventory),
+      n(row.ending_serious_delinquency_inventory),n(row.late_posting_adjustment),row.cure_ratio_pct.toFixed(1)+'%',
+      n(row.flow_identity_difference),row.prior_ending_plus_adjustment_difference==null?'—':n(row.prior_ending_plus_adjustment_difference),
+      `Table ${row.source_table} · p.${row.source_page}`
+    ]);
+    $('hud-transitions-table').replaceChildren(table([
+      'Month','Beginning serious-delinquency inventory','New entries','Cures leaving serious delinquency',
+      'Claims','Prepayments','Ending inventory','Late-posting adjustment','HUD cure ratio',
+      'Flow bridge difference','Prior ending + adjustment difference','Source'
+    ],rows,[1,2,3,4,5,6,7,8,9,10]));
+    state.className='domain-state ok';state.textContent='HUD Production Report · Table 2 · 13 monthly observations · 2026-08 latest · counts and roll-forwards checked · aggregate only.';
+  }catch(error){state.className='domain-state error';state.textContent=`HUD FHA production transitions unavailable: ${error.message}`;}
+}
 async function loadNmdbContext(){
   const state=$('nmdb-state');
   try{
@@ -233,6 +262,57 @@ async function loadNmdbStateContext(){
     stateChoice.addEventListener('change',async()=>{try{await load(stateChoice.value);render();}catch(error){status.className='domain-state error';status.textContent=`NMDB state data unavailable: ${error.message}`;}});
     seriesChoice.addEventListener('change',render);marketChoice.addEventListener('change',render);render();
   }catch(error){status.className='domain-state error';status.textContent=`NMDB state benchmark unavailable: ${error.message}`;}
+}
+async function loadNmdbAllGeographies(){
+  const status=$('nmdb-all-geo-status'),levelChoice=$('nmdb-all-geo-level'),geoChoice=$('nmdb-all-geo-id'),marketChoice=$('nmdb-all-geo-market'),seriesChoice=$('nmdb-all-geo-series'),periodChoice=$('nmdb-all-geo-period'),excel=$('nmdb-all-geo-excel');
+  const filters={geo_level:'National',geo_id:'USA',market:'All Mortgages',series_id:'all',period:'all'};let latest=null,request=0,ready=false;
+  const query=new URLSearchParams(location.search);Object.keys(filters).forEach(key=>{const value=query.get('nmdb_all_geo_'+key);if(value!==null)filters[key]=value;});
+  const choices=[[levelChoice,'geo_level'],[geoChoice,'geo_id'],[marketChoice,'market'],[seriesChoice,'series_id'],[periodChoice,'period']];
+  const fill=(select,items,value)=>{select.replaceChildren(...items.map(([key,label])=>{const option=node('option','',label);option.value=key;return option;}));if(items.some(([key])=>key===value))select.value=value;else select.value=items[0]?.[0]||'';};
+  const remember=()=>{const params=new URLSearchParams(location.search);Object.entries(filters).forEach(([key,value])=>params.set('nmdb_all_geo_'+key,value));history.replaceState(null,'',`?${params}`);};
+  const update=async()=>{
+    const id=++request;status.className='domain-state';status.textContent='Filtering receipt-verified FHFA observations…';
+    excel.hidden=true;excel.removeAttribute('href');
+    $('nmdb-all-geo-metrics').replaceChildren();$('nmdb-all-geo-trend').replaceChildren();$('nmdb-all-geo-legend').replaceChildren();$('nmdb-all-geo-table').replaceChildren(node('p','muted','Loading the selected FHFA extract…'));
+    try{
+      const params=new URLSearchParams(filters),response=await fetch(`/api/fhfa-nmdb-performance-geographies?${params}`,{cache:'no-store',headers:{Accept:'application/json'}}),data=await response.json();
+      if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);if(id!==request)return;latest=data;
+      if(!data.available){status.className='domain-state error';status.textContent=data.reason||'Full-geography package unavailable.';return;}
+      const opts=data.filter_options;
+      fill(levelChoice,opts.geography_levels.map(value=>[value,value]),filters.geo_level);
+      fill(geoChoice,[...(filters.geo_level==='National'?[]:[['all','All geographies']]),...opts.geographies.map(row=>[row.geo_id,`${row.geo_name} · ${row.geo_id}`])],filters.geo_id);
+      fill(marketChoice,[['all','All markets'],...opts.markets.map(value=>[value,value])],filters.market);
+      fill(seriesChoice,[['all','All series'],...opts.series.map(row=>[row.series_id,`${row.label} · ${row.series_id}`])],filters.series_id);
+      fill(periodChoice,[['all','All quarters'],...opts.periods.slice().reverse().map(value=>[value,value])],filters.period);
+      const c=data.coverage;
+      $('nmdb-all-geo-metrics').replaceChildren(
+        metric('Selected rows',`${n(c.selected_rows)} / ${n(c.selection_limit)}`,`Complete query extract available in Excel`),
+        metric('Geographies',n(c.source_geographies),filters.geo_level+' · '+filters.geo_id),
+        metric('Reported values',n(c.reported_values),'FHFA percentage, source scale'),
+        metric('Unavailable / suppressed',`${n(c.unavailable_values)} / ${n(c.suppressed_values)}`,'Counts overlap where suppressed')
+      );
+      const trend=$('nmdb-all-geo-trend'),legend=$('nmdb-all-geo-legend');trend.replaceChildren();legend.replaceChildren();
+      if(filters.geo_id!=='all'&&filters.period==='all'&&filters.series_id!=='all'){
+        const chosenMarkets=(filters.market==='all'?opts.markets:opts.markets.filter(name=>name===filters.market)).map(name=>({name}));
+        drawNmdbTrend(trend,data.rows,filters.series_id,chosenMarkets);
+        legend.replaceChildren(...chosenMarkets.map((item,index)=>{const entry=node('span','nmdb-legend-item'),swatch=node('i','nmdb-swatch');swatch.style.backgroundColor=nmdbColors[index%nmdbColors.length];entry.append(swatch,node('strong','',item.name));return entry;}));
+        $('nmdb-all-geo-caption').textContent=`${data.rows[0]?.geography_name||filters.geo_id} · ${data.rows[0]?.series_label||filters.series_id} · ${data.rows[0]?.period} to ${data.rows.at(-1)?.period}. Null source cells break the line.`;
+      }else $('nmdb-all-geo-caption').textContent='Choose one geography, one performance series, and all quarters to display the trend chart.';
+      const shown=data.rows.slice(0,500).map(row=>[row.period,row.geography_name+' · '+row.geography_id,row.market,row.series_id,row.value_pct===null?'—':dec(row.value_pct)+'%',row.suppressed?'Yes':'No',row.value_state]);
+      $('nmdb-all-geo-table').replaceChildren(table(['Quarter','Geography','Mortgage market','Series','Source value','Suppressed','Value state'],shown));
+      if(c.selected_rows>shown.length)$('nmdb-all-geo-table').append(node('p','footnote',`The page shows the first ${n(shown.length)} rows. Excel contains all ${n(c.selected_rows)} rows selected by these filters.`));
+      const exportParams=new URLSearchParams(filters);excel.href='/api/fhfa-nmdb-performance-geographies-excel?'+exportParams;excel.hidden=false;
+      status.className='domain-state ok';status.textContent=`FHFA all-geography package verified · ${n(c.source_rows)} source rows · ${n(c.source_geographies)} ${filters.geo_level} geographies · release ${data.source.release_date} · SHA-256 ${data.source.archive_sha256.slice(0,12)}.`;
+      remember();
+    }catch(error){if(id===request){status.className='domain-state error';status.textContent=`NMDB all-geography query unavailable: ${error.message}`;}}
+  };
+  choices.forEach(([select,key])=>select.addEventListener('change',()=>{
+    filters[key]=select.value;
+    if(key==='geo_level'){filters.geo_id=filters.geo_level==='National'?'USA':'all';filters.market='All Mortgages';filters.series_id='P90DL';filters.period='2026Q2';}
+    if(key==='geo_id'&&filters.geo_id==='all'&&filters.geo_level!=='National')filters.period='2026Q2';
+    remember();update();
+  }));
+  await update();
 }
 async function loadDomainAnalysis(){
   try{const r=await fetch('/api/nsmo-domains',{cache:'no-store',headers:{Accept:'application/json'}});const body=await r.json();if(!r.ok)throw new Error(body.error||`HTTP ${r.status}`);renderDomains(body);$('domain-state').className='domain-state ok';$('domain-state').textContent='Aggregates verified against the same PUF SHA-256 as the structural profile.';}

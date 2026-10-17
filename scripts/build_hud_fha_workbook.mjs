@@ -13,6 +13,7 @@ function addTable(sheetName, sourcePath, headers, tableName, widths) {
     const raw = imported.worksheets.getItem("Source").getUsedRange().values;
     const map = new Map(raw[0].map((header, index) => [String(header), index]));
     const rows = raw.slice(1).map((row) => headers.map(([key]) => {
+      if (["flow_identity_difference", "recomputed_cure_ratio_pct", "prior_ending_plus_adjustment_difference"].includes(key)) return "—";
       const value = row[map.get(key)];
       if (value === "" || value == null) return "—";
       if (key === "partial_period") return String(value).toLowerCase() === "true";
@@ -67,6 +68,13 @@ const intro = [
   ["Cách đọc Table 2", "Lý do là descriptive distribution, không phải predictor importance hoặc nguyên nhân nhân quả; shares cộng thành 100%."],
   ["Cách đọc Table 4", "Foreclosure starts (flow), in-foreclosure (stock), claims paid và annualized rate là chỉ số khác nhau, không thay thế nhau."],
   ["Cách đọc Table 5–6", "Recovery có thể vượt 100%; blank là publisher không báo cáo. Loss components không phải danh mục cộng được và không cộng thành net loss."],
+      ["Production transitions", "HUD FHA Single Family Production Report · Table 2 · 13 monthly flow/stock observations from Aug 2025 through Aug 2026. This is a separate report and series."],
+      ["Transition identity", "Ending serious-delinquency inventory = beginning + entries − cures − claims − prepayments from serious delinquency inventory."],
+      ["Late posting", "Beginning inventory in each later month reconciles to the prior ending inventory plus the published late-posting adjustment."],
+      ["Cure ratio", "HUD defines this as same-month cures divided by entries. It is not a matched-cohort cure probability; it may exceed 100%."],
+      ["Serious delinquency", "Inventory includes 90+ day delinquency, in-foreclosure and in-bankruptcy loans; excludes HECM."],
+      ["Production report source", "https://www.hud.gov/sites/default/files/Housing/documents/FHAProd_AUG2026.pdf · Table 2, report page 3. Direct PDF download returned HTTP 403; no raw PDF hash is claimed."],
+      ["Cross-report caveat", "HUD says Table 2 inventory may not reconcile fully with FHA Loan Performance Trends because timing and data sources differ."],
 ];
 start.getRange(`A1:B${intro.length}`).values = intro;
 start.getRange("A1:B1").merge();
@@ -144,10 +152,47 @@ workbook.worksheets.getItem("REO loss detail").getRange("B2:G14").setNumberForma
 workbook.worksheets.getItem("REO loss detail").getRange("H2:I14").setNumberFormat("$#,##0");
 workbook.worksheets.getItem("REO loss detail").getRange("J2:K14").setNumberFormat("#,##0");
 workbook.worksheets.getItem("REO loss detail").getRange("L2:P14").setNumberFormat('0.0" months"');
-console.log(JSON.stringify({ monthly, subgroup, reason, foreclosure, recovery, losses }));
+
+const transitions = await addTable("Delinquency flow", path.join(root, "docs/data/hud-fha-production-transitions-2026-08.csv"), [
+  ["period", "Period"], ["performance_year", "Performance year"], ["month", "Month"],
+  ["beginning_serious_delinquency_inventory", "Beginning serious-delinquency inventory"],
+  ["serious_delinquency_entries", "Entering serious delinquency"],
+  ["cures_leaving_serious_delinquency", "Cured / leaving serious delinquency"],
+  ["claims", "Claims"],
+  ["prepayments_from_serious_delinquency_inventory", "Prepayments from serious delinquency"],
+  ["ending_serious_delinquency_inventory", "Ending serious-delinquency inventory"],
+  ["late_posting_adjustment", "Late-posting adjustment"], ["cure_ratio_pct", "HUD cure ratio %"],
+  ["source_table", "HUD table"], ["source_page", "Report page"],
+  ["flow_identity_difference", "Flow identity difference"],
+  ["recomputed_cure_ratio_pct", "Recomputed cure ratio %"],
+  ["prior_ending_plus_adjustment_difference", "Beginning bridge difference"],
+], "HUDFHAProductionTransitions", [14, 17, 12, 28, 22, 25, 13, 27, 27, 19, 18, 12, 14, 20, 20, 20]);
+const transitionSheet = workbook.worksheets.getItem("Delinquency flow");
+transitionSheet.freezePanes.freezeColumns(3);
+transitionSheet.getRange("D2:J14").setNumberFormat("#,##0;(#,##0)");
+transitionSheet.getRange("K2:K14").setNumberFormat('0.0"%"');
+transitionSheet.getRange("N2:N14").formulas = Array.from({ length: 13 }, (_, index) => {
+  const row = index + 2;
+  return [`=I${row}-(D${row}+E${row}-F${row}-G${row}-H${row})`];
+});
+transitionSheet.getRange("O2:O14").formulas = Array.from({ length: 13 }, (_, index) => {
+  const row = index + 2;
+  return [`=ROUND(F${row}/E${row}*100,1)`];
+});
+transitionSheet.getRange("P3:P14").formulas = Array.from({ length: 12 }, (_, index) => {
+  const row = index + 3;
+  return [`=D${row}-(I${row - 1}+J${row})`];
+});
+transitionSheet.getRange("N2:N14").setNumberFormat("#,##0;(#,##0)");
+transitionSheet.getRange("O2:O14").setNumberFormat('0.0"%"');
+transitionSheet.getRange("P2:P14").setNumberFormat("#,##0;(#,##0)");
+transitionSheet.getRange("P2").values = [["—"]];
+
+workbook.recalculate();
+console.log(JSON.stringify({ monthly, subgroup, reason, foreclosure, recovery, losses, transitions }));
 if (previewDir) {
   await fs.mkdir(previewDir, { recursive: true });
-  for (const sheetName of ["Bat dau", "Monthly trend", "Subgroup rates", "New 90+ reasons", "Foreclosure", "REO recovery", "REO loss detail"]) {
+  for (const sheetName of ["Bat dau", "Monthly trend", "Subgroup rates", "New 90+ reasons", "Foreclosure", "REO recovery", "REO loss detail", "Delinquency flow"]) {
     const preview = await workbook.render({ sheetName, autoCrop: "all", scale: 1, format: "png" });
     await fs.writeFile(path.join(previewDir, `${sheetName.replaceAll(" ", "-")}.png`), new Uint8Array(await preview.arrayBuffer()));
   }

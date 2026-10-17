@@ -20,7 +20,7 @@ MONTH_PATTERN = re.compile(r"\d{4}-(?:0[1-9]|1[0-2])\Z")
 _SERVING_SOURCES = {
     name: {"path": Path(__file__).parent / (name + ".py"),
            "sha256": sha256(Path(__file__).parent / (name + ".py"))}
-    for name in ["service", "monitoring", "episode_followup", "period_transitions", "study_registry", "study_features", "assessment", "snapshot", "workspace", "reviews", "server", "suite_snapshot"]}
+    for name in ["service", "monitoring", "episode_followup", "period_transitions", "study_registry", "study_features", "assessment", "snapshot", "workspace", "reviews", "server", "suite_snapshot", "nmdb_performance_geographies"]}
 
 
 def filters_from(query: dict) -> dict:
@@ -202,6 +202,10 @@ class ResearchService:
     def fhfa_nmdb_performance(self):
         from .nmdb_aggregate import read
         return read(self.root)
+
+    def fhfa_nmdb_performance_geographies(self, query=None):
+        from .nmdb_performance_geographies import report
+        return report(self.root, query)
 
     def nmdb_mortgage_statistics_catalog(self):
         from .nmdb_mortgage_statistics import catalog

@@ -72,6 +72,9 @@ def read(root: Path) -> dict:
             "rows": series,
             "series": SERIES,
             "quality": {
+                "coverage_observations": profile["rows"],
+                "coverage_label": "Aggregate source rows",
+                "suppression_label": "Suppressed rows · all geographies",
                 "all_geography_rows": profile["rows"],
                 "unique_aggregate_keys": profile["unique_aggregate_keys"],
                 "suppressed_rows": profile["suppression_row_counts"].get("1", 0),
@@ -83,6 +86,66 @@ def read(root: Path) -> dict:
                 "Aggregate context only; not a loan-level panel, not a Freddie vintage, and not a model predictor.",
                 "National all-mortgages aggregates do not share the Freddie study sample or denominator.",
                 "Performance is reported at quarter end; categories and censoring do not match the monthly Freddie target.",
+                "FHFA statistics are a latest revised snapshot, not historical release vintages.",
+            ],
+        }
+
+    national_data = root / "docs" / "data" / "nmdb-performance-national-quarterly-2026q2.csv"
+    national_receipt = root / "docs" / "data" / "nmdb-performance-national-quarterly-2026q2-receipt.json"
+    if national_data.is_file() and national_receipt.is_file():
+        from .nmdb_performance import nmdb_performance_report
+
+        report = nmdb_performance_report(root)
+        national_rows = [
+            row for row in report["observations"]
+            if row["market"] == "All Mortgages"
+        ]
+        by_period = {period: {} for period in report["periods"]}
+        suppressed_rows = 0
+        blank_counts = {code: 0 for code in SERIES}
+        for row in national_rows:
+            code = row["series_id"]
+            by_period[row["period"]][code] = row["value_pct"]
+            suppressed_rows += int(row["suppressed"])
+            blank_counts[code] += int(row["value_pct"] is None)
+        if len(national_rows) != len(report["periods"]) * len(SERIES):
+            raise ValueError("FHFA NMDB national slice coverage is incomplete")
+        series = [
+            {"period": period, **by_period[period]}
+            for period in report["periods"]
+        ]
+        return {
+            "status": "AVAILABLE",
+            "dataset": report["source"]["title"],
+            "source_page": report["source"]["index_url"],
+            "source_url": report["source"]["download_url"],
+            "source_release_date": report["source"]["release_date"],
+            "retrieved_at": json.loads(national_receipt.read_text(encoding="utf-8")).get("acquired_at_utc", ""),
+            "geography": report["geography"],
+            "market": "All Mortgages",
+            "source_package_scope": "National / Census Areas package · National rows only",
+            "periods": len(series),
+            "first_period": report["periods"][0],
+            "last_period": report["periods"][-1],
+            "rows": series,
+            "series": SERIES,
+            "quality": {
+                "coverage_observations": len(national_rows),
+                "coverage_label": "National All Mortgages series observations",
+                "suppression_label": "Suppressed observations · national slice",
+                "all_geography_rows": None,
+                "unique_aggregate_keys": None,
+                "suppressed_rows": suppressed_rows,
+                "blank_or_dot_value_counts": blank_counts,
+                "archive_sha256": report["source"]["source_archive_sha256"],
+                "selected_csv_sha256": report["source"]["curated_file_sha256"],
+            },
+            "scope_notes": [
+                "This public fallback uses only the National rows from FHFA's National / Census Areas package; it does not expose or count the all-geography archive.",
+                "Aggregate context only; not a loan-level panel, not a Freddie vintage, and not a model predictor.",
+                "National all-mortgages aggregates do not share the Freddie study sample or denominator.",
+                "Performance is reported at quarter end; categories and censoring do not match the monthly Freddie target.",
+                "Blank and suppressed values remain unavailable; they are not zero-filled or imputed.",
                 "FHFA statistics are a latest revised snapshot, not historical release vintages.",
             ],
         }

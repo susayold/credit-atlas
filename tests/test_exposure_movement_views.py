@@ -10,7 +10,9 @@ from urllib.request import urlopen
 
 import pytest
 from credit_atlas import exposure_movements as movements
+from credit_atlas.excel_workbench import ExcelWorkbench
 from credit_atlas.exposure_movement_views import ExposureMovementViews
+from credit_atlas.exposure_views import ExposureViews
 from credit_atlas.server import handler_for
 from tests.test_exposure_movements import imported_pair
 
@@ -55,16 +57,26 @@ def test_independent_fraction_audit_and_fault_detection(fixture,monkeypatch):
 
 def test_http_exact_private_export_and_filter_guards(fixture):
     root,a,b,receipt,views=fixture
-    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(SimpleNamespace(root=root,exposure_movement_views=views)))
+    service=SimpleNamespace(root=root,exposure_movement_views=views,exposure_views=ExposureViews(root))
+    service.excel_workbench=ExcelWorkbench(service)
+    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service))
     thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
     query='?movement_id='+receipt['movement_id']+'&closing_import_id='+b
     base='http://127.0.0.1:'+str(server.server_port)
     try:
         for endpoint in ('/api/exposure-movement','/api/exposure-movement-report'):
             with urlopen(base+endpoint+query) as response:
-                value=json.load(response); assert value==views.report({'movement_id':receipt['movement_id'],'closing_import_id':b})
+                value=json.load(response); expected=views.report({'movement_id':receipt['movement_id'],'closing_import_id':b})
+                if endpoint.endswith('-report'):
+                    provenance=value.pop('export_provenance')
+                    assert provenance['visibility']=='private' and provenance['public_release_approved'] is False
+                    assert {s['role'] for s in provenance['source_imports']}=={'opening','closing'}
+                    assert {s['import_id'] for s in provenance['source_imports']}=={a,b}
+                    assert len(provenance['derived_artifacts'][0]['receipt_sha256'])==64
+                    assert set(provenance['derived_artifacts'][0]['source_import_ids'])=={a,b}
+                assert value==expected
                 assert 'no-store' in response.headers['Cache-Control']
-                assert str(root) not in json.dumps(value) and 'source_lineage' not in value
+                assert str(root) not in json.dumps(value)
         for suffix in ('&dimension=loan','&movement_id='+receipt['movement_id'],'&closing_import_id='+a,'&run=1'):
             with pytest.raises(HTTPError) as error: urlopen(base+'/api/exposure-movement'+query+suffix)
             assert error.value.code==400

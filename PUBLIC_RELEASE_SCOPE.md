@@ -6,6 +6,11 @@ This folder is a public-source release of the CreditAtlas software and technical
 
 The following are deliberately absent: private `data/`, `artifacts/`, and `outputs/`; local SQLite databases; Parquet/CSV/XLSX datasets derived from private borrower-level data; screenshots/review records; environment folders; `workspace.local.json`; and source-access cookies or credentials. Several local datasets contain borrower-level or otherwise restricted records; source permissions do not automatically permit republication. Do not add them to Git. The root `.gitignore` blocks private workspace paths. Small public-source tables under `docs/data/` and their attributed reference workbooks may be included when they contain no private records and their source/use limits are documented.
 
+The local Treasury HAMP cohort explorer is included as application code, but its
+curated 2,485-row quarterly CSV, source PDFs and analyst workbook remain private
+on D:. A public checkout without that private file reports the HAMP dataset as
+unavailable; it does not bundle or synthesize delinquency values.
+
 Internal markdown notes were retained as technical history, but links to omitted local evidence were redirected here. Values and findings in those notes are not a substitute for the source artifacts, and this public repository does not claim that excluded data is available to reproduce them.
 
 ## Vendored engine
@@ -67,6 +72,41 @@ local NSMO context page renders all six source tables with separate KPI and
 denominator notes. The D02 workbook includes every public CSV dataset as an
 Excel Table, with source definitions and scope notes; CSV remains the app's
 canonical input format.
+
+The HUD FHA Production Report Table 2 transcription is included as a separate
+13-month aggregate series (August 2025–August 2026) with a distinct app panel,
+API route, source note, and Excel tabs. HUD's Web Publication Procedures and
+Style Guide dated August 27, 2025 says that, as a rule, HUD website material is
+public domain. The project attributes the report and republishes numeric table
+values only; the original report PDF was unavailable for checking any
+report-specific third-party notice, and no raw-PDF hash is claimed. The series
+is not loan-level and is not a borrower-default target.
+
+The Toyota 2022-B and 2024-B SEC ABS-EE / Servicer's Certificate bridge is
+published as 80 period-level aggregates with accession links and source hashes.
+Three periods tie exactly; 77 recovery residuals remain unresolved, with their
+descriptive distribution included in a receipt. The residual ratios are not
+recovery rates, loss estimates, PD, LGD, or causal findings. No asset identifiers
+or loan-level rows are included.
+
+The source register also includes seven receipt-backed SEC filing-set metadata
+records across Toyota 2022-B, Toyota 2024-B, Nissan 2024-B and World Omni 2025-A.
+These records describe form, report-period coverage, grain and code consumers;
+they expose opaque private-receipt IDs only. Accession-level acquisition receipts,
+full hashes, downloaded ABS-EE/certificate payloads and parsed asset rows remain
+outside this public release. Public EDGAR availability does not itself approve
+redistribution of those payloads. Some 10-D filings include or incorporate ABS-EE
+asset-data exhibits, so the registry distinguishes extracted source objects for
+lineage without claiming that the underlying filing contents are disjoint.
+
+The Treasury HAMP quarterly-summary downloader/parser and the official source
+index for 20 reports (2018-Q1 to 2023-Q1; no 2021-Q3 report is listed) are
+included as software and source metadata. The downloaded PDFs, hash-bound
+receipts, derived aggregate CSV, and analyst workbook remain private pending a
+separate public-bundling review. The tables are source-reported 60+/90+
+delinquency percentages by program, modification vintage, and age since
+modification; they do not reconstruct the missing 2018-2021 loan-month activity
+or provide a general PD target.
 
 The D02 Excel reference workbook also includes aggregate-only extractions of
 FHFA NSMO Technical Report v7.0 Tables 3–6: response counts by mail/online mode,

@@ -605,6 +605,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
         "hud-fha-performance-2026-08.csv", "hud-fha-performance-2026-08-subgroups.csv",
         "hud-fha-new-90plus-reasons-2026-08.csv", "hud-fha-foreclosure-statistics-2026-08.csv",
         "hud-fha-reo-recovery-2026-08.csv", "hud-fha-reo-loss-components-2026-08.csv",
+        "hud-fha-production-transitions-2026-08.csv",
     ):
         shutil.copyfile(Path(__file__).parents[1] / "docs/data" / name, target_data / name)
     for name in ("nmdb-performance-national-quarterly-2026q2.csv",
@@ -638,6 +639,8 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert "/downloads/nmdb-performance.xlsx" in html
             assert "/downloads/d02-data-reference.xlsx" in html
             assert "FHA portfolio performance context" in html
+            assert "Serious-delinquency inventory transitions" in html
+            assert "hud-transitions-state" in html
             assert "Residential mortgage performance, 2002Q1–2026Q2" in html
         with urlopen(base + "/downloads/nsmo-reference.xlsx", timeout=5) as response:
             workbook_bytes = response.read()
@@ -668,6 +671,13 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             assert len(hud["reo_loss_components"]) == 13
             assert hud["latest"]["NSA"]["serious_delinquency_pct"] == 6.42
             assert hud["latest"]["SA"]["serious_delinquency_pct"] == 6.63
+        with urlopen(base + "/api/hud-fha-production-transitions", timeout=5) as response:
+            transitions = json.loads(response.read())
+            assert response.status == 200
+            assert len(transitions["monthly"]) == 13
+            assert transitions["latest"]["period"] == "2026-08"
+            assert transitions["latest"]["ending_serious_delinquency_inventory"] == 540410
+            assert transitions["latest"]["flow_identity_difference"] == 0
         with urlopen(base + "/downloads/nmdb-performance.xlsx", timeout=5) as response:
             workbook_bytes = response.read()
             assert response.status == 200

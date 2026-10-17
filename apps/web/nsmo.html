@@ -26,7 +26,7 @@
         <div class="hud-links"><a class="excel-download" href="/downloads/d02-data-reference.xlsx">Tải Excel toàn bộ dữ liệu D02 · 23 sheet</a><a id="source-link" class="button secondary" target="_blank" rel="noopener noreferrer">FHFA source ↗</a></div>
       </section>
       <section class="panel hud-context-panel">
-        <div class="section-head"><div><div class="eyebrow">SEPARATE PROGRAM BENCHMARK · FHA · HUD</div><h2>FHA portfolio performance context</h2><p>Benchmark aggregate từ HUD, độc lập với NSMO; không gộp sample, không dùng làm target hay nhãn train.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/hud-fha-performance.xlsx">Tải Excel HUD FHA · đủ 6 bảng</a><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD report · Aug 2026 ↗</a></div></div>
+        <div class="section-head"><div><div class="eyebrow">SEPARATE PROGRAM BENCHMARK · FHA · HUD</div><h2>FHA portfolio performance context</h2><p>Benchmark aggregate từ HUD, độc lập với NSMO; không gộp sample, không dùng làm target hay nhãn train.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/hud-fha-performance.xlsx">Tải Excel HUD FHA · 7 bảng</a><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD report · Aug 2026 ↗</a></div></div>
         <div id="hud-fha-state" class="domain-state" role="status">Đang tải HUD aggregate…</div>
         <div class="controls"><label>Điều chỉnh theo mùa<select id="hud-adjustment"><option value="NSA">Non-seasonally adjusted</option><option value="SA">Seasonally adjusted</option></select></label></div>
         <div id="hud-fha-metrics" class="metric-grid" aria-label="HUD FHA latest portfolio metrics"></div>
@@ -68,6 +68,13 @@
           </section>
         </div>
       </section>
+      <section class="panel hud-flow-panel">
+        <div class="section-head"><div><div class="eyebrow">SEPARATE FHA TRANSITION SERIES · HUD PRODUCTION REPORT</div><h2>Serious-delinquency inventory transitions</h2><p>HUD Production Report Table 2 · Aug 2025–Aug 2026. Đây là bảng flow/stock cấp chương trình FHA, không ghép với HUD Trends, NSMO hay Freddie Mac.</p></div><div class="hud-links"><a class="button secondary" href="https://www.hud.gov/sites/default/files/Housing/documents/FHAProd_AUG2026.pdf" target="_blank" rel="noopener noreferrer">HUD Production Report · Aug 2026 ↗</a></div></div>
+        <div id="hud-transitions-state" class="domain-state" role="status">Đang tải HUD transition aggregate…</div>
+        <div id="hud-transitions-metrics" class="metric-grid" aria-label="HUD FHA serious delinquency transition KPIs"></div>
+        <div id="hud-transitions-table" class="table-wrap"></div>
+        <p class="footnote">Inventory = 90+ ngày quá hạn + foreclosure + bankruptcy; không gồm HECM. Cured là khoản rời trạng thái serious delinquency xuống dưới 90 ngày. Cure ratio = cured trong tháng / số vào serious delinquency trong tháng, không theo dõi cùng một cohort nên không phải xác suất và có thể vượt 100%. Adjustment là late posting của kỳ trước. HUD cảnh báo loạt này có thể không khớp hoàn toàn với FHA Loan Performance Trends do khác thời điểm và nguồn dữ liệu. PDF tải trực tiếp trả 403; không có bản PDF local hoặc SHA-256.</p>
+      </section>
       <section class="panel nmdb-context-panel">
         <div class="section-head"><div><div class="eyebrow">SEPARATE NATIONAL BENCHMARK · FHFA NMDB</div><h2>Residential mortgage performance, 2002Q1–2026Q2</h2><p>Chuỗi aggregate cấp quốc gia theo quý, lấy từ mẫu NMDB 5%; dùng để đọc bối cảnh chu kỳ và khác biệt market, không ghép vào NSMO loan rows.</p></div><div class="hud-links"><a class="excel-download" href="/downloads/nmdb-performance.xlsx">Tải workbook Excel · 1.568 dòng</a><a class="button secondary" href="https://www.fhfa.gov/data/nmdb" target="_blank" rel="noopener noreferrer">FHFA NMDB source ↗</a></div></div>
         <div id="nmdb-state" class="domain-state" role="status">Đang xác minh aggregate NMDB…</div>
@@ -96,6 +103,22 @@
         <h3>Quarterly history · selected market</h3>
         <div id="nmdb-state-quarterly" class="table-wrap"></div>
         <p class="footnote">FHFA suppresses small cells with fewer than three loan records; blanks are not zero. PFORB begins in 2019Q4. The two newest quarters are preliminary. This separate 5% NMDB aggregate is descriptive context only; it is not joined to Freddie or NSMO records and is not used to train the D01 risk target.</p>
+      </section>
+      <section class="panel nmdb-context-panel" id="nmdb-all-geographies">
+        <div class="section-head"><div><div class="eyebrow">ALL-PUBLISHED GEOGRAPHIES · FHFA NMDB</div><h2>Explore national, regional, state and metro performance</h2><p>Receipt-verified FHFA all-geography ZIP · 261,856 published observations · filter before export. The selection remains source aggregate context and is never pooled into borrower-level outcomes.</p></div><div class="hud-links"><a id="nmdb-all-geo-excel" class="excel-download" download="FHFA-NMDB-geography-selection.xlsx" hidden>Tải Excel theo bộ lọc</a><a class="button secondary" href="https://www.fhfa.gov/document/d/nmdb/nmdb-aggregate-statistics-data-dictionary-technical-notes" target="_blank" rel="noopener noreferrer">FHFA definitions ↗</a></div></div>
+        <div id="nmdb-all-geo-status" class="domain-state" role="status">Đang xác minh full-geography package…</div>
+        <div class="controls">
+          <label>Geographic level<select id="nmdb-all-geo-level"></select></label>
+          <label>Geography<select id="nmdb-all-geo-id"></select></label>
+          <label>Mortgage market<select id="nmdb-all-geo-market"></select></label>
+          <label>Performance series<select id="nmdb-all-geo-series"></select></label>
+          <label>Quarter<select id="nmdb-all-geo-period"></select></label>
+        </div>
+        <div id="nmdb-all-geo-metrics" class="metric-grid" aria-label="Selected NMDB geography data quality"></div>
+        <figure class="chart-frame"><svg id="nmdb-all-geo-trend" viewBox="0 0 980 340" role="img" aria-label="FHFA NMDB filtered geography performance rate"></svg><figcaption id="nmdb-all-geo-caption"></figcaption></figure>
+        <div id="nmdb-all-geo-legend" class="nmdb-legend" aria-label="Selected series legend"></div>
+        <div id="nmdb-all-geo-table" class="table-wrap"></div>
+        <p class="footnote">Denominator = FHFA active-mortgage estimate at quarter-end. Suppressed cells and pre-2019Q4 forbearance blanks stay unavailable, not zero. The two latest quarters are preliminary/revisable. Do not sum overlapping geographies or markets; this dataset does not provide borrower PD or loan-level outcomes. Excel includes every row matching the filter (up to 5,000 rows) plus definitions and lineage.</p>
       </section>
       <section class="panel">
         <div class="section-head"><div><div class="eyebrow">QUARTERLY STATUS SNAPSHOT</div><h2>Performance code theo thời gian</h2><p>Đếm trạng thái được báo cáo tại từng quý cuối kỳ.</p></div></div>

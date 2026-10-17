@@ -9,7 +9,9 @@ from urllib.error import HTTPError
 from urllib.request import Request,urlopen
 
 import pytest
+from credit_atlas.excel_workbench import ExcelWorkbench
 from credit_atlas.exposure_scenario_views import ExposureScenarioViews
+from credit_atlas.exposure_views import ExposureViews
 from credit_atlas.server import handler_for
 from tests.test_exposure_scenarios import frozen,ratio
 
@@ -54,7 +56,9 @@ def test_independent_decimal_audit_detects_wrong_pd_effect(fixture,monkeypatch):
 
 def test_private_http_export_guard_and_exact_rational(fixture):
     root,receipt,views=fixture
-    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(SimpleNamespace(root=root,exposure_scenario_views=views)))
+    service=SimpleNamespace(root=root,exposure_scenario_views=views,exposure_views=ExposureViews(root))
+    service.excel_workbench=ExcelWorkbench(service)
+    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service))
     thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
     base='http://127.0.0.1:'+str(server.server_port)
     q={'scenario_id':receipt['scenario_id'],'source_import_id':receipt['source_import_id']}
@@ -62,7 +66,15 @@ def test_private_http_export_guard_and_exact_rational(fixture):
     try:
         for endpoint in ('/api/exposure-scenario','/api/exposure-scenario-report'):
             with urlopen(base+endpoint+query) as response:
-                report=json.load(response); assert report==views.report(q)
+                report=json.load(response); expected=views.report(q)
+                if endpoint.endswith('-report'):
+                    provenance=report.pop('export_provenance')
+                    assert provenance['visibility']=='private' and provenance['public_release_approved'] is False
+                    assert provenance['source_imports'][0]['import_id']==receipt['source_import_id']
+                    assert len(provenance['source_imports'][0]['receipt_sha256'])==64
+                    assert provenance['derived_artifacts'][0]['artifact_id']==receipt['scenario_id']
+                    assert len(provenance['derived_artifacts'][0]['receipt_sha256'])==64
+                assert report==expected
                 assert 'no-store' in response.headers['Cache-Control']
                 assert str(root) not in json.dumps(report) and 'source_lineage' not in report
         for suffix in ('&pd=1','&scenario_id='+q['scenario_id'],'&currency=GBP','&dimension=loan'):

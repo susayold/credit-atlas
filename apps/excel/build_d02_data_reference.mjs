@@ -125,6 +125,16 @@ const sources = [
     reo_stage_months: "REO stage (months)", all_stages_months: "All stages (months)",
     source_table: "HUD source table", source_page: "Report page",
   }, numeric: new Set(["claim_expenses_pct", "holding_costs_pct", "loss_on_collateral_pct", "sales_expense_pct", "program_discounts_pct", "net_loss_rate_pct", "average_dollar_loss", "average_unpaid_balance", "dispositions", "discounts", "delinquency_stage_months", "foreclosure_stage_months", "deed_transfer_stage_months", "reo_stage_months", "all_stages_months", "source_page"]) },
+  { sheet: "HUD transitions", file: "hud-fha-production-transitions-2026-08.csv", table: "HudTransitions", headers: {
+    period: "Reporting month", performance_year: "Performance year", month: "Month name",
+    beginning_serious_delinquency_inventory: "Beginning serious-delinquency inventory",
+    serious_delinquency_entries: "Entering serious delinquency",
+    cures_leaving_serious_delinquency: "Cured / leaving serious delinquency",
+    claims: "Claims", prepayments_from_serious_delinquency_inventory: "Prepayments from serious delinquency",
+    ending_serious_delinquency_inventory: "Ending serious-delinquency inventory",
+    late_posting_adjustment: "Late-posting adjustment", cure_ratio_pct: "HUD cure ratio (%)",
+    source_table: "HUD source table", source_page: "Report page",
+  }, numeric: new Set(["performance_year", "beginning_serious_delinquency_inventory", "serious_delinquency_entries", "cures_leaving_serious_delinquency", "claims", "prepayments_from_serious_delinquency_inventory", "ending_serious_delinquency_inventory", "late_posting_adjustment", "cure_ratio_pct", "source_table", "source_page"]) },
 ];
 
 const wb = Workbook.create();
@@ -141,7 +151,8 @@ const guideRows = [
   ["X-variable imputation", "FHFA may impute missing survey responses into X variables. The public PUF has no item-level J flags to identify each imputed value; selected Z fields mark actual answers only for certain items. Wave coverage is nonmissing PUF-value availability, not a borrower response rate."],
   ["NMDB", "National quarterly aggregate mortgage performance through 2026Q2. One row is a market × series × quarter, not a loan."],
   ["FHFA HPI", "Quarterly state/DC All-Transactions HPI through 2026Q2. Index, not dollar value; current history is retrospective and not point-in-time."],
-  ["HUD FHA", "Monthly trend, subgroups, new-90+ reason shares, foreclosure pipeline, REO recovery by geography and REO loss components through August 2026. These are not NSMO loan records."],
+  ["HUD FHA trends", "Monthly trend, subgroups, new-90+ reason shares, foreclosure pipeline, REO recovery by geography and REO loss components through August 2026. These are not NSMO loan records."],
+  ["HUD FHA production transitions", "A separate FHA Production Report table reports monthly serious-delinquency inventory, entries, cures, claims and prepayments. It is not the same series as HUD Loan Performance Trends."],
   ["HUD interpretation", "New-90+ reason shares sum to 100% and describe reported reasons, not predictive drivers. Foreclosure starts/claims/rates are separate measures. REO recovery percentages may exceed 100%; negative changes are percentage-point changes. Loss components are not exhaustive or additive."],
   ["Use", "Each data sheet has an Excel Table with filters. The top row and first identifier column remain fixed while scrolling."],
   ["Interpretation", "Keep the source population, denominator and metric definition with each dataset. Do not join these separate programs into NSMO mortgage rows."],
@@ -256,6 +267,13 @@ const hudRows = [
   ["REO recovery", "Proceeds/recovery as a percentage of unpaid principal balance at default, by state/territory.", "May exceed 100%; small disposition counts can make geography rates volatile. Blank means publisher did not report a value."],
   ["REO recovery change", "Difference between reported recovery rates, in percentage points.", "Negative values indicate a lower recovery rate than the comparison period."],
   ["Loss components", "HUD-reported loss/cost categories, average dollar amounts, counts and stage durations.", "Categories are not exhaustive and do not sum to the net loss rate."],
+  ["Serious-delinquency inventory", "HUD Production Report Table 2 includes 90+ day delinquency, in-foreclosure and in-bankruptcy loans; it excludes HECM.", "Aggregate FHA program count; not NSMO or Freddie loan-level data."],
+  ["Cure ratio", "HUD Table 2 cured count divided by serious-delinquency entries in the same month.", "Not a matched-cohort cure probability; monthly cured counts can exceed entries, so the ratio may be above 100%."],
+  ["Inventory flow identity", "Ending inventory = beginning inventory + entries − cures − claims − prepayments from serious delinquency inventory.", "The source rows are checked against this count identity."],
+  ["Late-posting adjustment", "HUD adjustment for activity posted late from the prior month; beginning inventory = prior ending inventory + current adjustment.", "The first included month has no prior month in this file, so that link is unavailable."],
+  ["Separate reporting series", "Production Report Table 2 and FHA Loan Performance Trends report different serious-delinquency inventory series.", "HUD says the two may not reconcile fully because timing and data sources differ."],
+  ["Production report source", "https://www.hud.gov/sites/default/files/Housing/documents/FHAProd_AUG2026.pdf", "Table 2, report page 3. Direct PDF retrieval returned HTTP 403; no local raw PDF or hash is claimed."],
+  ["Production report coverage", "13 monthly observations from August 2025 through August 2026.", "August 2026 is the latest month currently listed on the HUD Production Report index."],
   ["Scope", "HUD FHA Single-Family Loan Performance Trends, August 2026; aggregate portfolio evidence.", "Keep separate from NSMO loan-level records, targets and model-training samples."],
   ["Source", "https://www.hud.gov/sites/default/files/Housing/documents/FHALPT_AUG2026.pdf", "Tables 1–6; report pages 2–8."],
 ];
@@ -305,7 +323,7 @@ if (previewPath) {
 await fs.mkdir(path.dirname(output), { recursive: true });
 const xlsx = await SpreadsheetFile.exportXlsx(wb);
 await xlsx.save(output);
-console.log(JSON.stringify({ status: "exported", output, workbookSheets: sources.length + 4 }));
+console.log(JSON.stringify({ status: "exported", output, workbookSheets: sources.length + 6 }));
 
 function columnName(index) {
   let result = "";

@@ -9,7 +9,9 @@ from urllib.error import HTTPError
 from urllib.request import Request,urlopen
 
 import pytest
+from credit_atlas.excel_workbench import ExcelWorkbench
 from credit_atlas.exposure_ecl_views import ExposureEclViews
+from credit_atlas.exposure_views import ExposureViews
 from credit_atlas.server import handler_for
 from tests.test_exposure_ecl import frozen
 
@@ -57,13 +59,21 @@ def test_independent_cash_identity_audit_detects_marginal_probability_fault(fixt
 
 def test_http_exact_private_report_binding_and_parameter_guards(fixture):
     root,receipt,views=fixture; source=receipt['source_import_id']
-    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(SimpleNamespace(root=root,exposure_ecl_views=views)))
+    service=SimpleNamespace(root=root,exposure_ecl_views=views,exposure_views=ExposureViews(root))
+    service.excel_workbench=ExcelWorkbench(service)
+    server=ThreadingHTTPServer(('127.0.0.1',0),handler_for(service))
     thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
     base='http://127.0.0.1:'+str(server.server_port); query='?ecl_id='+receipt['ecl_id']+'&source_import_id='+source
     try:
         for endpoint in ('/api/exposure-ecl','/api/exposure-ecl-report'):
             with urlopen(base+endpoint+query) as response:
-                report=json.load(response); assert report==views.report({'ecl_id':receipt['ecl_id'],'source_import_id':source})
+                report=json.load(response); expected=views.report({'ecl_id':receipt['ecl_id'],'source_import_id':source})
+                if endpoint.endswith('-report'):
+                    provenance=report.pop('export_provenance')
+                    assert provenance['derived_artifacts'][0]['artifact_id']==receipt['ecl_id']
+                    assert len(provenance['derived_artifacts'][0]['receipt_sha256'])==64
+                    assert provenance['source_imports'][0]['import_id']==source
+                assert report==expected
                 assert 'no-store' in response.headers['Cache-Control'] and str(root) not in json.dumps(report)
         for suffix in ('&eir=0','&ecl_id='+receipt['ecl_id'],'&dimension=position_id','&currency=GBP'):
             with pytest.raises(HTTPError) as error: urlopen(base+'/api/exposure-ecl'+query+suffix)

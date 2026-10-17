@@ -58,8 +58,10 @@ def run():
         e=report['data']['P4'];hhi=sum(float(x['amount_share'])**2 for x in e['concentrations']);assert abs(metric('P4','Geographic HHI')['value']-hhi)<1e-12
         assert metric('P4','Research EL')['value'] is None
         assert report['provenance'][next(i for i,x in enumerate(report['provenance']) if x['domain']=='P4')]['comparison_source']['identifier']=='exposure-import-facfbef3f419'
-        assert abs(metric('P4','Reported principal')['comparison']['absolute_change']-(915208989.12-928246113.34))<1e-6
-        checks.append('Portfolio geographic HHI, exact comparison import lineage, balance movement and null EL')
+        assert metric('P4','Reported sample UPB')['unit']=='USD'
+        assert 'Freddie Mac 2012 annual sample' in a['P4']['scope'] and 'not owned book/EAD' in a['P4']['scope']
+        assert abs(metric('P4','Reported sample UPB')['comparison']['absolute_change']-(915208989.12-928246113.34))<1e-6
+        checks.append('Freddie sample geographic HHI, exact comparison import lineage, UPB movement and null EL')
         bridge=a['P4']['region_bridge'];assert bridge['reconciliation']=='EXACT_CENTS_PASS'
         source_now={r['bucket']:r for r in e['concentrations']};source_prior={r['bucket']:r for r in e['previous']['concentrations']}
         assert {r['bucket'] for r in bridge['rows']}==set(source_now)|set(source_prior)

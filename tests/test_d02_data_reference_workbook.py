@@ -12,7 +12,7 @@ def test_d02_reference_workbook_includes_each_referenced_public_data_csv():
     assert workbook.sheetnames == [
         "Start here", "NSMO fields", "NSMO feature gates", "NSMO routing", "NSMO question refs", "NSMO categories", "NSMO wave coverage", "NSMO item wording",
         "NSMO returns", "NSMO usability", "NMDB quarterly", "NMDB states", "FHFA HPI state", "HUD monthly", "HUD subgroups", "HUD 90+ reasons",
-        "HUD foreclosure", "HUD REO recovery", "HUD REO loss", "NMDB definitions", "HUD definitions", "NMDB state definitions", "FHFA HPI definitions",
+        "HUD foreclosure", "HUD REO recovery", "HUD REO loss", "HUD transitions", "NMDB definitions", "HUD definitions", "NMDB state definitions", "FHFA HPI definitions",
     ]
     expected = {
         "NSMO fields": "nsmo-v70-field-dictionary.csv",
@@ -33,6 +33,7 @@ def test_d02_reference_workbook_includes_each_referenced_public_data_csv():
         "HUD foreclosure": "hud-fha-foreclosure-statistics-2026-08.csv",
         "HUD REO recovery": "hud-fha-reo-recovery-2026-08.csv",
         "HUD REO loss": "hud-fha-reo-loss-components-2026-08.csv",
+        "HUD transitions": "hud-fha-production-transitions-2026-08.csv",
     }
     available_csvs = {path.name for path in (root / "docs/data").glob("*.csv")}
     assert set(expected.values()).issubset(available_csvs)
@@ -106,4 +107,14 @@ def test_d02_reference_workbook_includes_each_referenced_public_data_csv():
     assert workbook["HUD REO recovery"].max_row == 51
     assert workbook["HUD REO recovery"].cell(2, 3).value == 50.5
     assert workbook["HUD REO loss"].max_row == 14
+    assert workbook["HUD transitions"].max_row == 14
+    assert workbook["HUD transitions"].cell(14, 1).value == "2026-08"
+    assert workbook["HUD transitions"].cell(14, 5).value == 65_811
+    assert workbook["HUD transitions"].cell(14, 9).value == 540_410
+    cure_definition_rows = [
+        row for row in range(2, workbook["HUD definitions"].max_row + 1)
+        if workbook["HUD definitions"].cell(row, 1).value == "Cure ratio"
+    ]
+    assert len(cure_definition_rows) == 1
+    assert "matched-cohort cure probability" in workbook["HUD definitions"].cell(cure_definition_rows[0], 3).value
     assert workbook["HUD definitions"].max_row >= 9

@@ -8,7 +8,9 @@ import threading
 import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
+from openpyxl import load_workbook
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -58,6 +60,7 @@ def run(root: Path, release: str) -> dict:
     thread.start()
     errors: list[str] = []
     checks: list[str] = []
+    excel_responses: list[dict] = []
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(channel="msedge", headless=True)
@@ -65,6 +68,9 @@ def run(root: Path, release: str) -> dict:
             page.set_default_timeout(90000)
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
+            page.on("response", lambda response: excel_responses.append({
+                "status": response.status, "url_path": urlsplit(response.url).path,
+            }) if urlsplit(response.url).path == "/api/hmda-national-excel" else None)
             page.goto(f"http://127.0.0.1:{server.server_port}/?view=hmda&hmda_national_view_id={view_id}",
                       wait_until="domcontentloaded")
             expected = service.hmda_national_views.report(view_id, {
@@ -94,6 +100,29 @@ def run(root: Path, release: str) -> dict:
             exported = json.loads(download_path.read_text(encoding="utf-8"))
             assert exported == expected
             checks.append("Filtered JSON download exactly matches the receipt-verified selected-release API result")
+
+            with page.expect_download() as info:
+                page.get_by_role("button", name="Tải Excel giao cắt").click()
+            workbook_path = output / "CreditAtlas-HMDA-2025-Filtered.xlsx"
+            info.value.save_as(str(workbook_path))
+            workbook = load_workbook(workbook_path, data_only=False, read_only=False)
+            assert workbook.sheetnames == ["Summary", "Actions", "Method & sources"]
+            assert workbook["Summary"]["B6"].value == "CA"
+            assert workbook["Summary"]["B7"].value == "Conventional · 1"
+            assert workbook["Summary"]["B12"].value == summary["records"]
+            assert workbook["Summary"]["B13"].value == summary["decision_denominator"]
+            assert workbook["Summary"]["B14"].value == summary["denied_numerator"]
+            assert abs(workbook["Summary"]["B15"].value
+                       - float(summary["descriptive_denial_rate"])) < 1e-15
+            assert [workbook["Actions"].cell(row, 3).value for row in range(2, 10)] == [
+                row["records"] for row in summary["actions"]]
+            formula_count = sum(1 for sheet in workbook.worksheets for cells in sheet.iter_rows()
+                                for cell in cells if isinstance(cell.value, str) and cell.value.startswith("="))
+            assert formula_count == 12
+            assert not workbook._external_links
+            workbook.close()
+            checks.append("Filtered Excel download contains the selected filters, five KPIs and all eight action counts")
+            checks.append("Excel workbook read-back finds 12 reconciliation/share formulas and no external links")
             assert not errors, errors
             browser.close()
 
@@ -108,6 +137,8 @@ def run(root: Path, release: str) -> dict:
             "source_receipt_sha256": receipt["source_receipt_sha256"],
             "aggregate_sha256": receipt["aggregate_sha256"],
             "filtered_summary": exported["filtered_summary"],
+            "filtered_excel_sha256": sha256(workbook_path),
+            "filtered_excel_formula_count": formula_count,
             "app_js_sha256": sha256(ROOT / "apps/web/app.js"),
             "completed_at": timestamp(),
             "visibility": "private",
@@ -119,14 +150,22 @@ def run(root: Path, release: str) -> dict:
         write_new(output / "failed.json", {
             "status": "FAIL", "exception_type": type(error).__name__,
             "checks_completed": checks, "browser_errors": errors,
+            "excel_responses": excel_responses,
             "page_url": page.url if "page" in locals() else None,
-            "page_text": page.locator("body").inner_text()[:5000] if "page" in locals() else None,
+            "page_text": _page_text(page) if "page" in locals() else None,
         })
         raise
     finally:
         server.shutdown()
         server.server_close()
         thread.join(timeout=5)
+
+
+def _page_text(page):
+    try:
+        return page.locator("body").inner_text(timeout=5000)[:5000]
+    except Exception:
+        return None
 
 
 if __name__ == "__main__":

@@ -1,0 +1,49 @@
+{
+  "evidence_type": "hmda_filtered_excel_intersection_acceptance",
+  "verified_on": "2026-10-18",
+  "status": "PASS",
+  "scope": {
+    "activity_year": 2025,
+    "filters": "One selected US state × one HMDA loan type (California × conventional)",
+    "releases_tested": ["static snapshot", "dynamic as-of release"],
+    "export_contents": "Query-scoped aggregate workbook; no raw LAR rows, borrower records, or LEIs"
+  },
+  "browser": {
+    "snapshot_checks": 5,
+    "dynamic_checks": 5,
+    "checks_cover": [
+      "Filtered KPIs and denominator",
+      "URL filter persistence",
+      "JSON/API result parity",
+      "Excel filter, KPI, and eight action counts",
+      "Workbook formulas and external-link scan"
+    ],
+    "browser_errors": 0
+  },
+  "native_excel": {
+    "version": "16.0",
+    "read_only": true,
+    "macros_disabled": true,
+    "formula_count_per_workbook": 12,
+    "reconciliation_checks_per_workbook": "4/4 PASS",
+    "formula_errors": 0,
+    "external_links": 0,
+    "workbook_bytes_unchanged": true
+  },
+  "focused_backend_tests": {
+    "passed": 22,
+    "failed": 0
+  },
+  "limitations": [
+    "This verifies one state × product query on each 2025 release, not every filter combination or release.",
+    "Independent raw-source/API intersection parity is currently certified for Snapshot only; Dynamic official API parity remains open.",
+    "Older annual panels remain open for targeted acceptance.",
+    "HMDA measures application and underwriting dispositions, not repayment default or probability of default.",
+    "Source reuse rights are unresolved; raw inputs and detailed receipts remain private."
+  ],
+  "completion_ledger": {
+    "capabilities_complete": 26,
+    "capabilities_total": 50,
+    "ratio": 0.52
+  }
+}

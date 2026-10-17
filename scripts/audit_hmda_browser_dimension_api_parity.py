@@ -198,17 +198,19 @@ def main() -> None:
     from credit_atlas.workspace import read_json  # noqa: E402
     service = HmdaNationalViews(root)
     view_receipts = sorted((root / "artifacts/private").glob("hmda-national-view-*/view-complete.json"))
-    view_id = None
+    current_views = []
     for receipt_path in view_receipts:
         try:
             receipt = read_json(receipt_path)
-            if receipt.get("source_id") == args.source_id and receipt.get("status") == "VERIFIED_HMDA_NATIONAL_AGGREGATE_VIEW":
-                view_id = receipt_path.parent.name
-                break
+            if (receipt.get("source_id") == args.source_id
+                    and receipt.get("status") == "VERIFIED_HMDA_NATIONAL_AGGREGATE_VIEW"
+                    and receipt.get("methods") == service._methods):
+                current_views.append((receipt.get("completed_at", ""), receipt_path.parent.name))
         except (OSError, ValueError, KeyError, TypeError):
             continue
-    if not view_id:
-        raise ValueError("No verified local HMDA National Snapshot aggregate view was found")
+    if not current_views:
+        raise ValueError("No verified local HMDA National Snapshot view with current methods was found")
+    view_id = max(current_views)[1]
 
     app_profiles = {}
     for scope, spec in filter_specs.items():
@@ -218,8 +220,13 @@ def main() -> None:
             app_summary = report.get("filtered_summary")
             if app_summary is None:
                 raise ValueError("The app did not return the California × conventional filtered summary")
+            # Keep this public aggregate QA receipt limited to the scalar KPI
+            # fields; detailed action profiles stay in the local private run.
+            public_summary = {key: app_summary[key] for key in (
+                "records", "decision_denominator", "denied_numerator",
+                "descriptive_denial_rate", "public_amount_sum_usd")}
             app_profiles[scope] = {"kind": "intersection", "filters": {"state_code": "CA", "loan_type": "1"},
-                                   "summary": app_summary, "matches_official_api": False}
+                                   "summary": public_summary, "matches_official_api": False}
             continue
         dimension = spec.get("app_dimension")
         if not dimension:

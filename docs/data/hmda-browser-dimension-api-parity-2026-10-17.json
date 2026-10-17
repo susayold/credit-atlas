@@ -1,8 +1,8 @@
 {
   "evidence_type": "hmda_browser_2025_snapshot_dimension_api_parity",
-  "run_id": "hmda-dimension-parity-20261017T164645Z",
+  "run_id": "hmda-dimension-parity-20261017T183005Z",
   "status": "PASS",
-  "captured_at_utc": "2026-10-17T16:46:45.498577+00:00",
+  "captured_at_utc": "2026-10-17T18:30:05.585387+00:00",
   "source": "FFIEC / CFPB HMDA Data Browser aggregations API",
   "source_id": "hmda-national-snapshot-2025-9a5e89600e3c",
   "snapshot_freeze_date": "2026-06-02",
@@ -21,7 +21,7 @@
       "one largest-reporting LEI",
       "nationwide loan type"
     ],
-    "validation": "Exact action 1–8 count equality between official API and same-freeze local public LAR; matching app marginal bucket summaries are also checked for state, county, LEI and nationwide loan type.",
+    "validation": "Exact action 1–8 count equality between official API and same-freeze local public LAR; four app marginal buckets and the California × conventional intersection summary are also checked against the API.",
     "privacy": "Public JSON excludes raw rows, local paths, exact LEI, request URLs and action-level counts; full evidence remains in the private receipt on D:."
   },
   "results": [
@@ -52,6 +52,8 @@
         "descriptive_denied_share": "0.2240453034779742"
       },
       "app_marginal_summary_match": true,
+      "app_intersection_summary": null,
+      "app_intersection_summary_match": null,
       "descriptive_denied_share_delta": "0E-28"
     },
     {
@@ -81,6 +83,8 @@
         "descriptive_denied_share": "0.24146774511738014"
       },
       "app_marginal_summary_match": true,
+      "app_intersection_summary": null,
+      "app_intersection_summary_match": null,
       "descriptive_denied_share_delta": "0E-28"
     },
     {
@@ -105,6 +109,14 @@
       },
       "app_marginal_bucket_summary": null,
       "app_marginal_summary_match": null,
+      "app_intersection_summary": {
+        "records": 961135,
+        "decision_denominator": 670649,
+        "denied_numerator": 153088,
+        "descriptive_denial_rate": "0.22826843848272346",
+        "public_amount_sum_usd": "526427715000.00"
+      },
+      "app_intersection_summary_match": true,
       "descriptive_denied_share_delta": "0E-28"
     },
     {
@@ -134,6 +146,8 @@
         "descriptive_denied_share": "0.19922531292711784"
       },
       "app_marginal_summary_match": true,
+      "app_intersection_summary": null,
+      "app_intersection_summary_match": null,
       "descriptive_denied_share_delta": "0E-28"
     },
     {
@@ -163,15 +177,17 @@
         "descriptive_denied_share": "0.23401567151567151"
       },
       "app_marginal_summary_match": true,
+      "app_intersection_summary": null,
+      "app_intersection_summary_match": null,
       "descriptive_denied_share_delta": "0E-28"
     }
   ],
   "scope_limitations": [
     "This is a five-scope parity spot check of the 2025 Snapshot, not proof of all years, all geography codes, all institutions, or every filter combination.",
-    "The app's one-dimension buckets match the official API for state, county, selected LEI, and nationwide loan-type code 1. The California × loan-type intersection is checked against local raw data but is not an app marginal bucket; no app intersection parity is claimed.",
+    "The app's four marginal buckets (state, county, selected LEI, nationwide loan-type code 1) and the California × conventional intersection summary match the official API; broader intersections are not yet certified.",
     "The check exercises the receipt-verified app service used by its UI/API, but does not verify browser rendering or filtered Excel export for every query.",
     "Denied share is an application disposition measure, not repayment/default performance or PD.",
     "No forecast, imputation, row linkage, or borrower-level inference was used."
   ],
-  "private_receipt_sha256": "43ff2dc49ca8efce048c880946673b796b36d9a0d2f41a9ed32f9950fa2303a5"
+  "private_receipt_sha256": "b779b23950c5e0cc5835c1b133378169e0225af3856d5bd3da3a80946f2da388"
 }

@@ -15,6 +15,16 @@ FIELDS = [
     "applicant_credit_score_type", "denial_reason_1", "loan_amount",
 ]
 FIELDS += [f"synthetic_field_{index}" for index in range(99 - len(FIELDS))]
+ACTION_NAMES = {
+    "1": "ORIGINATED", "2": "APPROVED_NOT_ACCEPTED", "3": "DENIED",
+    "4": "WITHDRAWN", "5": "CLOSED_INCOMPLETE", "6": "PURCHASED_LOAN",
+    "7": "PREAPPROVAL_DENIED", "8": "PREAPPROVAL_APPROVED_NOT_ACCEPTED",
+}
+
+
+def actions(**counts):
+    return [{"code": code, "name": name, "records": counts.get(code, 0)}
+            for code, name in ACTION_NAMES.items()]
 
 
 def row(**overrides):
@@ -107,6 +117,8 @@ def test_aggregate_csv_builds_state_loan_type_intersections_and_reconciles(tmp_p
     assert (california_conventional["records"], california_conventional["decision_denominator"],
             california_conventional["denied_numerator"]) == (2, 2, 1)
     assert california_conventional["descriptive_denial_rate"] == "0.5"
+    assert {item["code"]: item["records"] for item in california_conventional["actions"]} == {
+        "1": 1, "2": 0, "3": 1, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0}
     assert sum(item["records"] for item in intersections.values()) == result["summary"]["records"] == 4
     assert sum(item["decision_denominator"] for item in intersections.values()) == result["summary"]["decision_denominator"] == 2
     assert sum(item["denied_numerator"] for item in intersections.values()) == result["summary"]["denied_numerator"] == 1
@@ -116,11 +128,14 @@ def test_report_returns_validated_filtered_summary_from_intersections(tmp_path: 
     service = HmdaNationalViews(tmp_path)
     intersections = [
         {"state_code": "CA", "loan_type": "1", "records": 2, "decision_denominator": 2,
-         "denied_numerator": 1, "descriptive_denial_rate": "0.5", "public_amount_sum_usd": "250000.00"},
+         "denied_numerator": 1, "descriptive_denial_rate": "0.5", "public_amount_sum_usd": "250000.00",
+         "actions": actions(**{"1": 1, "3": 1})},
         {"state_code": "CA", "loan_type": "2", "records": 3, "decision_denominator": 1,
-         "denied_numerator": 0, "descriptive_denial_rate": "0", "public_amount_sum_usd": "200000.00"},
+         "denied_numerator": 0, "descriptive_denial_rate": "0", "public_amount_sum_usd": "200000.00",
+         "actions": actions(**{"1": 1, "4": 2})},
         {"state_code": "NY", "loan_type": "1", "records": 1, "decision_denominator": 0,
-         "denied_numerator": 0, "descriptive_denial_rate": None, "public_amount_sum_usd": "300000.00"},
+         "denied_numerator": 0, "descriptive_denial_rate": None, "public_amount_sum_usd": "300000.00",
+         "actions": actions(**{"4": 1})},
     ]
     payload = {"source_id": "source", "snapshot_date": "2026-06-02", "activity_year": 2025,
         "summary": {"records": 6, "decision_denominator": 3, "denied_numerator": 1},
@@ -132,8 +147,11 @@ def test_report_returns_validated_filtered_summary_from_intersections(tmp_path: 
     report = service.report("hmda-national-view-0123456789ab", {
         "dimension": "county_code", "filter_state_code": "CA", "filter_loan_type": "1"})
     assert report["applied_filters"] == {"state_code": "CA", "loan_type": "1"}
-    assert report["filtered_summary"] == {"records": 2, "decision_denominator": 2,
+    assert {key: value for key, value in report["filtered_summary"].items() if key != "actions"} == {
+        "records": 2, "decision_denominator": 2,
         "denied_numerator": 1, "descriptive_denial_rate": "0.5", "public_amount_sum_usd": "250000.00"}
+    assert {item["code"]: item["records"] for item in report["filtered_summary"]["actions"]} == {
+        "1": 1, "2": 0, "3": 1, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0}
 
     state_report = service.report("hmda-national-view-0123456789ab", {
         "dimension": "county_code", "filter_state_code": "CA"})

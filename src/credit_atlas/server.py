@@ -707,10 +707,17 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                         if url.path == '/api/hmda-one-year-2023-report':
                             self.send(200, result, filename=f"CreditAtlas-{result['view_id']}-private-hmda-one-year.json", head=head)
                             return
-                elif url.path in {'/api/hmda-national-view', '/api/hmda-national-aggregates', '/api/hmda-national-report'}:
+                elif url.path in {'/api/hmda-national-view', '/api/hmda-national-aggregates', '/api/hmda-national-report', '/api/hmda-national-excel'}:
                     if url.path == '/api/hmda-national-view':
                         if set(query) != {'view_id'}: raise ValueError('HMDA national view accepts view_id only')
                         result = service.hmda_national_views.view(query['view_id'])
+                    elif url.path == '/api/hmda-national-excel':
+                        from .hmda_national_excel import workbook_bytes
+                        result = workbook_bytes(service, query)
+                        self.send(200, result,
+                                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                  filename='CreditAtlas-HMDA-2025-Filtered.xlsx', head=head)
+                        return
                     else:
                         result = service.hmda_national_views.report(query.get('view_id', ''), query)
                         if url.path == '/api/hmda-national-report':

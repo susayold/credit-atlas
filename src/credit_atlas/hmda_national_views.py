@@ -184,6 +184,7 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
         # tables so the app can report exact intersections without rescanning
         # the 13.5M-row source on every request.
         groups.append(("state_code", "loan_type"))
+        groups.append(("state_code", "loan_type", "action_taken"))
         cases = ["WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0 THEN 'state_code_loan_type'"]
         value_cases = [
             f"WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0 "
@@ -201,6 +202,8 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
                         THEN {_category('state_code')} ELSE NULL END AS intersection_state,
                    CASE WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0
                         THEN {_category('loan_type')} ELSE NULL END AS intersection_loan_type,
+                   CASE WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0 AND GROUPING(action_taken)=0
+                        THEN action_taken ELSE NULL END AS intersection_action,
                    count(*) AS records,
                    count(*) FILTER (WHERE action_taken IN ('1','2','3')) AS decision_denominator,
                    count(*) FILTER (WHERE action_taken='3') AS denied_numerator,
@@ -216,8 +219,10 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
                   "breakdowns": {key: [] for key in DIMENSIONS},
                   "intersections": {"state_code_loan_type": []}, "quality": {}}
         action_counts = {}
+        intersection_action_counts = {}
         for (dimension, bucket, intersection_state, intersection_loan_type,
-             records, denominator, denied, amount, wrong_year, invalid_action, invalid_amount) in rows:
+             intersection_action, records, denominator, denied, amount,
+             wrong_year, invalid_action, invalid_amount) in rows:
             if dimension == "action_taken":
                 action_counts[bucket] = records
                 continue
@@ -235,6 +240,10 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
                 item["denied_reason_records"] = denied
                 item["denominator_kind"] = "action_3_applications"
             if dimension == "state_code_loan_type":
+                if intersection_action is not None:
+                    key = (intersection_state, intersection_loan_type)
+                    intersection_action_counts.setdefault(key, {})[str(intersection_action)] = records
+                    continue
                 result["intersections"][dimension].append({
                     "state_code": intersection_state,
                     "loan_type": intersection_loan_type,
@@ -256,9 +265,9 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
             "descriptive_denial_rate": str(denied / decided) if decided else None,
             "public_amount_sum_usd": str(sum(Decimal(item["public_amount_sum_usd"])
                 for item in result["breakdowns"]["state_code"]))}
-        result["quality"] = {"wrong_year_rows": max((row[8] for row in rows), default=0),
-            "invalid_action_rows": max((row[9] for row in rows), default=0),
-            "invalid_amount_rows": max((row[10] for row in rows), default=0)}
+        result["quality"] = {"wrong_year_rows": max((row[9] for row in rows), default=0),
+            "invalid_action_rows": max((row[10] for row in rows), default=0),
+            "invalid_amount_rows": max((row[11] for row in rows), default=0)}
         if total <= 0 or result["quality"] != {"wrong_year_rows": 0, "invalid_action_rows": 0, "invalid_amount_rows": 0}:
             raise ValueError("National HMDA row quality checks failed")
         # For denial reasons, denominator is all action-3 records with a value
@@ -270,6 +279,16 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
             if row["denied_reason_records"] > 0]
         intersections = result["intersections"]["state_code_loan_type"]
         intersections.sort(key=lambda row: (row["state_code"], row["loan_type"]))
+        for item in intersections:
+            counts = intersection_action_counts.get((item["state_code"], item["loan_type"]), {})
+            item["actions"] = [{"code": code, "name": order[code], "records": counts.get(code, 0)}
+                               for code in sorted(order)]
+            if (sum(action["records"] for action in item["actions"]) != item["records"]
+                    or sum(action["records"] for action in item["actions"] if action["code"] in {"1", "2", "3"})
+                    != item["decision_denominator"]
+                    or next(action["records"] for action in item["actions"] if action["code"] == "3")
+                    != item["denied_numerator"]):
+                raise ValueError("HMDA state × loan-type action counts do not reconcile to their intersection")
         if (sum(row["records"] for row in intersections) != total
                 or sum(row["decision_denominator"] for row in intersections) != decided
                 or sum(row["denied_numerator"] for row in intersections) != denied
@@ -440,6 +459,7 @@ class HmdaNationalViews:
             "summary": payload["summary"], "actions": payload["actions"],
             "dimension": dimension, "dimension_label": DIMENSIONS[dimension],
             "breakdown": payload["breakdowns"][dimension], "scope": payload["scope"],
+            "source_url": payload.get("source_url"),
             "limitations": payload["limitations"], "denominator_contract": payload["denominator_contract"],
             "visibility": "private", "public_release_approved": False}
         filters = {}
@@ -461,6 +481,13 @@ class HmdaNationalViews:
             denominator = sum(row["decision_denominator"] for row in rows)
             denied = sum(row["denied_numerator"] for row in rows)
             amount = sum((Decimal(row["public_amount_sum_usd"]) for row in rows), Decimal("0.00"))
+            action_totals = {code: sum(next(action["records"] for action in row["actions"]
+                                                   if action["code"] == code) for row in rows)
+                             for code in sorted({action["code"] for row in rows for action in row["actions"]})}
+            if (sum(action_totals.values()) != records
+                    or sum(action_totals.get(code, 0) for code in ("1", "2", "3")) != denominator
+                    or action_totals.get("3", 0) != denied):
+                raise ValueError("HMDA filtered action counts do not reconcile to the filtered summary")
             result["applied_filters"] = filters
             result["filtered_summary"] = {
                 "records": records,
@@ -468,6 +495,9 @@ class HmdaNationalViews:
                 "denied_numerator": denied,
                 "descriptive_denial_rate": str(denied / denominator) if denominator else None,
                 "public_amount_sum_usd": str(amount),
+                "actions": [{"code": code, "name": next(action["name"] for row in rows
+                            for action in row["actions"] if action["code"] == code),
+                            "records": action_totals[code]} for code in sorted(action_totals)],
             }
         return result
 

@@ -1,9 +1,9 @@
 {
   "schema_version": "creditatlas-plan-workbook-update-v1",
-  "updated_date": "2026-10-17",
+  "updated_date": "2026-10-18",
   "workbook_path": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
-  "previous_sha256": "eb72ba97a53f0548cf3ce7d6f66f9ba55cd350125c6ad2e7386e562a20e598d8",
-  "sha256": "65b1903762323fb0469929f056539f319483c764ea98af768ea0ff1fbe0b1922",
+  "previous_sha256": "65b1903762323fb0469929f056539f319483c764ea98af768ea0ff1fbe0b1922",
+  "sha256": "c79633a2185a024474f774f56607482ef850313bca64753707358d4fd0fefd66",
   "sheets": [
     "Ke hoach",
     "50 yeu cau",
@@ -26,14 +26,18 @@
     ]
   },
   "verification": {
-    "artifact_tool_recalculation": "PASS: refreshed N02/N03 progress notes in the four-sheet plan workbook, included five-scope 2025 Snapshot HMDA filtered API/app parity plus focused Snapshot and Dynamic intersection smoke results, increased N02/N03 row heights so notes are fully visible, recalculated, exported, reimported and rendered.",
+    "artifact_tool_recalculation": "PASS: refreshed N02/N03 progress notes in the four-sheet plan workbook with five-scope Snapshot API/app parity, 5/5 browser checks on both Snapshot and Dynamic filtered intersection paths, and native Excel acceptance; increased row height, recalculated, exported, reimported and rendered.",
     "formula_cache_validation": "PASS: 18 formula cells across Ke hoach; 0 formula errors; B11=26, C11=50 and D11=52% remain unchanged.",
     "visual_review": "PASS: Ke hoach rows 17–21 rendered after update; N02/N03 evidence notes are fully visible with no clipping.",
     "status_dropdown": "Not changed; existing status validation retained.",
     "native_excel_desktop": "PASS: Excel 16.0 read-only/full rebuild; 4 sheets, 18 formulas, 0 formula errors, 0 external links; ledger 26/50; workbook bytes unchanged."
   },
-  "scope_note": "The plan records the 17–18 Oct HMDA acceptance: four current-code browser suites previously passed 46 checks; the focused 2025 Snapshot and Dynamic intersection smokes each pass KPI, URL and JSON parity checks with zero browser errors. The Dynamic smoke checks its receipt-bound app output; independent official API parity is only certified for Snapshot. Nine receipt-bound HMDA workbooks pass Excel 16.0 read-only/recalc with 177 formulas, 0 errors and 0 external links; 146 focused HMDA source/view/API/cohort/acquisition tests pass, plus 20 national/application tests for the new filters. Five filtered 2025 API scopes match local action profiles and app summaries (four marginals plus California × conventional). The six-sheet audit workbook has 124 formulas and passes Excel 16.0 with 0 errors/external links. The fixed-2023-mix independent raw-source audit passes 70/70 checks for mart, attrition, denominators/amounts, reference/common-support weights, missing strata and hash stability. These are local descriptive/data-integrity checks, not repayment-risk prediction, fairness, causal effect or production readiness. Older annual panels, filtered Excel export, broader release/UI parity, raw rights and other-source KPI lineage remain open. Existing caveats remain: Apple is one descriptive accession without point-in-time/debt-service qualification; Freddie is a private sample without ownership proof; HAMP gaps remain missing. No forecast or imputation was made. Capability remains 26/50.",
+  "scope_note": "The plan records the 17–18 Oct HMDA acceptance: four current-code browser suites previously passed 46 checks; the focused 2025 Snapshot and Dynamic intersection smokes each pass 5 browser checks covering scoped KPIs, URL, JSON and filtered Excel, with zero browser errors. Both query workbooks pass Excel 16.0 read-only/full rebuild with 12 formulas, all four reconciliation checks PASS, 0 formula errors/external links and unchanged bytes. Dynamic official API parity and older annual panels remain open; independent official API/raw parity is only certified for Snapshot. Nine receipt-bound HMDA audit workbooks pass Excel 16.0 with 177 formulas, 0 errors and 0 external links; 22 focused backend tests for national views, Excel and applications pass. Five filtered 2025 API scopes match local action profiles/app summaries. The six-sheet audit workbook has 124 formulas and passes Excel 16.0. The fixed-2023-mix independent raw-source audit passes 70/70 checks. These are local descriptive/data-integrity checks, not repayment-risk prediction, fairness, causal effect or production readiness. Raw reuse rights, broader release/UI parity and other-source KPI lineage remain open. Existing caveats remain: Apple is one descriptive accession without point-in-time/debt-service qualification; Freddie is a private sample without ownership proof; HAMP gaps remain missing. No forecast or imputation was made. Capability remains 26/50.",
   "revision_history": [
+    {
+      "sha256": "c79633a2185a024474f774f56607482ef850313bca64753707358d4fd0fefd66",
+      "note": "Updated N02/N03 notes after 2025 Snapshot and Dynamic filtered Excel intersection acceptance. Each has 5 browser checks; each workbook passes Excel 16.0 read-only/full rebuild with 12 formulas, all 4 reconciliation checks, zero errors/links and unchanged bytes. Older annual panels and Dynamic API/raw parity remain open. Capability ledger unchanged at 26/50."
+    },
     {
       "sha256": "65b1903762323fb0469929f056539f319483c764ea98af768ea0ff1fbe0b1922",
       "note": "Updated N02/N03 plan notes with HMDA Browser-selected releases, five filtered API/app parity scopes, focused Snapshot intersection smoke, native Excel, focused tests and fixed-2023-mix audit evidence; adjusted row height for full visibility. Excel 16.0 read-only/full rebuild passes with 18 formulas, zero errors/links, unchanged 26/50 ledger and unchanged workbook bytes."
@@ -75,5 +79,5 @@
       "note": "Updated P4 N02 plan status after source-aware Freddie-sample UPB labels were implemented. Six targeted Edge UI checks passed; broad browser suite remains blocked by a frozen convergence receipt mismatch. Capability remains 26/50."
     }
   ],
-  "file_size_bytes": 30742
+  "file_size_bytes": 30768
 }

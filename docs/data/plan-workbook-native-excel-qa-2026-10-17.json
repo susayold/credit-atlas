@@ -25,14 +25,15 @@
     "completion_ratio": 0.52
   },
   "updated_progress_notes": {
-    "N02": "46 current-code HMDA browser checks; 146 focused HMDA tests; nine HMDA workbook exports verified",
+    "N02": "Official 2018–2025 Data Browser release map and receipt-bound same-year 2025 Snapshot/Dynamic audit; raw redistribution rights confirmation and other release/year parity remain open",
     "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
   },
-  "scope": "N02 and N03 progress notes now include the HMDA current-code browser suite results, native Excel workbook results and independent fixed-2023-mix source audit. The N03 row was expanded to show the full note. The existing capability ledger was not changed.",
+  "scope": "N02 plan note now includes HMDA official release mapping, a receipt-bound same-year 2025 actual-data comparison, and the unresolved source-specific raw redistribution rights gate. The existing N03 evidence and 26/50 capability ledger remain unchanged.",
   "limitations": [
     "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
     "HMDA is application and decision data, not repayment/default performance.",
-    "Release comparability, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
+    "Explicit raw redistribution rights confirmation, year-by-year release/API parity, other route/filter combinations and remaining KPI lineage are still open.",
     "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
-  ]
+  ],
+  "workbook_sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de"
 }

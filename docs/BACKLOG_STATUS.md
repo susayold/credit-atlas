@@ -905,3 +905,26 @@ and `docs/data/hmda-native-excel-qa-2026-10-17.json`.
 Remaining HMDA work is release-window comparability, reuse-rights and KPI
 lineage. These files remain application/decision data, not repayment/default
 performance. No forecast was added, and capability completion remains 26/50.
+
+## 2026-10-17 HMDA release-comparability research and aggregate audit
+
+Completed a first-pass research and data audit for HMDA release comparability.
+The official FAQ maps the Data Browser to Three-Year releases for 2018–2022,
+One-Year for 2023–2024, and the 2025 Snapshot. This explains why the app's
+archived One-Year 2019 file is not the current Browser-selected 2019 Three-Year
+vintage. Added a reproducible receipt-bound audit for same-activity-year 2025
+Snapshot and Dynamic aggregates: Snapshot 13,543,606 LAR rows/4,782 reporters;
+Dynamic capture 13,558,306/4,794; delta +14,700 rows and +12 reporters. The
+action-count reconciliation passed; decisions increased by 12,506, denials by
+666, and descriptive denied share changed by −0.02304073 percentage points.
+
+Detailed findings: `docs/HMDA_RELEASE_COMPARABILITY_AND_REUSE_RIGHTS_2026-10-17_VI.md`;
+sanitized output: `docs/data/hmda-2025-release-comparison-2026-10-17.json`;
+reproducible script: `scripts/audit_hmda_2025_release_comparability.py`.
+Raw rows and private receipts stay on D:. The reviewed publisher pages support
+public analysis/privacy-modified-data claims, but did not state an explicit
+raw redistribution license; keep raw private until that source-specific gate
+is resolved. This is application/decision data, not repayment/default
+performance. No forecast/imputation was made; the master capability ledger
+remains **26/50 (52%)**. Remaining: source rights confirmation, year-by-year
+release/API parity, harmonized KPI definitions, and N03 field-to-formula links.

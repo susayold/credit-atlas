@@ -196,3 +196,35 @@ N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_bounda
 2. Hoàn thiện N02 theo crosswalk mới: tách source families đang thiếu record, bind mọi release/hash receipt và kiểm tra source rights/date-grain cho từng KPI.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
 4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.
+
+## 2026-10-17 HMDA release mapping, 2025 actual comparison and reuse gate
+
+Researched the FFIEC/CFPB Data Browser's selected static release by activity
+year and cross-checked the result against the release-specific HMDA views and
+existing app labels. The Browser mapping is Three-Year for 2018–2022, One-Year
+for 2023–2024 and Snapshot for 2025. This confirms that the app's One-Year 2019
+archive (freeze 2022-04-05, with the publisher's >12-month update caveat) is a
+separate vintage from the Browser-selected 2019 Three-Year file (freeze
+2022-12-31).
+
+Added `scripts/audit_hmda_2025_release_comparability.py`. It reads private
+receipt-bound aggregate views and acquisition receipts, checks source IDs and
+as-of dates, recomputes action totals, the 1+2+3 decision denominator, denied
+numerator and denied share, then writes only sanitized aggregates. The audit
+passed for the 2025 Snapshot (13,543,606 rows; 4,782 reporters) and Dynamic
+capture (13,558,306 rows; 4,794 reporters). Dynamic minus Snapshot is +14,700
+rows, +12 reporters, +12,506 decisions, +666 denials and −0.02304073 percentage
+points in descriptive denied share. The action deltas sum to the row delta and
+the action 1–3 deltas sum to the denominator delta.
+
+Public outputs: `docs/HMDA_RELEASE_COMPARABILITY_AND_REUSE_RIGHTS_2026-10-17_VI.md`
+and `docs/data/hmda-2025-release-comparison-2026-10-17.json`; private source
+hashes and paths remain in the D: receipt. Public HMDA pages reviewed support
+analysis and explain privacy modification, but no explicit raw redistribution
+license was found on the specific product pages checked. Keep raw files
+private until source-specific terms are confirmed; this is a rights-review
+status, not legal advice. The analysis compares publication states and must not
+be described as borrower transitions, repayment performance, PD, or a forecast.
+HMDA browser/API parity for other release/year combinations, explicit rights
+confirmation and remaining KPI lineage are still open. The 50-capability ledger
+remains 26/50 (52%).

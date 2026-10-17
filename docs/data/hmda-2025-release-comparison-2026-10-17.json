@@ -1,0 +1,109 @@
+{
+  "evidence_type": "hmda_2025_same_year_release_comparison",
+  "status": "PASS",
+  "activity_year": 2025,
+  "comparison_basis": {
+    "snapshot": {
+      "release": "2025 Static Snapshot",
+      "source_as_of": "2026-06-02",
+      "lar_records": 13543606,
+      "reporters": 4782,
+      "decision_denominator_actions_1_2_3": 9360942,
+      "denied_numerator_action_3": 2115090,
+      "descriptive_denied_share": "0.2259484141660102156385543250"
+    },
+    "dynamic": {
+      "release": "2025 Dynamic weekly capture",
+      "source_as_of": "2026-10-11T12:00:30Z",
+      "lar_records": 13558306,
+      "reporters": 4794,
+      "decision_denominator_actions_1_2_3": 9373448,
+      "denied_numerator_action_3": 2115756,
+      "descriptive_denied_share": "0.2257180068636429198732419490"
+    },
+    "delta_dynamic_minus_snapshot": {
+      "lar_records": 14700,
+      "reporters": 12,
+      "decision_denominator_actions_1_2_3": 12506,
+      "denied_numerator_action_3": 666,
+      "denied_share_percentage_points": "-0.02304073"
+    },
+    "action_count_deltas": [
+      {
+        "action_taken": "1",
+        "label": "originated",
+        "snapshot_records": 6827891,
+        "dynamic_records": 6837511,
+        "dynamic_minus_snapshot": 9620
+      },
+      {
+        "action_taken": "2",
+        "label": "approved_not_accepted",
+        "snapshot_records": 417961,
+        "dynamic_records": 420181,
+        "dynamic_minus_snapshot": 2220
+      },
+      {
+        "action_taken": "3",
+        "label": "denied",
+        "snapshot_records": 2115090,
+        "dynamic_records": 2115756,
+        "dynamic_minus_snapshot": 666
+      },
+      {
+        "action_taken": "4",
+        "label": "withdrawn",
+        "snapshot_records": 1710723,
+        "dynamic_records": 1713082,
+        "dynamic_minus_snapshot": 2359
+      },
+      {
+        "action_taken": "5",
+        "label": "closed_incomplete",
+        "snapshot_records": 695006,
+        "dynamic_records": 695182,
+        "dynamic_minus_snapshot": 176
+      },
+      {
+        "action_taken": "6",
+        "label": "purchased",
+        "snapshot_records": 1578064,
+        "dynamic_records": 1578065,
+        "dynamic_minus_snapshot": 1
+      },
+      {
+        "action_taken": "7",
+        "label": "preapproval_denied",
+        "snapshot_records": 50499,
+        "dynamic_records": 50499,
+        "dynamic_minus_snapshot": 0
+      },
+      {
+        "action_taken": "8",
+        "label": "preapproval_approved_not_accepted",
+        "snapshot_records": 148372,
+        "dynamic_records": 148030,
+        "dynamic_minus_snapshot": -342
+      }
+    ],
+    "denominator_contract": "action_taken 1+2+3",
+    "denied_share_formula": "count(action_taken=3) / count(action_taken in 1,2,3)"
+  },
+  "interpretation": [
+    "The comparison holds activity year constant and changes only the publisher release state captured here.",
+    "The Dynamic capture includes late submissions/resubmissions after the Snapshot freeze; these are aggregate record-count differences, not borrower transitions.",
+    "HMDA records application and underwriting actions, not repayment, delinquency, default, loss, or probability of default."
+  ],
+  "limitations": [
+    "No row-level matching or unique borrower/application transition is claimed.",
+    "The Dynamic file is a dated weekly capture, not a final annual vintage.",
+    "This calculation uses receipt-bound source-verified aggregates and acquisition action profiles; it does not perform a second parse of raw LAR rows.",
+    "Detailed receipts, raw data and source hashes remain private."
+  ],
+  "official_sources": [
+    "https://ffiec.cfpb.gov/data-publication/snapshot-national-loan-level-dataset/2025",
+    "https://ffiec.cfpb.gov/data-publication/dynamic-national-loan-level-dataset/2025",
+    "https://ffiec.cfpb.gov/documentation/tools/data-browser/data-browser-faq",
+    "https://ffiec.cfpb.gov/documentation/api/data-browser/"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "evidence_type": "hmda_2025_dynamic_current_source_metadata_check",
+  "checked_at_utc": "2026-10-17T18:42:54Z",
+  "status": "PASS_METADATA_MATCH_LOCAL_CAPTURE",
+  "publisher": "FFIEC / CFPB",
+  "local_capture": {
+    "source_id": "hmda-national-dynamic-2025-20261011",
+    "release_as_of_utc": "2026-10-11T12:00Z",
+    "receipt_retrieved_at_utc": "2026-10-16T09:17:03Z",
+    "local_archives_sha256_rechecked_against_acquisition_receipt": true
+  },
+  "current_publisher_objects": [
+    {
+      "dataset": "LAR",
+      "url": "https://files.ffiec.cfpb.gov/dynamic-data/2025/2025_lar.zip",
+      "head_http_status": 200,
+      "last_modified": "Sun, 11 Oct 2026 12:00:30 GMT",
+      "etag": "\"63e4086887d03c50f5d20962d9a6d810-141\"",
+      "content_length_bytes": 736787013,
+      "receipt_metadata_matches": true,
+      "local_archive_sha256_matches_receipt": true
+    },
+    {
+      "dataset": "Transmittal Sheet",
+      "url": "https://files.ffiec.cfpb.gov/dynamic-data/2025/2025_ts.zip",
+      "head_http_status": 200,
+      "last_modified": "Sun, 11 Oct 2026 12:00:20 GMT",
+      "etag": "\"37e1bf2050f628f4867728e81e347ce9-1\"",
+      "content_length_bytes": 191918,
+      "receipt_metadata_matches": true,
+      "local_archive_sha256_matches_receipt": true
+    }
+  ],
+  "release_semantics": {
+    "dynamic_update_frequency": "Weekly, Monday",
+    "2025_data_browser_query_source": "Static Snapshot",
+    "dynamic_delivery": "Separate S3 file product; not a distinct Dynamic Data Browser API query",
+    "official_references": [
+      "https://ffiec.cfpb.gov/data-publication/dynamic-national-loan-level-dataset/2025",
+      "https://ffiec.cfpb.gov/documentation/api/file-serving/",
+      "https://ffiec.cfpb.gov/documentation/api/data-browser/",
+      "https://ffiec.cfpb.gov/data-browser/data/2025"
+    ]
+  },
+  "interpretation": "Current publisher Last-Modified, ETag, and byte size match the receipt-bound October 11 local capture. Local archive hashes were rechecked. This is not a full remote byte-for-byte re-download comparison; ETag is treated as an object-version marker, not a cryptographic SHA-256.",
+  "limitations": [
+    "The publisher may replace the weekly objects later; poll version metadata before any future acquisition or analysis refresh.",
+    "Data Browser API/raw parity is certified for the selected 2025 Snapshot release, not for the separate Dynamic file product.",
+    "Public raw-file redistribution rights remain unconfirmed; archives and detailed receipts remain private."
+  ]
+}

@@ -36,8 +36,8 @@
   },
   "limitations": [
     "This verifies one state × product query on each 2025 release, not every filter combination or release.",
-    "Independent raw-source/API intersection parity is currently certified for Snapshot only; Dynamic official API parity remains open.",
-    "Older annual panels remain open for targeted acceptance.",
+    "Independent raw-source/API intersection parity applies to the Data Browser-selected 2025 Snapshot. Dynamic is a separate weekly S3 product; its current Last-Modified, ETag, and size match the receipt-bound October 11 capture, and local archive hashes match the receipt. No separate Dynamic Data Browser API parity query applies.",
+    "Prior 2018–2024 annual-panel browser receipts pass; the broad suite replay on this revision stopped during source verification before browser. The current code diff does not touch annual-panel render functions, but no new current-revision annual-panel replay is claimed.",
     "HMDA measures application and underwriting dispositions, not repayment default or probability of default.",
     "Source reuse rights are unresolved; raw inputs and detailed receipts remain private."
   ],

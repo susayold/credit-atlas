@@ -25,14 +25,14 @@
     "completion_ratio": 0.52
   },
   "updated_progress_notes": {
-    "N02": "Snapshot and Dynamic 2025 filtered Excel intersection smoke: 5/5 browser checks each; each native Excel workbook has 12 formulas and 4/4 reconciliation checks; independent official API/raw parity only Snapshot; Dynamic API parity and annual panels remain open",
+    "N02": "2018/2019 prior annual receipts pass 4 checks each; 2020–2024 suite passes 21 total incl. 15 panel-specific; current broad replay stopped before browser and annual render code is unchanged. Snapshot/Dynamic filtered exports pass 5 browser checks and 4/4 Excel reconciliations. Dynamic 2025 S3 Last-Modified/ETag/size and local archive hashes match the Oct 11 receipt; Browser API 2025 uses Snapshot, not Dynamic.",
     "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
   },
-  "scope": "N02 and N03 progress notes include the five-scope Snapshot filtered API/app parity, Snapshot and Dynamic filtered intersection exports, native Excel checks and independent fixed-2023-mix source audit. Filtered XLSX acceptance covers one selected 2025 state × product query per release. Older annual panels and Dynamic official API/raw parity remain open. The existing capability ledger was not changed.",
+  "scope": "N02 and N03 progress notes include existing annual-panel browser receipts, the five-scope Snapshot filtered API/app parity, Snapshot and Dynamic filtered intersection exports, native Excel checks, current Dynamic S3 object metadata/local hash check and independent fixed-2023-mix source audit. Current broad annual replay stopped in source verification before browser; annual panel code was not changed by the current 2025 export patch. Filtered XLSX acceptance covers one selected 2025 state × product query per release. Data Browser API 2025 uses Snapshot; Dynamic is a separate S3 product. The existing capability ledger was not changed.",
   "limitations": [
     "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
     "HMDA is application and decision data, not repayment/default performance.",
-    "Older annual panels, Dynamic official API parity, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
+    "The full current-revision annual suite replay did not complete. Dynamic remote byte-for-byte comparison was not repeated, although current object metadata and local receipt hashes match; reuse rights, other route/filter combinations and remaining KPI lineage remain open.",
     "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
   ]
 }

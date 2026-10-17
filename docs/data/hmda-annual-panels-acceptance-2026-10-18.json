@@ -1,0 +1,38 @@
+{
+  "evidence_type": "hmda_annual_panel_browser_acceptance_status",
+  "verified_on": "2026-10-18",
+  "status": "PRIOR_ACCEPTANCE_PASS_CURRENT_REVISION_REPLAY_INCOMPLETE",
+  "prior_receipt_acceptance": {
+    "2018_three_year": {
+      "status": "PASS",
+      "checks": 4,
+      "browser_errors": 0,
+      "scope": "Source and totals, action profile, state/LTV breakdown, Excel download, 390px layout"
+    },
+    "2019_one_year": {
+      "status": "PASS",
+      "checks": 4,
+      "browser_errors": 0,
+      "scope": "Frozen release totals, action-3 denial reasons, JSON parity, workbook download, 390px layout"
+    },
+    "2020_to_2024_one_year_panels": {
+      "status": "PASS",
+      "suite_total_checks": 21,
+      "panel_specific_checks": 15,
+      "browser_errors": 0,
+      "scope": "Separate year panels, scoped totals/action profiles, denial-reason JSON parity, receipt-bound workbook downloads, and 2020–2024 comparison display"
+    }
+  },
+  "current_revision_replay": {
+    "status": "NOT_COMPLETED",
+    "reason": "The broad suite was interrupted during source/receipt verification before opening the browser; it yielded no new browser acceptance result.",
+    "code_change_scope": "The current app.js change is confined to the 2025 national Snapshot state × loan-type filtered export block; the 2018–2024 panel render functions were not changed.",
+    "interpretation": "Prior PASS receipts remain valid for their tested revision. The unchanged annual panel code is supported by a narrow code-diff review, not a new runtime replay on the current revision."
+  },
+  "limitations": [
+    "This does not claim current-revision browser replay of the 2018–2024 panels.",
+    "The 2018/2019 and 2020–2024 artifacts have different release vintages and remain separate; the suite does not make them same-vintage or directly comparable without the documented controls.",
+    "HMDA application/decision outcomes are not repayment performance or probability of default.",
+    "Annual data reuse rights remain unresolved and private-source receipts remain on D:."
+  ]
+}

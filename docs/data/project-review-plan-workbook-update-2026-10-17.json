@@ -2,8 +2,8 @@
   "schema_version": "creditatlas-plan-workbook-update-v1",
   "updated_date": "2026-10-18",
   "workbook_path": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
-  "previous_sha256": "65b1903762323fb0469929f056539f319483c764ea98af768ea0ff1fbe0b1922",
-  "sha256": "c79633a2185a024474f774f56607482ef850313bca64753707358d4fd0fefd66",
+  "previous_sha256": "3f80032eb8c69a44eda8892db3a48c153e18ee3bfc9690c7059f56e283fd8a15",
+  "sha256": "033da0902af4b4cbd30b1166cf6b9fc3657d4ff28a0194064985ba2729719348",
   "sheets": [
     "Ke hoach",
     "50 yeu cau",
@@ -32,8 +32,16 @@
     "status_dropdown": "Not changed; existing status validation retained.",
     "native_excel_desktop": "PASS: Excel 16.0 read-only/full rebuild; 4 sheets, 18 formulas, 0 formula errors, 0 external links; ledger 26/50; workbook bytes unchanged."
   },
-  "scope_note": "The plan records the 17–18 Oct HMDA acceptance: four current-code browser suites previously passed 46 checks; the focused 2025 Snapshot and Dynamic intersection smokes each pass 5 browser checks covering scoped KPIs, URL, JSON and filtered Excel, with zero browser errors. Both query workbooks pass Excel 16.0 read-only/full rebuild with 12 formulas, all four reconciliation checks PASS, 0 formula errors/external links and unchanged bytes. Dynamic official API parity and older annual panels remain open; independent official API/raw parity is only certified for Snapshot. Nine receipt-bound HMDA audit workbooks pass Excel 16.0 with 177 formulas, 0 errors and 0 external links; 22 focused backend tests for national views, Excel and applications pass. Five filtered 2025 API scopes match local action profiles/app summaries. The six-sheet audit workbook has 124 formulas and passes Excel 16.0. The fixed-2023-mix independent raw-source audit passes 70/70 checks. These are local descriptive/data-integrity checks, not repayment-risk prediction, fairness, causal effect or production readiness. Raw reuse rights, broader release/UI parity and other-source KPI lineage remain open. Existing caveats remain: Apple is one descriptive accession without point-in-time/debt-service qualification; Freddie is a private sample without ownership proof; HAMP gaps remain missing. No forecast or imputation was made. Capability remains 26/50.",
+  "scope_note": "The plan records 17–18 Oct HMDA acceptance: four current-code browser suites previously passed 46 checks; focused 2025 Snapshot and Dynamic intersection smokes each pass 5 browser checks covering scoped KPIs, URL, JSON and filtered Excel, with zero browser errors. Both query workbooks pass Excel 16.0 read-only/full rebuild with 12 formulas, all four reconciliation checks PASS, 0 formula errors/external links and unchanged bytes. Prior annual panel receipts pass for 2018 Three-Year (4 checks), 2019 One-Year (4 checks), and the 2020–2024 national suite (21 total, 15 panel-specific); the full replay on the current revision was interrupted before browser during source verification, while code-diff review confirms annual render functions were unchanged. Dynamic LAR/TS HEAD metadata and local archive hashes match the Oct 11 receipt. Official docs indicate 2025 Browser queries use Snapshot and Dynamic is a separate weekly S3 file product, so a distinct Dynamic Browser API parity query is not applicable; independent official API/raw parity is certified for Snapshot. Nine receipt-bound HMDA audit workbooks pass Excel 16.0 with 177 formulas, 0 errors and 0 external links; 22 focused national view/Excel/application backend tests pass. Five filtered 2025 API scopes match local action profiles/app summaries. The six-sheet audit workbook has 124 formulas and passes Excel 16.0. The fixed-2023-mix independent raw-source audit passes 70/70 checks. These are local descriptive/data-integrity checks, not repayment-risk prediction, fairness, causal effect or production readiness. Raw reuse rights, broader release/UI parity and other-source KPI lineage remain open. Existing caveats remain: Apple is one descriptive accession without point-in-time/debt-service qualification; Freddie is a private sample without ownership proof; HAMP gaps remain missing. No forecast or imputation was made. Capability remains 26/50.",
   "revision_history": [
+    {
+      "sha256": "033da0902af4b4cbd30b1166cf6b9fc3657d4ff28a0194064985ba2729719348",
+      "note": "Updated N02/N03 notes with existing annual-panel PASS receipts, 2025 Snapshot/Dynamic filtered Excel acceptance, and official Dynamic source status. Current 2025 LAR/TS S3 metadata (Last-Modified, ETag, size) matches the October 11 receipt and local archive SHA-256 rechecks pass; Browser 2025 uses Snapshot, so no separate Dynamic Browser API parity query applies. Capability remains 26/50."
+    },
+    {
+      "sha256": "3f80032eb8c69a44eda8892db3a48c153e18ee3bfc9690c7059f56e283fd8a15",
+      "note": "Updated N02/N03 notes after filtered Excel acceptance and review of existing annual-panel receipts: 2018/2019 each pass 4 checks; 2020–2024 suite passes 21 total incl. 15 panel-specific. Current broad replay stopped during source verification before browser; annual render code is unchanged in current patch. Snapshot/Dynamic filtered workbooks each pass 5 browser checks and Excel 16.0 4/4 reconciliation checks. Dynamic official API parity remains open; ledger 26/50."
+    },
     {
       "sha256": "c79633a2185a024474f774f56607482ef850313bca64753707358d4fd0fefd66",
       "note": "Updated N02/N03 notes after 2025 Snapshot and Dynamic filtered Excel intersection acceptance. Each has 5 browser checks; each workbook passes Excel 16.0 read-only/full rebuild with 12 formulas, all 4 reconciliation checks, zero errors/links and unchanged bytes. Older annual panels and Dynamic API/raw parity remain open. Capability ledger unchanged at 26/50."
@@ -79,5 +87,5 @@
       "note": "Updated P4 N02 plan status after source-aware Freddie-sample UPB labels were implemented. Six targeted Edge UI checks passed; broad browser suite remains blocked by a frozen convergence receipt mismatch. Capability remains 26/50."
     }
   ],
-  "file_size_bytes": 30768
+  "file_size_bytes": 30906
 }

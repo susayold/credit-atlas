@@ -34,6 +34,13 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
 - Trace công thức PUDB, HMDA denominator và NMDB New/Outstanding đã được ghi riêng. Khi rà Appendix B/C cho NMDB, thêm các series New `AVE_LOANAMT`, `AVE_PAYMENT`, `AVE_PROPVAL` vào contract VALUE1-only; kiểm thử synthetic mart bảo đảm VALUE2 numeric thô không mở sai weighting.
 
+### N03 — HMDA fixed-2023-mix source audit — 17/10/2026
+
+- Chạy `scripts/audit_hmda_cohorts.py` trên cohort private để đọc độc lập source CSV bằng DuckDB, so sánh toàn bộ joint mart, rồi tính lại ordered attrition, action counts/amounts, denominator, full-reference/common-support rates, missing strata và weight coverage cho từng preset/năm.
+- **70/70 checks pass**, gồm kiểm tra hash source/cohort không đổi trong audit. Detailed receipt và cell-level cohort values vẫn ở private workspace, chưa được duyệt phát hành công khai.
+- Kết quả xác nhận phép tính và lineage local cho cohort này; không chứng minh source publisher completeness, không phải PD/causal/fairness result và không thay thế browser/Excel acceptance. N03 vẫn mở cho các release/query HMDA khác và KPI còn lại.
+- Không thêm forecast, không đổi data, không nâng capability ledger: **26/50**.
+
 ### N03 — FHFA NMDB performance KPI trace — 17/10/2026
 
 - Đối chiếu FHFA Data Dictionary/Technical Notes với national extract, state extract, receipt/hash, parser/API, app selectors/tables/charts, workbook builders và hai Excel outputs. Ghi chi tiết tại [N03 NMDB performance trace](N03_NMDB_PERFORMANCE_TRACE_2026-10-17_VI.md).

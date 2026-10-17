@@ -1,0 +1,36 @@
+{
+  "evidence_type": "focused_browser_smoke_public_summary",
+  "verified_on": "2026-10-18",
+  "status": "PASS",
+  "scope": "HMDA California × conventional filters on the 2025 Snapshot and 2025 Dynamic releases",
+  "runs": [
+    {
+      "release": "2025 Snapshot",
+      "status": "PASS",
+      "checks": [
+        "Filtered KPI summary displays with the selected-scope denominator",
+        "Applied filters persist in the page URL",
+        "Filtered JSON download matches the receipt-verified app result"
+      ],
+      "check_count": 3,
+      "browser_error_count": 0
+    },
+    {
+      "release": "2025 Dynamic",
+      "status": "PASS",
+      "checks": [
+        "Filtered KPI summary displays with the selected-scope denominator",
+        "Applied filters persist in the page URL",
+        "Filtered JSON download matches the receipt-verified app result"
+      ],
+      "check_count": 3,
+      "browser_error_count": 0
+    }
+  ],
+  "limitations": [
+    "Focused 2025 Snapshot and Dynamic browser smokes only; older annual panels were not tested.",
+    "The official API-versus-raw five-scope audit certifies the Snapshot intersection; this Dynamic smoke checks UI and app JSON against its own receipt-bound result, not independent official API parity.",
+    "Filtered Excel export and broader state × loan-type combinations remain open.",
+    "Private source identifiers, receipt hashes, exact private aggregates, raw rows, and loan-level files are excluded. No public release of private receipts or raw sources is approved."
+  ]
+}

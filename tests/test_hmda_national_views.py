@@ -91,6 +91,60 @@ def test_denial_reason_dimension_counts_only_action_three(tmp_path: Path) -> Non
     assert result["summary"]["denied_numerator"] == 2
 
 
+def test_aggregate_csv_builds_state_loan_type_intersections_and_reconciles(tmp_path: Path) -> None:
+    path = write_lar(tmp_path / "lar.csv", [
+        row(state_code="CA", loan_type="1", action_taken="1", loan_amount="100000"),
+        row(state_code="CA", loan_type="1", action_taken="3", loan_amount="150000"),
+        row(state_code="CA", loan_type="2", action_taken="4", loan_amount="200000"),
+        row(state_code="NY", loan_type="1", action_taken="4", loan_amount="300000"),
+    ])
+
+    result = aggregate_csv(path, tmp_path)
+
+    intersections = {(item["state_code"], item["loan_type"]): item
+                     for item in result["intersections"]["state_code_loan_type"]}
+    california_conventional = intersections[("CA", "1")]
+    assert (california_conventional["records"], california_conventional["decision_denominator"],
+            california_conventional["denied_numerator"]) == (2, 2, 1)
+    assert california_conventional["descriptive_denial_rate"] == "0.5"
+    assert sum(item["records"] for item in intersections.values()) == result["summary"]["records"] == 4
+    assert sum(item["decision_denominator"] for item in intersections.values()) == result["summary"]["decision_denominator"] == 2
+    assert sum(item["denied_numerator"] for item in intersections.values()) == result["summary"]["denied_numerator"] == 1
+
+
+def test_report_returns_validated_filtered_summary_from_intersections(tmp_path: Path, monkeypatch) -> None:
+    service = HmdaNationalViews(tmp_path)
+    intersections = [
+        {"state_code": "CA", "loan_type": "1", "records": 2, "decision_denominator": 2,
+         "denied_numerator": 1, "descriptive_denial_rate": "0.5", "public_amount_sum_usd": "250000.00"},
+        {"state_code": "CA", "loan_type": "2", "records": 3, "decision_denominator": 1,
+         "denied_numerator": 0, "descriptive_denial_rate": "0", "public_amount_sum_usd": "200000.00"},
+        {"state_code": "NY", "loan_type": "1", "records": 1, "decision_denominator": 0,
+         "denied_numerator": 0, "descriptive_denial_rate": None, "public_amount_sum_usd": "300000.00"},
+    ]
+    payload = {"source_id": "source", "snapshot_date": "2026-06-02", "activity_year": 2025,
+        "summary": {"records": 6, "decision_denominator": 3, "denied_numerator": 1},
+        "actions": [], "breakdowns": {key: [] for key in DIMENSIONS},
+        "intersections": {"state_code_loan_type": intersections}, "scope": "test", "limitations": [],
+        "denominator_contract": {"codes": ["1", "2", "3"]}}
+    monkeypatch.setattr(service, "_view", lambda identifier: (tmp_path, {}, payload))
+
+    report = service.report("hmda-national-view-0123456789ab", {
+        "dimension": "county_code", "filter_state_code": "CA", "filter_loan_type": "1"})
+    assert report["applied_filters"] == {"state_code": "CA", "loan_type": "1"}
+    assert report["filtered_summary"] == {"records": 2, "decision_denominator": 2,
+        "denied_numerator": 1, "descriptive_denial_rate": "0.5", "public_amount_sum_usd": "250000.00"}
+
+    state_report = service.report("hmda-national-view-0123456789ab", {
+        "dimension": "county_code", "filter_state_code": "CA"})
+    assert state_report["filtered_summary"]["records"] == 5
+    assert state_report["filtered_summary"]["decision_denominator"] == 3
+    with pytest.raises(ValueError, match="Unsupported HMDA national state_code filter"):
+        service.report("hmda-national-view-0123456789ab", {"filter_state_code": "ZZ"})
+    with pytest.raises(ValueError, match="Invalid HMDA national aggregate query"):
+        service.report("hmda-national-view-0123456789ab", {"borrower_id": "x"})
+
+
 def test_aggregate_csv_rejects_wrong_year_or_invalid_action(tmp_path: Path) -> None:
     wrong_year = write_lar(tmp_path / "wrong-year.csv", [row(activity_year="2024")])
     with pytest.raises(ValueError, match="row quality"):

@@ -25,14 +25,14 @@
     "completion_ratio": 0.52
   },
   "updated_progress_notes": {
-    "N02": "46 current-code HMDA browser checks; 146 focused HMDA tests; nine HMDA workbook exports verified; 5 filtered 2025 API scopes exact to local action counts, 4 app marginals match, intersection gap recorded",
+    "N02": "46 earlier current-code HMDA browser checks; focused Snapshot and Dynamic intersection browser smokes pass; Dynamic official API parity and annual panels remain open; 146 prior focused HMDA tests plus 20 national/application tests; 5 Snapshot filtered API scopes and app summaries match",
     "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
   },
-  "scope": "N02 and N03 progress notes include the HMDA current-code browser suite, native Excel workbook results, five filtered 2025 API scopes, app marginal parity, the remaining intersection gap and independent fixed-2023-mix source audit. The N03 row is expanded to show the full note. The existing capability ledger was not changed.",
+  "scope": "N02 and N03 progress notes include the earlier HMDA current-code browser suite, focused Snapshot and Dynamic intersection browser smokes, native Excel results, five Snapshot filtered API/app scopes and independent fixed-2023-mix source audit. The N03 row is expanded to show the full note. The existing capability ledger was not changed.",
   "limitations": [
     "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
     "HMDA is application and decision data, not repayment/default performance.",
-    "Release comparability, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
+    "Older annual panels, Dynamic official API parity, filtered Excel export, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
     "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
   ]
 }

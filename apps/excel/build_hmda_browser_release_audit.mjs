@@ -15,7 +15,8 @@ const dimensionAudit = dimensionAuditArg ? JSON.parse(await fs.readFile(path.res
 if (dimensionAudit && (dimensionAudit.evidence_type !== 'hmda_browser_2025_snapshot_dimension_api_parity'
     || dimensionAudit.status !== 'PASS' || dimensionAudit.results?.length !== 5
     || dimensionAudit.results.some((item) => !item.all_action_counts_match
-      || !item.official_api_parameter_echo_matches || item.official_api_http_status !== 200))) {
+      || !item.official_api_parameter_echo_matches || item.official_api_http_status !== 200
+      || !(item.app_marginal_summary_match === true || item.app_intersection_summary_match === true)))) {
   throw new Error('Expected five verified filtered-API dimensions for the 2025 Snapshot');
 }
 
@@ -199,21 +200,22 @@ if (dimensionAudit && dimensions) {
   styleBase(dimensions, 'O', 20);
   columnWidths(dimensions, { A: 28, B: 52, C: 15, D: 15, E: 15, F: 15, G: 15, H: 15, I: 17, J: 17, K: 17, L: 18, M: 14, N: 17, O: 14 });
   title(dimensions, 'A1:O1', 'Filtered dimension parity · official 2025 Snapshot API vs local source');
-  subtitle(dimensions, 'A2:O2', 'Five spot-check scopes compared on action codes 1–8. Four marginal scopes also match the receipt-verified app report; California × product is raw/API validated but not an app intersection. Share columns are Excel formulas.', 54);
+  subtitle(dimensions, 'A2:O2', 'Five spot-check scopes compared on action codes 1–8. Four app marginal buckets and the California × conventional intersection match the receipt-verified app report. Share columns are Excel formulas.', 54);
   dimensions.getRange('A4:O4').values = [[
     'Scope', 'Official filter', 'API rows 1–8', 'Local rows 1–8', 'API decisions 1+2+3', 'Local decisions 1+2+3',
     'API denied · 3', 'Local denied · 3', 'API denied share', 'Local denied share', 'Δ share · pp',
-    'Local raw match', 'API filter echo', 'App marginal match', 'Check',
+    'Local raw match', 'API filter echo', 'App match', 'Check',
   ]];
   header(dimensions, 'A4:O4');
   const dimensionRows = dimensionAudit.results.map((item) => {
     const [label, filter] = scopeLabels[item.scope] ?? [item.scope, 'See private receipt'];
+    const appMatch = item.app_intersection_summary_match ?? item.app_marginal_summary_match;
     return [label, filter, item.api_summary.action_1_to_8_records, item.local_snapshot_summary.action_1_to_8_records,
       item.api_summary.decision_denominator_1_2_3, item.local_snapshot_summary.decision_denominator_1_2_3,
       item.api_summary.denied_numerator_action_3, item.local_snapshot_summary.denied_numerator_action_3,
       null, null, null, item.all_action_counts_match ? 'PASS' : 'FAIL',
       item.official_api_parameter_echo_matches ? 'PASS' : 'FAIL',
-      item.app_marginal_summary_match === null ? 'N/A' : item.app_marginal_summary_match ? 'PASS' : 'FAIL', null];
+      appMatch === null ? 'N/A' : appMatch ? 'PASS' : 'FAIL', null];
   });
   const dimensionEndRow = 4 + dimensionAudit.results.length;
   dimensions.getRange(`A5:O${dimensionEndRow}`).values = dimensionRows;
@@ -272,7 +274,7 @@ const methodRows = [
   ['2018 source boundary', '1,961 local raw rows have action=-1 and are quarantined; API/report profile covers actions 1–8.', '2018 private acquisition and audit receipt', 'Excluded from KPI'],
   ['2019–2022 vintage comparison', 'App archives are One-Year; the current Browser selects Three-Year. Compare totals by action only; no row-level match.', 'See Vintage deltas and JSON audit', 'Cross-vintage diagnostic'],
   ['2023–2025 matching releases', '2023/2024 One-Year and 2025 Snapshot app receipts match all Browser-selected action counts.', 'Private receipts crosswalked in JSON output', 'Exact action-count match'],
-  ['2025 filtered API dimension check', dimensionAudit ? `${dimensionAudit.results.length} Snapshot scopes reconciled; four app marginal buckets match and the California × loan-type intersection is raw/API-only.` : 'No filtered dimension audit supplied to this workbook build.', 'See Dimension parity and sanitized API audit JSON', dimensionAudit?.status ?? 'Not included'],
+  ['2025 filtered API dimension check', dimensionAudit ? `${dimensionAudit.results.length} Snapshot scopes reconciled; four app marginal buckets and the California × conventional intersection match.` : 'No filtered dimension audit supplied to this workbook build.', 'See Dimension parity and sanitized API audit JSON', dimensionAudit?.status ?? 'Not included'],
   ['2025 Dynamic', 'Dynamic is a separate weekly release state; not the Browser-selected static Snapshot.', '2025 Snapshot/Dynamic comparison report', 'Separate source ID'],
   ['Release-state limits', 'Release differences can include late submissions/resubmissions and reclassifications; action deltas can have either sign.', 'No row matching performed', 'Do not call new unique rows'],
   ['Trend limits', 'Across-year levels also reflect coverage, reporting thresholds, product mix and geography mix.', 'Additional harmonization needed', 'Not causal'],
@@ -321,7 +323,8 @@ if (dimensionAudit && dimensions) {
         || Math.abs(Number(row[7]) - Number(item.local_snapshot_summary.descriptive_denied_share)) > 1e-12
         || Math.abs(Number(row[8]) - Number(item.descriptive_denied_share_delta)) > 1e-8
         || row[9] !== 'PASS' || row[10] !== 'PASS'
-        || row[11] !== (item.app_marginal_summary_match === null ? 'N/A' : item.app_marginal_summary_match ? 'PASS' : 'FAIL')
+        || row[11] !== ((item.app_intersection_summary_match ?? item.app_marginal_summary_match) === null
+          ? 'N/A' : (item.app_intersection_summary_match ?? item.app_marginal_summary_match) ? 'PASS' : 'FAIL')
         || row[12] !== 'PASS') {
       throw new Error(`Filtered dimension parity formula/source mismatch for ${item.scope}: ${JSON.stringify(row)}`);
     }

@@ -954,7 +954,7 @@ to six sheets and adds filtered-dimension reconciliation. It contains no raw
 LAR rows; see `apps/excel/templates/CreditAtlas-HMDA-Browser-Release-Audit-2018-2025.xlsx`
 and `docs/data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json`.
 
-## 2026-10-17 HMDA filtered-dimension follow-up
+## 2026-10-17–18 HMDA filtered-dimension follow-up
 
 Five filtered requests to the official 2025 Snapshot API (California, Los
 Angeles County, California × conventional, a deterministically selected largest
@@ -966,8 +966,15 @@ type remains API-vs-raw validated without app intersection support.
 The HMDA audit workbook now contains six sheets and 124 formula cells. Excel
 16.0 read-only/full-rebuild acceptance passes with zero formula errors or
 external links; all five dimension scopes reconcile to the sanitized JSON.
-Public evidence: `docs/data/hmda-browser-dimension-api-parity-2026-10-17.json`.
-Next: implement app intersection filters, test representative browser and
-filtered-Excel routes, then extend coverage/schema/mix and KPI lineage review.
-Raw redistribution terms remain unconfirmed; no forecast/model was added and
-the capability ledger remains 26/50 (52%).
+The app now supports the California × conventional state/product intersection,
+and its filtered Snapshot result matches the official API and local LAR. The
+focused Snapshot and Dynamic browser smokes each pass three checks for KPI
+values, URL state and JSON export. Dynamic UI/JSON is checked against its own
+receipt-bound app result; independent Dynamic API parity is still open. Public
+evidence: `docs/data/hmda-browser-dimension-api-parity-2026-10-18.json` and
+`docs/data/hmda-national-intersection-browser-smoke-2026-10-18.json`.
+Next: cover older annual panels and filtered Excel routes, extend intersection
+combinations and geography/lender/product parity, then complete
+coverage/schema/mix and KPI lineage review. Raw redistribution terms remain
+unconfirmed; no forecast/model was added and the capability ledger remains
+26/50 (52%).

@@ -137,6 +137,23 @@ def summary(counts: dict[str, int]) -> dict:
     }
 
 
+def summaries_match(left: dict, right: dict) -> bool:
+    left_records = left.get("action_1_to_8_records", left.get("records"))
+    right_records = right.get("action_1_to_8_records", right.get("records"))
+    left_denominator = left.get("decision_denominator_1_2_3", left.get("decision_denominator"))
+    right_denominator = right.get("decision_denominator_1_2_3", right.get("decision_denominator"))
+    left_denied = left.get("denied_numerator_action_3", left.get("denied_numerator"))
+    right_denied = right.get("denied_numerator_action_3", right.get("denied_numerator"))
+    left_share = left.get("descriptive_denied_share", left.get("descriptive_denial_rate"))
+    right_share = right.get("descriptive_denied_share", right.get("descriptive_denial_rate"))
+    return (
+        left_records == right_records
+        and left_denominator == right_denominator
+        and left_denied == right_denied
+        and abs(Decimal(left_share) - Decimal(right_share)) <= Decimal("0.000000000001")
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workspace-root", required=True, type=Path,
@@ -174,10 +191,9 @@ def main() -> None:
     api = {scope: read_api_profile(session, scope, spec["params"], spec["endpoint"])
            for scope, spec in filter_specs.items()}
 
-    # Exercise the same receipt-verified service report used by the local 2025
-    # national UI/API; its one-dimension breakdowns are compared to matching
-    # publisher-filtered API scopes. The CA × product intersection has no
-    # equivalent in this marginal-only view and stays explicitly unclaimed.
+    # Exercise the receipt-verified service used by the local 2025 national
+    # UI/API; compare four marginal buckets and the supported CA × product
+    # intersection to matching publisher-filtered API scopes.
     from credit_atlas.hmda_national_views import HmdaNationalViews  # noqa: E402
     from credit_atlas.workspace import read_json  # noqa: E402
     service = HmdaNationalViews(root)
@@ -196,9 +212,19 @@ def main() -> None:
 
     app_profiles = {}
     for scope, spec in filter_specs.items():
+        if scope == "state_ca_conventional":
+            report = service.report(view_id, {"view_id": view_id, "dimension": "state_code",
+                "filter_state_code": "CA", "filter_loan_type": "1"})
+            app_summary = report.get("filtered_summary")
+            if app_summary is None:
+                raise ValueError("The app did not return the California × conventional filtered summary")
+            app_profiles[scope] = {"kind": "intersection", "filters": {"state_code": "CA", "loan_type": "1"},
+                                   "summary": app_summary, "matches_official_api": False}
+            continue
         dimension = spec.get("app_dimension")
         if not dimension:
-            app_profiles[scope] = {"dimension": None, "bucket": None, "summary": None, "matches_official_api": None}
+            app_profiles[scope] = {"kind": None, "dimension": None, "bucket": None,
+                                   "summary": None, "matches_official_api": None}
             continue
         report = service.report(view_id, {"view_id": view_id, "dimension": dimension})
         bucket = spec["app_bucket"]
@@ -211,7 +237,7 @@ def main() -> None:
             "denied_numerator_action_3": int(row["denied_numerator"]),
             "descriptive_denied_share": row["descriptive_denial_rate"],
         }
-        app_profiles[scope] = {"dimension": dimension, "bucket": bucket, "summary": app_summary,
+        app_profiles[scope] = {"kind": "marginal", "dimension": dimension, "bucket": bucket, "summary": app_summary,
                                "matches_official_api": False}
 
     results = []
@@ -224,13 +250,7 @@ def main() -> None:
         app_profile = app_profiles[scope]
         if app_profile["summary"] is not None:
             app_summary = app_profile["summary"]
-            app_profile["matches_official_api"] = (
-                app_summary["action_1_to_8_records"] == api_summary["action_1_to_8_records"]
-                and app_summary["decision_denominator_1_2_3"] == api_summary["decision_denominator_1_2_3"]
-                and app_summary["denied_numerator_action_3"] == api_summary["denied_numerator_action_3"]
-                and abs(Decimal(app_summary["descriptive_denied_share"])
-                        - Decimal(api_summary["descriptive_denied_share"])) <= Decimal("0.000000000001")
-            )
+            app_profile["matches_official_api"] = summaries_match(app_summary, api_summary)
         results.append({
             "scope": scope,
             "query_dimension": spec.get("app_dimension"),
@@ -241,8 +261,10 @@ def main() -> None:
             "max_absolute_action_count_delta": max(abs(delta) for delta in differences.values()),
             "api_summary": api_summary,
             "local_snapshot_summary": local_summary,
-            "app_marginal_bucket_summary": app_profile["summary"],
-            "app_marginal_summary_match": app_profile["matches_official_api"],
+            "app_marginal_bucket_summary": app_profile["summary"] if app_profile.get("kind") == "marginal" else None,
+            "app_marginal_summary_match": app_profile["matches_official_api"] if app_profile.get("kind") == "marginal" else None,
+            "app_intersection_summary": app_profile["summary"] if app_profile.get("kind") == "intersection" else None,
+            "app_intersection_summary_match": app_profile["matches_official_api"] if app_profile.get("kind") == "intersection" else None,
             "descriptive_denied_share_delta": str(Decimal(api_summary["descriptive_denied_share"] or "0")
                                                        - Decimal(local_summary["descriptive_denied_share"] or "0")),
         })
@@ -250,6 +272,7 @@ def main() -> None:
            or not row["all_action_counts_match"]
            or row["api_summary"] != row["local_snapshot_summary"]
            or (row["app_marginal_bucket_summary"] is not None and not row["app_marginal_summary_match"])
+           or (row["app_intersection_summary"] is not None and not row["app_intersection_summary_match"])
            or Decimal(row["descriptive_denied_share_delta"]) != 0 for row in results):
         status = "FAIL"
     else:
@@ -294,13 +317,13 @@ def main() -> None:
             "endpoints": [API, NATIONWIDE_API],
             "query": "Five official API requests: four geographic/LEI subsets plus one nationwide loan-type filter; years=2025; actions_taken=1..8",
             "dimensions": ["state", "county", "state × loan type", "one largest-reporting LEI", "nationwide loan type"],
-            "validation": "Exact action 1–8 count equality between official API and same-freeze local public LAR; matching app marginal bucket summaries are also checked for state, county, LEI and nationwide loan type.",
+            "validation": "Exact action 1–8 count equality between official API and same-freeze local public LAR; four app marginal buckets and the California × conventional intersection summary are also checked against the API.",
             "privacy": "Public JSON excludes raw rows, local paths, exact LEI, request URLs and action-level counts; full evidence remains in the private receipt on D:.",
         },
         "results": results,
         "scope_limitations": [
             "This is a five-scope parity spot check of the 2025 Snapshot, not proof of all years, all geography codes, all institutions, or every filter combination.",
-            "The app's one-dimension buckets match the official API for state, county, selected LEI, and nationwide loan-type code 1. The California × loan-type intersection is checked against local raw data but is not an app marginal bucket; no app intersection parity is claimed.",
+            "The app's four marginal buckets (state, county, selected LEI, nationwide loan-type code 1) and the California × conventional intersection summary match the official API; broader intersections are not yet certified.",
             "The check exercises the receipt-verified app service used by its UI/API, but does not verify browser rendering or filtered Excel export for every query.",
             "Denied share is an application disposition measure, not repayment/default performance or PD.",
             "No forecast, imputation, row linkage, or borrower-level inference was used.",

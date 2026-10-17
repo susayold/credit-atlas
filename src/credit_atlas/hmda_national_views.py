@@ -180,8 +180,15 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
 
         groups = [(field,) for field in DIMENSIONS if field != "denial_reason_1"]
         groups.append(("denial_reason_1",))
-        cases = []
-        value_cases = []
+        # Store a small, reusable state × loan-type cube alongside the marginal
+        # tables so the app can report exact intersections without rescanning
+        # the 13.5M-row source on every request.
+        groups.append(("state_code", "loan_type"))
+        cases = ["WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0 THEN 'state_code_loan_type'"]
+        value_cases = [
+            f"WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0 "
+            f"THEN CONCAT({_category('state_code')}, '|', {_category('loan_type')})"
+        ]
         for field, label in DIMENSIONS.items():
             cases.append(f"WHEN GROUPING({field})=0 THEN '{field}'")
             value_cases.append(f"WHEN GROUPING({field})=0 THEN {_category(field)}")
@@ -190,6 +197,10 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
             SELECT CASE {' '.join(cases)} ELSE 'action_taken' END AS dimension,
                    CASE {' '.join(value_cases)}
                         WHEN GROUPING(action_taken)=0 THEN action_taken ELSE '' END AS bucket,
+                   CASE WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0
+                        THEN {_category('state_code')} ELSE NULL END AS intersection_state,
+                   CASE WHEN GROUPING(state_code)=0 AND GROUPING(loan_type)=0
+                        THEN {_category('loan_type')} ELSE NULL END AS intersection_loan_type,
                    count(*) AS records,
                    count(*) FILTER (WHERE action_taken IN ('1','2','3')) AS decision_denominator,
                    count(*) FILTER (WHERE action_taken='3') AS denied_numerator,
@@ -202,9 +213,11 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
         """
         rows = connection.execute(sql, [str(path)]).fetchall()
         result = {"columns": columns, "actions": [], "summary": None,
-                  "breakdowns": {key: [] for key in DIMENSIONS}, "quality": {}}
+                  "breakdowns": {key: [] for key in DIMENSIONS},
+                  "intersections": {"state_code_loan_type": []}, "quality": {}}
         action_counts = {}
-        for dimension, bucket, records, denominator, denied, amount, wrong_year, invalid_action, invalid_amount in rows:
+        for (dimension, bucket, intersection_state, intersection_loan_type,
+             records, denominator, denied, amount, wrong_year, invalid_action, invalid_amount) in rows:
             if dimension == "action_taken":
                 action_counts[bucket] = records
                 continue
@@ -221,6 +234,13 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
                 item["public_amount_sum_usd"] = None
                 item["denied_reason_records"] = denied
                 item["denominator_kind"] = "action_3_applications"
+            if dimension == "state_code_loan_type":
+                result["intersections"][dimension].append({
+                    "state_code": intersection_state,
+                    "loan_type": intersection_loan_type,
+                    **item,
+                })
+                continue
             result["breakdowns"][dimension].append(item)
         if not action_counts or set(action_counts) - set("12345678"):
             raise ValueError("National HMDA action distribution is incomplete or invalid")
@@ -236,9 +256,9 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
             "descriptive_denial_rate": str(denied / decided) if decided else None,
             "public_amount_sum_usd": str(sum(Decimal(item["public_amount_sum_usd"])
                 for item in result["breakdowns"]["state_code"]))}
-        result["quality"] = {"wrong_year_rows": max((row[6] for row in rows), default=0),
-            "invalid_action_rows": max((row[7] for row in rows), default=0),
-            "invalid_amount_rows": max((row[8] for row in rows), default=0)}
+        result["quality"] = {"wrong_year_rows": max((row[8] for row in rows), default=0),
+            "invalid_action_rows": max((row[9] for row in rows), default=0),
+            "invalid_amount_rows": max((row[10] for row in rows), default=0)}
         if total <= 0 or result["quality"] != {"wrong_year_rows": 0, "invalid_action_rows": 0, "invalid_amount_rows": 0}:
             raise ValueError("National HMDA row quality checks failed")
         # For denial reasons, denominator is all action-3 records with a value
@@ -248,6 +268,14 @@ def aggregate_csv(path: Path, temp_root: Path | None = None, *, delimiter: str =
             values.sort(key=lambda row: (-row.get("denied_reason_records", row["records"]), row["bucket"]))
         result["breakdowns"]["denial_reason_1"] = [row for row in result["breakdowns"]["denial_reason_1"]
             if row["denied_reason_records"] > 0]
+        intersections = result["intersections"]["state_code_loan_type"]
+        intersections.sort(key=lambda row: (row["state_code"], row["loan_type"]))
+        if (sum(row["records"] for row in intersections) != total
+                or sum(row["decision_denominator"] for row in intersections) != decided
+                or sum(row["denied_numerator"] for row in intersections) != denied
+                or sum(Decimal(row["public_amount_sum_usd"]) for row in intersections)
+                    != Decimal(result["summary"]["public_amount_sum_usd"])):
+            raise ValueError("National HMDA state × loan-type intersections do not reconcile to source totals")
         return result
     finally:
         connection.close()
@@ -367,7 +395,8 @@ class HmdaNationalViews:
         if (payload.get("view_id") != identifier or payload.get("source_id") != source_id
                 or payload.get("visibility") != "private" or payload.get("public_release_approved") is not False
                 or payload.get("summary", {}).get("records") != source_receipt["datasets"]["lar"]["profile"]["summary"]["records"]
-                or set(payload.get("breakdowns", {})) != set(DIMENSIONS)):
+                or set(payload.get("breakdowns", {})) != set(DIMENSIONS)
+                or set(payload.get("intersections", {})) != {"state_code_loan_type"}):
             raise ValueError("HMDA national aggregate content contract changed")
         return folder, receipt, payload
 
@@ -390,22 +419,57 @@ class HmdaNationalViews:
             "summary", "actions", "dimensions", "scope", "limitations", "denominator_contract",
             "source_url", "visibility", "public_release_approved")}
         result["release_type"] = payload.get("release_type", "static snapshot")
+        intersections = payload["intersections"]["state_code_loan_type"]
+        result["intersection_filter_options"] = {
+            "state_code": sorted({row["state_code"] for row in intersections}),
+            "loan_type": sorted({row["loan_type"] for row in intersections}),
+        }
         return result
 
     def report(self, identifier, query):
-        if not isinstance(query, dict) or set(query) - {"view_id", "dimension"} or query.get("view_id", identifier) != identifier:
+        if (not isinstance(query, dict)
+                or set(query) - {"view_id", "dimension", "filter_state_code", "filter_loan_type"}
+                or query.get("view_id", identifier) != identifier):
             raise ValueError("Invalid HMDA national aggregate query")
         dimension = query.get("dimension", "state_code")
         if not isinstance(dimension, str) or dimension not in DIMENSIONS:
             raise ValueError("Unsupported HMDA national breakdown dimension")
         _, _, payload = self._view(identifier)
-        return {"view_id": identifier, "source_id": payload["source_id"],
+        result = {"view_id": identifier, "source_id": payload["source_id"],
             "snapshot_date": payload["snapshot_date"], "release_type": payload.get("release_type", "static snapshot"), "activity_year": payload["activity_year"],
             "summary": payload["summary"], "actions": payload["actions"],
             "dimension": dimension, "dimension_label": DIMENSIONS[dimension],
             "breakdown": payload["breakdowns"][dimension], "scope": payload["scope"],
             "limitations": payload["limitations"], "denominator_contract": payload["denominator_contract"],
             "visibility": "private", "public_release_approved": False}
+        filters = {}
+        for field in ("state_code", "loan_type"):
+            key = "filter_" + field
+            value = query.get(key)
+            if value is None:
+                continue
+            if not isinstance(value, str) or not value:
+                raise ValueError(f"Invalid HMDA national {field} filter")
+            options = {row[field] for row in payload["intersections"]["state_code_loan_type"]}
+            if value not in options:
+                raise ValueError(f"Unsupported HMDA national {field} filter")
+            filters[field] = value
+        if filters:
+            rows = [row for row in payload["intersections"]["state_code_loan_type"]
+                    if all(row[field] == value for field, value in filters.items())]
+            records = sum(row["records"] for row in rows)
+            denominator = sum(row["decision_denominator"] for row in rows)
+            denied = sum(row["denied_numerator"] for row in rows)
+            amount = sum((Decimal(row["public_amount_sum_usd"]) for row in rows), Decimal("0.00"))
+            result["applied_filters"] = filters
+            result["filtered_summary"] = {
+                "records": records,
+                "decision_denominator": denominator,
+                "denied_numerator": denied,
+                "descriptive_denial_rate": str(denied / denominator) if denominator else None,
+                "public_amount_sum_usd": str(amount),
+            }
+        return result
 
 
 def build_national_view(root: Path, source_id: str):

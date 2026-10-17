@@ -74,6 +74,25 @@ def run(root):
             expect(page.locator("#hmda-national-actions tbody tr")).to_have_count(8)
             checks.append("National source verified; 13,543,606 records, 4,782 LEIs, exact action denominator and descriptive denied share")
 
+            page.get_by_label("HMDA national state filter").select_option("CA")
+            page.get_by_label("HMDA national loan type filter").select_option("1")
+            page.get_by_role("button", name="Áp dụng giao cắt").click()
+            expect(page.locator("#hmda-national-intersection-summary .metric-value").nth(0)).to_have_text("961,135")
+            expect(page.locator("#hmda-national-intersection-summary .metric-value").nth(1)).to_have_text("670,649")
+            expect(page.locator("#hmda-national-intersection-summary .metric-value").nth(2)).to_have_text("153,088")
+            expect(page.locator("#hmda-national-intersection-summary .metric-value").nth(3)).to_have_text("22.8268%")
+            checks.append("California × conventional intersection reconciles to five-scope official API audit with its own denominator and denied share")
+
+            with page.expect_download() as info:
+                page.get_by_role("button", name="Tải JSON giao cắt").click()
+            info.value.save_as(str(output / "hmda-national-california-conventional.json"))
+            exported_intersection = json.loads((output / "hmda-national-california-conventional.json").read_text(encoding="utf-8"))
+            expected_intersection = service.hmda_national_views.report(view_id, {
+                "dimension": "state_code", "filter_state_code": "CA", "filter_loan_type": "1"})
+            assert exported_intersection == expected_intersection
+            assert exported_intersection["filtered_summary"]["records"] == 961_135
+            checks.append("Filtered JSON download exactly matches receipt-verified intersection API result")
+
             expect(page.locator("#hmda-national-breakdown tbody tr")).to_have_count(55)
             page.get_by_label("HMDA national breakdown dimension").select_option("denial_reason_1")
             page.get_by_role("button", name="Đọc national breakdown").click()

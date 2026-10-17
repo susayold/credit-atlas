@@ -115,18 +115,23 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     pass
             if not isinstance(body, bytes):
                 body = json.dumps(body, ensure_ascii=False, allow_nan=False).encode("utf-8")
-            self.send_response(code)
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Referrer-Policy", "no-referrer")
-            self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
-            if filename:
-                self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
-            self.end_headers()
-            if not head:
-                self.wfile.write(body)
+            try:
+                self.send_response(code)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.send_header("Referrer-Policy", "no-referrer")
+                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
+                if filename:
+                    self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+                self.end_headers()
+                if not head:
+                    self.wfile.write(body)
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                # Browsers may abandon an in-flight response during navigation;
+                # the peer is gone, so a second error response cannot be sent.
+                return
 
         def do_HEAD(self):
             self.get(True)

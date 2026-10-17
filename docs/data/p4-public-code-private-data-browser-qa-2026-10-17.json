@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "title": "P4 browser and export acceptance refresh",
+  "status": "PASS",
+  "scope": "Public checkout code and web assets were exercised against receipt-bound private Freddie sample data. No raw data or private workspace paths are included in this public evidence summary.",
+  "browser_acceptance": {
+    "script": "scripts/browser_exposure_qa.py",
+    "checks_passed": 20,
+    "browser_errors": 0,
+    "provenance_checks": [
+      "Seven downloadable JSON report families retain exact report-payload parity after removing the export envelope.",
+      "Each source import carries receipt/output hashes and 39/39 relative upstream lineage path/hash pairs.",
+      "Derived artifact receipt hashes are checked for scenario, ECL, tail, movement, and convergence exports; portfolio review is checked against its saved revision and snapshots.",
+      "Private and no-public-release flags are preserved; no absolute workspace path is exported."
+    ],
+    "private_receipt_sha256": "bb87359d693036ea4d9ebe0dd5664e18b6337b4250de33d7cf12353e777e6b55"
+  },
+  "focused_tests": {
+    "result": "48 passed, 5 skipped, 0 failed",
+    "scope": "HTTP boundary, P4 exposure views/convergence, and portfolio review tests against public code with the pinned project environment.",
+    "skip_reason": "The public checkout does not contain the private evidence required by five tests."
+  },
+  "frozen_convergence_receipt": {
+    "replay": "PASS",
+    "runs": 9,
+    "diagnostics": 4,
+    "environment": "Project-pinned Python 3.12.14, NumPy 2.5.3, SciPy 1.18.1",
+    "receipt_sha256": "b4a2bb4e2351308a824fbff602fef3344c7bf7be8919f4f4765a0250c8f10828",
+    "receipt_modified": false
+  },
+  "code_sha256": {
+    "scripts/browser_exposure_qa.py": "3815eb3ebb11ccd6d81b4f38bf8d1db7c46d41110d2d4ac504ad6ad16a453a06",
+    "src/credit_atlas/server.py": "1b4f31fd36131115b4cf42e5c7466a48a9017a2006ac0ec61d03d81b8627efb0"
+  },
+  "decision_boundary": [
+    "This acceptance verifies application behavior and local byte lineage; it does not authenticate Freddie Mac as publisher of the local archive or establish applicable terms or redistribution rights.",
+    "The Freddie input remains sample-level UPB, not an owned portfolio, borrower concentration, EAD, calibrated PD/LGD, or empirical ECL.",
+    "Native Microsoft Excel desktop review, Apple issuer-panel KPI-period trace, and overall N02 source-to-KPI acceptance remain open.",
+    "Capability completion remains 26/50 (52%)."
+  ],
+  "full_public_suite": {
+    "result": "1342 passed, 196 skipped, 0 failed, 0 errors",
+    "duration_seconds": 365.8,
+    "environment": "Project-pinned Python 3.12.14; PYTHONPATH=src; dedicated writable test temp directory on D:",
+    "skip_reason": "Declared tests require private source data or machine-local evidence excluded from the public bundle."
+  }
+}

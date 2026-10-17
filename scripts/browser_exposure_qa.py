@@ -14,6 +14,40 @@ from credit_atlas.workspace import app_root, read_json, timestamp, write_new
 expect.set_options(timeout=60000)
 
 
+def assert_private_export_payload(exported, expected, source_import_ids, root, artifact=None):
+    """Check both report parity and the provenance envelope on downloadable P4 JSON."""
+    provenance = exported.pop('export_provenance')
+    assert provenance['schema_version'] == 1
+    assert provenance['visibility'] == 'private'
+    assert provenance['public_release_approved'] is False
+    assert 'full verified input' in provenance['source_scope_note']
+    assert {row['import_id'] for row in provenance['source_imports']} == set(source_import_ids)
+    assert len(provenance['source_imports']) == len(set(source_import_ids))
+    for source in provenance['source_imports']:
+        assert source['visibility'] == 'private' and source['public_release_approved'] is False
+        assert len(source['receipt_sha256']) == 64
+        assert len(source['source_lineage']) == 39
+        assert all(len(row['sha256']) == 64 for row in source['source_lineage'])
+        assert all(not row['path'].startswith(('/', '\\\\')) and '..' not in row['path'].replace('\\\\', '/').split('/')
+                   and ':' not in row['path'].replace('\\\\', '/').split('/')[0]
+                   for row in source['source_lineage'])
+    assert str(root) not in json.dumps(provenance)
+    if artifact is None:
+        assert provenance['derived_artifacts'] == []
+    else:
+        artifact_type, artifact_id = artifact
+        matches = [row for row in provenance['derived_artifacts']
+                   if row['artifact_type'] == artifact_type and row['artifact_id'] == artifact_id]
+        assert len(matches) == 1
+        if artifact_type == 'portfolio_review':
+            assert matches[0]['receipt_sha256'] is None
+        else:
+            assert len(matches[0]['receipt_sha256']) == 64
+            assert set(matches[0]['source_import_ids']) == set(source_import_ids)
+    assert exported == expected
+    return provenance
+
+
 def run(root, web_root=None):
     output = root / 'artifacts/private' / ('exposure-browser-qa-' + uuid.uuid4().hex[:12])
     output.mkdir(parents=True)
@@ -154,6 +188,8 @@ def run(root, web_root=None):
             with page.expect_download() as info: page.get_by_role('link',name='Xuất portfolio review').click()
             info.value.save_as(str(output/'portfolio-review-export.json'))
             review=read_json(output/'portfolio-review-export.json')
+            review_expected=service.portfolio_reviews.report(identifier,review['id'],2)
+            assert_private_export_payload(review,review_expected,[identifier],root,('portfolio_review',review['id']))
             assert review['revision']==2 and review['evidence_current'] and not review['qualification']['capital_approved']
             assert len(review['snapshots'])==4
             assert service.portfolio_reviews.report(identifier,review['id'],1)['status']=='draft'
@@ -190,7 +226,8 @@ def run(root, web_root=None):
             with page.expect_download() as info: page.get_by_role('link',name='Xuất declared ECL study').click()
             info.value.save_as(str(output/'ecl-export.json'))
             ecl=read_json(output/'ecl-export.json')
-            assert ecl==service.exposure_ecl_views.report({'ecl_id':'exposure-ecl-ba27d7207a44','source_import_id':identifier,'currency':'USD','dimension':'stage'})
+            ecl_expected=service.exposure_ecl_views.report({'ecl_id':'exposure-ecl-ba27d7207a44','source_import_id':identifier,'currency':'USD','dimension':'stage'})
+            assert_private_export_payload(ecl,ecl_expected,[identifier],root,('ecl',ecl_expected['ecl_id']))
             assert not ecl['contract']['accounting_compliance'] and not ecl['contract']['observed_contract_cashflows']
             assert ecl['stage_assessments']['non_relief']['stage']==1 and ecl['stage_assessments']['relief']['stage']==2
             select_task(page, 'ECL')
@@ -202,7 +239,8 @@ def run(root, web_root=None):
             with page.expect_download() as info: page.get_by_role('link',name='Xuất tail risk study').click()
             info.value.save_as(str(output/'tail-export.json'))
             tail=read_json(output/'tail-export.json')
-            assert tail==service.exposure_tail_views.report({'tail_id':'exposure-tail-10a079f18dc9','source_import_id':identifier,'currency':'USD'})
+            tail_expected=service.exposure_tail_views.report({'tail_id':'exposure-tail-10a079f18dc9','source_import_id':identifier,'currency':'USD'})
+            assert_private_export_payload(tail,tail_expected,[identifier],root,('tail',tail_expected['tail_id']))
             assert tail['global_cross_currency_total'] is None and not tail['contract']['calibrated_correlation']
             assert all(abs(sum(t['es_segment_contributions'].values())-t['es'])<1e-6 for r in tail['results'] for t in r['tails'])
             select_task(page, 'Tail risk')
@@ -212,7 +250,8 @@ def run(root, web_root=None):
             with page.expect_download() as info: page.get_by_role('link',name='Xuất declared scenario set').click()
             info.value.save_as(str(output/'scenario-export.json'))
             scenario=read_json(output/'scenario-export.json')
-            assert scenario==service.exposure_scenario_views.report({'scenario_id':'exposure-scenario-9655e30419ec','source_import_id':identifier,'currency':'USD','dimension':'source_state'})
+            scenario_expected=service.exposure_scenario_views.report({'scenario_id':'exposure-scenario-9655e30419ec','source_import_id':identifier,'currency':'USD','dimension':'source_state'})
+            assert_private_export_payload(scenario,scenario_expected,[identifier],root,('scenario',scenario_expected['scenario_id']))
             assert all(row['attribution_residual']['numerator']=='0' for s in scenario['scenarios'] for row in s['aggregates'])
             select_task(page, 'Scenarios')
             page.locator('#exposure-scenarios').screenshot(path=str(output/'scenario-desktop.png'))
@@ -225,13 +264,15 @@ def run(root, web_root=None):
             with page.expect_download() as info: page.get_by_role('link', name='Xuất movement bridge').click()
             info.value.save_as(str(output / 'movement-export.json'))
             movement = read_json(output / 'movement-export.json')
-            assert movement == service.exposure_movement_views.report({'movement_id':'exposure-movement-dbd1ecad612e', 'closing_import_id':identifier,'dimension':'source_state','currency':'USD'})
+            movement_expected=service.exposure_movement_views.report({'movement_id':'exposure-movement-dbd1ecad612e', 'closing_import_id':identifier,'dimension':'source_state','currency':'USD'})
+            assert_private_export_payload(movement,movement_expected,[movement_expected['opening_import_id'],identifier],root,('movement',movement_expected['movement_id']))
             assert all(float(row['residual']) == 0 for row in movement['groups'])
             checks.append('Movement dimension follows confirmed scope; exact private bridge export and zero residuals')
             with page.expect_download() as info: page.locator('#export-report').click()
             info.value.save_as(str(output / 'exposure-export.json'))
             report = read_json(output / 'exposure-export.json')
-            assert report == service.exposure_views.report({'import_id': identifier, 'currency': 'USD', 'dimension': 'source_state'})
+            report_expected=service.exposure_views.report({'import_id': identifier, 'currency': 'USD', 'dimension': 'source_state'})
+            assert_private_export_payload(report,report_expected,[identifier],root)
             assert report['currencies'][0]['research_el_major_exact'] is None
             assert not report['public_release_approved']
             assert all(value is False for value in report['contract'].values() if type(value) is bool)

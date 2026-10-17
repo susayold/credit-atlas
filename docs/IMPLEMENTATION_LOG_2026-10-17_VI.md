@@ -73,6 +73,13 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - State Alaska × Jumbo Market × AVE_INTRATE có 27 annual observations; 7 suppressed cells giữ unavailable và chart tách thành 4 observed segments. Hai query-scoped workbooks được kiểm bằng openpyxl: filters/weighting, 27/54 observation rows, missing/suppression flags, latest values, bốn sheet và chart đều khớp API report.
 - Kiểm tra workbook này là đọc package/XLSX theo cấu trúc và data values; **không** khẳng định Microsoft Excel desktop mở/recalculate thành công. Không xuất raw loan-level records. N05/N06 tổng vẫn mở cho Excel desktop, PUDB/HMDA/route parity còn lại và các KPI chưa trace; capability ledger giữ **26/50 = 52%**.
 
+### Browser acceptance FHFA PUDB acquisition profile — 17/10/2026
+
+- Thêm `scripts/browser_pudb_profile_qa.py`; chạy Edge headless trên mortgage source workspace bằng profile receipt-bound và workbook private. QA receipt, JSON export và workbook tải ở `artifacts/private/pudb-browser-qa-20261017`, không đưa dữ liệu private lên repo.
+- **5 checks pass, 0 page/console errors:** UI khớp source release 2026-09-24, 2.093.767 rows, 66 fields, 2.093.767 unique keys và archive SHA; category tables khớp profile; API và JSON download khớp service output; 390px không overflow.
+- Workbook tải từ route có năm sheet, đối soát **126 category rows** và **66/66** field missingness/dictionary; 5 category cells dưới 30 được giữ suppressed, formulas cho category share còn hiện diện. Profile xác nhận `public_release_approved=false`.
+- Native Excel desktop open/recalculate vẫn chưa xác nhận. Đây là annual Enterprise acquisitions, không có payment/default target và không trở thành D01 performance panel.
+
 ## N07 — Toyota recovery-component exception ledger
 
 - Tạo bridge aggregate công khai cho Toyota 2022-B (51 kỳ) và 2024-B (29 kỳ), gắn từng kỳ với collection-period start/end, calendar days, filing date, ABS-EE/10-D accession, certificate URL và certificate hash. Không phát hành contract/asset IDs.
@@ -124,7 +131,7 @@ N09 verification: `tests/test_absee_surveillance.py` và `tests/test_http_bounda
 
 ## Bước kế tiếp
 
-1. Mở/recalculate các workbook N06 trong Excel desktop; tiếp tục browser/query parity cho PUDB, HMDA và các route NMDB còn lại.
+1. Mở/recalculate workbook N06 và PUDB trong Excel desktop; tiếp tục browser/query parity cho HMDA và các route NMDB còn lại.
 2. Hoàn thiện N02 theo crosswalk mới: tách source families đang thiếu record, bind mọi release/hash receipt và kiểm tra source rights/date-grain cho từng KPI.
 3. Nối KPI outputs vào method cards, gồm numerator/denominator, data release/as-of, formula và missingness; giữ các score/final holdout đã freeze nguyên trạng.
 4. Chuyển sang N10: chuẩn bị pilot Freddie annual sample và kiểm tra quyền truy cập, receipt/hash, release/layout, parser counts và resource budget khi Clarity session hợp lệ có sẵn. Không giả lập sample chưa tải.

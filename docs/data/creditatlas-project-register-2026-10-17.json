@@ -45,7 +45,7 @@
       "id": "N02",
       "status": "In progress: 91-record source-release register; FHFA (9), LendingClub/Bondora (5), Treasury HAMP (2), World Bank WDI (22), Sovereign Archive (12) tranches bound",
       "scope": "27 dataset/domain groups statically traced; all 20 public_sources.catalog IDs match local receipt. Source-release register has 91 records (20 public-suite +71 supplemental across 16 broad families), including 12 HMDA, 9 FHFA PUDB/NMDB/NSMO, 5 LendingClub/Bondora, 2 Treasury HAMP, 22 World Bank WDI API/reference and 12 BoC–BoE Sovereign Archive objects. Sixteen parent groups have source-level records. WDI has 122,892 observations and 64,452 source NULLs. Sovereign archive has 42,519 entity-year rows over four editions, 680,304 selected metric positions, 515,678 missing, 72,509 zero, 1,341 source markers, 9,954 schema-absent and 68 count conflicts. HAMP has only 14 local activity dates. These aggregate/context sources do not provide compatible retail borrower PD labels. Public tests validate lineage while raw private evidence stays excluded.",
-      "remaining": "11 of 27 parent groups still need object-level records or explicit no-data/access state; 7 FRED IDs remain source-layer without parent groups. Prioritize eligible loan-level Freddie/Ginnie only within access/terms and source groups with usable outcomes; finish source-specific API/UI/Excel parity; the private PUDB analyst workbook and download route exist and need browser/native Excel acceptance; its N03 formula trace is documented; HMDA denominator and PUDB formula traces are documented; continue NMDB and other KPI formula links; complete dataset-specific third-party rights checks. HAMP 2009–2017 archive endpoint times out; local 2018–2021 gap is unresolved. WDI is latest-revised macro context; do not project or impute. Sovereign archive is revised sovereign-government default stock context, not retail/corporate PD/LGD."
+      "remaining": "11 of 27 parent groups still need object-level records or explicit no-data/access state; 7 FRED IDs remain source-layer without parent groups. Prioritize eligible loan-level Freddie/Ginnie only within access/terms and source groups with usable outcomes; finish source-specific API/UI/Excel parity. PUDB and NMDB New/Outstanding representative browser acceptance now pass; open/recalculate their workbooks in native Excel and complete HMDA/other route parity. Their N03 formula traces and HMDA denominator trace are documented; continue NMDB and other KPI formula links; complete dataset-specific third-party rights checks. HAMP 2009–2017 archive endpoint times out; local 2018–2021 gap is unresolved. WDI is latest-revised macro context; do not project or impute. Sovereign archive is revised sovereign-government default stock context, not retail/corporate PD/LGD."
     },
     {
       "id": "N03",
@@ -61,7 +61,7 @@
     },
     {
       "id": "N06",
-      "status": "API and workbook download verified; browser/native Excel acceptance open",
+      "status": "Representative PUDB and NMDB New/Outstanding browser/XLSX acceptance pass; native Excel open/recalculate and other route acceptance open",
       "scope": "Dedicated P2 NMDB workspace adds product/geography/market/series/weight/year filters, time series, quality KPIs, national reference workbook and query-scoped Excel export.",
       "remaining": "Review live browser behavior and open/recalculate both dynamic and reference workbook in Excel desktop; keep acceptance open until those checks."
     },
@@ -498,7 +498,7 @@
       "status": "Acquired/profiled: 2,093,767 × 66; three source objects receipt-bound; aggregate API available",
       "access": "Public FHFA release",
       "use": "Mortgage credit-access/acquisition mix; no monthly performance/default label",
-      "next": "Add analyst-facing Excel profile/export and verify category counts against the official record-count workbook; retain <30 suppression; no performance/default inference.",
+      "next": "Open/recalculate the private analyst workbook in native Excel; retain <30 suppression and no performance/default inference.",
       "evidence": "docs/FHFA_PUDB_CREDIT_ACCESS_REVIEW_VI.md",
       "publisher": "https://www.fhfa.gov/data/pudb",
       "rights_review": "Public aggregate/limited-use release; follow FHFA definitions."
@@ -806,7 +806,7 @@
       "target": "Describe 2025 Enterprise single-family acquisition composition by the official PUDB categories and geographic/support cells.",
       "method": "Let N=2,093,767 verified acquisition rows. For each of 16 category fields f, count n(f,c) after trimming source-code whitespace; retain blank as <BLANK>. File share=100*n(f,c)/N. For field f, b(f) is the blank-cell count across all N rows and known(f)=N-b(f); workbook nonblank-category share=100*n(f,c)/known(f), excluding the blank category. Missing%=100*b(f)/N. App shows file share; workbook also shows nonblank share and missingness. Suppress nonzero category and missingness counts below 30 with their associated shares; visible shares may sum below 100%. Analyze one dimension at a time; never sum overlapping dimensions or infer borrower-level relationships.",
       "validation": "Schema-v4 receipt/profile: 2,093,767 rows × 66 fields; unique record_num_sf_ctf; duplicate=0; malformed=0; acquisition year=2025 and 2020 census geography. Official Enterprise counts 987,450 + 1,106,317 = 2,093,767. All 66 fields have explicit blank counts, including zeros; the workbook builder reconciles each category dimension to N and dictionary header names/order to the verified schema. See docs/N03_PUDB_FORMULA_TRACE_2026-10-17_VI.md.",
-      "limits": "Acquisition composition is not an approval/denial denominator, repayment/default label, PD, causal fairness measure or loan-level performance panel. Exact field blank counts and profile remain local-private; the public register keeps missing_cell_count null. Browser visual and native Excel open/recalculate acceptance remain pending. No imputation, forecast or model qualification.",
+      "limits": "Acquisition composition is not an approval/denial denominator, repayment/default label, PD, causal fairness measure or loan-level performance panel. Exact field blank counts and profile remain local-private; the public register keeps missing_cell_count null. Representative browser/API/JSON/workbook acceptance passes; native Excel open/recalculate and remaining route acceptance remain pending. No imputation, forecast or model qualification.",
       "evidence": "docs/N03_PUDB_FORMULA_TRACE_2026-10-17_VI.md"
     },
     {

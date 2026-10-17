@@ -2,6 +2,8 @@
 
 Ngày nghiên cứu gốc: **16/10/2026**; trạng thái được cập nhật đến **18/10/2026 Asia/Bangkok (17/10 UTC)**. Baseline code của vòng rà soát gốc: `b997c204c88a2773efac57137cf0b2ba5401e1b8`. Báo cáo này là đầu mối đọc hiện trạng và quyết định công việc tiếp theo; các kế hoạch và receipt cũ vẫn là bằng chứng lịch sử.
 
+Phụ lục nghiên cứu ngày 18/10 bổ sung rights audit cho FRED/ALFRED và thứ tự xử lý N02/N03 theo publisher/endpoint: [Project review research addendum](PROJECT_REVIEW_RESEARCH_ADDENDUM_2026-10-18_VI.md). Phụ lục nêu rõ giới hạn phạm vi: đây là audit theo luồng nghiệp vụ, registries, routes và tests trọng yếu; chưa phải đọc line-by-line toàn repo hay mọi raw row.
+
 ## Cập nhật trạng thái đến 18/10/2026
 
 Plan gốc đã rà soát ledger 50 capability, D01/D02, các workflow trọng yếu, inventory code/test và nguồn nghiên cứu chính thức. Kết quả rà soát **không có nghĩa là đã đọc lại từng dòng của toàn bộ repo hoặc profile lại mọi raw dataset**; phạm vi, cách đếm và giới hạn đã nêu ở mục 2. Các kết quả mới sau baseline được cập nhật như sau:

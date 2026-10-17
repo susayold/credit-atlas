@@ -1,6 +1,6 @@
 {
-  "files": 1320,
-  "bytes": 35405267,
+  "files": 1321,
+  "bytes": 35421810,
   "hash_basis": "SHA-256 of Git-normalized LF text; binary files hashed as-is",
   "excluded_private_data": true,
   "sha256": {
@@ -210,7 +210,8 @@
     "docs/PROGRESS_UPDATE_2026-10-15_VI.md": "4e0e3e70d6989c86de4bce6166b8dbd914db84b344962e41cc0bbdb7f3caaca7",
     "docs/PROGRESS_VS_PLAN_2026-10-11_VI.md": "148cbf3c11e0618a21fcfdd2605e89d8216f54be39f9d79d32655825eec29bc0",
     "docs/PROGRESS_VS_PLAN_2026-10-12_VI.md": "db05eaa520be413e38f64ba42a385ef682d3ef9e74d69f551cb3379694ed6703",
-    "docs/PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md": "f4383fbf0803b628656920daffd55cbb5afc00b892c210975ee7f80fae4b5956",
+    "docs/PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md": "b8b0bcb5522f93a9c8c0deb6e7e566a9dfbc3a50a553b369223fb6b5b2cdc6fd",
+    "docs/PROJECT_REVIEW_RESEARCH_ADDENDUM_2026-10-18_VI.md": "9e44172227d2def03162611566f28e6f0d23602d1af956368690a6ac7f8664f6",
     "docs/PUBLIC_MORTGAGE_CONTEXT.md": "8cadb543a52829e325dae0c6782ea9df0898de1e5046bbc655a844e7e77c99c0",
     "docs/RETAIL_COHORT_EXPLANATIONS_WORKFLOW.md": "0280383dc72ed89bd5ba4615267191dfb232853ac6bafa95761f06815a6bccf3",
     "docs/RETAIL_DATA_AND_PROTOCOL.md": "fc45ebdd5aa5270937b8115ac68f154ca5bcfeaf675b28c9a2d02cebc3dd19fa",

@@ -56,8 +56,8 @@ try {
     $n01Status=[string]$plan.Range('F18').Value2
     $n01Progress=[string]$plan.Range('G18').Value2
     $n01Acceptance=[string]$plan.Range('E18').Value2
-    if($n01Status -ne 'Đang làm' -or $n01Progress -notlike '*API/static runtime PASS (12 checks)*' -or $n01Progress -notlike '*50 reciprocal links across 33 source rows*' -or $n01Acceptance -notlike '*ledger P1–P5*'){
-        throw 'Excel does not show the latest N01 runtime status and scope correction'
+    if($n01Status -ne 'Đang làm' -or $n01Progress -notlike '*API/static runtime PASS (12 checks)*' -or $n01Progress -notlike '*50 capability rows*' -or $n01Progress -notlike '*Static stale-label scan PASS*' -or $n01Progress -notlike '*Browser UI render is still unverified*' -or $n01Acceptance -notlike '*CreditAtlas P1–P5*' -or $n01Acceptance -notlike '*static stale-label scan PASS*'){
+        throw "Excel does not show the latest N01 runtime status and scope correction. Status='$n01Status'; acceptance='$n01Acceptance'; progress='$n01Progress'"
     }
     $n02Status=[string]$plan.Range('F19').Value2
     $n02Acceptance=[string]$plan.Range('E19').Value2

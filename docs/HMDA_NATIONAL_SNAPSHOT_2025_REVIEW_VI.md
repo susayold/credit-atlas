@@ -102,9 +102,9 @@ export; byte-identical download of the reviewed Excel workbook; and 390px
 mobile visibility. No browser errors. The test receipt is kept privately at
 `artifacts/private/hmda-national-browser-qa-47aa438a0bd0/receipt.json`.
 
-The D01 master ledger remains **26/50 complete (52%)**; 42/50 have at least
-some implementation or conditional coverage (84%, not the completion rate).
-The new work closes no D01 mortgage performance or model gate. The national
+The CreditAtlas-wide P1–P5 master ledger remains **26/50 complete (52%)**; 42/50
+have at least some implementation or conditional coverage (84%, not the completion
+rate). This new work closes no D01 mortgage-performance or model gate. The national
 application/decision case remains separate from the D01 loan performance
 target and requires broader D08 product acceptance before it is called done.
 

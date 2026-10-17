@@ -1,6 +1,6 @@
 # D01 — Requirement audit and remaining work
 
-Scope correction, 2026-10-16: the 26/50 (52%) completion ledger covers the five
+Scope correction, 2026-10-18: the 26/50 (52%) completion ledger covers the five
 CreditAtlas workspaces P1–P5, not D01 alone. Historical checkpoint references to
 "D01 26/50" must be read with this correction. D01 has its own 30 backlog items
 and R0–R4 release gates. The current independent review and proposed next work
@@ -22,8 +22,9 @@ Action 1–3 denominator is 9,373,448; action 3 is 2,115,756; descriptive denied
 share is 22.5718%, not PD. Difference versus the June 2 Snapshot is a release
 comparison only; no borrower-level transition or repayment interpretation is
 claimed. No forecast, imputation, or model fit. HMDA remains D08 application /
-decision data and does not change D01's **26/50 complete (52%)** or its missing
-Freddie multi-vintage gate. The final app acceptance passes **21 checks with
+decision data. It does not change the CreditAtlas-wide P1–P5 ledger
+(**26/50 complete, 52%**) or close D01's Freddie multi-vintage gate. The final
+app acceptance passes **21 checks with
 zero browser errors**, including Dynamic/Snapshot selection, release-specific
 Excel/JSON downloads, the 2019–2024 comparison, and 390px layout; private
 receipt: `artifacts/private/hmda-national-browser-qa-9fa5ed6e2f65/receipt.json`.
@@ -32,7 +33,7 @@ See
 
 ### Data-first continuation — HMDA One-Year 2019, publisher vintage exception, 2026-10-16
 
-Found and acquired the official static 2019 One-Year national LAR (17,563,200 rows, 99 fields, 5,565 LEIs; CSV SHA-256 `f13d5b3aedba074921a7d114e0787d6220d10b2746a769eae135178b13b1673b`). All eight action counts reconcile to the fully profiled file; tested row-quality exceptions are zero. The official release page warns that 2019 contains more than 12 months of updates because of release timing. This is disclosed in the panel and adjacent-year comparison; do not treat 2019 as a standardized 12-month cutoff. Added a source-bound private aggregate view and the panel/API; D08 only, no Freddie vintage and no change to D01 26/50. No forecast, imputation or model fit. See [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
+Found and acquired the official static 2019 One-Year national LAR (17,563,200 rows, 99 fields, 5,565 LEIs; CSV SHA-256 `f13d5b3aedba074921a7d114e0787d6220d10b2746a769eae135178b13b1673b`). All eight action counts reconcile to the fully profiled file; tested row-quality exceptions are zero. The official release page warns that 2019 contains more than 12 months of updates because of release timing. This is disclosed in the panel and adjacent-year comparison; do not treat 2019 as a standardized 12-month cutoff. Added a source-bound private aggregate view and the panel/API; D08 only, no Freddie vintage and no change to the CreditAtlas-wide P1–P5 26/50 ledger. No forecast, imputation or model fit. See [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
 
 ### Data-first continuation — HMDA One-Year 2021, correction to release research, 2026-10-16
 
@@ -46,8 +47,8 @@ aggregate view, an eight-sheet Excel workbook and an app panel; the five One-Yea
 views now compare 2020–2024. Actions 1–3 total 18,620,312 applications; action 3
 denials are 2,922,414 (15.6948%), an application-decision share, not PD/default.
 No Three-Year API reconciliation is claimed, and no forecast, imputation or
-model fit was performed. This improves D08 only; D01 stays 26/50 (52%), with
-42/50 some/conditional coverage. See
+model fit was performed. This improves D08 only; the CreditAtlas-wide P1–P5
+ledger stays 26/50 (52%), with 42/50 some/conditional coverage. See
 [`HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2021_REVIEW_VI.md).
 
 ### Data-first continuation — HMDA One-Year 2020, 2026-10-16
@@ -58,8 +59,8 @@ CRC, all eight action totals and row-quality checks were verified. Integrated a
 private source-bound aggregate view, an eight-sheet Excel workbook, JSON/XLSX
 downloads and an app panel. Actions 1–3 total 18,134,264 applications; 2,880,243
 were action-3 denials (15.8829%). This is a descriptive application share, not
-PD/default and does not change D01's 26/50 (52%) completion or 42/50 (84%)
-some/conditional coverage. Raw data remains private on D:. No forecast,
+PD/default and does not change CreditAtlas-wide P1–P5 completion (26/50, 52%) or
+some/conditional coverage (42/50, 84%). Raw data remains private on D:. No forecast,
 imputation or model fit was performed. See
 [`HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md).
 
@@ -74,8 +75,9 @@ wrong-year, invalid-action/state/loan-type/LEI/loan-amount checks each return 0.
 The descriptive action-3 share over actions 1–3 is 24.2844%, not PD/default.
 This One-Year release is distinct from the 2025 Snapshot release, contains no
 repayment performance labels and is not joinable as a borrower-level performance
-panel. It adds useful D08 application-level evidence, but does not alter D01's
-**26/50 complete (52%)** or **42/50 some/conditional coverage (84%)**; Freddie
+panel. It adds useful D08 application-level evidence, but does not alter the
+CreditAtlas-wide P1–P5 **26/50 complete (52%)** or **42/50 some/conditional
+coverage (84%)**; Freddie
 R2 and model R3 remain gated on authorized mortgage performance vintages. No
 forecast, imputation, or model fit was done. Raw rows and receipt remain private.
 See [`HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2024_REVIEW_VI.md).
@@ -93,8 +95,8 @@ breakdown dimensions. The 22.5948% denied share uses actions 1–3 only
 fields remain private on D:. Five live browser acceptance checks pass, with
 no browser errors, including exact private JSON export, Excel download and
 390px layout. This is D08 application/decision coverage, not repayment history.
-The D01 master requirement count remains **26/50 complete (52%)**, with 42/50
-some implementation or conditional coverage; this addition does not close a
+The CreditAtlas-wide P1–P5 master requirement count remains **26/50 complete
+(52%)**, with 42/50 some implementation or conditional coverage; this addition does not close a
 D01 outcome/model gate. No forecasts, imputation, or model fitting were
 performed. See
 [`HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md`](HMDA_NATIONAL_SNAPSHOT_2025_REVIEW_VI.md).
@@ -249,7 +251,7 @@ interpretation caveats. Browser acceptance passed 7/7 grouped checks with no
 page errors; exact source-row coverage (22/37/50/13), July/August partial-period
 reason handling, latest national HUD KPIs, six-table Excel download and mobile
 layout were checked. Private evidence: `artifacts/private/hud-tables-browser-qa-20261016/receipt.json`.
-This improves D02-4 descriptive context only. It does not alter the D01 26/50
+This improves D02-4 descriptive context only. It does not alter the CreditAtlas-wide P1–P5 26/50
 completion count, qualify a Freddie vintage, or resolve D02-5/6. HUD PDF and
 Portfolio Snapshot binaries remain unavailable through ordinary HTTP (403).
 
@@ -548,8 +550,8 @@ fresh verified case `d01-202610150931`, with no browser errors. Receipt:
 `artifacts/private/browser-qa-f0dba3916637/receipt.json`. The HMDA and FDIC
 files are application/financial-condition sources and do not add mortgage
 repayment histories or satisfy the missing Freddie multi-vintage gate. M01-028
-remains partial; D01's 26/50 completion count and the model/data gates are
-unchanged.
+remains partial; the CreditAtlas-wide P1–P5 26/50 completion count is unchanged,
+and D01's model/data gates remain open.
 
 ## 2026-10-15 shared report-download continuation
 
@@ -590,7 +592,7 @@ still says 09/2021, so effective timing remains unresolved. Added a receipt-
 verified API and aggregate-only Sources panel. Four parser contract tests pass;
 the latest real-data browser acceptance is 69/69 PASS with a key-free profile
 export and injected HTTP 503 failure check. Source note: `docs/HUD_FHA_IIF_TRACT_REVIEW_VI.md`.
-This is separate FHA exposure context and does not change D01's 26/50 status or
+This is separate FHA exposure context and does not change the CreditAtlas-wide P1–P5 26/50 status or
 qualify model data.
 
 ## 2026-10-15 cross-workspace attachment audit
@@ -631,8 +633,8 @@ claims. Five parser/receipt tests pass; the latest 64-check browser acceptance
 verifies the private profile/export and an injected export outage. See
 `docs/FHFA_PUDB_CREDIT_ACCESS_REVIEW_VI.md` and
 `artifacts/private/browser-qa-ce65ee3cf106/receipt.json`. This is a separate
-credit-access case and does not change D01's 26/50 completion count or its
-unmet multi-vintage gate.
+credit-access case and does not change the CreditAtlas-wide P1–P5 26/50
+completion count or close D01's unmet multi-vintage gate.
 
 ## 2026-10-15 CFPB mortgage geography context
 
@@ -681,7 +683,7 @@ and terms). The refreshed acceptance passed all 10 grouped checks: SBA's
 transition/lifecycle details, reload state, and 390px layouts. No browser errors
 occurred and the Retail holdout access ledger digest was unchanged. Receipt and
 private screenshots: `artifacts/private/remaining-domains-qa-904024f23f91/`.
-This refreshes UX/task coverage; it does not change the D01 26/50 count, add
+This refreshes UX/task coverage; it does not change the CreditAtlas-wide P1–P5 26/50 count, add
 loan-performance vintages, or qualify any model.
 
 ## 2026-10-15 cross-workspace export failure continuation
@@ -697,7 +699,8 @@ The source-level NSMO review remains current: FHFA's 2026 PUF contains quarterly
 performance through 2025Q3 but requires acknowledgement of its monitoring notice
 and terms before download; Freddie/Fannie loan-level sources remain account or
 registration gated. No unrelated application/aggregate table is promoted to a
-mortgage-performance vintage. D01 stays at 26/50 and M01-028 remains Partial.
+mortgage-performance vintage. The CreditAtlas-wide P1–P5 ledger stays at 26/50,
+and M01-028 remains Partial.
 
 ## 2026-10-15 ABS specialized attachment acceptance
 
@@ -710,8 +713,8 @@ focused acceptance passes 22/22 at
 `artifacts/private/abs-browser-qa-52d096bc29bd/receipt.json`; JavaScript syntax
 and browser execution are clean. This closes these five attachment routes only:
 Retail sub-workspace exports and remaining API deliveries still need scoped
-acceptance. D01 remains 26/50, M01-028 remains Partial, and no data/model gate
-changed.
+acceptance. The CreditAtlas-wide P1–P5 ledger remains 26/50; M01-028 remains
+Partial, and no data/model gate changed.
 
 ## 2026-10-15 Retail attachment failure continuation
 
@@ -730,7 +733,8 @@ clients, token/page behavior, export scope, 390px layout, no holdout-ledger chan
 and 503 handling. Receipts are listed in the M01-028 row above.
 
 This closes the Retail and ABS attachment routes called out in the previous
-checkpoint, but not the full M01-028 route inventory. D01 remains 26/50; no
+checkpoint, but not the full M01-028 route inventory. The CreditAtlas-wide
+P1–P5 ledger remains 26/50; no
 additional Freddie/Fannie/NSMO/Ginnie loan-performance vintage was acquired, and
 no model fit or qualification gate changed. The next engineering pass starts
 with Portfolio workbook/import/review deliveries and continues across other
@@ -741,7 +745,7 @@ workspace-specific routes.
 
 P4 acceptance passes 11/11 grouped checks at `artifacts/private/p4-acceptance-qa-58361d0d2a27`. Inventory and movement JSON match their API payloads with explicit UTF-8 decoding; missing risk stays null, cross-currency totals are not manufactured, and HTTP 503 creates no fake attachment. Scenario, ECL, tail-risk, and convergence exports also match their API payloads and show errors without downloads on HTTP 503.
 
-The combined Portfolio/Retail workbench acceptance passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`, covering Portfolio summary/concentration, review drafts, native-currency Excel, workbook failure behavior, on-demand tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroup and client-explanation flows. D01 remains 26/50; no additional gated mortgage-performance data or model qualification gate changed. M01-028 remains Partial pending the full route inventory.
+The combined Portfolio/Retail workbench acceptance passes 15 grouped checks at `artifacts/private/product-workbench-qa-5cc302c5a26d`, covering Portfolio summary/concentration, review drafts, native-currency Excel, workbook failure behavior, on-demand tasks, keyboard/mobile behavior, and Retail saved evidence, validation, subgroup and client-explanation flows. The CreditAtlas-wide P1–P5 ledger remains 26/50; no additional gated mortgage-performance data or model qualification gate changed. M01-028 remains Partial pending the full route inventory.
 
 
 ## 2026-10-15 data refresh and new-source access check
@@ -785,7 +789,7 @@ first-entry dynamic screen counts 57,311 mortgages, 887,861 intervals and 695
 first observed 90+ exits; it has variable follow-up and is not a fixed-horizon
 rate. Termination, same-month ambiguity, non-observation and survey-weight/
 variance limitations remain. No target, PD, or model is created; D02 remains
-descriptive/feasibility-only and D01 stays 26/50. See
+descriptive/feasibility-only and the CreditAtlas-wide P1–P5 ledger stays 26/50. See
 `docs/D02_NSMO_RISK_SET_FEASIBILITY_2026-10-16_VI.md` and
 `docs/D01_NSMO_SOURCE_REVIEW_VI.md`.
 
@@ -817,7 +821,7 @@ Added a reproducible bounded downloader/auditor, three focused passing tests, an
 a Vietnamese source/method review with observed 2025 and 2026Q2 examples. Raw
 files and receipts remain private. This is aggregate market composition and
 active-stock context, not loan-level repayment performance, a new Freddie
-vintage, or a forecast; the D01 master remains 26/50 complete (52%). App/Excel
+vintage, or a forecast; the CreditAtlas-wide P1–P5 master remains 26/50 complete (52%). App/Excel
 integration and audit of the separate official wide-format alternatives remain
 follow-up work. See
 `docs/FHFA_NMDB_ORIGINATION_OUTSTANDING_REVIEW_VI.md` and
@@ -879,7 +883,7 @@ documents action values 1–8 and the API rejects `-1` as an invalid filter, the
 not silently mapped into a category. Audit status is
 `PASS_WITH_QUARANTINED_SOURCE_ROWS`; no app integration or KPI uses them pending
 source investigation. This is D08 application/decision data, not D01 loan
-performance, so the master 26/50 count and D01 model gates do not change.
+performance, so the CreditAtlas-wide P1–P5 master 26/50 count and D01 model gates do not change.
 Reproducible acquisition/audit scripts are `scripts/acquire_hmda_browser_2018.py`
 and `scripts/audit_hmda_browser_2018.py`; detailed evidence is in
 `docs/HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`.

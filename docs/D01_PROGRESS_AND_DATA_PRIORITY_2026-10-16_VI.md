@@ -1,9 +1,10 @@
 # D01 — tiến độ so với plan và ưu tiên dữ liệu
 
-**Đính chính phạm vi tỷ lệ (16/10/2026):** `26/50 = 52%` là completion ledger
+**Đính chính phạm vi tỷ lệ (18/10/2026):** `26/50 = 52%` là completion ledger
 của toàn bộ CreditAtlas P1–P5, không phải phần trăm riêng D01. Các câu gọi tỷ lệ
 này là D01 trong checkpoint cũ dưới đây cần đọc theo đính chính này. D01 được
-đánh giá riêng theo 30 backlog items và R0–R4. Xem
+đánh giá riêng theo 30 backlog items và R0–R4. Các cách gán 26/50 cho D01 trong
+các checkpoint dưới đây được sửa ở lượt rà này. Xem
 [đánh giá và kế hoạch tiếp theo](PROJECT_REVIEW_AND_NEXT_PLAN_2026-10-16_VI.md).
 
 **Checkpoint:** 16/10/2026. Đây là trạng thái theo bằng chứng có thể kiểm tra,
@@ -30,14 +31,15 @@ aggregation API (15.138.510 hồ sơ); CSV còn 1.961 dòng `action_taken=-1` v�
 LEI/state trống nên được giữ và quarantine, loại khỏi KPI. Đã tạo workbook riêng
 5 sheet với 3.503 dòng phân khúc aggregate, 99-field guide và ghi rõ công thức,
 binning LTV/lãi suất, mẫu số và quarantine. Đây là D08 application/decision,
-không phải payment performance; D01 vẫn 26/50.
+không phải payment performance; completion ledger toàn CreditAtlas vẫn 26/50.
 Chi tiết/hash: [`HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md`](HMDA_NATIONAL_THREE_YEAR_2018_REVIEW_VI.md).
 
 **Trạng thái tích hợp HMDA 2018:** panel Three-Year riêng đã được nối vào app
 và có breakdown, JSON, workbook Excel riêng. Kiểm thử browser thật pass; panel
 hiển thị 15.138.510 action hợp lệ, 1.961 dòng quarantine, decision denominator
 10.623.751 và denied share 24,0277%. Mobile 390px không tràn ngang, tải Excel
-đúng và không có browser errors. Đây là tiến độ D08/app; D01 vẫn 26/50 (52%)
+đúng và không có browser errors. Đây là tiến độ D08/app; completion ledger
+CreditAtlas vẫn 26/50 (52%)
 vì đây là dữ liệu application/decision, không có repayment/default outcome.
 
 **Bổ sung dữ liệu HMDA 2024 trong ngày:** đã tải và đối soát file national
@@ -63,7 +65,7 @@ kiểm CRC/hash, giải nén/audit 25.666.745 dòng và tích hợp aggregate vi
 panel cùng Excel 8 sheet. Chi tiết tại
 [`HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2020_REVIEW_VI.md).
 
-**Bổ sung HMDA One-Year 2019 (D08, không phải D01):** tìm thấy static release chính thức 2019, dù bảng FAQ hiện hành chỉ liệt kê One-Year 2020–2024 cho Data Browser. Đã tải và audit 17.563.200 dòng/99 trường/5.565 LEI; ZIP CRC, hash và các kiểm tra chất lượng pass. FFIEC cảnh báo release 2019 chứa hơn 12 tháng cập nhật; app/so sánh giữ caveat này và không coi đây là cutoff chuẩn 12 tháng. Đã thêm aggregate view và panel riêng, không dùng API Three-Year làm reconciliation. D01 vẫn 26/50 = 52%, HMDA không có performance labels nên không tăng vintage count. Chi tiết: [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
+**Bổ sung HMDA One-Year 2019 (D08, không phải D01):** tìm thấy static release chính thức 2019, dù bảng FAQ hiện hành chỉ liệt kê One-Year 2020–2024 cho Data Browser. Đã tải và audit 17.563.200 dòng/99 trường/5.565 LEI; ZIP CRC, hash và các kiểm tra chất lượng pass. FFIEC cảnh báo release 2019 chứa hơn 12 tháng cập nhật; app/so sánh giữ caveat này và không coi đây là cutoff chuẩn 12 tháng. Đã thêm aggregate view và panel riêng, không dùng API Three-Year làm reconciliation. HMDA không có performance labels nên không tăng vintage count; CreditAtlas-wide P1–P5 ledger vẫn 26/50 = 52%. Chi tiết: [`HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md`](HMDA_NATIONAL_ONE_YEAR_2019_REVIEW_VI.md).
 
 **Sửa research + bổ sung HMDA One-Year 2021:** rà lại FAQ FFIEC cho thấy release
 2021 có thật (freeze 01/05/2023); phát biểu trước đó rằng release không tồn tại
@@ -80,8 +82,8 @@ Snapshot 2025 và One-Year 2024 **PASS, 8 checks, zero errors**, gồm breakdown
 JSON/Excel download và mobile width; bằng chứng private tại
 `D:\data\Codex\credit-atlas\artifacts\private\hmda-national-browser-qa-6f761518ddc3\receipt.json`.
 Bộ HMDA One-Year hiện có đầy đủ 2019–2024, so sánh cùng action denominator; 2019 có caveat >12 tháng cập nhật.
-Tỷ lệ D01 vẫn 26/50 vì HMDA
-không đáp ứng gate performance R2/R3. Ưu tiên dữ liệu tiếp theo cho D01 vẫn là
+Completion ledger CreditAtlas vẫn 26/50; HMDA
+không đáp ứng gate performance R2/R3 riêng của D01. Ưu tiên dữ liệu tiếp theo cho D01 vẫn là
 Freddie Clarity performance samples; Ginnie Mae cần phiên tải đã xác thực và sẽ
 được xử lý như case riêng.
 
@@ -151,7 +153,8 @@ cho case `d01-202610150931` ghi **PASS, 107 checks, zero browser errors**; recei
   và 0 domain ngoài danh mục. Tuy nhiên payment activity quan sát được chỉ có
   14 tháng **2022-01–2023-02**; 2018–2021 vẫn chưa có coverage được chứng minh.
   Bản Treasury 2009–2017 đang timeout ở host chính thức. Nguồn này được giữ như
-  một case servicing/loss-mitigation riêng; không làm tăng 26/50 hay số vintage
+  một case servicing/loss-mitigation riêng; không làm tăng CreditAtlas-wide
+  completion 26/50 hay số vintage
   Freddie. Xem [Treasury HAMP review](TREASURY_HAMP_DATA_REVIEW_VI.md).
 - **Aggregate/context:** FHFA NMDB, CFPB Mortgage Trends, Fed/FRED, HMDA, FHFA
   PUDB, HUD và NSMO có ích cho domain riêng hoặc benchmark, nhưng khác grain,

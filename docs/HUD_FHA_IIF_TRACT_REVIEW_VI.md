@@ -75,5 +75,5 @@ scope. Four synthetic parser checks pass; combined real-data browser QA is
 69/69 PASS at `artifacts/private/browser-qa-7a73963387de/receipt.json`.
 
 This source adds a separate FHA geographic-exposure context track. It does not
-change D01's `26/50 = 52%` acceptance, add a Freddie vintage, or remove the
-NSMO/Ginnie Mae access gates.
+change the CreditAtlas-wide P1–P5 `26/50 = 52%` capability status, add a Freddie
+vintage, or remove D01's NSMO/Ginnie Mae access gates.

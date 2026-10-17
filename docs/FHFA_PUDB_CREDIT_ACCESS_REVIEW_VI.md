@@ -66,8 +66,8 @@ missing categories, and small-count suppression.
   Historical annual releases have their own schema, geography and code changes
   and must be acquired with matching dictionaries before any comparison.
 - This file is not the D01 2012 Freddie performance sample. It does not add a
-  Freddie annual vintage and does not change the D01 R2/R3 gate or 26/50
-  completion count.
+  Freddie annual vintage or change the D01 R2/R3 gate. The CreditAtlas-wide
+  P1–P5 completion ledger remains 26/50.
 
 ## CreditAtlas implementation and privacy boundary
 

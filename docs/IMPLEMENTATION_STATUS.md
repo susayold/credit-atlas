@@ -1,5 +1,9 @@
 # P2 / D01 implementation status
 
+**Scope note, 2026-10-18:** the 26/50 completion figure is the CreditAtlas-wide
+P1–P5 capability ledger, not a D01 percentage. D01 progress is recorded below by
+its separate R0–R4 gates.
+
 Started 2026-10-08. Goal: implement the first CreditAtlas module according to
 chapter 47 of the consolidated research plan.
 
@@ -130,7 +134,7 @@ plan-to-evidence status and next acquisition order.
   private local test receipt (omitted from this public release).
   Actual PUF validation separately streamed **3,180,309** quarterly rows; the
   aggregate-only profile and download hashes are private under
-  private local data-audit receipts (omitted from this public release). D01 remains at 26/50; NSMO is not a
+  private local data-audit receipts (omitted from this public release). The CreditAtlas-wide ledger remains at 26/50; NSMO is not a
   Freddie vintage and no PD target/model was created.
 - M01-022 descriptive export is verified across five real-case scopes. The
   wrapper/report schemas, case/run/method digests, empty-year behavior,
@@ -376,5 +380,5 @@ API/parser/download tests pass 18/18; Edge smoke test passes for the updated
 panel, historical KPIs and zero JS errors. Bank aggregates remain context only:
 no loan-level histories, PD labels or qualified model features were added.
 Bank aggregates remain context only: no loan-level histories, PD labels or
-qualified model features were added. D01 remains 26/50. Details and sources:
+qualified model features were added. The CreditAtlas-wide ledger remains 26/50; these sources add no D01 model gate. Details and sources:
 `docs/PUBLIC_MORTGAGE_CONTEXT.md`.

@@ -1,13 +1,13 @@
 {
   "evidence_type": "project_review_plan_workbook_n01_update",
   "status": "PASS",
-  "updated_at_utc": "2026-10-17T19:28:29.8388467Z",
+  "updated_at_utc": "2026-10-17T19:57:00.710069+00:00",
   "workbook": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
   "changed_cells": [
     "Ke hoach!E18",
     "Ke hoach!G18"
   ],
-  "change_summary": "Refreshed N01 completion-scope criterion and API/static runtime evidence; retained N01 as in progress because browser render and stale-label scan remain open.",
+  "change_summary": "Updated N01 workbook to record the static stale-label scan as PASS across 195 Markdown files while keeping browser UI rendering open and unverified.",
   "validation": {
     "artifact_tool_import_edit_export": true,
     "rendered_changed_rows_and_visually_reviewed": true,
@@ -22,15 +22,20 @@
     "native_excel_version": "16.0",
     "native_excel_read_only_full_rebuild": true,
     "n01_status": "Đang làm",
-    "native_excel_bytes_unchanged": true
+    "static_scope_scan_status": "PASS",
+    "browser_ui_render_accepted": false,
+    "workbook_sha256_verified_by_read_only_excel": true
   },
   "ledger": {
     "ratio": 0.52,
     "achieved": 26.0,
     "total": 50.0
   },
-  "previous_workbook_sha256": "ea449e5a23178da7455cab2bd532c8ea795bfa03074ef054197d5c8ab5dc1e5f",
-  "current_workbook_sha256": "612e8646422321701147b3e69f9e0dbecd34061f5d1b51ac0dbfcffd16bdd284",
-  "file_size_bytes": 31275,
-  "browser_ui_render_accepted": false
+  "previous_workbook_sha256": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
+  "current_workbook_sha256": "2eb5c3d41f1c71a244302e566236d868a58b6c23a12e5652b976dacc41f42b25",
+  "file_size_bytes": 31060,
+  "scope_scan_receipt": "docs/data/progress-scope-label-scan-2026-10-18.json",
+  "scope_scan_files": 195,
+  "scope_scan_d01_metric_cooccurrences": 15,
+  "scope_scan_regression_cases": 4
 }

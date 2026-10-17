@@ -1,0 +1,20 @@
+{
+  "evidence_type": "creditatlas_progress_scope_label_static_acceptance",
+  "status": "PASS",
+  "created_at_utc": "2026-10-17T19:58:56.708453+00:00",
+  "scope": "All Markdown files under docs/; no raw datasets scanned or modified.",
+  "rule": "Reject affirmative claims assigning the CreditAtlas-wide 26/50 (52%) P1–P5 completion ledger to D01 itself.",
+  "markdown_files_scanned": 195,
+  "d01_metric_cooccurrence_lines_reviewed": 15,
+  "required_scope_correction_files": [
+    "docs/BACKLOG_STATUS.md",
+    "docs/D01_PROGRESS_AND_DATA_PRIORITY_2026-10-16_VI.md",
+    "docs/PROGRESS_UPDATE_2026-10-15_VI.md",
+    "docs/IMPLEMENTATION_STATUS.md"
+  ],
+  "missing_scope_corrections": [],
+  "regression_cases": 4,
+  "regression_failures": [],
+  "stale_misattributions": [],
+  "browser_ui_render_verified": false
+}

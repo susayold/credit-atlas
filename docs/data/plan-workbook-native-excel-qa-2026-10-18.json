@@ -1,7 +1,7 @@
 {
   "evidence_type": "native_excel_project_review_plan_workbook_acceptance",
   "status": "PASS",
-  "verified_at_utc": "2026-10-17T19:36:56.6648712Z",
+  "verified_at_utc": "2026-10-17T19:56:35.2314961Z",
   "file": "CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
   "excel_version": "16.0",
   "read_only": true,
@@ -17,7 +17,7 @@
   "formula_errors": [],
   "external_links": 0,
   "n01_status": "Đang làm",
-  "n01_progress_note": "API/static runtime PASS (12 checks): 27 dataset groups, 123 source records, 15 method cards; 15/15 source-linked with 50 reciprocal links across 33 source rows. Ledger remains 26/50; D01 gates are separate. Browser rendering and stale-label scan remain open.",
+  "n01_progress_note": "API/static runtime PASS (12 checks): 27 dataset groups, 123 source records, 15 method cards, 50 capability rows; 26/50, domain counts and D01 R0–R4 reconcile. Fixed register init fallback. Static stale-label scan PASS: 195 Markdown files, 14 D01/ledger co-mentions reviewed, zero false D01 completion claims. Browser UI render is still unverified.",
   "n02_status": "Đang làm",
   "n02_progress_note": "N02 lineage: D01 → Freddie; UCI 350/365 → UCI source and metadata; P4 → Freddie upstream sample-derived UPB only (not owned portfolio); Toyota/Nissan filings → recovery studies and the 103-period ABS finding. LendingClub now has three valid evidence documents. Still open: five group dispositions, Freddie release/rights, and KPI-to-field/output parity. 90 source records without method-card links are not presumed invalid.",
   "n03_status": "Đang làm",
@@ -32,8 +32,7 @@
     "ratio": 0.52,
     "achieved": 26.0
   },
-  "workbook_sha256_before": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
-  "workbook_sha256_after": "108220833e57ea9101af1d1e712c4ca868024153155fd326c6b17f4cb5e2b9a6",
-  "workbook_bytes_unchanged": true,
-  "scope": "Read-only Microsoft Excel 16.0 full recalculation of the public review-plan workbook; 18 formulas, 0 formula errors, 0 external links, and no byte changes. N01/N02/N03 notes match current API and linkage acceptance."
+  "workbook_sha256_before": "2eb5c3d41f1c71a244302e566236d868a58b6c23a12e5652b976dacc41f42b25",
+  "workbook_sha256_after": "2eb5c3d41f1c71a244302e566236d868a58b6c23a12e5652b976dacc41f42b25",
+  "workbook_bytes_unchanged": true
 }

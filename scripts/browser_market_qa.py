@@ -1,32 +1,50 @@
 """Actual-source P5 native-market and assumed-bond workflow acceptance."""
+import argparse
 import csv
 import json
 import re
+import sys
 import threading
 import uuid
 from datetime import date
 from http.server import ThreadingHTTPServer
+from pathlib import Path
 
 from playwright.sync_api import expect, sync_playwright
 from browser_navigation import navigate_workspace, select_task
 
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / 'src'))
+
 from credit_atlas.server import handler_for
 from credit_atlas.service import ResearchService
-from credit_atlas.workspace import app_root, timestamp, write_new
+from credit_atlas.workspace import timestamp, write_new
 
 expect.set_options(timeout=60000)
 
 
 def run(root):
+    root = Path(root).resolve()
+    if root.drive.upper() != 'D:':
+        raise ValueError('Private market workspace and browser receipts must remain on D:')
     output = root / 'artifacts/private' / ('market-browser-qa-' + uuid.uuid4().hex[:12])
     output.mkdir(parents=True)
     service = ResearchService(root, review_path=output / 'qa-reviews.sqlite3')
     valid = [row for row in service.market_views.catalog()['views'] if row['status'] == 'verified']
     if not valid:
         raise ValueError('Real market snapshot required')
-    identifier = valid[0]['view_id']
-    snapshot = service.market_views.view(identifier)
-    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service))
+    selected = None
+    for row in valid:
+        candidate = service.market_views.view(row['view_id'])
+        if any(leg['source_id'] == 'treasury-daily-par-yield'
+               for profile in candidate['profiles'] for leg in profile.get('source_legs', [])):
+            selected = (row, candidate)
+            break
+    if selected is None:
+        raise ValueError('Direct Treasury market snapshot required')
+    view_row, snapshot = selected
+    identifier = view_row['view_id']
+    server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(service, web_root=REPO / 'apps' / 'web'))
     worker = threading.Thread(target=server.serve_forever, daemon=True)
     worker.start()
     base = f'http://127.0.0.1:{server.server_port}'
@@ -40,11 +58,11 @@ def run(root):
             page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
             page.goto(base + '/?view=market&market_view_id=' + identifier, wait_until='networkidle')
             expect(page.locator('#active-module')).to_have_text('P5')
-            expect(page.locator('#context-note')).to_contain_text('46,675')
-            expect(page.locator('#readiness-badges')).to_contain_text('994 historical values quarantined')
-            expect(page.locator('#content')).to_contain_text('Ngày cuối có đủ ba kỳ hạn: 2026-10-06')
-            expect(page.locator('#content')).to_contain_text('4.79 / 5.27 / 5.64')
-            checks.append('actual 46675-observation/five-series context and same-date Treasury values')
+            expect(page.locator('#context-note')).to_contain_text('45,517')
+            expect(page.locator('#content')).to_contain_text('Ngày cuối có đủ ba kỳ hạn: 2026-10-16')
+            expect(page.locator('#content')).to_contain_text('4.74 / 5.09 / 5.43')
+            expect(page.locator('#content')).to_contain_text('direct publisher from 1990-01-02')
+            checks.append('receipt-bound 45,517-observation P5 view and same-date direct Treasury values/source role')
             for name in ('run-select', 'segment-select', 'basis-select'):
                 assert page.locator('#' + name).is_disabled()
             assert not page.locator('#content').get_by_text('Lưu finding từ view này').count()
@@ -78,8 +96,8 @@ def run(root):
             checks.append('private selected series export matches snapshot and raw CSV, with source rights')
             page.screenshot(path=str(output / 'market-desktop.png'))
             page.locator('.card').filter(has_text='Native series explorer').screenshot(path=str(output / 'market-native-desktop.png'))
-            # Test the actual historical discontinuation on calendar-scaled SVG,
-            # not just the source adapter's absence of imputed observations.
+            # Test that the publisher's 30Y discontinuation remains unavailable,
+            # never filled from FRED or bridged on the calendar-scaled SVG.
             page.get_by_label('Market series', exact=True).select_option('DGS30')
             page.get_by_label('Market from date', exact=True).fill('2001-01-01')
             page.get_by_label('Market to date', exact=True).fill('2007-01-01')
@@ -91,9 +109,11 @@ def run(root):
             before = [row for row in history_rows if row['value_percent'] is not None and date.fromisoformat(row['observation_date']) < middle]
             after = [row for row in history_rows if row['value_percent'] is not None and date.fromisoformat(row['observation_date']) > middle]
             assert before[-1]['observation_date'] == '2002-02-15' and after[0]['observation_date'] == '2006-02-09'
-            assert historical['quarantined_rows'] == 994
-            flagged = [row for row in history_rows if row['documented_discontinuation_conflict']]
-            assert all(row['source_value_percent'] is not None and row['value_percent'] is None for row in flagged)
+            gap = [row for row in history_rows if '2002-02-18' <= row['observation_date'] <= '2006-02-08']
+            assert len(gap) == 994
+            assert historical['quarantined_rows'] == 0
+            assert all(row['source_value_percent'] is None and row['value_percent'] is None
+                       and not row['documented_discontinuation_conflict'] for row in gap)
             first_date, last_date = (date.fromisoformat(history_rows[i]['observation_date']) for i in (0, -1))
             middle_x = 48 + (middle - first_date).days / (last_date - first_date).days * (680 - 48 - 18)
             path = page.locator('svg[aria-label="Native market observations in percent"] path').get_attribute('d')
@@ -107,7 +127,7 @@ def run(root):
                     assert not previous_x < middle_x < current_x, 'Chart connects across source discontinuation'
                 previous_x = current_x
             page.locator('.card').filter(has_text='Native series explorer').screenshot(path=str(output / 'dgs30-discontinuation.png'))
-            checks.append('994 documentation-conflict source values preserved but quarantined from calendar-scaled curve')
+            checks.append('994 native 30Y discontinuation dates remain missing, with no FRED fill or chart bridge')
             page.get_by_label('Market series', exact=True).select_option('BAMLC0A0CM')
             page.get_by_label('Market from date', exact=True).fill(query['from'])
             page.get_by_label('Market to date', exact=True).fill(query['to'])
@@ -150,7 +170,7 @@ def run(root):
             checks.append('P5 navigation back to actual independent P4/P2 contexts')
             page.route('**/api/runs', lambda route: route.fulfill(json={'runs': []}))
             page.goto(base + '/?view=market&market_view_id=' + identifier, wait_until='networkidle')
-            expect(page.locator('#context-note')).to_contain_text('46,675')
+            expect(page.locator('#context-note')).to_contain_text('45,517')
             select_task(page, 'Bond scenarios')
             expect(page.locator('#content')).to_contain_text('100.000000')
             checks.append('P5 usable without mortgage or retail runs')
@@ -172,4 +192,8 @@ def run(root):
 
 
 if __name__ == '__main__':
-    print(json.dumps(run(app_root()), indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--workspace', type=Path, required=True,
+                        help='Private CreditAtlas D: workspace with market source data')
+    args = parser.parse_args()
+    print(json.dumps(run(args.workspace), indent=2))

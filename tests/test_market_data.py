@@ -1,4 +1,5 @@
 from decimal import Decimal
+from hashlib import sha256 as hashlib_sha256
 import json
 
 import pyarrow.parquet as pq
@@ -39,6 +40,45 @@ def market_acquisition(tmp_path, monkeypatch):
     return tmp_path, identifier, source
 
 
+def treasury_source_run(root):
+    run_id = 'treasury-par-yield-20261017T210946Z-aaaaaaaa'
+    folder = root / 'data/private/market-context/treasury-par-yields' / run_id
+    folder.mkdir(parents=True)
+    files, sources = [], []
+    for period in ('1990-2023', '2026'):
+        name = 'treasury-par-yields-' + period + '.csv'
+        path = folder / name
+        path.write_text('fixture official Treasury source partition\n')
+        digest = hashlib_sha256(path.read_bytes()).hexdigest()
+        files.append({'file': name, 'sha256': digest, 'bytes': path.stat().st_size})
+        sources.append({'source_id': 'treasury-daily-par-yield-' + period,
+            'source_page_url': 'https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives',
+            'source_object_url': 'https://home.treasury.gov/system/test.csv', 'file': name,
+            'sha256': digest, 'bytes': path.stat().st_size, 'row_count': 1,
+            'first_date': '1990-01-02', 'last_date': '2026-01-06'})
+    normalized = folder / 'normalized-treasury-par-yields.csv'
+    normalized.write_text(
+        'observation_date,TREASURY2Y,TREASURY10Y,TREASURY30Y\n'
+        '2026-01-02,2.00,3.25,4.00\n'
+        '2026-01-05,,3.50,\n'
+        '2026-01-06,2.10,,4.30\n')
+    normalized_digest = hashlib_sha256(normalized.read_bytes()).hexdigest()
+    files.append({'file': normalized.name, 'sha256': normalized_digest, 'bytes': normalized.stat().st_size})
+    receipt = {
+        'schema_version': 1, 'run_id': run_id, 'status': 'DOWNLOADED_AND_AUDITED',
+        'visibility': 'private', 'public_release_approved': False, 'model_qualified': False,
+        'retrieved_at_utc': timestamp(), 'acquisition_method_sha256': market_data.methods()['acquire_treasury_par_yields'],
+        'source_files': sources, 'normalized_file': {'file': normalized.name,
+            'sha256': normalized_digest, 'bytes': normalized.stat().st_size},
+        'native_rows': 3, 'first_date': '2026-01-02', 'last_date': '2026-01-06', 'files': files,
+        'fred_overlap_comparisons': {
+            key: {'exact_value_mismatches': 0, 'exact_match_rate_when_both_known': 1.0}
+            for key in ('2YR', '10YR', '30YR')},
+    }
+    (folder / 'acquisition-audit.json').write_text(json.dumps(receipt))
+    return run_id
+
+
 def test_actual_adapter_native_alignment_and_monthly_scope(market_acquisition):
     root, identifier, _ = market_acquisition
     result = market_data.prepare_market(root, identifier)
@@ -60,6 +100,36 @@ def test_actual_adapter_native_alignment_and_monthly_scope(market_acquisition):
     dgs10 = next(row for row in monthly if row['series'] == 'DGS10')
     assert dgs10['last_known_date'].isoformat() == '2026-01-05' and dgs10['last_known_percent'] == Decimal('3.5')
     assert dgs10['known_rows'] == 2 and dgs10['missing_rows'] == 1
+
+
+def test_receipt_bound_treasury_route_is_primary_after_1990_and_preserves_row_lineage(market_acquisition):
+    root, suite_id, source = market_acquisition
+    fred_path = source / 'fred-dgs2.csv'
+    fred_path.write_text(fred_path.read_text().replace(
+        'observation_date,DGS2\n', 'observation_date,DGS2\n1989-12-29,7.90\n'))
+    batch_path = source / 'acquisition-complete.json'
+    batch = json.loads(batch_path.read_text())
+    fred_item = next(row for row in batch['sources'] if row['source_id'] == 'fred-dgs2')
+    fred_item.update(sha256=sha256(fred_path), bytes=fred_path.stat().st_size,
+                     profile=profile(fred_path, fred_item))
+    batch_path.write_text(json.dumps(batch))
+    (source / 'fred-dgs2-receipt.json').write_text(json.dumps(fred_item))
+    treasury_run = treasury_source_run(root)
+    result = market_data.prepare_market(root, suite_id, treasury_run)
+    folder, receipt = market_data.verify_market(root, result['case_id'])
+    assert receipt['treasury_run_id'] == treasury_run
+    assert receipt['historical_treasury_semantics_qualified'] is False
+    assert all(row['differing_rows'] == 0 for row in receipt['independent_reconciliations'])
+    facts = pq.read_table(folder / 'native-observations.parquet').to_pylist()
+    dgs2 = [row for row in facts if row['series'] == 'DGS2']
+    assert len(dgs2) == 4
+    pre_1990 = next(row for row in dgs2 if row['observation_date'].isoformat() == '1989-12-29')
+    assert pre_1990['source_id'] == 'fred-dgs2' and pre_1990['source_value_percent'] == Decimal('7.9')
+    direct = [row for row in dgs2 if row['observation_date'].isoformat() >= '1990-01-02']
+    assert len(direct) == 3 and {row['source_id'] for row in direct} == {'treasury-daily-par-yield'}
+    assert all(row['source_sha256'] == receipt['treasury_direct_source']['normalized_sha256'] for row in direct)
+    dgs30 = [row for row in facts if row['series'] == 'DGS30']
+    assert next(row for row in dgs30 if row['observation_date'].isoformat() == '2026-01-05')['value_percent'] is None
 
 
 def test_modified_market_raw_and_output_rejected(market_acquisition):

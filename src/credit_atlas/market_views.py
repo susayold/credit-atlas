@@ -117,7 +117,7 @@ class MarketViews:
         with duckdb.connect() as con:
             con.read_parquet(str(folder / 'native-observations.parquet')).create_view('native')
             rows = con.execute('''SELECT observation_date, source_value_percent, value_percent, source_value,
-                documented_discontinuation_conflict FROM native
+                documented_discontinuation_conflict, source_id, source_sha256 FROM native
                 WHERE series=? AND observation_date BETWEEN ? AND ? ORDER BY observation_date''',
                 [query['series'], first, last]).to_arrow_table().to_pylist()
         self.view(identifier)

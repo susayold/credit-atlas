@@ -2,18 +2,18 @@
   "schema_version": 1,
   "as_of": "2026-10-18",
   "reviewed_public_commit": "7cdbde31fbe8a00d7677542c66eef4ccaf695e33",
-  "scope_note": "N02 review maps 29 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 24 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion. On 2026-10-18, one explicit macro-market group was added for seven FRED catalog series and three ALFRED vintage records; the 27 original parent groups and 50-item capability ledger remain unchanged in meaning. On 2026-10-18, direct FHFA U.S./Census-divisions HPI was added under its own group after 206/206 exact quarterly parity with the local FRED USSTHPI snapshot; it remains latest-release context without a historical vintage. On 2026-10-18, direct BLS UNRATE was added to the existing macro group after exact 945/945 monthly Decimal parity with the receipt-bound FRED comparator; D01 now uses BLS direct and preserves the official 2025-10 missing observation.",
+  "scope_note": "N02 review maps 30 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 25 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion. On 2026-10-18, one explicit macro-market group was added for seven FRED catalog series and three ALFRED vintage records; the 27 original parent groups and 50-item capability ledger remain unchanged in meaning. On 2026-10-18, direct FHFA U.S./Census-divisions HPI was added under its own group after 206/206 exact quarterly parity with the local FRED USSTHPI snapshot; it remains latest-release context without a historical vintage. On 2026-10-18, direct Treasury daily par yields (1990–2026) were added as a P5 source group after exact Treasury/FRED overlap checks; direct BLS UNRATE was added to the existing macro group after exact 945/945 monthly Decimal parity with the receipt-bound FRED comparator; D01 now uses BLS direct and preserves the official 2025-10 missing observation.",
   "counts": {
-    "registered_dataset_domain_records": 29,
-    "mapped_registry_records": 29,
+    "registered_dataset_domain_records": 30,
+    "mapped_registry_records": 30,
     "source_catalog_ids": 20,
     "source_catalog_ids_with_parent_record": 20,
     "source_catalog_ids_without_parent_record": 0,
     "unregistered_or_underregistered_source_families": 8,
     "source_catalog_ids_receipt_matched": 20,
-    "source_level_records": 105,
-    "supplemental_source_records": 105,
-    "registry_groups_with_source_objects": 24,
+    "source_level_records": 109,
+    "supplemental_source_records": 109,
+    "registry_groups_with_source_objects": 25,
     "registry_groups_without_source_objects": 5,
     "registry_groups_with_explicit_disposition": 5,
     "disposition_private_source_or_input_present": 1,
@@ -794,6 +794,19 @@
           "limitations": "Latest FHFA snapshot only. Exact 206/206 parity to the local FRED USSTHPI snapshot does not create historical vintage or publication timestamps, does not authorize every downstream use, and does not qualify a model feature. FHFA-only acquisition, verified reuse of the existing FRED UNRATE/PMMS snapshots, D01 macro-context rebuild, API/JSON byte parity and browser read-path smoke passed. A full foundation rebuild from raw D01 mortgage sample remains unrun."
         }
       ]
+    },
+    {
+      "registry_id": "treasury-direct-par-yield-curve",
+      "source_release_record_ids": [
+        "treasury-par-yield-1990-2023",
+        "treasury-par-yield-2024",
+        "treasury-par-yield-2025",
+        "treasury-par-yield-2026"
+      ],
+      "code_and_consumer": "`scripts/acquire_treasury_par_yields.py` → receipt-bound private source partitions; `src/credit_atlas/market_data.py` → Treasury primary from 1990 plus FRED pre-1990 extension → `market_views.py` → `/api/market-view` and `/api/market-report` → P5 Market & Bond UI/JSON export.",
+      "kpi_or_output": "Daily Treasury 2Y/10Y/30Y CMT context; same-date 10Y–2Y and 30Y–10Y slopes where both tenor values exist; descriptive only.",
+      "status_and_limits": "9,205 direct Treasury rows (1990-01-02–2026-10-16); 9,197/9,197 exact 2Y and 10Y overlap, 8,203/8,203 exact 30Y observed overlap; seven Treasury native dates post-date the FRED snapshot. Treasury 30Y is missing during the official 2002-02-18–2006-02-08 discontinuation, not filled from 20Y; current P5 view/report UI and JSON export pass 13 Edge checks; data stay latest-revised and private; recurring refresh, rights/rehosting and model calibration remain open.",
+      "evidence_type": "direct_publisher_private_receipt_exact_overlap_and_p5_case"
     }
   ],
   "unregistered_or_underregistered_source_families": [
@@ -849,13 +862,14 @@
   ],
   "source_release_register": {
     "path": "docs/data/creditatlas-source-release-register-2026-10-17.json",
-    "record_count": 125,
+    "record_count": 129,
     "receipt_bound_public_source_ids": 20,
-    "supplemental_source_families": 17,
-    "note": "20 public-suite objects plus 105 supplemental source objects across 17 broad families. This includes 22 World Bank WDI objects, 12 HMDA files, 9 FHFA PUDB/NMDB/NSMO objects, 5 LendingClub/Bondora objects, 22 Treasury HAMP objects, 12 BoC–BoE Sovereign Archive objects, 7 receipt-bound SEC auto-ABS filing sets, three issuer-hosted artifacts for one Apple FY2025 SEC accession, one private Freddie 2012 cohort bound to a local receipt but not publisher-authenticated, and separate HUD/Fed/FHFA/Fannie records. Publication, observation, received and retrieval dates remain distinct; raw private payloads and full hashes are not published. The direct FHFA U.S./Census-divisions HPI is the added 18th-Oct source object within the existing FHFA HPI family; its USA series exactly matches 206/206 quarters of the local FRED snapshot. The direct BLS LNS14000000 snapshot is the added 18-Oct object within the existing macro-context family; its exact 945/945 comparison and private D01 integration do not create historical vintages or model qualification.",
-    "supplemental_source_records": 105,
+    "supplemental_source_families": 18,
+    "note": "129 source records: 20 public-suite objects and 109 supplemental objects across 18 broad families, including the direct U.S. Treasury daily par-yield curve partitions 1990–2026. Concrete records stay edition/grain-specific. This register binds provenance and does not itself complete rights, model, route or capability acceptance. Raw restricted/uncleared payloads remain private. HMDA exact/cross-vintage, BLS/FHFA parity, Treasury direct parity and remaining family-specific limitations are recorded in their source reviews.",
+    "supplemental_source_records": 109,
     "macro_market_group_added": "fred-alfred-macro-market-context",
-    "fhfa_hpi_group_added": "fhfa-hpi-geographic-context"
+    "fhfa_hpi_group_added": "fhfa-hpi-geographic-context",
+    "treasury_direct_group_added": "treasury-direct-par-yield-curve"
   },
   "supplemental_source_record_crosswalk": [
     {
@@ -1735,6 +1749,38 @@
       "source_family": "Direct BLS CPS unemployment rate",
       "current_use_status": "Direct public-domain BLS snapshot integrated into private D01 descriptive macro context; cite BLS; not historical PIT or model-qualified.",
       "note": "945 monthly rows, 1948-01 through 2026-09; exact Decimal parity with local FRED snapshot on 945/945 months. One source-reported null at 2025-10 (shutdown; BLS footnote 9), kept missing. Annual seasonal revisions apply; candidate receipt/data remain private under local receipt ID."
+    },
+    {
+      "source_release_record_id": "treasury-par-yield-1990-2023",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year",
+      "source_family": "Direct U.S. Treasury daily par yield curve",
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "note": "CSV partition 1990-2023; 8507 native rows, 1990-01-02–2023-12-29; 997 blank tenor cells retained. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors."
+    },
+    {
+      "source_release_record_id": "treasury-par-yield-2024",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year",
+      "source_family": "Direct U.S. Treasury daily par yield curve",
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "note": "CSV partition 2024; 250 native rows, 2024-01-02–2024-12-31; 0 blank tenor cells retained. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors."
+    },
+    {
+      "source_release_record_id": "treasury-par-yield-2025",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year",
+      "source_family": "Direct U.S. Treasury daily par yield curve",
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "note": "CSV partition 2025; 249 native rows, 2025-01-02–2025-12-31; 0 blank tenor cells retained. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors."
+    },
+    {
+      "source_release_record_id": "treasury-par-yield-2026",
+      "publisher": "U.S. Department of the Treasury",
+      "source_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year",
+      "source_family": "Direct U.S. Treasury daily par yield curve",
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "note": "CSV partition 2026; 199 native rows, 2026-01-02–2026-10-16; 0 blank tenor cells retained. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors."
     }
   ],
   "source_group_dispositions": [

@@ -178,9 +178,11 @@ def main() -> None:
     source_register["source_records"] = [row for row in source_register["source_records"] if row["source_id"] not in ids] + records
     source_register["record_count"] = len(source_register["source_records"])
     source_register["supplemental_source_records"] = source_register["record_count"] - 20
+    family_count = len({row["source_family"] for row in source_register["source_records"]
+                        if row.get("source_family")})
     source_register["scope_note"] = (
         f"{source_register['record_count']} source records: 20 public-suite objects and "
-        f"{source_register['record_count'] - 20} supplemental objects across 17 broad families, including "
+        f"{source_register['record_count'] - 20} supplemental objects across {family_count} broad families, including "
         "receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. "
         "Concrete records stay edition/grain-specific; raw private payloads and full hashes are not published. "
         "Source registration does not by itself complete rights, route, debt-service, or capability acceptance."
@@ -188,13 +190,14 @@ def main() -> None:
 
     crosswalk_rows = trace_map["supplemental_source_record_crosswalk"]
     crosswalk_rows = [row for row in crosswalk_rows if row["source_release_record_id"] not in ids] + crosswalk
+    family_count = len({row["source_family"] for row in crosswalk_rows if row.get("source_family")})
     trace_map["supplemental_source_record_crosswalk"] = crosswalk_rows
     trace_map["source_release_register"].update({
         "record_count": len(source_register["source_records"]),
         "supplemental_source_records": len(crosswalk_rows),
-        "supplemental_source_families": 17,
+        "supplemental_source_families": family_count,
         "note": (
-            f"20 public-suite objects plus {len(crosswalk_rows)} supplemental objects across 17 broad families. "
+            f"20 public-suite objects plus {len(crosswalk_rows)} supplemental objects across {family_count} broad families. "
             "The SEC EDGAR family includes 7 auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. "
             "Freddie 2012 is bound to a local private receipt but not publisher-authenticated. "
             "Publication, observation, received and retrieval dates remain distinct; raw private payloads and full hashes are not published."
@@ -277,7 +280,7 @@ def main() -> None:
     n02["status"] = f"In progress: {len(source_register['source_records'])}-record source register; one Apple FY2025 filing bound through three issuer-hosted artifacts; Freddie release and terms unresolved."
     n02["scope"] = (
         f"{group_count} dataset/domain groups traced; {len(source_register['source_records'])} source records "
-        f"(20 public-suite +{len(crosswalk_rows)} supplemental across 17 broad families); 7 SEC auto-ABS filing-set records plus three Apple artifacts for one accession. "
+        f"(20 public-suite +{len(crosswalk_rows)} supplemental across {family_count} broad families); 7 SEC auto-ABS filing-set records plus three Apple artifacts for one accession. "
         f"{bound_groups}/{group_count} groups have source objects; {len(remaining)} retain explicit dispositions. Freddie 2012 remains local/private and release-unauthenticated. "
         "Apple issuer copy bytes are not identical in size to SEC-hosted objects, so byte parity remains unverified."
     )

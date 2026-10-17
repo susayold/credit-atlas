@@ -1,6 +1,55 @@
 # P5 — Market Context & Bond Scenario Lab
 
-09/10/2026. Current case `market-case-1f4a60893d6c`, snapshot
+## Trạng thái hiện tại — cập nhật 18/10/2026
+
+P5 đã chuyển Treasury Daily Par Yield Curve sang nguồn Treasury trực tiếp từ
+1990-01-02; FRED DGS2/DGS10/DGS30 chỉ còn làm historical extension trước mốc
+đó và comparator. Case hiện tại là
+`market-case-85942aa82d1a` → view `market-view-8af362feebc9`, được lưu private
+và khóa bằng source receipt/hash. Có **45.517 native facts**, **16.555 ngày
+aligned**, Treasury mới nhất đến 2026-10-16; 2Y/10Y/30Y là 4,74/5,09/5,43%,
+với same-date slopes 35bp và 34bp. OAS vẫn qua FRED đến 2026-10-07 và PMMS
+đến 2026-10-08; không giả định các series cùng ngày cập nhật.
+
+| Series | Native rows | Usable | Missing | Quarantined | Ngày cuối usable |
+|---|---:|---:|---:|---:|---|
+| DGS2 / Treasury 2Y | 12.750 | 12.591 | 159 | 0 | 2026-10-16 |
+| DGS10 / Treasury 10Y | 16.510 | 16.183 | 327 | 0 | 2026-10-16 |
+| DGS30 / Treasury 30Y | 12.565 | 11.419 | 1.146 | 0 | 2026-10-16 |
+| BAMLC0A0CM / ICE OAS | 794 | 785 | 9 | 0 | 2026-10-07 |
+| MORTGAGE30US / PMMS | 2.898 | 2.898 | 0 | 0 | 2026-10-08 |
+
+Treasury archive 1990–2023 cùng yearly CSV 2024–2026 có tổng **9.205 ngày
+native**. Treasury/FRED common-known parity: 2Y **9.197/9.197**, 10Y
+**9.197/9.197**, 30Y **8.203/8.203**. Treasury 30Y giữ **994 ngày** missing
+trong giai đoạn publisher discontinuation; thêm ngày 2010-10-11 cả ba tenor
+cùng thiếu. 994 giá trị của FRED comparator trong discontinuation window
+không được đưa vào P5, không thay bằng 20Y, không nội suy.
+
+Trong P5 market report, mỗi observation giữ `source_id` và `source_sha256`;
+UI hiện source leg và mốc source switch, export JSON khớp report API. Các
+receipt nguyên thủy, normalized source data và output vẫn ở private D:.
+Treasury describes these as indicative-bid-derived constant-maturity par
+yields, not executable security quotes or a zero curve; methodology changed
+on 2021-12-06. [Treasury source/method review](TREASURY_DIRECT_PAR_YIELD_SOURCE_REVIEW_VI.md),
+[official archives](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives),
+[daily rates](https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve),
+[yield-curve methodology](https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/treasury-yield-curve-methodology).
+
+Focused tests **38/38 PASS**, project-register API/runtime **13 checks PASS**,
+and current full P5 Edge acceptance **13 checks PASS**; the direct Treasury
+browser/export smoke adds 5 checks. The current full browser receipt is
+`market-browser-qa-fa1573a93a95`; the direct-source receipt is
+`treasury-browser-qa-38a5e574809a` (both stored in the private workspace).
+Recurring refresh acceptance, distribution rights and model qualification
+remain open. The project ledger stays **26/50 (52%)**.
+
+The dated case, profiles and FRED DGS30 conflict investigation below are
+historical baseline evidence from 09/10/2026, not the current Treasury-primary
+case. The old FRED conflict remains contained to the comparator; current P5
+uses Treasury's documented discontinuation window as true missingness.
+
+Historical baseline 09/10/2026. Case `market-case-1f4a60893d6c`, snapshot
 `market-view-171f41206767`; source batch `suite-619b1ee9aa8c`.
 Đây là market-context/assumed-bond slice, chưa là actual ABS/deal/CDS system.
 
@@ -140,7 +189,7 @@ DV01 **$0,064632**. Export có full assumed terms/conventions/schedule/shocks,
 
 ## App, commands và phần còn thiếu
 
-http://127.0.0.1:8770/?view=market&market_view_id=market-view-171f41206767
+http://127.0.0.1:8770/?view=market&market_view_id=market-view-8af362feebc9
 
 Series/date explorer, native-date chart, source quality, last60-row preview,
 full selected-series export, bond workbench và separate scenario export.
@@ -157,10 +206,12 @@ URL/mobile/no mortgage dependency/navigation và browser errors. Screenshots
 đã xem gồm desktop/mobile, native context, bond và reviewed DGS30 gap.
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/prepare_market.py --suite suite-619b1ee9aa8c
-.\.venv\Scripts\python.exe scripts/build_market_view.py --case market-case-1f4a60893d6c
+$workspace = 'D:\path\to\private-credit-atlas-workspace'
+.\.venv\Scripts\python.exe scripts/prepare_market.py --workspace $workspace --suite suite-619b1ee9aa8c --treasury-run treasury-par-yield-20261017T213708Z-ac15a82d
+.\.venv\Scripts\python.exe scripts/build_market_view.py --workspace $workspace --case market-case-85942aa82d1a
 .\.venv\Scripts\python.exe scripts/audit_bond_numerics.py
-.\.venv\Scripts\python.exe -X utf8 scripts/browser_market_qa.py
+.\.venv\Scripts\python.exe -X utf8 scripts/browser_market_qa.py --workspace $workspace
+.\.venv\Scripts\python.exe -X utf8 scripts/browser_treasury_direct_qa.py --workspace $workspace
 .\scripts\test.ps1
 ```
 

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-18",
-  "scope_note": "125 source records: 20 public-suite objects and 105 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved. Direct FHFA U.S./Census-divisions All-Transactions HPI was added on 2026-10-18 after 206/206 exact quarterly parity against the private FRED USSTHPI snapshot; no historical vintage was established. Direct BLS CPS unemployment series LNS14000000 was added on 2026-10-18 after exact 945/945 monthly parity with the legacy FRED UNRATE snapshot; BLS now supplies the D01 descriptive macro route, while the FRED object remains private comparator provenance. October 2025 is a source-reported missing month, not imputed; BLS latest-revised data are not historical point-in-time vintages.",
-  "record_count": 125,
+  "scope_note": "129 source records: 20 public-suite objects and 109 supplemental objects across 18 broad families, including the direct U.S. Treasury daily par-yield curve partitions 1990–2026. Concrete records stay edition/grain-specific. This register binds provenance and does not itself complete rights, model, route or capability acceptance. Raw restricted/uncleared payloads remain private. HMDA exact/cross-vintage, BLS/FHFA parity, Treasury direct parity and remaining family-specific limitations are recorded in their source reviews.",
+  "record_count": 129,
   "source_records": [
     {
       "source_id": "bondora-public-loan-dataset-investor-xlsx",
@@ -6166,7 +6166,215 @@
       ],
       "current_use_status": "Direct BLS series is integrated into the private D01 latest-release context with attribution. It may be used as descriptive macro context; it is not PIT evidence or a model-qualified predictor. Keep 2025-10 null and record annual revisions.",
       "source_series_id": "LNS14000000"
+    },
+    {
+      "source_id": "treasury-par-yield-1990-2023",
+      "registry_group_id": "treasury-direct-par-yield-curve",
+      "publisher": "U.S. Department of the Treasury",
+      "publisher_page_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives",
+      "source_object_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives/par-yield-curve-rates-1990-2023.csv",
+      "format": "CSV; official Treasury daily par-yield curve",
+      "release_label": "Daily Treasury par yield curve; source partition 1990-2023",
+      "publisher_publication_date": null,
+      "publication_date_status": "No release timestamp is embedded per row; retrieval time and last observed market date are recorded separately.",
+      "snapshot_as_of": "2023-12-29",
+      "observed_period_start": "1990-01-02",
+      "observed_period_end": "2023-12-29",
+      "native_row_count": 8507,
+      "grain": "U.S. market observation date × Treasury par-curve maturity; source values are percent and remain at daily native dates.",
+      "modules": [
+        "P5"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_treasury_par_yields.py → private raw partitions, normalized native-date CSV, acquisition-audit.json and exact FRED comparator.",
+        "scripts/prepare_market.py --treasury-run → src/credit_atlas/market_data.py; Treasury 2Y/10Y/30Y is primary from 1990-01-02; FRED is retained only for the pre-1990 extension and comparator.",
+        "src/credit_atlas/market_views.py → /api/market-view and /api/market-report; row-level source_id/source_sha256 are returned for private inspection/export."
+      ],
+      "kpi_or_output": "Daily 2Y/10Y/30Y Treasury constant-maturity par-yield context and same-date slope calculations; not a zero curve, executable quote, security price, borrower outcome, or qualified PD predictor.",
+      "method_card_ids": [],
+      "rights_use_gate": "Official Treasury CSV is publicly accessible. The reviewed Treasury pages describe source/method and provide downloads but did not establish a separate raw-data redistribution grant for this project; raw data and outputs remain private, no public rehosting approval is recorded, and no model use is qualified.",
+      "rights_review_status": "DIRECT_TREASURY_PUBLIC_DOWNLOAD; PRIVATE_RAW; PUBLIC_RAW_REHOSTING_UNAPPROVED; NO_MODEL_QUALIFICATION",
+      "receipt_status": "DOWNLOADED_AND_VALIDATED; partition 1990-2023; Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors.",
+      "retrieved_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_completed_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_reference": "local-private-id:treasury-par-yield-20261017T213708Z-ac15a82d",
+      "sha256_prefix": "004461bcf87e",
+      "component_sha256_prefixes": {
+        "normalized_three_tenor_panel": "d5dba1a7ef30"
+      },
+      "missing_cell_count": 997,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "8507 source-native rows from 1990-01-02 to 2023-12-29; 997 blank cells across 2Y/10Y/30Y are retained as missing. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors. The 2021-12-06 methodology break and the 30Y 2002–2006 discontinuation remain explicit. Latest-revised snapshot only, not PIT.",
+      "missing_cell_count_basis": "Number of blank cells in the three normalized native tenor columns for this source partition; source blanks remain null and are never imputed.",
+      "distributor": null,
+      "distributor_url": null,
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/treasury-yield-curve-methodology",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/interest-rates-frequently-asked-questions"
+      ],
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "source_series_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year"
+    },
+    {
+      "source_id": "treasury-par-yield-2024",
+      "registry_group_id": "treasury-direct-par-yield-curve",
+      "publisher": "U.S. Department of the Treasury",
+      "publisher_page_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2024&type=daily_treasury_yield_curve",
+      "source_object_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2024/all?type=daily_treasury_yield_curve&field_tdr_date_value=2024&page=&_format=csv",
+      "format": "CSV; official Treasury daily par-yield curve",
+      "release_label": "Daily Treasury par yield curve; source partition 2024",
+      "publisher_publication_date": null,
+      "publication_date_status": "No release timestamp is embedded per row; retrieval time and last observed market date are recorded separately.",
+      "snapshot_as_of": "2024-12-31",
+      "observed_period_start": "2024-01-02",
+      "observed_period_end": "2024-12-31",
+      "native_row_count": 250,
+      "grain": "U.S. market observation date × Treasury par-curve maturity; source values are percent and remain at daily native dates.",
+      "modules": [
+        "P5"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_treasury_par_yields.py → private raw partitions, normalized native-date CSV, acquisition-audit.json and exact FRED comparator.",
+        "scripts/prepare_market.py --treasury-run → src/credit_atlas/market_data.py; Treasury 2Y/10Y/30Y is primary from 1990-01-02; FRED is retained only for the pre-1990 extension and comparator.",
+        "src/credit_atlas/market_views.py → /api/market-view and /api/market-report; row-level source_id/source_sha256 are returned for private inspection/export."
+      ],
+      "kpi_or_output": "Daily 2Y/10Y/30Y Treasury constant-maturity par-yield context and same-date slope calculations; not a zero curve, executable quote, security price, borrower outcome, or qualified PD predictor.",
+      "method_card_ids": [],
+      "rights_use_gate": "Official Treasury CSV is publicly accessible. The reviewed Treasury pages describe source/method and provide downloads but did not establish a separate raw-data redistribution grant for this project; raw data and outputs remain private, no public rehosting approval is recorded, and no model use is qualified.",
+      "rights_review_status": "DIRECT_TREASURY_PUBLIC_DOWNLOAD; PRIVATE_RAW; PUBLIC_RAW_REHOSTING_UNAPPROVED; NO_MODEL_QUALIFICATION",
+      "receipt_status": "DOWNLOADED_AND_VALIDATED; partition 2024; Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors.",
+      "retrieved_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_completed_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_reference": "local-private-id:treasury-par-yield-20261017T213708Z-ac15a82d",
+      "sha256_prefix": "6775840b76cd",
+      "component_sha256_prefixes": {
+        "normalized_three_tenor_panel": "d5dba1a7ef30"
+      },
+      "missing_cell_count": 0,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "250 source-native rows from 2024-01-02 to 2024-12-31; 0 blank cells across 2Y/10Y/30Y are retained as missing. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors. The 2021-12-06 methodology break and the 30Y 2002–2006 discontinuation remain explicit. Latest-revised snapshot only, not PIT.",
+      "missing_cell_count_basis": "Number of blank cells in the three normalized native tenor columns for this source partition; source blanks remain null and are never imputed.",
+      "distributor": null,
+      "distributor_url": null,
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2024&type=daily_treasury_yield_curve",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/treasury-yield-curve-methodology",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/interest-rates-frequently-asked-questions"
+      ],
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "source_series_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year"
+    },
+    {
+      "source_id": "treasury-par-yield-2025",
+      "registry_group_id": "treasury-direct-par-yield-curve",
+      "publisher": "U.S. Department of the Treasury",
+      "publisher_page_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2025&type=daily_treasury_yield_curve",
+      "source_object_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2025/all?type=daily_treasury_yield_curve&field_tdr_date_value=2025&page=&_format=csv",
+      "format": "CSV; official Treasury daily par-yield curve",
+      "release_label": "Daily Treasury par yield curve; source partition 2025",
+      "publisher_publication_date": null,
+      "publication_date_status": "No release timestamp is embedded per row; retrieval time and last observed market date are recorded separately.",
+      "snapshot_as_of": "2025-12-31",
+      "observed_period_start": "2025-01-02",
+      "observed_period_end": "2025-12-31",
+      "native_row_count": 249,
+      "grain": "U.S. market observation date × Treasury par-curve maturity; source values are percent and remain at daily native dates.",
+      "modules": [
+        "P5"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_treasury_par_yields.py → private raw partitions, normalized native-date CSV, acquisition-audit.json and exact FRED comparator.",
+        "scripts/prepare_market.py --treasury-run → src/credit_atlas/market_data.py; Treasury 2Y/10Y/30Y is primary from 1990-01-02; FRED is retained only for the pre-1990 extension and comparator.",
+        "src/credit_atlas/market_views.py → /api/market-view and /api/market-report; row-level source_id/source_sha256 are returned for private inspection/export."
+      ],
+      "kpi_or_output": "Daily 2Y/10Y/30Y Treasury constant-maturity par-yield context and same-date slope calculations; not a zero curve, executable quote, security price, borrower outcome, or qualified PD predictor.",
+      "method_card_ids": [],
+      "rights_use_gate": "Official Treasury CSV is publicly accessible. The reviewed Treasury pages describe source/method and provide downloads but did not establish a separate raw-data redistribution grant for this project; raw data and outputs remain private, no public rehosting approval is recorded, and no model use is qualified.",
+      "rights_review_status": "DIRECT_TREASURY_PUBLIC_DOWNLOAD; PRIVATE_RAW; PUBLIC_RAW_REHOSTING_UNAPPROVED; NO_MODEL_QUALIFICATION",
+      "receipt_status": "DOWNLOADED_AND_VALIDATED; partition 2025; Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors.",
+      "retrieved_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_completed_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_reference": "local-private-id:treasury-par-yield-20261017T213708Z-ac15a82d",
+      "sha256_prefix": "cf2fa3da7f16",
+      "component_sha256_prefixes": {
+        "normalized_three_tenor_panel": "d5dba1a7ef30"
+      },
+      "missing_cell_count": 0,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "249 source-native rows from 2025-01-02 to 2025-12-31; 0 blank cells across 2Y/10Y/30Y are retained as missing. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors. The 2021-12-06 methodology break and the 30Y 2002–2006 discontinuation remain explicit. Latest-revised snapshot only, not PIT.",
+      "missing_cell_count_basis": "Number of blank cells in the three normalized native tenor columns for this source partition; source blanks remain null and are never imputed.",
+      "distributor": null,
+      "distributor_url": null,
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2025&type=daily_treasury_yield_curve",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/treasury-yield-curve-methodology",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/interest-rates-frequently-asked-questions"
+      ],
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "source_series_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year"
+    },
+    {
+      "source_id": "treasury-par-yield-2026",
+      "registry_group_id": "treasury-direct-par-yield-curve",
+      "publisher": "U.S. Department of the Treasury",
+      "publisher_page_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+      "source_object_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?type=daily_treasury_yield_curve&field_tdr_date_value=2026&page=&_format=csv",
+      "format": "CSV; official Treasury daily par-yield curve",
+      "release_label": "Daily Treasury par yield curve; source partition 2026",
+      "publisher_publication_date": null,
+      "publication_date_status": "No release timestamp is embedded per row; retrieval time and last observed market date are recorded separately.",
+      "snapshot_as_of": "2026-10-16",
+      "observed_period_start": "2026-01-02",
+      "observed_period_end": "2026-10-16",
+      "native_row_count": 199,
+      "grain": "U.S. market observation date × Treasury par-curve maturity; source values are percent and remain at daily native dates.",
+      "modules": [
+        "P5"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_treasury_par_yields.py → private raw partitions, normalized native-date CSV, acquisition-audit.json and exact FRED comparator.",
+        "scripts/prepare_market.py --treasury-run → src/credit_atlas/market_data.py; Treasury 2Y/10Y/30Y is primary from 1990-01-02; FRED is retained only for the pre-1990 extension and comparator.",
+        "src/credit_atlas/market_views.py → /api/market-view and /api/market-report; row-level source_id/source_sha256 are returned for private inspection/export."
+      ],
+      "kpi_or_output": "Daily 2Y/10Y/30Y Treasury constant-maturity par-yield context and same-date slope calculations; not a zero curve, executable quote, security price, borrower outcome, or qualified PD predictor.",
+      "method_card_ids": [],
+      "rights_use_gate": "Official Treasury CSV is publicly accessible. The reviewed Treasury pages describe source/method and provide downloads but did not establish a separate raw-data redistribution grant for this project; raw data and outputs remain private, no public rehosting approval is recorded, and no model use is qualified.",
+      "rights_review_status": "DIRECT_TREASURY_PUBLIC_DOWNLOAD; PRIVATE_RAW; PUBLIC_RAW_REHOSTING_UNAPPROVED; NO_MODEL_QUALIFICATION",
+      "receipt_status": "DOWNLOADED_AND_VALIDATED; partition 2026; Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors.",
+      "retrieved_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_completed_at_utc": "2026-10-17T21:37:11.350756+00:00",
+      "receipt_reference": "local-private-id:treasury-par-yield-20261017T213708Z-ac15a82d",
+      "sha256_prefix": "b06702248327",
+      "component_sha256_prefixes": {
+        "normalized_three_tenor_panel": "d5dba1a7ef30"
+      },
+      "missing_cell_count": 0,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "199 source-native rows from 2026-01-02 to 2026-10-16; 0 blank cells across 2Y/10Y/30Y are retained as missing. Treasury/FRED exact snapshot parity for all overlapping known values: 2Y and 10Y 9,197/9,197; 30Y 8,203/8,203. FRED ends 2026-10-06; Treasury adds seven later native dates through 2026-10-16. Treasury 30Y is null for 994 native dates inside its documented discontinuation window; 994 FRED values in that overlap are excluded from the direct P5 route. One separate common missing date is 2010-10-11 across all three tenors. The 2021-12-06 methodology break and the 30Y 2002–2006 discontinuation remain explicit. Latest-revised snapshot only, not PIT.",
+      "missing_cell_count_basis": "Number of blank cells in the three normalized native tenor columns for this source partition; source blanks remain null and are never imputed.",
+      "distributor": null,
+      "distributor_url": null,
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics",
+        "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/treasury-yield-curve-methodology",
+        "https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/interest-rates-frequently-asked-questions"
+      ],
+      "current_use_status": "Selected as the P5 primary source from 1990-01-02 in local private market case; FRED DGS2/DGS10/DGS30 are used only before 1990 and as exact-overlap comparators. 30Y discontinuation stays unavailable. Public rehosting, scenario calibration and model qualification remain unapproved.",
+      "source_series_id": "Daily Treasury Par Yield Curve Rates: 2-year, 10-year, 30-year"
     }
   ],
-  "supplemental_source_records": 105
+  "supplemental_source_records": 109
 }

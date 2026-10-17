@@ -10,8 +10,8 @@ from credit_atlas import project_register as module
 def test_project_register_exposes_the_source_and_plan_inventory():
     result = module.project_register()
 
-    assert len(result["source_records"]) == 125
-    assert len(result["datasets"]) == 29
+    assert len(result["source_records"]) == 129
+    assert len(result["datasets"]) == 30
     assert len(result["method_cards"]) == 15
     assert len(result["capabilities"]) == 50
     assert result["progress"]["completed"] == 26
@@ -60,6 +60,23 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     assert direct_hpi["retrieved_at_utc"] == "2026-10-17T20:20:58.823917+00:00"
     assert direct_hpi["model_qualified_in_receipt"] is False
     assert direct_hpi["sha256_prefix"] == "580d761c3488"
+    treasury_group = next(row for row in result["datasets"]
+                          if row["id"] == "treasury-direct-par-yield-curve")
+    treasury_sources = {row["source_id"]: row for row in result["source_records"]
+                        if row["source_id"].startswith("treasury-par-yield-")}
+    assert set(treasury_sources) == {
+        "treasury-par-yield-1990-2023", "treasury-par-yield-2024",
+        "treasury-par-yield-2025", "treasury-par-yield-2026",
+    }
+    assert set(treasury_group["source_release_record_ids"]) == set(treasury_sources)
+    assert sum(row["native_row_count"] for row in treasury_sources.values()) == 9205
+    assert sum(row["missing_cell_count"] for row in treasury_sources.values()) == 997
+    assert all(row["registry_group_id"] == treasury_group["id"]
+               and row["publisher"] == "U.S. Department of the Treasury"
+               and row["model_qualified_in_receipt"] is False
+               and row["public_release_approved_in_receipt"] is False
+               for row in treasury_sources.values())
+    assert all("994 native dates" in row["scope_note"] for row in treasury_sources.values())
     freddie = next(row for row in result["source_records"]
                    if row["source_id"] == "freddie-sfll-2012-user-supplied")
     assert freddie["registry_group_id"] == "freddie-2012"
@@ -141,13 +158,13 @@ def test_project_register_exposes_the_source_and_plan_inventory():
                        if row["output_id"] == "d01_macro.fhfa_quarterly_hpi_context")
     assert "Do not interpolate to months" in hpi_lineage["transform"]
     assert "does not qualify a model feature" in hpi_lineage["limitations"]
-    assert source_register["record_count"] == len(source_register["source_records"]) == 125
-    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 105
-    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 105
-    assert trace_map["source_release_register"]["supplemental_source_families"] == 17
-    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 105
-    assert trace_map["counts"]["registered_dataset_domain_records"] == 29
-    assert trace_map["counts"]["registry_groups_with_source_objects"] == 24
+    assert source_register["record_count"] == len(source_register["source_records"]) == 129
+    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 109
+    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 109
+    assert trace_map["source_release_register"]["supplemental_source_families"] == 18
+    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 109
+    assert trace_map["counts"]["registered_dataset_domain_records"] == 30
+    assert trace_map["counts"]["registry_groups_with_source_objects"] == 25
     assert trace_map["counts"]["source_catalog_ids_with_parent_record"] == 20
     assert trace_map["counts"]["source_catalog_ids_without_parent_record"] == 0
     assert project_register["source_group_disposition_summary"] == result["source_group_disposition_summary"]

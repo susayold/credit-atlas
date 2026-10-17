@@ -1,0 +1,33 @@
+{
+  "evidence_type": "project_review_plan_workbook_update",
+  "status": "PASS",
+  "updated_at_utc": "2026-10-17T19:07:35.6964320Z",
+  "workbook": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
+  "changed_cells": [
+    "Ke hoach!G22",
+    "Ke hoach!G23"
+  ],
+  "change_summary": "Refreshed N05/N06 with receipt-backed FHFA query-grid scope, browser and native Excel evidence; retained both task statuses as in progress and preserved the 26/50 capability ledger.",
+  "validation": {
+    "artifact_tool_import_edit_export": true,
+    "rendered_changed_rows_and_visually_reviewed": true,
+    "all_other_cell_values_unchanged": true,
+    "formula_cells_unchanged": true,
+    "style_ids_unchanged": true,
+    "sheets_merges_tables_freeze_panes_unchanged": true,
+    "formula_count": 18,
+    "formula_error_matches": 0,
+    "external_links": 0,
+    "native_excel_version": "16.0",
+    "native_excel_read_only_full_rebuild": true,
+    "native_excel_reconciliation_ledger": {
+      "achieved": 26.0,
+      "ratio": 0.52,
+      "total": 50.0
+    },
+    "bytes_unchanged_after_native_read": true
+  },
+  "previous_workbook_sha256": "033da0902af4b4cbd30b1166cf6b9fc3657d4ff28a0194064985ba2729719348",
+  "current_workbook_sha256": "ea449e5a23178da7455cab2bd532c8ea795bfa03074ef054197d5c8ab5dc1e5f",
+  "file_size_bytes": 31144
+}

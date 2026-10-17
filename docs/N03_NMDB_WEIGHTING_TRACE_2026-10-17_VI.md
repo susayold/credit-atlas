@@ -1,6 +1,6 @@
 # N03 — FHFA NMDB New/Outstanding: trace trọng số và KPI
 
-**Cập nhật:** 17/10/2026 · **Method card:** `nmdb-origination-stock-market-context` · **Source release:** 30/09/2026 · **Consumer:** P2 NMDB workbench và Excel exports.
+**Cập nhật:** 18/10/2026 · **Method card:** `nmdb-origination-stock-market-context` · **Source release:** 30/09/2026 · **Consumer:** P2 NMDB workbench và Excel exports.
 
 ## Kết luận audit
 
@@ -58,7 +58,7 @@ Code paths: [`nmdb_mortgage_statistics.py`](../src/credit_atlas/nmdb_mortgage_st
 - Workbook D02 reference được rebuild từ CSV nguồn: `NMDB states` có **79,968 hàng × 13 cột**, khớp đầy đủ từng hàng với CSV; 68 suppression flags và 14,535 ô rate trống vẫn được giữ đúng, trong đó 68/68 suppressed cells blank. Microsoft Excel 16.0 mở read-only/recalc workbook 24 sheet, Table filter hiện, không external link và file không đổi byte. Bằng chứng đã khử thông tin riêng tại [NMDB state-reference Excel acceptance](data/nmdb-state-reference-native-excel-qa-2026-10-17.json).
 - Cùng lỗi duplicate worksheet/Table AutoFilter cũng được bỏ khỏi các builder NMDB New/Outstanding và Treasury HAMP summary; regression tests kiểm tra bộ lọc thuộc Table, không nhân đôi ở worksheet. Test suite xác nhận cấu trúc trước khi phát hành workbook.
 - Sau các sửa chữa filter/workbook, **35 focused tests pass** cho NMDB mart/API/performance/acquisition/workbooks và Treasury HAMP summary builder.
-- Workbook route/API runtime checks và browser acceptance hiện có trong [implementation log](IMPLEMENTATION_LOG_2026-10-17_VI.md). N05/N06 vẫn còn mở cho các tổ hợp geography/market/series/period khác và những route chưa được nghiệm thu bằng native Excel; một số query đã qua nghiệm thu không chứng nhận mọi workbook.
+- N05/N06 New/Outstanding query-grid acceptance: 235 API scopes pass, covering all 115 New and 68 Outstanding published series/weight pairs, all 31 market categories and all five geography levels per product. Fifty-six filtered workbooks match API across 1,758 rows × 18 columns (31,644 cells). The Alaska State × Jumbo Market query preserves seven publisher-suppressed rows as unavailable. Browser QA passes 8/8 checks with no page errors, including URL restoration, VALUE1-only rejection and 390px layout. Two representative exports pass Microsoft Excel 16.0 read-only/full rebuild; filters and charts remain, with zero formulas/errors/external links and unchanged bytes. Thirty focused tests pass. The 151 unavailable-cell occurrences are repeated across overlapping query scopes, not distinct raw cells; suppression remains a separate overlapping subset. Full Cartesian query combinations and native Excel on every export are not claimed. See [query-grid acceptance](data/nmdb-market-query-grid-acceptance-2026-10-18.json).
 
 ## Dùng cho mục đích nào, không dùng cho mục đích nào
 
@@ -66,4 +66,4 @@ New/Outstanding hữu ích cho market composition, mortgage characteristic distr
 
 ## Việc tiếp theo trong plan
 
-N03 trace cho PUDB, HMDA denominator và NMDB New/Outstanding hiện đã được ghi. Tiếp tục trace formula/input/unit cho HMDA fixed-composition output và các numeric outputs còn lại; với mỗi KPI cần source ID/release, series definition, filter, unit, period, missing/imputation provenance, test evidence và consumer/API/Excel. N05/N06 chỉ đóng sau browser acceptance và native Excel open/recalculate đại diện đủ các route/filter; capability ledger vẫn 26/50 cho tới acceptance theo 50 requirements.
+N03 trace cho PUDB, HMDA denominator và NMDB New/Outstanding hiện đã được ghi. N05/N06 đã có broad query-grid acceptance theo phạm vi receipt trên, nhưng vẫn còn các tổ hợp Cartesian và route khác ngoài lưới; không cần tải lại hai archive FHFA khi mart hiện tại đã bind receipt và đối soát. Việc tiếp theo theo Đợt A là hợp nhất N01–N03 status/method trace, rồi N04 public regression/runtime inventory; sau đó chỉ mở thêm NMDB export case khi nó kiểm tra được route hoặc edge khác. Tiếp tục trace formula/input/unit cho HMDA fixed-composition output và numeric outputs còn lại; mỗi KPI cần source ID/release, series definition, filter, unit, period, missing/imputation provenance, test evidence và consumer/API/Excel. Capability ledger vẫn 26/50 cho tới acceptance theo 50 requirements.

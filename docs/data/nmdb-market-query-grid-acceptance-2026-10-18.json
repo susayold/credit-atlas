@@ -1,0 +1,121 @@
+{
+  "evidence_type": "fhfa_nmdb_new_outstanding_query_grid_acceptance",
+  "status": "PASS",
+  "checked_at_utc": "2026-10-17T18:55:10.874892+00:00",
+  "source": {
+    "publisher": "FHFA National Mortgage Database Aggregate Statistics",
+    "official_catalog": "https://www.fhfa.gov/data/nmdb",
+    "data_dictionary": "https://www.fhfa.gov/document/d/nmdb/nmdb-aggregate-statistics-data-dictionary-technical-notes.pdf",
+    "release_date": "2026-09-30",
+    "new_annual_rows": 3038100,
+    "outstanding_quarterly_rows": 535464,
+    "upstream_receipt_status": "PASS",
+    "receipt_bound_mart_sha256": "89fae54538e360221f820af43f37b44f23b4f5b39a8809e361acd4380aa02b1a"
+  },
+  "api_grid": {
+    "queries_passed": 235,
+    "series_weight_pairs_by_product": {
+      "new_annual": 115,
+      "outstanding_quarterly": 68
+    },
+    "markets_by_product": {
+      "new_annual": 27,
+      "outstanding_quarterly": 4
+    },
+    "geography_levels_by_product": {
+      "new_annual": [
+        "Census Division",
+        "Census Region",
+        "National",
+        "Rural/Non-Rural",
+        "State"
+      ],
+      "outstanding_quarterly": [
+        "Census Division",
+        "Census Region",
+        "National",
+        "Rural/Non-Rural",
+        "State"
+      ]
+    },
+    "reported_unavailable_observation_occurrences_across_overlapping_queries": 151,
+    "suppressed_observation_occurrences_across_overlapping_queries": 7,
+    "forecast_or_imputation_used": false
+  },
+  "filtered_xlsx_grid": {
+    "exports_passed": 56,
+    "rows_compared": 1758,
+    "columns_per_row": 18,
+    "cells_compared": 31644,
+    "all_data_cells_match_api": true,
+    "scope_checks": {
+      "geography-level": 10,
+      "market": 31,
+      "series-weight": 4,
+      "geography-market": 10,
+      "period-edge": 4,
+      "period-range": 2,
+      "value2": 2,
+      "quality-edge": 1
+    },
+    "contains_suppression_edge_case": true
+  },
+  "browser": {
+    "status": "PASS",
+    "checks_passed": 8,
+    "page_errors": 0,
+    "mobile_viewport_px": 390,
+    "suppressed_rows_in_Alaska_Jumbo": 7,
+    "outstanding_latest_period": "2026Q2",
+    "outstanding_value2_latest_source_value": 54.2
+  },
+  "native_excel": {
+    "version": "16.0",
+    "read_only_full_rebuild": true,
+    "representative_workbooks": [
+      {
+        "product": "new_annual",
+        "read_only": true,
+        "selected_rows": 27,
+        "selected_data_columns": 18,
+        "table_filter_visible": true,
+        "charts": 1,
+        "suppressed_rows": 7,
+        "formula_cells": 0,
+        "formula_errors": [],
+        "external_links": 0,
+        "bytes_unchanged": true,
+        "file": "CreditAtlas-NMDB-New-Alaska-Jumbo-browser-qa.xlsx"
+      },
+      {
+        "product": "outstanding_quarterly",
+        "read_only": true,
+        "selected_rows": 54,
+        "selected_data_columns": 18,
+        "table_filter_visible": true,
+        "charts": 1,
+        "suppressed_rows": 0,
+        "formula_cells": 0,
+        "formula_errors": [],
+        "external_links": 0,
+        "bytes_unchanged": true,
+        "file": "CreditAtlas-NMDB-Outstanding-VALUE2-browser-qa.xlsx"
+      }
+    ],
+    "all_bytes_unchanged": true
+  },
+  "tests": {
+    "focused_nmdb_tests_passed": 30,
+    "failed": 0
+  },
+  "interpretation": [
+    "New originations are annual flow; Outstanding is quarter-end active-loan stock. They are separate products and are not joined or added.",
+    "VALUE1 is loan-count weighted. New VALUE2 is origination-amount weighted; Outstanding VALUE2 is quarter-end UPB weighted. The estimands differ.",
+    "The seven Alaska/Jumbo suppressed values remain unavailable; they are not converted to zero. The 151 unavailable occurrences are counted across overlapping query scopes and are not unique source cells.",
+    "This is aggregate market context with no borrower-level default outcome; it does not produce PD, LGD, or model validation."
+  ],
+  "limitations": [
+    "The query grid covers all published series/weight pairs, every market category, every geography level, representative geography-market intersections, and period edges, but is not the full Cartesian product of every filter.",
+    "Browser UI interactions were checked in eight targeted cases; native Excel open/recalculate was checked for two representative exports. Other route families remain outside this acceptance."
+  ]
+}

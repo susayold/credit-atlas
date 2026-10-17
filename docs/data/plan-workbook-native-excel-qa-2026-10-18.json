@@ -1,0 +1,30 @@
+{
+  "evidence_type": "native_excel_project_review_plan_workbook_acceptance",
+  "status": "PASS",
+  "verified_at_utc": "2026-10-17T19:07:35.6964320Z",
+  "excel_version": "16.0",
+  "read_only": true,
+  "macros_disabled": true,
+  "external_links_updated": false,
+  "sheets": [
+    "Ke hoach",
+    "50 yeu cau",
+    "Du lieu",
+    "Phuong phap"
+  ],
+  "formula_cells": 18,
+  "formula_errors": 0,
+  "external_links": 0,
+  "n05_n06_task_status": [
+    "Đang làm",
+    "Đang làm"
+  ],
+  "ledger": {
+    "achieved": 26.0,
+    "ratio": 0.52,
+    "total": 50.0
+  },
+  "workbook_sha256": "ea449e5a23178da7455cab2bd532c8ea795bfa03074ef054197d5c8ab5dc1e5f",
+  "workbook_bytes_unchanged_after_read_only_open": true,
+  "scope": "Current four-sheet plan workbook after N05/N06 query-grid notes were refreshed; no capability status or ledger formula changed."
+}

@@ -1,0 +1,554 @@
+{
+  "evidence_type": "hmda_browser_selected_release_action_counts_2018_2025",
+  "status": "PASS",
+  "captured_at_utc": "2026-10-17T13:53:26.038218+00:00",
+  "activity_years": "2018–2025",
+  "source": "FFIEC / CFPB HMDA Data Browser nationwide aggregations API",
+  "source_documentation": "https://ffiec.cfpb.gov/documentation/api/data-browser/",
+  "source_release_mapping": "https://ffiec.cfpb.gov/documentation/tools/data-browser/data-browser-faq",
+  "method": {
+    "query": "One official nationwide API request per activity year; actions_taken=1,2,3,4,5,6,7,8",
+    "row_measure": "Sum of official API counts for action codes 1–8; 2018 action=-1 rows are outside this published action domain and remain quarantined locally.",
+    "denominator": "count(action_taken in 1,2,3)",
+    "numerator": "count(action_taken == 3)",
+    "rate": "descriptive_denied_share = numerator / denominator; application disposition only, not repayment/default PD",
+    "local_comparison": "Compare each Browser-selected release to the receipt-bound local archive for the same activity year. For 2019–2022, the local archive is One-Year while the current Browser selects Three-Year, so deltas are cross-vintage aggregate diagnostics, not matched-row changes."
+  },
+  "years": [
+    {
+      "activity_year": 2018,
+      "browser_selected_release": "Three-Year",
+      "browser_freeze_date": "2021-12-31",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2018&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "bfa0057a4635de83c5fc4580e5c8720891102ed03ec1db706e8ec14e2caa9ff2",
+      "browser_actions_1_to_8": {
+        "5": 554481,
+        "1": 7732289,
+        "3": 2552640,
+        "4": 1771582,
+        "6": 2012221,
+        "7": 101772,
+        "2": 338822,
+        "8": 74703
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 15138510,
+        "decision_denominator_actions_1_2_3": 10623751,
+        "denied_numerator_action_3": 2552640,
+        "descriptive_denied_share": "0.240276715823"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "Three-Year",
+        "local_freeze_date": "2021-12-31",
+        "local_source_id": "hmda-browser-three-year-2018",
+        "local_source_receipt_sha256": "2a714c99f6b230708a933c0d4c8cc48f82c8acb57cafdb1ca2fe5fb6128e3a3a",
+        "same_vintage_as_browser": true,
+        "comparison_status": "PASS_EXACT_SAME_VINTAGE",
+        "local_actions_1_to_8": {
+          "1": 7732289,
+          "2": 338822,
+          "3": 2552640,
+          "4": 1771582,
+          "5": 554481,
+          "6": 2012221,
+          "7": 101772,
+          "8": 74703
+        },
+        "local_summary": {
+          "action_1_to_8_records": 15138510,
+          "decision_denominator_actions_1_2_3": 10623751,
+          "denied_numerator_action_3": 2552640,
+          "descriptive_denied_share": "0.240276715823"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 1961,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "action_1_to_8_records": 0,
+          "decision_denominator_actions_1_2_3": 0,
+          "denied_numerator_action_3": 0,
+          "descriptive_denied_share_percentage_points": "0.00000000"
+        },
+        "matching_action_counts": true
+      }
+    },
+    {
+      "activity_year": 2019,
+      "browser_selected_release": "Three-Year",
+      "browser_freeze_date": "2022-12-31",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2019&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "99dbb0c206e9fbc822a0c4b6546a23873516853738d387ae7ee2817169b693b0",
+      "browser_actions_1_to_8": {
+        "5": 720712,
+        "4": 2146690,
+        "2": 401762,
+        "6": 2272958,
+        "8": 73643,
+        "7": 76609,
+        "3": 2536776,
+        "1": 9344813
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 17573963,
+        "decision_denominator_actions_1_2_3": 12283351,
+        "denied_numerator_action_3": 2536776,
+        "descriptive_denied_share": "0.206521494013"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2022-04-05",
+        "local_source_id": "hmda-national-one-year-2019-f13d5b3aedba",
+        "local_source_receipt_sha256": "10aba2f392e35695ef263b0a8f210a4555fddead7f6ac6f9a87e92a9e89eb30a",
+        "same_vintage_as_browser": false,
+        "comparison_status": "CROSS_VINTAGE_DIAGNOSTIC",
+        "local_actions_1_to_8": {
+          "8": 73638,
+          "1": 9340568,
+          "5": 718782,
+          "7": 76605,
+          "6": 2267336,
+          "2": 404421,
+          "4": 2146140,
+          "3": 2535710
+        },
+        "local_summary": {
+          "action_1_to_8_records": 17563200,
+          "decision_denominator_actions_1_2_3": 12280699,
+          "denied_numerator_action_3": 2535710,
+          "descriptive_denied_share": "0.206479289167"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 4245,
+            "2": -2659,
+            "3": 1066,
+            "4": 550,
+            "5": 1930,
+            "6": 5622,
+            "7": 4,
+            "8": 5
+          },
+          "action_1_to_8_records": 10763,
+          "decision_denominator_actions_1_2_3": 2652,
+          "denied_numerator_action_3": 1066,
+          "descriptive_denied_share_percentage_points": "0.00422048"
+        },
+        "matching_action_counts": false
+      }
+    },
+    {
+      "activity_year": 2020,
+      "browser_selected_release": "Three-Year",
+      "browser_freeze_date": "2023-12-31",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2020&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "8367adfdaf7f09417ad11e641844022a5453ffbe62fe5ea6d0494146e9d7ea9a",
+      "browser_actions_1_to_8": {
+        "1": 14637334,
+        "3": 2886263,
+        "4": 3360047,
+        "2": 660757,
+        "6": 2778730,
+        "5": 1248380,
+        "7": 57561,
+        "8": 69971
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 25699043,
+        "decision_denominator_actions_1_2_3": 18184354,
+        "denied_numerator_action_3": 2886263,
+        "descriptive_denied_share": "0.158722327997"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2022-04-30",
+        "local_source_id": "hmda-national-one-year-2020-b59581b05544",
+        "local_source_receipt_sha256": "218bf3d6eafca624fcbf5dbaa66ff096c93cfc7bd3e700cadea038e9b0a7ef34",
+        "same_vintage_as_browser": false,
+        "comparison_status": "CROSS_VINTAGE_DIAGNOSTIC",
+        "local_actions_1_to_8": {
+          "2": 624446,
+          "1": 14629575,
+          "5": 1243387,
+          "6": 2758274,
+          "7": 57569,
+          "8": 69768,
+          "4": 3403483,
+          "3": 2880243
+        },
+        "local_summary": {
+          "action_1_to_8_records": 25666745,
+          "decision_denominator_actions_1_2_3": 18134264,
+          "denied_numerator_action_3": 2880243,
+          "descriptive_denied_share": "0.158828778494"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 7759,
+            "2": 36311,
+            "3": 6020,
+            "4": -43436,
+            "5": 4993,
+            "6": 20456,
+            "7": -8,
+            "8": 203
+          },
+          "action_1_to_8_records": 32298,
+          "decision_denominator_actions_1_2_3": 50090,
+          "denied_numerator_action_3": 6020,
+          "descriptive_denied_share_percentage_points": "-0.01064505"
+        },
+        "matching_action_counts": false
+      }
+    },
+    {
+      "activity_year": 2021,
+      "browser_selected_release": "Three-Year",
+      "browser_freeze_date": "2024-12-31",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2021&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "f243b69d6298f798d504b4af626b388d5f5355ef623e683e7b5a2bc246786f18",
+      "browser_actions_1_to_8": {
+        "1": 15091528,
+        "2": 633595,
+        "3": 2950191,
+        "4": 3341816,
+        "7": 52773,
+        "8": 94955,
+        "5": 1404858,
+        "6": 2700264
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 26269980,
+        "decision_denominator_actions_1_2_3": 18675314,
+        "denied_numerator_action_3": 2950191,
+        "descriptive_denied_share": "0.157972765545"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2023-05-01",
+        "local_source_id": "hmda-national-one-year-2021-0463a785690a",
+        "local_source_receipt_sha256": "0fe8e8b345b688f6cb1666df956f12cc6fad2cb3064553760438f2d54755f23b",
+        "same_vintage_as_browser": false,
+        "comparison_status": "CROSS_VINTAGE_DIAGNOSTIC",
+        "local_actions_1_to_8": {
+          "1": 15062966,
+          "5": 1452022,
+          "6": 2691964,
+          "7": 53506,
+          "8": 96204,
+          "4": 3313356,
+          "3": 2922414,
+          "2": 634932
+        },
+        "local_summary": {
+          "action_1_to_8_records": 26227364,
+          "decision_denominator_actions_1_2_3": 18620312,
+          "denied_numerator_action_3": 2922414,
+          "descriptive_denied_share": "0.156947638686"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 28562,
+            "2": -1337,
+            "3": 27777,
+            "4": 28460,
+            "5": -47164,
+            "6": 8300,
+            "7": -733,
+            "8": -1249
+          },
+          "action_1_to_8_records": 42616,
+          "decision_denominator_actions_1_2_3": 55002,
+          "denied_numerator_action_3": 27777,
+          "descriptive_denied_share_percentage_points": "0.10251269"
+        },
+        "matching_action_counts": false
+      }
+    },
+    {
+      "activity_year": 2022,
+      "browser_selected_release": "Three-Year",
+      "browser_freeze_date": "2025-12-31",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2022&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "bcd28f033138ff7b37bdcbb917d6994793237dcad4bffa1b4f1801318417c04f",
+      "browser_actions_1_to_8": {
+        "3": 2525024,
+        "1": 8416071,
+        "6": 1572452,
+        "5": 747635,
+        "2": 420518,
+        "4": 2233245,
+        "7": 74275,
+        "8": 136755
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 16125975,
+        "decision_denominator_actions_1_2_3": 11361613,
+        "denied_numerator_action_3": 2525024,
+        "descriptive_denied_share": "0.222241683465"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2024-05-01",
+        "local_source_id": "hmda-national-one-year-2022-364cdfa3f46c",
+        "local_source_receipt_sha256": "34ff18ae06ede77cbdff5dd70c445cbb80085c1e394decf1b140135271a151dd",
+        "same_vintage_as_browser": false,
+        "comparison_status": "CROSS_VINTAGE_DIAGNOSTIC",
+        "local_actions_1_to_8": {
+          "8": 128424,
+          "2": 417122,
+          "6": 1559011,
+          "1": 8406350,
+          "5": 791864,
+          "7": 71850,
+          "3": 2500211,
+          "4": 2224475
+        },
+        "local_summary": {
+          "action_1_to_8_records": 16099307,
+          "decision_denominator_actions_1_2_3": 11323683,
+          "denied_numerator_action_3": 2500211,
+          "descriptive_denied_share": "0.220794859764"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 9721,
+            "2": 3396,
+            "3": 24813,
+            "4": 8770,
+            "5": -44229,
+            "6": 13441,
+            "7": 2425,
+            "8": 8331
+          },
+          "action_1_to_8_records": 26668,
+          "decision_denominator_actions_1_2_3": 37930,
+          "denied_numerator_action_3": 24813,
+          "descriptive_denied_share_percentage_points": "0.14468237"
+        },
+        "matching_action_counts": false
+      }
+    },
+    {
+      "activity_year": 2023,
+      "browser_selected_release": "One-Year",
+      "browser_freeze_date": "2025-05-19",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2023&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "107d2fe81488f16593f30104f350b0655d3b8ebe0e8f9884d9170b7c50820a6d",
+      "browser_actions_1_to_8": {
+        "1": 5710399,
+        "2": 310898,
+        "3": 2037094,
+        "4": 1468108,
+        "5": 536137,
+        "6": 1263097,
+        "8": 175823,
+        "7": 62622
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 11564178,
+        "decision_denominator_actions_1_2_3": 8058391,
+        "denied_numerator_action_3": 2037094,
+        "descriptive_denied_share": "0.252791655307"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2025-05-19",
+        "local_source_id": "hmda-national-one-year-2023-b2fcebcc952c",
+        "local_source_receipt_sha256": "5182d410e5157c31ad0b0cccbfc5b253247ff86fd0330632c0a59b59d92cf6af",
+        "same_vintage_as_browser": true,
+        "comparison_status": "PASS_EXACT_SAME_VINTAGE",
+        "local_actions_1_to_8": {
+          "5": 536137,
+          "1": 5710399,
+          "7": 62622,
+          "6": 1263097,
+          "8": 175823,
+          "2": 310898,
+          "3": 2037094,
+          "4": 1468108
+        },
+        "local_summary": {
+          "action_1_to_8_records": 11564178,
+          "decision_denominator_actions_1_2_3": 8058391,
+          "denied_numerator_action_3": 2037094,
+          "descriptive_denied_share": "0.252791655307"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "action_1_to_8_records": 0,
+          "decision_denominator_actions_1_2_3": 0,
+          "denied_numerator_action_3": 0,
+          "descriptive_denied_share_percentage_points": "0.00000000"
+        },
+        "matching_action_counts": true
+      }
+    },
+    {
+      "activity_year": 2024,
+      "browser_selected_release": "One-Year",
+      "browser_freeze_date": "2026-06-02",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2024&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "09eb437f9478cff2b97b8f8438a89af45c0cb19059c90e650424e68c6b7e9de4",
+      "browser_actions_1_to_8": {
+        "1": 6197085,
+        "3": 2103462,
+        "2": 361232,
+        "5": 581940,
+        "4": 1538273,
+        "6": 1276504,
+        "7": 47312,
+        "8": 153391
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 12259199,
+        "decision_denominator_actions_1_2_3": 8661779,
+        "denied_numerator_action_3": 2103462,
+        "descriptive_denied_share": "0.242844108583"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "One-Year",
+        "local_freeze_date": "2026-06-02",
+        "local_source_id": "hmda-national-one-year-2024-002bab12cd71",
+        "local_source_receipt_sha256": "bf0bec3475db5b51816e652e0cb4430be0fb7ee9ca02c9daf786a18a0c84a9b1",
+        "same_vintage_as_browser": true,
+        "comparison_status": "PASS_EXACT_SAME_VINTAGE",
+        "local_actions_1_to_8": {
+          "1": 6197085,
+          "2": 361232,
+          "3": 2103462,
+          "4": 1538273,
+          "5": 581940,
+          "6": 1276504,
+          "7": 47312,
+          "8": 153391
+        },
+        "local_summary": {
+          "action_1_to_8_records": 12259199,
+          "decision_denominator_actions_1_2_3": 8661779,
+          "denied_numerator_action_3": 2103462,
+          "descriptive_denied_share": "0.242844108583"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "action_1_to_8_records": 0,
+          "decision_denominator_actions_1_2_3": 0,
+          "denied_numerator_action_3": 0,
+          "descriptive_denied_share_percentage_points": "0.00000000"
+        },
+        "matching_action_counts": true
+      }
+    },
+    {
+      "activity_year": 2025,
+      "browser_selected_release": "Snapshot",
+      "browser_freeze_date": "2026-06-02",
+      "official_api_url": "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations?years=2025&actions_taken=1,2,3,4,5,6,7,8",
+      "api_served_from": "cache",
+      "api_response_sha256": "e36c4105644d1592b01e80bd08f060f20955c4e8be22994519e885c1e01b9a88",
+      "browser_actions_1_to_8": {
+        "2": 417961,
+        "3": 2115090,
+        "1": 6827891,
+        "4": 1710723,
+        "5": 695006,
+        "6": 1578064,
+        "7": 50499,
+        "8": 148372
+      },
+      "browser_summary": {
+        "action_1_to_8_records": 13543606,
+        "decision_denominator_actions_1_2_3": 9360942,
+        "denied_numerator_action_3": 2115090,
+        "descriptive_denied_share": "0.225948414166"
+      },
+      "local_archive_comparison": {
+        "local_release_vintage": "Snapshot",
+        "local_freeze_date": "2026-06-02",
+        "local_source_id": "hmda-national-snapshot-2025-9a5e89600e3c",
+        "local_source_receipt_sha256": "975d492750c471f2e0bbc14fe778faab1568d277d0f1f011bca10d57ff1daa88",
+        "same_vintage_as_browser": true,
+        "comparison_status": "PASS_EXACT_SAME_VINTAGE",
+        "local_actions_1_to_8": {
+          "1": 6827891,
+          "2": 417961,
+          "3": 2115090,
+          "4": 1710723,
+          "5": 695006,
+          "6": 1578064,
+          "7": 50499,
+          "8": 148372
+        },
+        "local_summary": {
+          "action_1_to_8_records": 13543606,
+          "decision_denominator_actions_1_2_3": 9360942,
+          "denied_numerator_action_3": 2115090,
+          "descriptive_denied_share": "0.225948414166"
+        },
+        "quarantined_out_of_domain_rows_action_minus_1": 0,
+        "browser_minus_local_archive": {
+          "actions_1_to_8": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0,
+            "7": 0,
+            "8": 0
+          },
+          "action_1_to_8_records": 0,
+          "decision_denominator_actions_1_2_3": 0,
+          "denied_numerator_action_3": 0,
+          "descriptive_denied_share_percentage_points": "0.00000000"
+        },
+        "matching_action_counts": true
+      }
+    }
+  ],
+  "interpretation_limits": [
+    "Action-count aggregates do not identify which application rows changed between releases; no row-level matching was performed.",
+    "Late submissions and resubmissions can change counts or action composition. Aggregate differences are not borrower transitions or repayment performance.",
+    "The selected Browser static release changes by year and reporting coverage can change; raw year-to-year rates are descriptive and are not a controlled causal trend.",
+    "The official API query filters to actions 1–8. The 1,961 action=-1 rows in the local 2018 CSV remain quarantined and are not silently counted as a Browser action.",
+    "This audit adds no forecast, imputation, PD, default, or model output."
+  ]
+}

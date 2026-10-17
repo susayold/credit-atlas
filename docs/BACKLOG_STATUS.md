@@ -928,3 +928,28 @@ is resolved. This is application/decision data, not repayment/default
 performance. No forecast/imputation was made; the master capability ledger
 remains **26/50 (52%)**. Remaining: source rights confirmation, year-by-year
 release/API parity, harmonized KPI definitions, and N03 field-to-formula links.
+
+## 2026-10-17 HMDA Browser-selected action-count audit
+
+The official FFIEC/CFPB nationwide aggregation API was queried for each year
+2018–2025 using actions 1–8 and receipt-crosswalked to local releases. All eight
+queries passed. Same-vintage local action profiles reconcile exactly for 2018,
+2023, 2024 and 2025. The app's 2019–2022 One-Year archives differ from the
+Browser-selected Three-Year releases: total action-row deltas are +10,763,
++32,298, +42,616 and +26,668; denied-share deltas are +0.00422048, −0.01064505,
++0.10251269 and +0.14468237 percentage points. These are aggregate release
+state differences without row matching; no unique new application count or
+borrower transition is inferred.
+
+Detailed report: `docs/HMDA_RELEASE_COMPARABILITY_AND_REUSE_RIGHTS_2026-10-17_VI.md`;
+sanitized output: `docs/data/hmda-browser-selected-release-action-audit-2026-10-17.json`;
+reproducible script: `scripts/audit_hmda_browser_selected_release_comparability.py`.
+Private API response captures and source receipt hashes stay on D:. Next: rights
+confirmation for raw rehosting, dimension-level API/UI parity, and KPI/coverage
+harmonization. No model/forecast was added; capability remains **26/50 (52%)**.
+An analyst workbook covering all eight Browser-selected releases and four
+cross-vintage comparisons now passes native Excel 16.0 read-only acceptance:
+five sheets, 104 formulas, zero formula errors/external links, and every action
+count and derived KPI reconciled to the sanitized audit JSON. It contains no raw
+LAR rows; see `apps/excel/templates/CreditAtlas-HMDA-Browser-Release-Audit-2018-2025.xlsx`
+and `docs/data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json`.

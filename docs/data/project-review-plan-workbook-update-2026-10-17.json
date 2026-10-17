@@ -2,8 +2,8 @@
   "schema_version": "creditatlas-plan-workbook-update-v1",
   "updated_date": "2026-10-17",
   "workbook_path": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
-  "previous_sha256": "cf96831c973ba3995d39e38d839812b207c8933d49bdbcb94c494a9184b12a0d",
-  "sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de",
+  "previous_sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de",
+  "sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c",
   "sheets": [
     "Ke hoach",
     "50 yeu cau",
@@ -26,14 +26,18 @@
     ]
   },
   "verification": {
-    "artifact_tool_recalculation": "PASS: updated HMDA N02 note in the four-sheet plan workbook, retained N03 evidence, recalculated, exported, reimported and rendered.",
+    "artifact_tool_recalculation": "PASS: updated HMDA N02 workbook note with the eight-year official API audit, exact-match and cross-vintage findings, retained N03 evidence, recalculated, exported, reimported and rendered.",
     "formula_cache_validation": "PASS: 18 formula cells; 0 formula errors; B11=26, C11=50 and D11=52% unchanged.",
-    "visual_review": "PASS: Ke hoach rows 17–21 rendered after the update; the release map, comparison metrics and open rights caveat are visible without clipping.",
+    "visual_review": "PASS: Ke hoach rows 17–21 render with the full eight-year Browser audit note visible; no clipping.",
     "status_dropdown": "Not changed; existing status validation retained.",
     "native_excel_desktop": "PASS: Excel 16.0 read-only/full rebuild; 4 sheets, 18 formulas, 0 errors/links; ledger 26/50; workbook bytes unchanged."
   },
-  "scope_note": "Updated N02 with official HMDA Data Browser release mapping for 2018–2025, the distinct app One-Year 2019 archive, a receipt-bound same-year 2025 Snapshot/Dynamic aggregate comparison, and the unresolved raw redistribution rights gate. N03 fixed-2023-mix audit evidence remains. No forecast/imputation; capability stays 26/50.",
+  "scope_note": "Updated N02 with the official 2018–2025 Data Browser action-count audit: four same-vintage exact local receipt matches, four 2019–2022 cross-vintage comparisons against stored One-Year archives, and unresolved raw redistribution gate. N03 fixed-2023-mix evidence remains; no forecast/imputation; capability stays 26/50.",
   "revision_history": [
+    {
+      "sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c",
+      "note": "Updated N02 workbook note with 2018–2025 official Browser action-count audit (8 responses), 4 exact same-vintage local receipt matches, 4 cross-vintage 2019–2022 aggregate deltas, and remaining rights/dimension/KPI gates. Rendered and reopened in Excel 16.0 read-only/full rebuild; 18 formulas, zero errors/links; 26/50 unchanged."
+    },
     {
       "sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de",
       "note": "Updated N02 plan note with official HMDA release mapping, receipt-bound 2025 Snapshot/Dynamic comparison, and pending raw redistribution rights gate. Rendered and reopened in Excel 16.0 read-only/full rebuild; 18 formulas, zero errors/links; ledger remains 26/50."
@@ -59,5 +63,5 @@
       "note": "Updated P4 N02 plan status after source-aware Freddie-sample UPB labels were implemented. Six targeted Edge UI checks passed; broad browser suite remains blocked by a frozen convergence receipt mismatch. Capability remains 26/50."
     }
   ],
-  "file_size_bytes": 30763
+  "file_size_bytes": 30806
 }

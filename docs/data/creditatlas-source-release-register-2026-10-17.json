@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-17",
-  "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance.",
+  "scope_note": "123 source records: 20 public-suite objects and 103 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private.",
   "record_count": 123,
   "source_records": [
     {
@@ -1343,8 +1343,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "PASS_WITH_QUARANTINED_SOURCE_ROWS",
       "retrieved_at_utc": "2026-10-16T11:20:04.103554+00:00",
       "receipt_completed_at_utc": "2026-10-16T11:30:23.140008+00:00",
@@ -1357,7 +1357,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "2018 Three-Year includes 36 months of updates through the 2021-12-31 freeze. The private CSV contains 15,140,471 rows; 1,961 action=-1 rows have blank LEI/malformed geography and are quarantined. Do not silently drop or count them as valid actions.",
-      "current_use_status": "Separate 2018 Three-Year panel; exclude 1,961 quarantined rows from official action KPI."
+      "current_use_status": "Local 2018 Three-Year action counts match the current Data Browser API for action codes 1–8; retain and exclude the 1,961 quarantined action=-1 rows from official action KPI."
     },
     {
       "source_id": "hmda-2019-one-year-national",
@@ -1389,8 +1389,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2019_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": null,
@@ -1403,7 +1403,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "More than 12 months of updates per FFIEC notice; comparisons have a nonstandard update window. Package Last-Modified is hosting metadata and is not the local retrieval timestamp.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive is a separate vintage from the current Data Browser-selected 2019 Three-Year release. Keep this archive labelled and analyze only as its own source release; cross-vintage action-count deltas are aggregate diagnostics, not row changes or performance labels."
     },
     {
       "source_id": "hmda-2020-one-year-national",
@@ -1435,8 +1435,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2020_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": null,
@@ -1449,7 +1449,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Static One-Year post-deadline resubmission vintage. Package Last-Modified is hosting metadata and is not the local retrieval timestamp.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive is a separate vintage from the current Data Browser-selected 2020 Three-Year release. Keep this archive labelled and analyze only as its own source release; cross-vintage action-count deltas are aggregate diagnostics, not row changes or performance labels."
     },
     {
       "source_id": "hmda-2021-one-year-national",
@@ -1481,8 +1481,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2021_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": null,
@@ -1495,7 +1495,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Static One-Year post-deadline resubmission vintage. Package Last-Modified is hosting metadata and is not the local retrieval timestamp.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive is a separate vintage from the current Data Browser-selected 2021 Three-Year release. Keep this archive labelled and analyze only as its own source release; cross-vintage action-count deltas are aggregate diagnostics, not row changes or performance labels."
     },
     {
       "source_id": "hmda-2022-one-year-national",
@@ -1527,8 +1527,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2022_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": null,
       "receipt_completed_at_utc": null,
@@ -1541,7 +1541,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Static One-Year post-deadline resubmission vintage. Package Last-Modified is hosting metadata and is not the local retrieval timestamp.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive is a separate vintage from the current Data Browser-selected 2022 Three-Year release. Keep this archive labelled and analyze only as its own source release; cross-vintage action-count deltas are aggregate diagnostics, not row changes or performance labels."
     },
     {
       "source_id": "hmda-2023-one-year-national",
@@ -1573,8 +1573,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2023_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": "2026-10-16T05:38:38.656283+00:00",
       "receipt_completed_at_utc": null,
@@ -1587,7 +1587,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Official API action-code aggregation receipt is stored privately; profile reflects the acquired CSV. 2023 One-Year is separate from 2025 Snapshot and Dynamic releases.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive matches the current Data Browser-selected 2023 One-Year product and freeze; action counts match official API aggregates. Application/underwriting descriptive analysis only; no borrower performance labels."
     },
     {
       "source_id": "hmda-2024-one-year-national",
@@ -1619,8 +1619,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2024_ONE_YEAR_NATIONAL",
       "retrieved_at_utc": "2026-10-16T04:29:31.800185+00:00",
       "receipt_completed_at_utc": null,
@@ -1633,7 +1633,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Official API action-code aggregation receipt is stored privately; profile reflects the acquired CSV. 2024 One-Year is separate from 2025 Snapshot and Dynamic releases.",
-      "current_use_status": "Application/underwriting descriptive analysis only; no borrower performance labels."
+      "current_use_status": "App One-Year archive matches the current Data Browser-selected 2024 One-Year product and freeze; action counts match official API aggregates. Application/underwriting descriptive analysis only; no borrower performance labels."
     },
     {
       "source_id": "hmda-2025-dynamic-national-lar",
@@ -1665,8 +1665,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2025_DYNAMIC_AS_OF_2026_10_11",
       "retrieved_at_utc": "2026-10-16T09:17:03.030498+00:00",
       "receipt_completed_at_utc": null,
@@ -1679,7 +1679,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Weekly mutable series captured as a dated point-in-time file; differs from static snapshot due to revisions/submissions, not borrower performance.",
-      "current_use_status": "Dynamic LAR: dated aggregate-only snapshot"
+      "current_use_status": "2025 Dynamic is an independently dated weekly release state; it is not the Data Browser-selected 2025 static Snapshot and is not repayment/default performance."
     },
     {
       "source_id": "hmda-2025-dynamic-transmittal-sheet",
@@ -1708,8 +1708,8 @@
       ],
       "kpi_or_output": "QA tie-out: 4,794 LEIs and reported LAR count equals dynamic LAR count. Reference/QA only.",
       "method_card_ids": [],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_2025_DYNAMIC_AS_OF_2026_10_11",
       "retrieved_at_utc": "2026-10-16T09:17:02.909120+00:00",
       "receipt_completed_at_utc": null,
@@ -1751,8 +1751,8 @@
       ],
       "kpi_or_output": "Geography code/name reference for QA; no current app KPI input identified.",
       "method_card_ids": [],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_NATIONAL_SNAPSHOT_2025",
       "retrieved_at_utc": "2026-10-16T03:40:50+00:00",
       "receipt_completed_at_utc": null,
@@ -1797,8 +1797,8 @@
         "hmda-denial-share-by-decided",
         "hmda-fixed-2023-mix"
       ],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_NATIONAL_SNAPSHOT_2025",
       "retrieved_at_utc": "2026-10-16T03:30:02+00:00",
       "receipt_completed_at_utc": null,
@@ -1811,7 +1811,7 @@
       "model_qualified_in_receipt": false,
       "public_release_approved_in_receipt": false,
       "scope_note": "Static Snapshot frozen 2026-06-02; this is not the weekly Dynamic vintage.",
-      "current_use_status": "Static snapshot: aggregate-only LAR"
+      "current_use_status": "2025 Static Snapshot action counts match the current Data Browser API; keep separate from the independently captured 2025 Dynamic release."
     },
     {
       "source_id": "hmda-2025-snapshot-transmittal-sheet",
@@ -1840,8 +1840,8 @@
       ],
       "kpi_or_output": "QA tie-out: 4,782 LEIs and sum of reported LAR count equals the LAR row count. Reference/QA only, not a borrower KPI.",
       "method_card_ids": [],
-      "rights_use_gate": "Official public modified HMDA data; cite FFIEC/CFPB, preserve release-specific definitions and privacy controls. Aggregates/derived outputs only in the public app. No default/PD inference or undocumented borrower linkage.",
-      "rights_review_status": "PUBLIC_MODIFIED_DATA; RELEASE_COMPARABILITY_AND_PRIVACY_REVIEW_REQUIRED",
+      "rights_use_gate": "CFPB describes public modified HMDA LAR as available for public analysis and says the disclosure is privacy-modified. Reviewed product/FAQ/schema pages did not specify raw-file redistribution or repository rehosting terms. Keep raw LAR/receipts private pending source-specific confirmation; publish only reviewed aggregates/code with attribution and privacy controls.",
+      "rights_review_status": "PUBLIC_FOR_ANALYSIS; EXPLICIT_RAW_REDISTRIBUTION_NOT_IDENTIFIED; RAW_PRIVATE_PENDING_SOURCE_SPECIFIC_CONFIRMATION",
       "receipt_status": "VERIFIED_HMDA_NATIONAL_SNAPSHOT_2025",
       "retrieved_at_utc": "2026-10-16T03:40:50+00:00",
       "receipt_completed_at_utc": null,

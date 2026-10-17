@@ -25,15 +25,15 @@
     "completion_ratio": 0.52
   },
   "updated_progress_notes": {
-    "N02": "Official 2018–2025 Data Browser release map and receipt-bound same-year 2025 Snapshot/Dynamic audit; raw redistribution rights confirmation and other release/year parity remain open",
+    "N02": "Eight official Browser API years audited; 4 same-vintage local receipt matches, 4 cross-vintage diagnostics for 2019–2022; raw rights/dimension parity/KPI lineage remain open",
     "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
   },
-  "scope": "N02 plan note now includes HMDA official release mapping, a receipt-bound same-year 2025 actual-data comparison, and the unresolved source-specific raw redistribution rights gate. The existing N03 evidence and 26/50 capability ledger remain unchanged.",
+  "scope": "N02 plan note now summarizes the official Browser-selected action-count audit for 2018–2025, including the four exact same-vintage local receipt reconciliations and four cross-vintage comparisons. N03 evidence and the capability ledger remain unchanged.",
   "limitations": [
-    "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
-    "HMDA is application and decision data, not repayment/default performance.",
-    "Explicit raw redistribution rights confirmation, year-by-year release/API parity, other route/filter combinations and remaining KPI lineage are still open.",
-    "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
+    "This verifies the plan workbook formulas and presentation, not completion of every listed project item or production/model readiness.",
+    "HMDA release comparisons are action-count aggregates; no loan-level row matching was performed, and HMDA is not repayment/default performance.",
+    "Explicit raw redistribution/rehosting confirmation, dimension-level parity, full coverage/schema harmonization and remaining KPI lineage are still open.",
+    "Detailed source receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
   ],
-  "workbook_sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de"
+  "workbook_sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c"
 }

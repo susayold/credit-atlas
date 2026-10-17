@@ -1,0 +1,55 @@
+{
+  "evidence_type": "hmda_release_audit_native_excel_acceptance",
+  "verified_on": "2026-10-17",
+  "status": "PASS",
+  "application": "Microsoft Excel desktop",
+  "excel_version": "16.0",
+  "open_mode": "read-only; macros/events/updates disabled; not saved",
+  "workbook_sha256": "08fc2f55849b4edd629b43c21b46aa2fef343a660d0119cf7a295bedfa6cc990",
+  "workbook_unchanged": true,
+  "sheet_count": 5,
+  "sheets": [
+    {
+      "name": "Browser selected",
+      "used_range": "A1:O20",
+      "formula_cells": 32
+    },
+    {
+      "name": "App One-Year",
+      "used_range": "A1:O20",
+      "formula_cells": 24
+    },
+    {
+      "name": "Vintage deltas",
+      "used_range": "A1:O24",
+      "formula_cells": 48
+    },
+    {
+      "name": "Lineage",
+      "used_range": "A1:G18",
+      "formula_cells": 0
+    },
+    {
+      "name": "Method & sources",
+      "used_range": "A1:D28",
+      "formula_cells": 0
+    }
+  ],
+  "formula_cells": 104,
+  "formula_errors": [],
+  "external_link_count": 0,
+  "data_reconciliation": {
+    "browser_selected_years": 8,
+    "formula_kpis": "Actions 1-8 total, decisions 1+2+3, denied action 3, denied share, and cross-vintage rate deltas reconciled",
+    "cross_vintage_diagnostic_years": 4,
+    "action_count_values": "All workbook rows reconciled against sanitized verified audit JSON",
+    "app_one_year_archives": 6
+  },
+  "limitations": [
+    "Aggregate action counts only; workbook contains no loan-level/raw LAR rows.",
+    "2019-2022 comparisons are release-state differences across different vintages without row matching.",
+    "Denied share is an application disposition measure, not repayment/default performance or PD.",
+    "Raw redistribution/rehosting rights and dimension-level parity remain open.",
+    "Project capability ledger remains 26/50 (52%); this workbook completes only the HMDA release-comparability work item."
+  ]
+}

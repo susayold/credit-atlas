@@ -228,3 +228,42 @@ be described as borrower transitions, repayment performance, PD, or a forecast.
 HMDA browser/API parity for other release/year combinations, explicit rights
 confirmation and remaining KPI lineage are still open. The 50-capability ledger
 remains 26/50 (52%).
+
+## 2026-10-17 HMDA Browser-selected 2018–2025 release audit
+
+Added `scripts/audit_hmda_browser_selected_release_comparability.py`. It queried
+FFIEC/CFPB's nationwide aggregation endpoint once per activity year and kept
+only action codes 1–8. The script saved exact JSON API responses and source
+receipt hashes to a private receipt on D:, then emitted aggregate counts and
+crosswalk results; it did not read or copy loan-level rows. All eight official
+responses passed the action-code and count contract.
+
+The current Browser-selected product totals and denied shares are in
+`docs/data/hmda-browser-selected-release-action-audit-2026-10-17.json`. Local
+same-vintage receipt action profiles match exactly for 2018 Three-Year, 2023
+and 2024 One-Year, and 2025 Snapshot. For 2019–2022 the app's One-Year archive
+is compared with the currently selected Three-Year release: Browser-minus-local
+total action rows are +10,763, +32,298, +42,616 and +26,668; decision
+denominator deltas are +2,652, +50,090, +55,002 and +37,930; denied-share
+deltas are +0.00422048, −0.01064505, +0.10251269 and +0.14468237 percentage
+points. Action-level counts can move both up and down. There is no row matching,
+so these results are release-state sensitivity, not unique new applications or
+borrower transitions.
+
+Expanded `docs/HMDA_RELEASE_COMPARABILITY_AND_REUSE_RIGHTS_2026-10-17_VI.md`,
+N02 traceability, project register, backlog and plan workbook with the release
+mapping, actual counts, interpretation limits and source-rights status. Four
+same-vintage exact matches do not close full dimension/API parity. Keep 2019–22
+One-Year archives distinct from the Browser's Three-Year release. Raw LAR and
+receipts remain private pending source-specific raw redistribution/rehosting
+confirmation. No forecast, imputation, PD or default model was added; the
+capability ledger stays 26/50.
+
+Built `apps/excel/templates/CreditAtlas-HMDA-Browser-Release-Audit-2018-2025.xlsx`
+from the sanitized audit JSON. The five sheets expose Browser-selected releases,
+stored One-Year archives, 2019–2022 vintage deltas, receipt/API lineage, and
+definitions/limits. Artifact-tool recalculation and round-trip passed; Excel 16.0
+read-only QA reconciled all aggregate action counts and KPI formulas (104 formula
+cells, zero errors or external links), without changing workbook bytes. The
+workbook contains no raw LAR rows; see
+`docs/data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json`.

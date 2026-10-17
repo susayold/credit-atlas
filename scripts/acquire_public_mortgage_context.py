@@ -1,10 +1,12 @@
-"""Download actual public FRED data and run retrospective mortgage context."""
+"""Acquire public macro sources and build retrospective mortgage context."""
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import json
 import math
+import shutil
 import statistics
 import subprocess
 import uuid
@@ -173,6 +175,64 @@ def fetch_fhfa_us_hpi(folder):
     return records, metadata
 
 
+def reuse_existing_fred_series(source_folder, destination_folder, receipt):
+    """Copy only the prior FRED snapshots; never make new FRED requests."""
+    metadata_by_id = {row.get("series_id"): row for row in receipt.get("series", [])
+                      if isinstance(row, dict)}
+    if not {"UNRATE", "MORTGAGE30US"}.issubset(metadata_by_id):
+        raise ValueError("Latest macro receipt is missing reusable FRED series metadata")
+    downloads = []
+    for series_id in ("UNRATE", "MORTGAGE30US"):
+        metadata = metadata_by_id[series_id]
+        expected_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=" + series_id
+        if metadata.get("source_url") != expected_url:
+            raise ValueError("Existing FRED snapshot has an unexpected source URL")
+        source_path = source_folder / (series_id + ".csv")
+        if not source_path.is_file() or sha256(source_path) != metadata.get("sha256"):
+            raise ValueError("Existing FRED snapshot failed its receipt digest check")
+        destination_path = destination_folder / source_path.name
+        shutil.copyfile(source_path, destination_path)
+        if sha256(destination_path) != metadata["sha256"]:
+            raise ValueError("Copied FRED snapshot failed its receipt digest check")
+        downloads.append((parse_csv(destination_path.read_bytes(), series_id), metadata))
+    return downloads
+
+
+def _complete_run(service, case_id, snapshot, folder, records, metadata):
+    schema = pa.schema([("series_id", pa.string()), ("observation_date", pa.date32()), ("value", pa.float64())])
+    pq.write_table(pa.Table.from_pylist(records, schema=schema), folder / "native-series.parquet", compression="zstd")
+    months = [row["period"][:7] for row in snapshot["snapshot"]["monthly"]]
+    context = monthly_context(months, records)
+    write_new(folder / "monthly-context.json", {
+        "case_id": case_id, "pipeline_run": snapshot["pipeline_run"], "rows": context,
+        "quarterly_hpi": [{"reference_quarter_start": row["observation_date"].isoformat(),
+                          "index_1980_q1_100": row["value"]}
+                         for row in records if row["series_id"] == "USSTHPI"
+                         and months[0] <= row["observation_date"].isoformat()[:7] <= months[-1]],
+        "use": "retrospective_descriptive_context_only",
+        "limitations": ["Latest revised snapshots do not prove historical publication availability.",
+                       "Quarterly HPI stays quarterly; no monthly interpolation.",
+                       "Monthly mortgage rate is the mean of source weekly observations in that month.",
+                       "PMMS methodology changed on 2022-11-17; do not assume one unchanged measurement regime.",
+                       "No borrower identification, causal economic effect or model prediction is inferred.",
+                       "Macro series do not replace annual mortgage origination/performance samples."]})
+    service.case(case_id)
+    receipt = {"status": "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE", "completed_at": timestamp(),
+               "case_id": case_id, "pipeline_run": snapshot["pipeline_run"],
+               "series": metadata, "total_native_observations": len(records),
+               "monthly_context_rows": len(context),
+               "unemployment_months_available": sum(row["unemployment_percent_latest_revised"] is not None for row in context),
+               "mortgage_rate_months_available": sum(row["mortgage30_percent_monthly_mean"] is not None for row in context),
+               "loan_vintages_added": [], "model_training_performed": False,
+               "predictive_asof_qualified": False, "visibility": "private", "public_release_approved": False,
+               "outputs_sha256": {path.name: sha256(path) for path in folder.iterdir() if path.is_file()}}
+    write_new(folder / "run-complete.json", receipt)
+    return {"data_directory": str(folder), **{key: receipt[key] for key in
+            ("status", "total_native_observations", "monthly_context_rows", "model_training_performed")},
+            "series": [{key: info[key] for key in ("series_id", "observations", "last_reference_date")}
+                       for info in metadata]}
+
+
 def monthly_context(months, records):
     unemployment = {row["observation_date"].isoformat()[:7]: row["value"]
                     for row in records if row["series_id"] == "UNRATE"}
@@ -205,38 +265,46 @@ def run(root, case_id="d01-a24484b21a21"):
             downloads = [future.result() for future in downloads]
         records = [row for result, _ in downloads for row in result]
         metadata = [info for _, info in downloads]
-        schema = pa.schema([("series_id", pa.string()), ("observation_date", pa.date32()), ("value", pa.float64())])
-        pq.write_table(pa.Table.from_pylist(records, schema=schema), folder / "native-series.parquet", compression="zstd")
-        months = [row["period"][:7] for row in snapshot["snapshot"]["monthly"]]
-        context = monthly_context(months, records)
-        write_new(folder / "monthly-context.json", {
-            "case_id": case_id, "pipeline_run": snapshot["pipeline_run"], "rows": context,
-            "quarterly_hpi": [{"reference_quarter_start": row["observation_date"].isoformat(),
-                              "index_1980_q1_100": row["value"]}
-                             for row in records if row["series_id"] == "USSTHPI"
-                             and months[0] <= row["observation_date"].isoformat()[:7] <= months[-1]],
-            "use": "retrospective_descriptive_context_only",
-            "limitations": ["Latest revised snapshots do not prove historical publication availability.",
-                           "Quarterly HPI stays quarterly; no monthly interpolation.",
-                           "Monthly mortgage rate is the mean of source weekly observations in that month.",
-                           "PMMS methodology changed on 2022-11-17; do not assume one unchanged measurement regime.",
-                           "No borrower identification, causal economic effect or model prediction is inferred.",
-                           "Macro series do not replace annual mortgage origination/performance samples."]})
-        service.case(case_id)
-        receipt = {"status": "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE", "completed_at": timestamp(),
-                   "case_id": case_id, "pipeline_run": snapshot["pipeline_run"],
-                   "series": metadata, "total_native_observations": len(records),
-                   "monthly_context_rows": len(context),
-                   "unemployment_months_available": sum(row["unemployment_percent_latest_revised"] is not None for row in context),
-                   "mortgage_rate_months_available": sum(row["mortgage30_percent_monthly_mean"] is not None for row in context),
-                   "loan_vintages_added": [], "model_training_performed": False,
-                   "predictive_asof_qualified": False, "visibility": "private", "public_release_approved": False,
-                   "outputs_sha256": {path.name: sha256(path) for path in folder.iterdir() if path.is_file()}}
-        write_new(folder / "run-complete.json", receipt)
-        return {"data_directory": str(folder), **{key: receipt[key] for key in
-                ("status", "total_native_observations", "monthly_context_rows", "model_training_performed")},
-                "series": [{key: info[key] for key in ("series_id", "observations", "last_reference_date")}
-                           for info in metadata]}
+        return _complete_run(service, case_id, snapshot, folder, records, metadata)
+    except Exception as error:
+        write_new(folder / "run-failed.json", {"status": "FAIL", "failed_at": timestamp(),
+                   "exception_type": type(error).__name__, "model_training_performed": False})
+        raise
+
+
+def run_fhfa_hpi_refresh(root, case_id="d01-a24484b21a21"):
+    """Refresh only direct FHFA HPI and reuse immutable prior FRED inputs."""
+    if root.resolve().drive.upper() != "D:":
+        raise ValueError("Downloaded data must remain on D:")
+    service = ResearchService(root)
+    snapshot = service.snapshot(case_id)
+    candidates = []
+    for source_folder in (root / "data/private/public-context").glob("fred-*"):
+        receipt_path = source_folder / "run-complete.json"
+        if not receipt_path.is_file():
+            continue
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt.get("status") == "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE":
+            candidates.append((str(receipt.get("completed_at", "")), source_folder, receipt))
+    if not candidates:
+        raise ValueError("No previous completed macro run exists to reuse FRED snapshots")
+    _, source_folder, prior_receipt = max(candidates, key=lambda item: item[0])
+    folder = root / "data/private/public-context" / ("fred-fhfa-" + uuid.uuid4().hex[:12])
+    folder.mkdir(parents=True)
+    write_new(folder / "run-start.json", {
+        "started_at": timestamp(), "case_id": case_id,
+        "intent": "refresh_direct_fhfa_hpi_without_new_fred_requests",
+        "newly_acquired_series": ["USSTHPI"],
+        "reused_series": ["UNRATE", "MORTGAGE30US"],
+        "reused_from_private_run": source_folder.name,
+    })
+    try:
+        reused = reuse_existing_fred_series(source_folder, folder, prior_receipt)
+        fhfa_records, fhfa_metadata = fetch_fhfa_us_hpi(folder)
+        records = reused[0][0] + fhfa_records + reused[1][0]
+        metadata_by_id = {item[1]["series_id"]: item[1] for item in reused}
+        metadata = [metadata_by_id["UNRATE"], fhfa_metadata, metadata_by_id["MORTGAGE30US"]]
+        return _complete_run(service, case_id, snapshot, folder, records, metadata)
     except Exception as error:
         write_new(folder / "run-failed.json", {"status": "FAIL", "failed_at": timestamp(),
                    "exception_type": type(error).__name__, "model_training_performed": False})
@@ -244,4 +312,11 @@ def run(root, case_id="d01-a24484b21a21"):
 
 
 if __name__ == "__main__":
-    print(json.dumps(run(app_root()), indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=app_root())
+    parser.add_argument("--case-id", default="d01-a24484b21a21")
+    parser.add_argument("--fhfa-only", action="store_true",
+                        help="download direct FHFA HPI only; reuse existing FRED files without network calls")
+    args = parser.parse_args()
+    action = run_fhfa_hpi_refresh if args.fhfa_only else run
+    print(json.dumps(action(args.root, args.case_id), indent=2))

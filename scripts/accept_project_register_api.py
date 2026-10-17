@@ -140,6 +140,7 @@ def main() -> int:
                 "scripts/compare_fhfa_us_hpi_to_fred.py",
                 "src/credit_atlas/fhfa_hpi.py",
                 "src/credit_atlas/mortgage_macro_context.py",
+                "src/credit_atlas/server.py",
                 "tests/test_project_register.py",
             )
             receipt = {

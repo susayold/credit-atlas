@@ -474,11 +474,15 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                     from .hud_fha_production_transitions import hud_fha_production_transitions
                     self.send(200, hud_fha_production_transitions(service.root), head=head)
                     return
-                if url.path == "/api/mortgage-macro-context":
+                if url.path in {"/api/mortgage-macro-context", "/api/mortgage-macro-context-report"}:
                     if query:
                         raise ValueError("Mortgage macro context accepts no filters")
                     from .mortgage_macro_context import report
-                    self.send(200, report(service.root), head=head)
+                    result = report(service.root)
+                    if url.path.endswith("-report"):
+                        self.send(200, result, filename="CreditAtlas-mortgage-macro-context.json", head=head)
+                    else:
+                        self.send(200, result, head=head)
                     return
                 if url.path == "/api/fed-bank-mortgage-context":
                     if query:

@@ -199,7 +199,8 @@ async function mortgageMacroContextPane(container,generation){
    rightsLink.href=s.rights_evidence_url||s.metadata_url||'#';rightsLink.target='_blank';rightsLink.rel='noopener noreferrer';
    return[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count),sourceLink,rightsLink,s.attribution||'—'];
   });
-  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Publisher / distributor','Frequency','Latest reference date',{label:'Observations',number:true},'Source URL','Rights / vintage status','Attribution'],sourceRows));
+  const exportLink=el('a','button secondary','Tải macro context JSON');exportLink.href='/api/mortgage-macro-context-report';exportLink.download='CreditAtlas-mortgage-macro-context.json';
+  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,exportLink,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Publisher / distributor','Frequency','Latest reference date',{label:'Observations',number:true},'Source URL','Rights / vintage status','Attribution'],sourceRows));
   const pit=d.point_in_time_context;
   if(pit?.status==='AVAILABLE'){
    const rows=pit.monthly_history,pitBox=card('ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó',pit.coverage.first_month+' → '+pit.coverage.last_month+' · '+number(pit.coverage.monthly_rows)+' tháng · chốt cuối tháng');

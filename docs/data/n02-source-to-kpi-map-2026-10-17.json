@@ -766,7 +766,7 @@
         "fhfa-state-all-transactions-hpi-2026q2",
         "fhfa-us-census-all-transactions-hpi-2026q2"
       ],
-      "code_and_consumer": "scripts/acquire_public_mortgage_context.py:fetch_fhfa_us_hpi -> normalized quarterly input -> src/credit_atlas/mortgage_macro_context.py -> /api/mortgage-macro-context and D01 context panel; state HPI remains a separate QA reference with no current route.",
+      "code_and_consumer": "scripts/acquire_public_mortgage_context.py:fetch_fhfa_us_hpi -> normalized quarterly input -> src/credit_atlas/mortgage_macro_context.py -> /api/mortgage-macro-context + byte-identical /api/mortgage-macro-context-report download and D01 context panel and JSON report download; state HPI remains a separate QA reference with no current route.",
       "kpi_or_output": "Quarterly U.S. All-Transactions HPI (1980Q1=100), carried at native quarter grain; no monthly interpolation.",
       "status_and_limits": "Direct FHFA current snapshot contains 2,060 rows across USA and nine Census divisions, 1975Q1–2026Q2. The USA series has exact Decimal parity on 206/206 overlapping quarters versus the local FRED USSTHPI snapshot (zero missing/value mismatches). This validates definition/value overlap for the snapshots only; FHFA current release is not a vintage history, does not prove event-time publication availability, and is not a qualified predictor. Attribution is recorded; no public redistribution approval or legal opinion is asserted.",
       "evidence_type": "official_publisher_page_and_faq_review_plus_direct_source_receipt_and_exact_snapshot_parity",
@@ -789,8 +789,8 @@
             "retrieved_at_utc",
             "attribution"
           ],
-          "consumer": "/api/mortgage-macro-context -> D01 macro context UI and JSON report",
-          "limitations": "Latest FHFA snapshot only. Exact 206/206 parity to the local FRED USSTHPI snapshot does not create historical vintage or publication timestamps, does not authorize every downstream use, and does not qualify a model feature."
+          "consumer": "/api/mortgage-macro-context and byte-identical /api/mortgage-macro-context-report attachment -> D01 macro context UI/JSON export",
+          "limitations": "Latest FHFA snapshot only. Exact 206/206 parity to the local FRED USSTHPI snapshot does not create historical vintage or publication timestamps, does not authorize every downstream use, and does not qualify a model feature. FHFA-only acquisition, verified reuse of the existing FRED UNRATE/PMMS snapshots, D01 macro-context rebuild, API/JSON byte parity and browser read-path smoke passed. A full foundation rebuild from raw D01 mortgage sample remains unrun."
         }
       ]
     }

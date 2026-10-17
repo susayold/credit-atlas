@@ -17,6 +17,7 @@ import pytest
 
 from credit_atlas.mortgage_macro_context import report
 from credit_atlas.server import handler_for
+from scripts.acquire_public_mortgage_context import reuse_existing_fred_series
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -237,6 +238,57 @@ def test_macro_report_fails_closed_on_source_digest_mismatch(macro_root):
         report(macro_root)
 
 
+def test_fhfa_only_refresh_reuses_verified_fred_files_without_changing_them(tmp_path):
+    source = tmp_path / "prior"
+    destination = tmp_path / "new"
+    source.mkdir()
+    destination.mkdir()
+    metadata = []
+    for series_id, rows in {
+        "UNRATE": [("2026-08-01", "4.2"), ("2026-09-01", "4.3")],
+        "MORTGAGE30US": [("2026-10-08", "6.25"), ("2026-10-15", "6.20")],
+    }.items():
+        path = source / f"{series_id}.csv"
+        with path.open("w", encoding="utf-8", newline="") as stream:
+            writer = csv.writer(stream, lineterminator="\n")
+            writer.writerow(["observation_date", series_id])
+            writer.writerows(rows)
+        metadata.append({
+            "series_id": series_id,
+            "source_url": f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}",
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        })
+    before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in source.iterdir()}
+    downloads = reuse_existing_fred_series(source, destination, {"series": metadata})
+    after = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in source.iterdir()}
+    assert before == after
+    assert [row[1]["series_id"] for row in downloads] == ["UNRATE", "MORTGAGE30US"]
+    assert downloads[0][0][-1]["value"] == 4.3
+    assert downloads[1][0][-1]["value"] == 6.2
+    assert all(hashlib.sha256((destination / name).read_bytes()).hexdigest() == digest
+               for name, digest in before.items())
+
+
+def test_fhfa_only_refresh_rejects_fred_snapshot_digest_mismatch(tmp_path):
+    source = tmp_path / "prior"
+    destination = tmp_path / "new"
+    source.mkdir()
+    destination.mkdir()
+    path = source / "UNRATE.csv"
+    path.write_text("observation_date,UNRATE\n2026-09-01,4.3\n", encoding="utf-8")
+    bad_metadata = [{
+        "series_id": "UNRATE",
+        "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE",
+        "sha256": "0" * 64,
+    }, {
+        "series_id": "MORTGAGE30US",
+        "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US",
+        "sha256": "0" * 64,
+    }]
+    with pytest.raises(ValueError, match="failed its receipt digest"):
+        reuse_existing_fred_series(source, destination, {"series": bad_metadata})
+
+
 def test_macro_report_does_not_fallback_from_newer_corrupt_successful_run(macro_root):
     newest = macro_root / "data/private/public-context/fred-ffffffffffff"
     newest.mkdir()
@@ -274,15 +326,25 @@ def macro_api(macro_root):
 
 def test_macro_api_is_unfiltered_and_sources_view_exposes_context(macro_api):
     with urlopen(macro_api + "/api/mortgage-macro-context", timeout=5) as response:
-        result = json.loads(response.read())
+        api_payload = response.read()
+        result = json.loads(api_payload)
     assert result["status"] == "AVAILABLE"
     assert len(result["series"]) == 3
     hpi = next(row for row in result["series"] if row["series_id"] == "USSTHPI")
     assert hpi["source"] == "Federal Housing Finance Agency (direct)"
     assert hpi["rights_evidence_url"] == "https://www.fhfa.gov/document/hpi-faqs"
     assert hpi["snapshot_as_of"] == "2026Q2"
+    with urlopen(macro_api + "/api/mortgage-macro-context-report", timeout=5) as response:
+        export_payload = response.read()
+        assert response.headers["Content-Disposition"].endswith(
+            'filename="CreditAtlas-mortgage-macro-context.json"'
+        )
+    assert export_payload == api_payload
     with pytest.raises(HTTPError) as error:
         urlopen(macro_api + "/api/mortgage-macro-context?series=UNRATE", timeout=5)
+    assert error.value.code == 400
+    with pytest.raises(HTTPError) as error:
+        urlopen(macro_api + "/api/mortgage-macro-context-report?series=UNRATE", timeout=5)
     assert error.value.code == 400
     with urlopen(macro_api + "/app.js", timeout=5) as response:
         source = response.read().decode("utf-8")
@@ -293,6 +355,8 @@ def test_macro_api_is_unfiltered_and_sources_view_exposes_context(macro_api):
     assert "Rights / vintage status" in source
     assert "Attribution" in source
     assert "rights_evidence_url" in source or "s.rights_evidence_url" in source
+    assert "Tải macro context JSON" in source
+    assert "/api/mortgage-macro-context-report" in source
     assert "FHFA direct · All-Transactions NSA" in source
     assert "ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó" in source
     assert "/api/mortgage-macro-context" in source

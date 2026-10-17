@@ -50,8 +50,8 @@
     {
       "id": "N03",
       "status": "15/15 method cards now have validated evidence paths and reciprocal source-release lineage; output-level mapping remains in progress.",
-      "scope": "Fifteen method cards carry dataset input, target, method, stored validation, limitations, valid evidence references and source-release IDs. Linkage acceptance: 50 reciprocal card↔source pairs across 33 source records. Freddie sample use in P4 is explicitly marked as upstream sample-derived UPB diagnostic, not owned exposure. ABS 103-period card is explicitly limited to Toyota 2022-B/2024-B and Nissan 2024-B.",
-      "remaining": "Map each material numeric app output to its exact method/input and unit; include all declared assumptions and publisher-versus-app imputation provenance. The reciprocal card/source links cover the current 15 cards but do not claim exhaustive KPI-to-code or KPI-to-cell traceability."
+      "scope": "Fifteen method cards carry dataset input, target, method, stored validation, limitations, valid evidence references and source-release IDs. Linkage acceptance: 50 reciprocal card↔source pairs across 33 source records. Freddie sample use in P4 is explicitly marked as upstream sample-derived UPB diagnostic, not owned exposure. ABS 103-period card is explicitly limited to Toyota 2022-B/2024-B and Nissan 2024-B. FHFA direct quarterly HPI now has a source-specific KPI formula trace and an API/JSON-report route with byte-identical fixture acceptance.",
+      "remaining": "Map each material numeric app output to its exact method/input and unit; include all declared assumptions and publisher-versus-app imputation provenance. The reciprocal card/source links cover the current 15 cards but do not claim exhaustive KPI-to-code or KPI-to-cell traceability. FHFA-only acquisition, reused-FRED receipt verification, D01 macro-context rebuild and current-revision browser read-path smoke passed; a full D01 foundation rebuild from raw mortgage sample remains unrun, and no model feature is qualified."
     },
     {
       "id": "N05",

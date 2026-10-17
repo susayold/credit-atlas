@@ -1,7 +1,10 @@
 import csv
+from io import BytesIO
 from pathlib import Path
 
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
+
+from scripts import add_nmdb_state_to_reference_workbook as state_workbook_builder
 
 
 def test_nmdb_workbook_has_latest_summary_and_filterable_full_series():
@@ -30,3 +33,28 @@ def test_nmdb_workbook_has_latest_summary_and_filterable_full_series():
     assert "2019Q4" in workbook["Definitions"]["D5"].value
     assert workbook["Definitions"]["B2"].value == "30–89 days delinquent"
     assert "30–59 or 60–89" in workbook["Definitions"]["C2"].value
+
+
+def test_nmdb_state_reference_table_has_filter_without_duplicate_sheet_filter(tmp_path, monkeypatch):
+    data_path = tmp_path / "state-panel.csv"
+    data_path.write_text(
+        "source,frequency,geo_level,geo_id,geo_name,market,period,year,quarter,month,suppressed,series_id,value_pct\n"
+        "NMDB,Quarterly,State,VT,Vermont,All Mortgages,2004Q1,2004,1,3,1,P3089DL,\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(state_workbook_builder, "DATA", data_path)
+    workbook = Workbook()
+    workbook.active.title = "Start here"
+    workbook.create_sheet("FHFA HPI state")
+
+    state_workbook_builder.add_data_sheet(workbook)
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    states = load_workbook(output)["NMDB states"]
+
+    assert states.auto_filter.ref is None
+    table = states.tables["NmdbStates"]
+    assert table.ref == "A1:M2"
+    assert table.autoFilter.ref == "A1:M2"
+    assert states.cell(2, 13).value is None

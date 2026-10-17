@@ -1,10 +1,13 @@
 import json
+import io
 from pathlib import Path
 
 import duckdb
 import pytest
+from openpyxl import load_workbook
 
 from credit_atlas.nmdb_mortgage_statistics import MART_RELATIVE, RECEIPT_RELATIVE, report
+from credit_atlas.nmdb_mortgage_statistics_excel import workbook_bytes
 from credit_atlas.workspace import sha256
 
 
@@ -75,3 +78,25 @@ def test_value2_remains_selectable_for_a_series_where_appendix_b_supports_it(nmd
     assert result["rows"][0]["selected_value"] == 16.0
     assert result["measure"] == "VALUE2"
     assert result["quality"]["forecast_or_imputation_used"] is False
+
+
+def test_nmdb_market_workbook_uses_table_filter_without_duplicate_sheet_filter(nmdb_root):
+    query = {
+        "product": "new_annual", "geo_level": "National", "geo_id": "USA",
+        "market": "All Mortgages", "series_id": "AVE_INTRATE", "measure": "VALUE2",
+        "from_year": "2025", "to_year": "2025",
+    }
+
+    class Service:
+        @staticmethod
+        def nmdb_mortgage_statistics(filters):
+            return report(nmdb_root, filters)
+
+    workbook = load_workbook(io.BytesIO(workbook_bytes(Service(), query)), data_only=False)
+    data = workbook["Selected data"]
+
+    assert data.auto_filter.ref is None
+    table = data.tables["NMDBSelectedData"]
+    assert table.ref == "A1:R2"
+    assert table.autoFilter.ref == "A1:R2"
+    assert data.cell(2, 13).value == 16.0

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-import pytest
+from io import BytesIO
 
-from scripts.build_treasury_hamp_quarterly_summary import CurationError, parse_summary_text
+import pytest
+from openpyxl import Workbook, load_workbook
+
+from scripts.build_treasury_hamp_quarterly_summary import CurationError, parse_summary_text, style_table
 from scripts.download_treasury_hamp_quarterly_summaries import load_sources
 
 
@@ -68,3 +71,23 @@ def test_quarterly_summary_parser_rejects_invalid_90_plus_subset():
     layout = sample_layout().replace("2009 1,000 10.0% 5.0%", "2009 1,000 10.0% 11.0%", 1)
     with pytest.raises(CurationError, match="subset/range"):
         parse_summary_text(layout, "Updated through March 31, 2023", REPORT, "a" * 64)
+
+
+def test_treasury_summary_table_uses_table_filter_without_duplicate_sheet_filter():
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Cohort KPIs"
+    sheet.append(["source_id", "value"])
+    sheet.append(["hamp-2023q1", 1.25])
+
+    style_table(sheet, "HampQuarterlyCohortKpis")
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    sheet = load_workbook(output)["Cohort KPIs"]
+
+    assert sheet.auto_filter.ref is None
+    table = sheet.tables["HampQuarterlyCohortKpis"]
+    assert table.ref == "A1:B2"
+    assert table.autoFilter.ref == "A1:B2"

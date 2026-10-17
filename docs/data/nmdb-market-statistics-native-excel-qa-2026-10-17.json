@@ -1,0 +1,71 @@
+{
+  "evidence_type": "native_excel_market_statistics_query_acceptance",
+  "verified_on": "2026-10-17",
+  "status": "PASS",
+  "source": {
+    "publisher": "FHFA NMDB Aggregate Statistics",
+    "release_date": "2026-09-30",
+    "market_mart_is_receipt_bound": true,
+    "source_hashes_omitted": true
+  },
+  "excel": {
+    "version": "16.0",
+    "read_only": true,
+    "macros_disabled": true,
+    "external_links_updated": false,
+    "full_rebuild": true,
+    "sheets": [
+      "Start Here",
+      "Selected data",
+      "Definitions",
+      "Quality & lineage"
+    ],
+    "table_name": "NMDBSelectedData",
+    "table_filter_visible": true,
+    "formula_errors": 0,
+    "external_links": 0,
+    "workbook_bytes_unchanged_after_read_only_open": true
+  },
+  "queries": [
+    {
+      "product": "new_annual",
+      "geography": "National / USA",
+      "market": "All Mortgages",
+      "series_id": "AVE_INTRATE",
+      "measure": "VALUE1",
+      "period_start": "1998",
+      "period_end": "2025",
+      "rows": 28,
+      "columns": 18,
+      "report_to_excel_parity": "28/28 rows x 18 columns",
+      "selected_value_unavailable_rows": 0,
+      "suppressed_rows": 0,
+      "forecast_or_imputation": false
+    },
+    {
+      "product": "outstanding_quarterly",
+      "geography": "National / USA",
+      "market": "All Mortgages",
+      "series_id": "PCT_MTMLTV_GT100",
+      "measure": "VALUE1",
+      "period_start": "2013Q1",
+      "period_end": "2026Q2",
+      "rows": 54,
+      "columns": 18,
+      "report_to_excel_parity": "54/54 rows x 18 columns",
+      "selected_value_unavailable_rows": 0,
+      "suppressed_rows": 0,
+      "forecast_or_imputation": false
+    }
+  ],
+  "descriptive_observation": {
+    "series_id": "PCT_MTMLTV_GT100",
+    "measure": "VALUE1",
+    "2013Q1_percent": 11.3,
+    "minimum_period": "2022Q2",
+    "minimum_percent": 0.1,
+    "2026Q2_percent": 0.3,
+    "endpoint_change_percentage_points": -11.0,
+    "interpretation_boundary": "Quarterly active-stock shares have changing denominators and do not track a fixed borrower cohort or estimate PD."
+  }
+}

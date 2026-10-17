@@ -24,7 +24,7 @@
     "total_capabilities": 50,
     "completion_ratio": 0.52
   },
-  "scope": "One N03 progress note was updated to record native Excel acceptance for a single query export. The completion ledger was not changed.",
+  "scope": "N03, N05, N06 and N20 progress notes were updated with the verified NMDB query and state-reference acceptance evidence. The completion ledger was not changed.",
   "limitations": [
     "This confirms the plan workbook's native Excel behavior and formulas, not completion of the listed work items.",
     "Hashes and local file paths are intentionally omitted from this public evidence record."

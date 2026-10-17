@@ -40,7 +40,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Chuẩn hóa `P3089DL` trên API/UI/Excel thành **30–89 DPD**; FHFA gộp bucket 30–59 và 60–89 ngày. Đã sửa cả national NMDB performance workbook lẫn D02 data-reference workbook. Giữ mẫu số active loans cuối quý, native percentage points và 4 market source series riêng.
 - Audit actual CSV state: 79.968 rows; 68 cờ suppression, 17 mỗi series, đều ở Vermont × Government / Non-Conventional trong 2004Q1–2008Q3. `PFORB` có 14.484 blank trước 2019Q4; 17 cùng mang suppression flag và 14.467 không mang cờ. Code, app và Excel giữ blank/flag riêng; không điền zero.
 - Sửa trend SVG để flush segment tại từng null, thay vì nối đường qua suppression/pre-series gap. Mở rộng Edge QA: P3089 label, Vermont suppressed row, đoạn chart bị ngắt, Excel download, selectors và mobile; **6 checks pass, không page error**.
-- Focused tests: `test_nmdb_performance.py`, `test_nmdb_state_performance.py`, `test_nmdb_performance_workbook.py`, `test_d02_data_reference_workbook.py` — **6 passed**. Workbook D02 có 23 sheet và 79.968 state rows; artifact-tool render QA xác nhận định nghĩa; native Excel desktop chưa mở/recalculate.
+- Focused tests ở checkpoint ban đầu: `test_nmdb_performance.py`, `test_nmdb_state_performance.py`, `test_nmdb_performance_workbook.py`, `test_d02_data_reference_workbook.py` — **6 passed**. D02 khi đó có 23 sheet và 79.968 state rows; native Excel được nghiệm thu ở follow-up phía dưới.
 - Đây là trace/presentation fix, không thêm row hay forecast. N03 còn KPI khác; N05/N06 tổng vẫn mở; capability acceptance giữ **26/50 = 52%**.
 
 ### N05 — canonical FHFA NMDB aggregate mart
@@ -56,7 +56,7 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - Thêm P2 view `nmdb` với product, geography level/id, market, series, trọng số và year filters; có time-series chart, latest-period KPI, liền-kề delta, missing/suppression, provenance và use limits.
 - Thêm API catalog/report và query-scoped `.xlsx` endpoint. Workbook reference National / USA / All Mortgages có 1.680 New annual + 1.998 Outstanding quarterly rows, 97 codebook definitions, latest KPIs và quality/lineage.
 - Export giữ VALUE1/VALUE2 raw, giá trị đã parse, suppression, selected measure, filter context, source release và mart SHA-256. Excel không nhồi toàn bộ 3,57 triệu aggregate rows vào một sheet.
-- N05/N06 chưa đóng acceptance tổng: runtime/API/export đã có; browser QA hiện pass cho NMDB performance và representative New/Outstanding filters/query-scoped exports. Native Excel desktop và các route khác vẫn còn mở. Không tăng completion 26/50 chỉ vì thêm implementation.
+- N05/N06 chưa đóng acceptance tổng: runtime/API/export và browser QA đại diện đã có; hai actual New/Outstanding query exports cùng D02 state reference được native Excel nghiệm thu ở follow-up phía dưới. Các route/filter còn lại vẫn mở. Không tăng completion 26/50 chỉ vì thêm implementation.
 
 ### Runtime review N05/N06 — 17/10/2026
 
@@ -72,6 +72,15 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - **8 checks pass, 0 page/console errors:** New annual 1998–2025, AVE_INTRATE VALUE1 = 6,3% năm 2025; Outstanding quarterly AVE_MTMLTV VALUE2 = 54,2% năm 2026Q2, đủ 54 quý; URL filters survive reload; selected `TOT_UPB` chỉ mở VALUE1 và API trả HTTP 400 khi ép VALUE2; mobile 390px không overflow.
 - State Alaska × Jumbo Market × AVE_INTRATE có 27 annual observations; 7 suppressed cells giữ unavailable và chart tách thành 4 observed segments. Hai query-scoped workbooks được kiểm bằng openpyxl: filters/weighting, 27/54 observation rows, missing/suppression flags, latest values, bốn sheet và chart đều khớp API report.
 - Kiểm tra workbook này là đọc package/XLSX theo cấu trúc và data values; **không** khẳng định Microsoft Excel desktop mở/recalculate thành công. Không xuất raw loan-level records. N05/N06 tổng vẫn mở cho Excel desktop, PUDB/HMDA/route parity còn lại và các KPI chưa trace; capability ledger giữ **26/50 = 52%**.
+
+### Native Excel và parity follow-up N03/N05/N06 — 17/10/2026
+
+- Rà lại mọi workbook builder có `add_table()` và phát hiện filter bị khai báo đồng thời ở worksheet và Excel Table trong NMDB query exports cùng D02 `NMDB states`. Đã gỡ sheet-level filter lặp ở hai builder; Table filter vẫn hiện trong Excel. Cùng cấu trúc lặp được gỡ khỏi Treasury HAMP summary builder và có regression test round-trip.
+- Tạo hai export từ mart FHFA receipt-bound: New annual `AVE_INTRATE` / VALUE1, National / USA / All Mortgages, 1998–2025 (**28/28 hàng × 18 cột**) và Outstanding `PCT_MTMLTV_GT100` / VALUE1, cùng geography/market, 2013Q1–2026Q2 (**54/54 × 18**). Excel 16.0 read-only mở cả hai, rebuild, xác nhận table filters hiện, 0 formula error/external link và bytes không đổi. Release 2026-09-30; không dùng forecast/imputation.
+- Quan sát mô tả từ series source: share active mortgages có current MTM LTV >100% theo VALUE1 là 11.3% ở 2013Q1, mức thấp nhất 0.1% ở 2022Q2 và 0.3% ở 2026Q2; endpoint change −11.0 pp. Đây là snapshot qua các mẫu số active-stock khác nhau, không phải cùng một cohort hay PD. [FHFA định nghĩa series](https://www.fhfa.gov/document/NMDB-Aggregate-Statistics-Data-Dictionary-Technical-Notes.pdf).
+- Rebuild D02 data-reference workbook: 24 sheets; `NMDB states` có 79,968 hàng × 13 cột, exact row parity với CSV. 68 suppressed values vẫn blank trong tổng 14,535 blank rate cells. Excel 16.0 read-only mở/rebuild, Table filter hiển thị, 0 external links, file không đổi.
+- Một query NMDB Performance có suppression (98×12), workbook plan (18 formulas, 0 errors, ledger 26/50) cũng đã qua native Excel ở follow-up trước. Tổng hiện có **35 focused tests pass** cho các test NMDB và Treasury workbook liên quan. Bằng chứng sanitized: [New/Outstanding exports](data/nmdb-market-statistics-native-excel-qa-2026-10-17.json), [state reference](data/nmdb-state-reference-native-excel-qa-2026-10-17.json), [performance query](data/nmdb-query-excel-native-qa-2026-10-17.json).
+- N05/N06 vẫn **partial**: query/export samples đã mở bằng native Excel, nhưng chưa cover đủ mọi geography × market × series × measure × period; PUD/HMDA/HUD exports và HAMP native Excel còn mở. Capability ledger giữ **26/50 = 52%**.
 
 ### Browser acceptance FHFA PUDB acquisition profile — 17/10/2026
 

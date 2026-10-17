@@ -136,7 +136,6 @@ def parse_pdf(path: Path, report: dict) -> tuple[list[dict], str, int]:
 
 def style_table(sheet, name: str, freeze: str = "A2") -> None:
     sheet.freeze_panes = freeze
-    sheet.auto_filter.ref = sheet.dimensions
     sheet.sheet_view.showGridLines = False
     header_fill = PatternFill("solid", fgColor="17365D")
     for cell in sheet[1]:

@@ -1,0 +1,34 @@
+{
+  "evidence_type": "native_excel_state_reference_workbook_acceptance",
+  "verified_on": "2026-10-17",
+  "status": "PASS",
+  "source": "FHFA NMDB state performance release through 2026Q2",
+  "excel": {
+    "version": "16.0",
+    "read_only": true,
+    "macros_disabled": true,
+    "external_links_updated": false,
+    "full_rebuild": true,
+    "sheets": 24,
+    "table_name": "NmdbStates",
+    "table_filter_visible": true,
+    "external_links": 0,
+    "workbook_bytes_unchanged_after_read_only_open": true
+  },
+  "nmdb_state_sheet": {
+    "rows": 79968,
+    "columns": 13,
+    "period_start": "2002Q1",
+    "period_end": "2026Q2",
+    "source_csv_row_parity": "79,968/79,968 rows x 13 columns",
+    "suppressed_rows": 68,
+    "blank_rate_cells": 14535,
+    "suppressed_rows_with_blank_rate": 68,
+    "sheet_level_duplicate_filter": false
+  },
+  "limitations": [
+    "The 14,535 blank values include unavailable and suppressed cells; suppression is a separate overlapping flag.",
+    "Aggregate state data are not borrower-level outcomes or fixed-horizon PD.",
+    "Private file paths and full hashes are omitted."
+  ]
+}

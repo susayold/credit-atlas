@@ -30,7 +30,6 @@ def add_data_sheet(book) -> None:
                           row["market"], row["period"], int(row["year"]), int(row["quarter"]), int(row["month"]),
                           row["suppressed"] == "1", row["series_id"], rate])
     sheet.freeze_panes = "B2"
-    sheet.auto_filter.ref = f"A1:M{sheet.max_row}"
     table = Table(displayName="NmdbStates", ref=f"A1:M{sheet.max_row}")
     table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
     sheet.add_table(table)

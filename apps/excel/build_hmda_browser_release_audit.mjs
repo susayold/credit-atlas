@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { FileBlob, SpreadsheetFile, Workbook } from '@oai/artifact-tool';
 
-const [jsonArg, outputArg] = process.argv.slice(2);
+const [jsonArg, outputArg, dimensionAuditArg] = process.argv.slice(2);
 if (!jsonArg || !outputArg) throw new Error('usage: build_hmda_browser_release_audit.mjs <audit.json> <output.xlsx>');
 const input = path.resolve(jsonArg);
 const output = path.resolve(outputArg);
@@ -11,11 +11,19 @@ if (audit.evidence_type !== 'hmda_browser_selected_release_action_counts_2018_20
     || audit.status !== 'PASS' || audit.years?.length !== 8) {
   throw new Error('Expected the verified eight-year HMDA Browser action-count audit');
 }
+const dimensionAudit = dimensionAuditArg ? JSON.parse(await fs.readFile(path.resolve(dimensionAuditArg), 'utf8')) : null;
+if (dimensionAudit && (dimensionAudit.evidence_type !== 'hmda_browser_2025_snapshot_dimension_api_parity'
+    || dimensionAudit.status !== 'PASS' || dimensionAudit.results?.length !== 5
+    || dimensionAudit.results.some((item) => !item.all_action_counts_match
+      || !item.official_api_parameter_echo_matches || item.official_api_http_status !== 200))) {
+  throw new Error('Expected five verified filtered-API dimensions for the 2025 Snapshot');
+}
 
 const wb = Workbook.create();
 const browser = wb.worksheets.add('Browser selected');
 const archives = wb.worksheets.add('App One-Year');
 const deltas = wb.worksheets.add('Vintage deltas');
+const dimensions = dimensionAudit ? wb.worksheets.add('Dimension parity') : null;
 const lineage = wb.worksheets.add('Lineage');
 const method = wb.worksheets.add('Method & sources');
 
@@ -180,6 +188,52 @@ deltas.tables.add('A4:O8', true, 'HmdaCrossVintageDeltaSummary');
 deltas.freezePanes.freezeRows(4);
 subtitle(deltas, 'A11:O12', 'Action 4–8 deltas matter: for example, 2020 has fewer action-4 rows but more action-2 rows in the Browser Three-Year vintage. The total delta is not “late rows added”; resubmissions/reclassifications can move action counts in both directions.', 48);
 
+if (dimensionAudit && dimensions) {
+  const scopeLabels = {
+    state_ca: ['California state', 'state=CA'],
+    county_los_angeles: ['Los Angeles County', 'county=06037'],
+    state_ca_conventional: ['California × conventional', 'state=CA; loan_type=1'],
+    largest_reporter_lei: ['Largest reporting institution (LEI)', 'one LEI selected by largest local 2025 action-1–8 count'],
+    nationwide_conventional: ['Nationwide conventional loans', 'loan_type=1'],
+  };
+  styleBase(dimensions, 'O', 20);
+  columnWidths(dimensions, { A: 28, B: 52, C: 15, D: 15, E: 15, F: 15, G: 15, H: 15, I: 17, J: 17, K: 17, L: 18, M: 14, N: 17, O: 14 });
+  title(dimensions, 'A1:O1', 'Filtered dimension parity · official 2025 Snapshot API vs local source');
+  subtitle(dimensions, 'A2:O2', 'Five spot-check scopes compared on action codes 1–8. Four marginal scopes also match the receipt-verified app report; California × product is raw/API validated but not an app intersection. Share columns are Excel formulas.', 54);
+  dimensions.getRange('A4:O4').values = [[
+    'Scope', 'Official filter', 'API rows 1–8', 'Local rows 1–8', 'API decisions 1+2+3', 'Local decisions 1+2+3',
+    'API denied · 3', 'Local denied · 3', 'API denied share', 'Local denied share', 'Δ share · pp',
+    'Local raw match', 'API filter echo', 'App marginal match', 'Check',
+  ]];
+  header(dimensions, 'A4:O4');
+  const dimensionRows = dimensionAudit.results.map((item) => {
+    const [label, filter] = scopeLabels[item.scope] ?? [item.scope, 'See private receipt'];
+    return [label, filter, item.api_summary.action_1_to_8_records, item.local_snapshot_summary.action_1_to_8_records,
+      item.api_summary.decision_denominator_1_2_3, item.local_snapshot_summary.decision_denominator_1_2_3,
+      item.api_summary.denied_numerator_action_3, item.local_snapshot_summary.denied_numerator_action_3,
+      null, null, null, item.all_action_counts_match ? 'PASS' : 'FAIL',
+      item.official_api_parameter_echo_matches ? 'PASS' : 'FAIL',
+      item.app_marginal_summary_match === null ? 'N/A' : item.app_marginal_summary_match ? 'PASS' : 'FAIL', null];
+  });
+  const dimensionEndRow = 4 + dimensionAudit.results.length;
+  dimensions.getRange(`A5:O${dimensionEndRow}`).values = dimensionRows;
+  dimensions.getRange(`I5:K${dimensionEndRow}`).formulas = dimensionAudit.results.map((_, index) => {
+    const row = index + 5;
+    return [`=IFERROR(G${row}/E${row},0)`, `=IFERROR(H${row}/F${row},0)`, `=(I${row}-J${row})*100`];
+  });
+  dimensions.getRange(`O5:O${dimensionEndRow}`).formulas = dimensionAudit.results.map((_, index) => {
+    const row = index + 5;
+    return [`=IF(AND(C${row}=D${row},E${row}=F${row},G${row}=H${row},L${row}="PASS",M${row}="PASS",OR(N${row}="PASS",N${row}="N/A")),"PASS","CHECK")`];
+  });
+  dimensions.getRange(`A5:O${dimensionEndRow}`).format.rowHeight = 34;
+  dimensions.getRange(`C5:H${dimensionEndRow}`).format.numberFormat = '#,##0;(#,##0);-';
+  dimensions.getRange(`I5:J${dimensionEndRow}`).format.numberFormat = '0.0000%';
+  dimensions.getRange(`K5:K${dimensionEndRow}`).format.numberFormat = '0.00000000;(0.00000000);-';
+  dimensions.tables.add(`A4:O${dimensionEndRow}`, true, 'HmdaFilteredDimensionApiParity');
+  dimensions.freezePanes.freezeRows(4);
+  subtitle(dimensions, 'A11:O12', 'Public sheet intentionally omits raw LAR rows, local paths, exact LEI and full action-level query responses. Exact query, LEI, action profiles, API payloads and receipt hashes are retained in the private D: receipt; only aggregate summaries are published.', 52);
+}
+
 // Hashes and source IDs, without private paths or any loan-level data.
 styleBase(lineage, 'G', 18);
 columnWidths(lineage, { A: 12, B: 18, C: 16, D: 22, E: 48, F: 66, G: 23 });
@@ -218,6 +272,7 @@ const methodRows = [
   ['2018 source boundary', '1,961 local raw rows have action=-1 and are quarantined; API/report profile covers actions 1–8.', '2018 private acquisition and audit receipt', 'Excluded from KPI'],
   ['2019–2022 vintage comparison', 'App archives are One-Year; the current Browser selects Three-Year. Compare totals by action only; no row-level match.', 'See Vintage deltas and JSON audit', 'Cross-vintage diagnostic'],
   ['2023–2025 matching releases', '2023/2024 One-Year and 2025 Snapshot app receipts match all Browser-selected action counts.', 'Private receipts crosswalked in JSON output', 'Exact action-count match'],
+  ['2025 filtered API dimension check', dimensionAudit ? `${dimensionAudit.results.length} Snapshot scopes reconciled; four app marginal buckets match and the California × loan-type intersection is raw/API-only.` : 'No filtered dimension audit supplied to this workbook build.', 'See Dimension parity and sanitized API audit JSON', dimensionAudit?.status ?? 'Not included'],
   ['2025 Dynamic', 'Dynamic is a separate weekly release state; not the Browser-selected static Snapshot.', '2025 Snapshot/Dynamic comparison report', 'Separate source ID'],
   ['Release-state limits', 'Release differences can include late submissions/resubmissions and reclassifications; action deltas can have either sign.', 'No row matching performed', 'Do not call new unique rows'],
   ['Trend limits', 'Across-year levels also reflect coverage, reporting thresholds, product mix and geography mix.', 'Additional harmonization needed', 'Not causal'],
@@ -248,6 +303,27 @@ for (const [sheet, range, expectedRows] of [
         || Number(row[2]) !== summary.denied_numerator_action_3
         || Math.abs(Number(row[3]) - Number(summary.descriptive_denied_share)) > 1e-12) {
       throw new Error(`${sheet}: calculated summary does not match audit JSON for ${item.activity_year}`);
+    }
+  });
+}
+if (dimensionAudit && dimensions) {
+  const dimensionEndRow = 4 + dimensionAudit.results.length;
+  const values = dimensions.getRange(`C5:O${dimensionEndRow}`).values;
+  dimensionAudit.results.forEach((item, i) => {
+    const row = values[i];
+    if (Number(row[0]) !== item.api_summary.action_1_to_8_records
+        || Number(row[1]) !== item.local_snapshot_summary.action_1_to_8_records
+        || Number(row[2]) !== item.api_summary.decision_denominator_1_2_3
+        || Number(row[3]) !== item.local_snapshot_summary.decision_denominator_1_2_3
+        || Number(row[4]) !== item.api_summary.denied_numerator_action_3
+        || Number(row[5]) !== item.local_snapshot_summary.denied_numerator_action_3
+        || Math.abs(Number(row[6]) - Number(item.api_summary.descriptive_denied_share)) > 1e-12
+        || Math.abs(Number(row[7]) - Number(item.local_snapshot_summary.descriptive_denied_share)) > 1e-12
+        || Math.abs(Number(row[8]) - Number(item.descriptive_denied_share_delta)) > 1e-8
+        || row[9] !== 'PASS' || row[10] !== 'PASS'
+        || row[11] !== (item.app_marginal_summary_match === null ? 'N/A' : item.app_marginal_summary_match ? 'PASS' : 'FAIL')
+        || row[12] !== 'PASS') {
+      throw new Error(`Filtered dimension parity formula/source mismatch for ${item.scope}: ${JSON.stringify(row)}`);
     }
   });
 }
@@ -282,11 +358,16 @@ const qa = {
   status: 'PASS',
   evidence_type: audit.evidence_type,
   input_json_sha256: (await import('node:crypto')).createHash('sha256').update(await fs.readFile(input)).digest('hex'),
+  dimension_audit_input_json_sha256: dimensionAudit
+    ? (await import('node:crypto')).createHash('sha256').update(await fs.readFile(path.resolve(dimensionAuditArg))).digest('hex')
+    : null,
   years: allYears.length,
   same_vintage_exact_matches: 4,
   cross_vintage_diagnostics: 4,
   formula_error_scan: errorScan.ndjson,
   ledger_impact: 'None; project capability ledger remains 26/50.',
+  dimension_parity_scopes: dimensionAudit ? dimensionAudit.results.length : 0,
+  dimension_parity_status: dimensionAudit?.status ?? 'Not included',
   raw_rows_in_workbook: false,
 };
 await fs.writeFile(`${output}.qa.json`, JSON.stringify(qa, null, 2));
@@ -295,6 +376,7 @@ for (const sheet of wb.worksheets.items) {
     'Browser selected': 'A1:O16',
     'App One-Year': 'A1:O14',
     'Vintage deltas': 'A1:O12',
+    'Dimension parity': 'A1:O12',
     Lineage: 'A1:G12',
     'Method & sources': 'A1:D18',
   };

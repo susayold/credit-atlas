@@ -267,3 +267,11 @@ read-only QA reconciled all aggregate action counts and KPI formulas (104 formul
 cells, zero errors or external links), without changing workbook bytes. The
 workbook contains no raw LAR rows; see
 `docs/data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json`.
+
+### HMDA filtered-dimension API/app parity — 17/10/2026
+
+- Đã gọi 5 phạm vi aggregate API năm 2025: California, Los Angeles County, California × conventional, một LEI được chọn theo largest local filer count, và nationwide conventional. Tất cả HTTP 200, filter echo khớp, 5/5 so khớp đầy đủ action 1–8 với local LAR Snapshot cùng freeze.
+- Bốn marginal bucket hiện có trong `HmdaNationalViews.report()` (state, county, LEI, loan type) khớp rows, denominator 1+2+3, denied action 3 và share với API. California × conventional chỉ khớp API-vs-local raw; app hiện chưa hỗ trợ intersection nên không tuyên bố UI/API app parity cho phạm vi này.
+- Mở rộng workbook release audit thành 6 sheet/124 formula cells. Excel desktop 16.0 read-only/full calculation PASS: 5 dimension scopes, 0 lỗi công thức, 0 external links, workbook không đổi bytes. Preview mới cho thấy intersection được đánh dấu `N/A` ở cột app marginal.
+- Evidence: [sanitized dimension audit](data/hmda-browser-dimension-api-parity-2026-10-17.json), [native Excel QA](data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json), [reproduction script](../scripts/audit_hmda_browser_dimension_api_parity.py), [release and rights review](HMDA_RELEASE_COMPARABILITY_AND_REUSE_RIGHTS_2026-10-17_VI.md).
+- Bước kế tiếp trong N02: thêm intersection filter vào app/API, test query-scoped browser/XLSX, rồi mở rộng parity theo release và cohort; riêng reuse rights, coverage/schema/mix và KPI lineage vẫn cần hoàn thành. Không forecast/impute; không thay đổi ledger 26/50.

@@ -87,6 +87,20 @@ App đang lưu các archive One-Year 2019–2022, trong khi Browser chọn Three
 
 Các chênh lệch action âm và dương cùng tồn tại, ví dụ 2020 có 43.436 fewer action-4 rows nhưng 36.311 more action-2 rows, và 2021/2022 có thay đổi đáng kể ở action 5. Vì vậy không mô tả chênh tổng như “late rows được cộng thêm”; đó là khác biệt giữa release-state totals có thể chứa resubmissions/reclassifications. Denied-share deltas nhỏ về điểm phần trăm nhưng vẫn có thể đổi khi population/decision mix đổi; phải chọn release definition trước khi so trend.
 
+## Đối chiếu API theo dimension và app service — 2025 Snapshot
+
+Tài liệu chính thức có hai đường aggregate phù hợp cho câu hỏi này: `/view/aggregations` nhận geography/LEI cùng HMDA filters; `/view/nationwide/aggregations` dành cho tập nationwide. Request phải chỉ rõ year và ít nhất một data filter; truy vấn non-national cần geography hoặc LEI, có thể kèm cả hai. Data Browser API là service phía dưới Data Browser UI. Tôi gọi năm query cho action 1–8, kiểm tra API echo lại filter, rồi so từng action count với LAR Snapshot freeze 02/06/2026 đã verify receipt/hash. Với các bucket một chiều, tôi đồng thời gọi `HmdaNationalViews.report()` của app và đối chiếu rows, mẫu số, denied numerator và share. [API specification](https://ffiec.cfpb.gov/documentation/api/data-browser/) · [public LAR field values](https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields/).
+
+| Phạm vi | API rows 1–8 | Mẫu số 1+2+3 | Denied action 3 | Denied share mô tả | App marginal bucket |
+|---|---:|---:|---:|---:|---|
+| California (`state=CA`) | 1.161.292 | 791.639 | 177.363 | 22,404530% | Khớp chính xác |
+| Los Angeles County (`06037`) | 223.914 | 152.070 | 36.720 | 24,146775% | Khớp chính xác |
+| California × conventional (`loan_type=1`) | 961.135 | 670.649 | 153.088 | 22,826844% | Không có bucket giao cắt trong panel marginal; API khớp local raw |
+| Một LEI có số báo cáo lớn nhất theo rule trong Snapshot | 663.472 | 555.321 | 110.634 | 19,922531% | Khớp chính xác; không công bố LEI ở output |
+| Nationwide conventional (`loan_type=1`) | 10.224.134 | 7.384.608 | 1.728.114 | 23,401567% | Khớp chính xác |
+
+Kết quả **5/5 API profiles khớp toàn bộ tám action counts** với cùng-release local LAR; mọi HTTP status là 200 và API echo khớp filter. Bốn bucket một chiều của app (state, county, LEI, loan type) khớp summary của API. Tổ hợp California × conventional được xác minh trực tiếp API-vs-raw, nhưng `HmdaNationalViews.report()` chỉ nhận một dimension nên không chứng minh giao cắt đó được app hiển thị; đây là khoảng trống chức năng cần xử lý tiếp. Đây mới là spot check cho một release và năm phạm vi, chưa đại diện mọi geography, LEI, year hay filter combinations; browser rendering và các Excel export query-scoped vẫn cần QA riêng. Public JSON [dimension audit](data/hmda-browser-dimension-api-parity-2026-10-17.json) không chứa raw rows, URL/LEI cụ thể hay action-level profile; query, payloads, exact identifiers và receipt hashes được lưu ở private receipt trên D:. Workbook Excel có sheet này và giữ trạng thái `N/A` rõ với app marginal intersection.
+
 ## Những thay đổi có thể làm lệch so sánh theo năm
 
 - **Release window:** Three-Year gộp điều chỉnh nhiều năm sau reporting deadline; One-Year là một freeze sớm hơn; Snapshot là một ngày cut cố định; Dynamic có thể đổi sau từng tuần. Gắn mọi kết quả với product, freeze/as-of, retrieval/capture và source ID.

@@ -949,7 +949,25 @@ confirmation for raw rehosting, dimension-level API/UI parity, and KPI/coverage
 harmonization. No model/forecast was added; capability remains **26/50 (52%)**.
 An analyst workbook covering all eight Browser-selected releases and four
 cross-vintage comparisons now passes native Excel 16.0 read-only acceptance:
-five sheets, 104 formulas, zero formula errors/external links, and every action
-count and derived KPI reconciled to the sanitized audit JSON. It contains no raw
+the initial five-sheet version had 104 formulas; the follow-up below expands it
+to six sheets and adds filtered-dimension reconciliation. It contains no raw
 LAR rows; see `apps/excel/templates/CreditAtlas-HMDA-Browser-Release-Audit-2018-2025.xlsx`
 and `docs/data/hmda-browser-release-audit-native-excel-qa-2026-10-17.json`.
+
+## 2026-10-17 HMDA filtered-dimension follow-up
+
+Five filtered requests to the official 2025 Snapshot API (California, Los
+Angeles County, California × conventional, a deterministically selected largest
+reporter LEI, and nationwide conventional) returned HTTP 200, echoed the
+requested filters, and matched local action 1–8 counts exactly. Four one-way
+app buckets (state, county, LEI and loan type) also match; California × loan
+type remains API-vs-raw validated without app intersection support.
+
+The HMDA audit workbook now contains six sheets and 124 formula cells. Excel
+16.0 read-only/full-rebuild acceptance passes with zero formula errors or
+external links; all five dimension scopes reconcile to the sanitized JSON.
+Public evidence: `docs/data/hmda-browser-dimension-api-parity-2026-10-17.json`.
+Next: implement app intersection filters, test representative browser and
+filtered-Excel routes, then extend coverage/schema/mix and KPI lineage review.
+Raw redistribution terms remain unconfirmed; no forecast/model was added and
+the capability ledger remains 26/50 (52%).

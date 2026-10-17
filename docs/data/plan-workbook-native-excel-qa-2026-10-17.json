@@ -25,15 +25,14 @@
     "completion_ratio": 0.52
   },
   "updated_progress_notes": {
-    "N02": "Eight official Browser API years audited; 4 same-vintage local receipt matches, 4 cross-vintage diagnostics for 2019–2022; raw rights/dimension parity/KPI lineage remain open",
+    "N02": "46 current-code HMDA browser checks; 146 focused HMDA tests; nine HMDA workbook exports verified; 5 filtered 2025 API scopes exact to local action counts, 4 app marginals match, intersection gap recorded",
     "N03": "70/70 fixed-2023-mix raw-source audit checks; NMDB and remaining KPI/rights work still open"
   },
-  "scope": "N02 plan note now summarizes the official Browser-selected action-count audit for 2018–2025, including the four exact same-vintage local receipt reconciliations and four cross-vintage comparisons. N03 evidence and the capability ledger remain unchanged.",
+  "scope": "N02 and N03 progress notes include the HMDA current-code browser suite, native Excel workbook results, five filtered 2025 API scopes, app marginal parity, the remaining intersection gap and independent fixed-2023-mix source audit. The N03 row is expanded to show the full note. The existing capability ledger was not changed.",
   "limitations": [
-    "This verifies the plan workbook formulas and presentation, not completion of every listed project item or production/model readiness.",
-    "HMDA release comparisons are action-count aggregates; no loan-level row matching was performed, and HMDA is not repayment/default performance.",
-    "Explicit raw redistribution/rehosting confirmation, dimension-level parity, full coverage/schema harmonization and remaining KPI lineage are still open.",
-    "Detailed source receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
-  ],
-  "workbook_sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c"
+    "This confirms the plan workbook behavior and its formulas, not completion of listed project work or production/model readiness.",
+    "HMDA is application and decision data, not repayment/default performance.",
+    "Release comparability, reuse rights, other route/filter combinations and remaining KPI lineage are still open.",
+    "Detailed receipts, hashes, loan-level data, raw rows and downloaded workbooks remain private."
+  ]
 }

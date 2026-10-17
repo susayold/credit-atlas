@@ -1,0 +1,177 @@
+{
+  "evidence_type": "hmda_browser_2025_snapshot_dimension_api_parity",
+  "run_id": "hmda-dimension-parity-20261017T164645Z",
+  "status": "PASS",
+  "captured_at_utc": "2026-10-17T16:46:45.498577+00:00",
+  "source": "FFIEC / CFPB HMDA Data Browser aggregations API",
+  "source_id": "hmda-national-snapshot-2025-9a5e89600e3c",
+  "snapshot_freeze_date": "2026-06-02",
+  "source_receipt_sha256": "975d492750c471f2e0bbc14fe778faab1568d277d0f1f011bca10d57ff1daa88",
+  "lar_csv_sha256": "ef6b0a4510a780e079b26f7e5f2617fc760abe1e6a07918df6ed83835448a67a",
+  "method": {
+    "endpoints": [
+      "https://ffiec.cfpb.gov/v2/data-browser-api/view/aggregations",
+      "https://ffiec.cfpb.gov/v2/data-browser-api/view/nationwide/aggregations"
+    ],
+    "query": "Five official API requests: four geographic/LEI subsets plus one nationwide loan-type filter; years=2025; actions_taken=1..8",
+    "dimensions": [
+      "state",
+      "county",
+      "state × loan type",
+      "one largest-reporting LEI",
+      "nationwide loan type"
+    ],
+    "validation": "Exact action 1–8 count equality between official API and same-freeze local public LAR; matching app marginal bucket summaries are also checked for state, county, LEI and nationwide loan type.",
+    "privacy": "Public JSON excludes raw rows, local paths, exact LEI, request URLs and action-level counts; full evidence remains in the private receipt on D:."
+  },
+  "results": [
+    {
+      "scope": "state_ca",
+      "query_dimension": "state_code",
+      "official_api_http_status": 200,
+      "official_api_parameter_echo_matches": true,
+      "api_served_from": "cache",
+      "all_action_counts_match": true,
+      "max_absolute_action_count_delta": 0,
+      "api_summary": {
+        "action_1_to_8_records": 1161292,
+        "decision_denominator_1_2_3": 791639,
+        "denied_numerator_action_3": 177363,
+        "descriptive_denied_share": "0.2240453034779741776238916981"
+      },
+      "local_snapshot_summary": {
+        "action_1_to_8_records": 1161292,
+        "decision_denominator_1_2_3": 791639,
+        "denied_numerator_action_3": 177363,
+        "descriptive_denied_share": "0.2240453034779741776238916981"
+      },
+      "app_marginal_bucket_summary": {
+        "action_1_to_8_records": 1161292,
+        "decision_denominator_1_2_3": 791639,
+        "denied_numerator_action_3": 177363,
+        "descriptive_denied_share": "0.2240453034779742"
+      },
+      "app_marginal_summary_match": true,
+      "descriptive_denied_share_delta": "0E-28"
+    },
+    {
+      "scope": "county_los_angeles",
+      "query_dimension": "county_code",
+      "official_api_http_status": 200,
+      "official_api_parameter_echo_matches": true,
+      "api_served_from": "cache",
+      "all_action_counts_match": true,
+      "max_absolute_action_count_delta": 0,
+      "api_summary": {
+        "action_1_to_8_records": 223914,
+        "decision_denominator_1_2_3": 152070,
+        "denied_numerator_action_3": 36720,
+        "descriptive_denied_share": "0.2414677451173801538765042415"
+      },
+      "local_snapshot_summary": {
+        "action_1_to_8_records": 223914,
+        "decision_denominator_1_2_3": 152070,
+        "denied_numerator_action_3": 36720,
+        "descriptive_denied_share": "0.2414677451173801538765042415"
+      },
+      "app_marginal_bucket_summary": {
+        "action_1_to_8_records": 223914,
+        "decision_denominator_1_2_3": 152070,
+        "denied_numerator_action_3": 36720,
+        "descriptive_denied_share": "0.24146774511738014"
+      },
+      "app_marginal_summary_match": true,
+      "descriptive_denied_share_delta": "0E-28"
+    },
+    {
+      "scope": "state_ca_conventional",
+      "query_dimension": null,
+      "official_api_http_status": 200,
+      "official_api_parameter_echo_matches": true,
+      "api_served_from": "cache",
+      "all_action_counts_match": true,
+      "max_absolute_action_count_delta": 0,
+      "api_summary": {
+        "action_1_to_8_records": 961135,
+        "decision_denominator_1_2_3": 670649,
+        "denied_numerator_action_3": 153088,
+        "descriptive_denied_share": "0.2282684384827234514626876354"
+      },
+      "local_snapshot_summary": {
+        "action_1_to_8_records": 961135,
+        "decision_denominator_1_2_3": 670649,
+        "denied_numerator_action_3": 153088,
+        "descriptive_denied_share": "0.2282684384827234514626876354"
+      },
+      "app_marginal_bucket_summary": null,
+      "app_marginal_summary_match": null,
+      "descriptive_denied_share_delta": "0E-28"
+    },
+    {
+      "scope": "largest_reporter_lei",
+      "query_dimension": "lei",
+      "official_api_http_status": 200,
+      "official_api_parameter_echo_matches": true,
+      "api_served_from": "cache",
+      "all_action_counts_match": true,
+      "max_absolute_action_count_delta": 0,
+      "api_summary": {
+        "action_1_to_8_records": 663472,
+        "decision_denominator_1_2_3": 555321,
+        "denied_numerator_action_3": 110634,
+        "descriptive_denied_share": "0.1992253129271178291474660602"
+      },
+      "local_snapshot_summary": {
+        "action_1_to_8_records": 663472,
+        "decision_denominator_1_2_3": 555321,
+        "denied_numerator_action_3": 110634,
+        "descriptive_denied_share": "0.1992253129271178291474660602"
+      },
+      "app_marginal_bucket_summary": {
+        "action_1_to_8_records": 663472,
+        "decision_denominator_1_2_3": 555321,
+        "denied_numerator_action_3": 110634,
+        "descriptive_denied_share": "0.19922531292711784"
+      },
+      "app_marginal_summary_match": true,
+      "descriptive_denied_share_delta": "0E-28"
+    },
+    {
+      "scope": "nationwide_conventional",
+      "query_dimension": "loan_type",
+      "official_api_http_status": 200,
+      "official_api_parameter_echo_matches": true,
+      "api_served_from": "cache",
+      "all_action_counts_match": true,
+      "max_absolute_action_count_delta": 0,
+      "api_summary": {
+        "action_1_to_8_records": 10224134,
+        "decision_denominator_1_2_3": 7384608,
+        "denied_numerator_action_3": 1728114,
+        "descriptive_denied_share": "0.2340156715156715156715156715"
+      },
+      "local_snapshot_summary": {
+        "action_1_to_8_records": 10224134,
+        "decision_denominator_1_2_3": 7384608,
+        "denied_numerator_action_3": 1728114,
+        "descriptive_denied_share": "0.2340156715156715156715156715"
+      },
+      "app_marginal_bucket_summary": {
+        "action_1_to_8_records": 10224134,
+        "decision_denominator_1_2_3": 7384608,
+        "denied_numerator_action_3": 1728114,
+        "descriptive_denied_share": "0.23401567151567151"
+      },
+      "app_marginal_summary_match": true,
+      "descriptive_denied_share_delta": "0E-28"
+    }
+  ],
+  "scope_limitations": [
+    "This is a five-scope parity spot check of the 2025 Snapshot, not proof of all years, all geography codes, all institutions, or every filter combination.",
+    "The app's one-dimension buckets match the official API for state, county, selected LEI, and nationwide loan-type code 1. The California × loan-type intersection is checked against local raw data but is not an app marginal bucket; no app intersection parity is claimed.",
+    "The check exercises the receipt-verified app service used by its UI/API, but does not verify browser rendering or filtered Excel export for every query.",
+    "Denied share is an application disposition measure, not repayment/default performance or PD.",
+    "No forecast, imputation, row linkage, or borrower-level inference was used."
+  ],
+  "private_receipt_sha256": "43ff2dc49ca8efce048c880946673b796b36d9a0d2f41a9ed32f9950fa2303a5"
+}

@@ -2,8 +2,8 @@
   "schema_version": "creditatlas-plan-workbook-update-v1",
   "updated_date": "2026-10-17",
   "workbook_path": "docs/reviews/CreditAtlas-Review-Next-Plan-2026-10-16.xlsx",
-  "previous_sha256": "b361471ffa3d2cc28d07dce202874429e0942d01ebebf344541d28fb6258a4de",
-  "sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c",
+  "previous_sha256": "85fb11d7a7a5424e1c5476c399d13ddc8ff2300cbb6471bb3366e7e363b6ea3c",
+  "sha256": "bcf2606d0cbc355c698dd159117a9d059d4016f37399a56ed1af64d545b2aaa4",
   "sheets": [
     "Ke hoach",
     "50 yeu cau",
@@ -26,14 +26,18 @@
     ]
   },
   "verification": {
-    "artifact_tool_recalculation": "PASS: updated HMDA N02 workbook note with the eight-year official API audit, exact-match and cross-vintage findings, retained N03 evidence, recalculated, exported, reimported and rendered.",
-    "formula_cache_validation": "PASS: 18 formula cells; 0 formula errors; B11=26, C11=50 and D11=52% unchanged.",
-    "visual_review": "PASS: Ke hoach rows 17–21 render with the full eight-year Browser audit note visible; no clipping.",
+    "artifact_tool_recalculation": "PASS: refreshed N02/N03 progress notes in the four-sheet plan workbook, included the five-scope 2025 HMDA filtered API/app parity result, increased N03 row height so its note is fully visible, recalculated, exported, reimported and rendered.",
+    "formula_cache_validation": "PASS: 18 formula cells across Ke hoach; 0 formula errors; B11=26, C11=50 and D11=52% remain unchanged.",
+    "visual_review": "PASS: Ke hoach rows 17–21 rendered after update; N02/N03 evidence notes are fully visible with no clipping.",
     "status_dropdown": "Not changed; existing status validation retained.",
-    "native_excel_desktop": "PASS: Excel 16.0 read-only/full rebuild; 4 sheets, 18 formulas, 0 errors/links; ledger 26/50; workbook bytes unchanged."
+    "native_excel_desktop": "PASS: Excel 16.0 read-only/full rebuild; 4 sheets, 18 formulas, 0 formula errors, 0 external links; ledger 26/50; workbook bytes unchanged."
   },
-  "scope_note": "Updated N02 with the official 2018–2025 Data Browser action-count audit: four same-vintage exact local receipt matches, four 2019–2022 cross-vintage comparisons against stored One-Year archives, and unresolved raw redistribution gate. N03 fixed-2023-mix evidence remains; no forecast/imputation; capability stays 26/50.",
+  "scope_note": "The current plan note records the 17 Oct HMDA acceptance: four current-code browser suites pass 46 checks with 0 browser errors; nine receipt-bound HMDA workbooks pass Excel 16.0 read-only/recalc with 177 formulas, 0 errors and 0 external links; 146 focused HMDA source/view/API/cohort/acquisition tests pass. The new 2025 filtered API audit checks five scopes against local action 1–8 profiles; four one-way app buckets match, while California × conventional still lacks app intersection support. Its six-sheet workbook has 124 formulas and passes Excel 16.0 with 0 errors/external links. The fixed-2023-mix independent raw-source audit passes 70/70 checks for mart, attrition, denominators/amounts, reference/common-support weights, missing strata and hash stability. These are local descriptive/data-integrity checks, not repayment-risk prediction, fairness, causal effect or production readiness. N02 reuse-rights, broader API/UI/export parity and other-source KPI lineage remain open. Existing caveats remain: Apple is one descriptive accession without point-in-time/debt-service qualification; Freddie is a private sample without ownership proof; HAMP gaps remain missing. No forecast or imputation was made. Capability remains 26/50.",
   "revision_history": [
+    {
+      "sha256": "bcf2606d0cbc355c698dd159117a9d059d4016f37399a56ed1af64d545b2aaa4",
+      "note": "Updated N02/N03 plan notes with HMDA Browser-selected releases, five filtered API/app parity scopes, native Excel, focused-test and fixed-2023-mix audit evidence; adjusted row height for full visibility. Excel 16.0 read-only/full rebuild passes with 18 formulas, zero errors/links, unchanged 26/50 ledger and unchanged workbook bytes."
+    },
     {
       "sha256": "f8cd5e9c9d543a37e29498c167a605fd0b7aaaab01d07818adfa59dceb2a097c",
       "note": "Updated N02 workbook note with 2018–2025 official Browser action-count audit (8 responses), 4 exact same-vintage local receipt matches, 4 cross-vintage 2019–2022 aggregate deltas, and remaining rights/dimension/KPI gates. Rendered and reopened in Excel 16.0 read-only/full rebuild; 18 formulas, zero errors/links; 26/50 unchanged."
@@ -63,5 +67,5 @@
       "note": "Updated P4 N02 plan status after source-aware Freddie-sample UPB labels were implemented. Six targeted Edge UI checks passed; broad browser suite remains blocked by a frozen convergence receipt mismatch. Capability remains 26/50."
     }
   ],
-  "file_size_bytes": 30806
+  "file_size_bytes": 30771
 }

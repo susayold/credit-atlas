@@ -7,7 +7,7 @@ SHA-256 digests remain in that private directory. All output hashes verified.
 
 | Series | Source | Frequency | Actual observations | Last reference date |
 |---|---|---|---:|---|
-| UNRATE | BLS via FRED | Monthly, seasonally adjusted, percent | 945 | 2026-09-01 |
+| UNRATE | U.S. Bureau of Labor Statistics (direct), series LNS14000000 | Monthly, seasonally adjusted, percent | 945 | 2026-09-01 |
 | USSTHPI | FHFA via FRED | Quarterly, not adjusted, 1980 Q1=100 | 206 | 2026-04-01 |
 | MORTGAGE30US | Freddie Mac via FRED | Weekly, not adjusted, percent | 2,898 | 2026-10-08 |
 

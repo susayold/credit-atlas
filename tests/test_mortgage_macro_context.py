@@ -17,7 +17,7 @@ import pytest
 
 from credit_atlas.mortgage_macro_context import report
 from credit_atlas.server import handler_for
-from scripts.acquire_public_mortgage_context import reuse_existing_fred_series
+from scripts.acquire_public_mortgage_context import reuse_existing_macro_series
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -238,7 +238,11 @@ def test_macro_report_fails_closed_on_source_digest_mismatch(macro_root):
         report(macro_root)
 
 
-def test_fhfa_only_refresh_reuses_verified_fred_files_without_changing_them(tmp_path):
+@pytest.mark.parametrize("unrate_source_url", [
+    "https://data.bls.gov/timeseries/LNS14000000",
+    "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE",
+])
+def test_fhfa_only_refresh_reuses_verified_macro_files_without_changing_them(tmp_path, unrate_source_url):
     source = tmp_path / "prior"
     destination = tmp_path / "new"
     source.mkdir()
@@ -255,11 +259,14 @@ def test_fhfa_only_refresh_reuses_verified_fred_files_without_changing_them(tmp_
             writer.writerows(rows)
         metadata.append({
             "series_id": series_id,
-            "source_url": f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}",
+            "source_url": (
+                unrate_source_url if series_id == "UNRATE"
+                else "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US"
+            ),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         })
     before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in source.iterdir()}
-    downloads = reuse_existing_fred_series(source, destination, {"series": metadata})
+    downloads = reuse_existing_macro_series(source, destination, {"series": metadata})
     after = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in source.iterdir()}
     assert before == after
     assert [row[1]["series_id"] for row in downloads] == ["UNRATE", "MORTGAGE30US"]
@@ -286,7 +293,7 @@ def test_fhfa_only_refresh_rejects_fred_snapshot_digest_mismatch(tmp_path):
         "sha256": "0" * 64,
     }]
     with pytest.raises(ValueError, match="failed its receipt digest"):
-        reuse_existing_fred_series(source, destination, {"series": bad_metadata})
+        reuse_existing_macro_series(source, destination, {"series": bad_metadata})
 
 
 def test_macro_report_does_not_fallback_from_newer_corrupt_successful_run(macro_root):
@@ -349,7 +356,9 @@ def test_macro_api_is_unfiltered_and_sources_view_exposes_context(macro_api):
     with urlopen(macro_api + "/app.js", timeout=5) as response:
         source = response.read().decode("utf-8")
     assert "Mortgage macro context · US national" in source
-    assert "FHFA direct current HPI + FRED UNRATE/PMMS snapshots" in source
+    assert "FHFA HPI + BLS unemployment are direct-source snapshots" in source
+    assert "Freddie Mac PMMS remains via FRED" in source
+    assert "BLS direct · civilian rate, seasonally adjusted" in source
     assert "FRED latest-revised history + ALFRED month-end snapshots" not in source
     assert "Publisher / distributor" in source
     assert "Rights / vintage status" in source

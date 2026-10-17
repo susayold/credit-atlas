@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-18",
-  "reviewed_public_commit": "dd7d34d0130f64a6425aa0023db21fd975d70e80",
-  "scope_note": "N02 review maps 29 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 24 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion. On 2026-10-18, one explicit macro-market group was added for seven FRED catalog series and three ALFRED vintage records; the 27 original parent groups and 50-item capability ledger remain unchanged in meaning. On 2026-10-18, direct FHFA U.S./Census-divisions HPI was added under its own group after 206/206 exact quarterly parity with the local FRED USSTHPI snapshot; it remains latest-release context without a historical vintage.",
+  "reviewed_public_commit": "7cdbde31fbe8a00d7677542c66eef4ccaf695e33",
+  "scope_note": "N02 review maps 29 parent dataset groups and records concrete source objects, local receipt IDs, code consumers, KPI scope and limitations. 24 groups have source-level objects bound, including one private user-supplied Freddie cohort with explicit publisher-authentication and terms caveats. The remaining 5 are explicitly classified (1 private source/input objects, 3 derived outputs, 1 publisher-access pending); source status is not capability completion. On 2026-10-18, one explicit macro-market group was added for seven FRED catalog series and three ALFRED vintage records; the 27 original parent groups and 50-item capability ledger remain unchanged in meaning. On 2026-10-18, direct FHFA U.S./Census-divisions HPI was added under its own group after 206/206 exact quarterly parity with the local FRED USSTHPI snapshot; it remains latest-release context without a historical vintage. On 2026-10-18, direct BLS UNRATE was added to the existing macro group after exact 945/945 monthly Decimal parity with the receipt-bound FRED comparator; D01 now uses BLS direct and preserves the official 2025-10 missing observation.",
   "counts": {
     "registered_dataset_domain_records": 29,
     "mapped_registry_records": 29,
@@ -11,8 +11,8 @@
     "source_catalog_ids_without_parent_record": 0,
     "unregistered_or_underregistered_source_families": 8,
     "source_catalog_ids_receipt_matched": 20,
-    "source_level_records": 104,
-    "supplemental_source_records": 104,
+    "source_level_records": 105,
+    "supplemental_source_records": 105,
     "registry_groups_with_source_objects": 24,
     "registry_groups_without_source_objects": 5,
     "registry_groups_with_explicit_disposition": 5,
@@ -374,11 +374,12 @@
         "fred-bamlc0a0cm",
         "fred-alfred-unrate-pit",
         "fred-alfred-ussthpi-pit",
-        "fred-alfred-mortgage30us-pit"
+        "fred-alfred-mortgage30us-pit",
+        "bls-unrate-direct-2026-09"
       ],
-      "code_and_consumer": "`public_sources.py` → public-suite acquisition; `market_data.py` → private Parquet/aligned/monthly summaries → `market_views.py` → `/api/market-view`, `/api/market-report`, Market & Bond UI and JSON export; `mortgage_macro_context.py` → `/api/mortgage-macro-context` and D01 macro context; ALFRED batches feed point-in-time context separately.",
-      "kpi_or_output": "P5 native-date rates, yield slopes, OAS and monthly summaries; P2/P4 latest-revised macro context; D01 month-end-selected ALFRED vintages; user-entered bond scenario price/duration/convexity/DV01. None is a borrower-level performance label or a qualified risk predictor.",
-      "status_and_limits": "All 10 FRED/ALFRED records are parent-bound and have per-record rights evidence/status. Existing local receipts are historical and private; FRED content storage/software restrictions and underlying owner permissions are not resolved. FRED latest-revised data are not historical availability. ALFRED selected vintages have no per-file retrieval timestamp; preserve PIT separation. DGS30 2002-02-18–2006-02-08 remains quarantined; MORTGAGE30US methodology changed 2022-11-17; ICE OAS is not cleared for third-party output. No data was reacquired or changed in this registry update.",
+      "code_and_consumer": "`public_sources.py` → public-suite acquisition; `market_data.py` → private Parquet/aligned/monthly summaries → `market_views.py` → `/api/market-view`, `/api/market-report`, Market & Bond UI and JSON export; `acquire_bls_unrate.py` → direct BLS receipt and parity comparator; `acquire_public_mortgage_context.py:run_bls_unrate_refresh` → direct BLS + direct FHFA HPI + historical FRED PMMS reused by receipt/hash → `mortgage_macro_context.py` → `/api/mortgage-macro-context` and D01 macro context; FRED/ALFRED market path remains separate; ALFRED batches feed point-in-time context separately.",
+      "kpi_or_output": "P5 native-date rates, yield slopes, OAS and monthly summaries; P2/P4 latest-revised macro context (BLS/FHFA direct snapshots + legacy FRED PMMS; each source marked separately); D01 month-end-selected ALFRED vintages; user-entered bond scenario price/duration/convexity/DV01. None is a borrower-level performance label or a qualified risk predictor.",
+      "status_and_limits": "All 10 legacy FRED/ALFRED records and the direct BLS snapshot are parent-bound and have per-record rights evidence/status. The direct BLS UNRATE (LNS14000000) snapshot matches the prior FRED series exactly on 945/945 months and now supplies the D01 latest-release route; 2025-10 remains a footnoted null. BLS requires source citation; annual revisions mean this snapshot cannot establish historical release-time availability. Existing FRED/ALFRED receipts remain private provenance; FRED content storage/software restrictions and third-party owner permissions are not resolved. FRED latest-revised data are not historical availability. ALFRED selected vintages have no per-file retrieval timestamp; preserve PIT separation. DGS30 2002-02-18–2006-02-08 remains quarantined; MORTGAGE30US methodology changed 2022-11-17; ICE OAS is not cleared for third-party output. Direct BLS and FHFA public-source refreshes were completed in private receipts; FRED source bytes were reused only where receipt hashes matched, with zero new FRED requests in these refreshes.",
       "evidence_type": "static_code_trace_plus_receipt_bound_source_inventory_and_official_terms_review",
       "kpi_formula_lineage": [
         {
@@ -455,9 +456,9 @@
           "output_id": "d01_macro.latest_revised_monthly_context",
           "code": "scripts/acquire_public_mortgage_context.py:monthly_context; src/credit_atlas/mortgage_macro_context.py:report",
           "source_fields": [
-            "UNRATE.observation_date/value (historical FRED snapshot; rights-gated)",
-            "MORTGAGE30US.observation_date/value (historical FRED snapshot; rights-gated)",
-            "FHFA_USA_HPI.observation_date/index_1980_q1_100 (direct FHFA current snapshot)"
+            "BLS LNS14000000 observation month/value (direct latest-revised CPS series; 2025-10 is official missing)",
+            "MORTGAGE30US observation_date/value (historical FRED snapshot; rights-gated)",
+            "FHFA USA All-Transactions HPI quarter/index (direct current snapshot)"
           ],
           "transform": "UNRATE maps by YYYY-MM; MORTGAGE30US is mean of nonmissing weekly source observations within YYYY-MM with observation count; direct FHFA U.S. HPI remains quarterly. No monthly HPI interpolation.",
           "output_fields": [
@@ -468,7 +469,7 @@
             "quarterly_hpi.index_1980_q1_100"
           ],
           "consumer": "/api/mortgage-macro-context → D01 macro context UI",
-          "limitations": "Retrospective descriptive context only. UNRATE and PMMS snapshots do not establish event-time publication availability and remain rights-gated; FHFA HPI is a current release without historical vintages. PMMS methodology changed 2022-11-17; no predictor is qualified."
+          "limitations": "Retrospective descriptive context only. BLS/FHFA are direct latest snapshots; BLS seasonally adjusted history is revised annually and neither source acquisition retains event-time vintage. The FRED PMMS snapshot remains rights-gated; weekly method changed 2022-11-17. 2025-10 unemployment is unavailable by source; no imputation. No predictor is qualified."
         },
         {
           "output_id": "d01_macro.point_in_time_monthly_context",
@@ -506,7 +507,7 @@
           "limitations": "No market series used for price; no security quote, default, recovery, prepayment, embedded option, stub/day-count or deal cashflow. Scenario inputs are analyst assumptions, not forecast."
         }
       ],
-      "output_lineage_status": "STATIC_FORMULA_AND_ROUTE_TRACE_ADDED_2026-10-18; route/browser/export parity remains incomplete; rights remain open."
+      "output_lineage_status": "STATIC_FORMULA_AND_ROUTE_TRACE_PLUS_DIRECT_BLS_FHFA_SOURCE_INTEGRATION_2026-10-18; API/JSON byte parity and browser read-path smoke passed; historical-vintage capture, full D01 foundation rebuild, PMMS rights and model qualification remain open."
     },
     {
       "registry_id": "freddie-2012",
@@ -800,7 +801,7 @@
       "source_family": "FRED/ALFRED macro, source-version and rights-gated records",
       "code_and_route_evidence": "`public_sources.py`, `market_data.py`, `mortgage_macro_context.py`; `/api/market-report`, `/api/mortgage-macro-context`",
       "output": "Native-frequency rates/spreads; latest-revised context; separate point-in-time vintage context",
-      "registry_action": "All seven FRED catalog IDs and three ALFRED point-in-time records now bind to fred-alfred-macro-market-context. This resolves the orphan-parent mapping only. FRED/ALFRED retention/software terms, series-owner permissions, route consumers and direct-publisher parity remain open; do not use/reacquire for software/model/public output until the applicable gate is resolved. Do not reconstruct vintages from revised data.",
+      "registry_action": "All seven legacy FRED catalog IDs and three ALFRED point-in-time records bind to the macro-context group. Direct FHFA HPI and BLS UNRATE are now publisher-sourced inputs for D01 after exact 206/206-quarter and 945/945-month snapshot parity, respectively. The FRED UNRATE object remains private comparison provenance only; remaining FRED/ALFRED storage/software terms, owner permissions and route consumers stay unresolved. Do not reacquire or use gated series for software/model/public output until the applicable rights gate is resolved. Do not reconstruct vintages from revised data.",
       "status_as_of": "2026-10-18: parent binding complete; rights review open"
     },
     {
@@ -848,11 +849,11 @@
   ],
   "source_release_register": {
     "path": "docs/data/creditatlas-source-release-register-2026-10-17.json",
-    "record_count": 124,
+    "record_count": 125,
     "receipt_bound_public_source_ids": 20,
     "supplemental_source_families": 17,
-    "note": "20 public-suite objects plus 104 supplemental source objects across 17 broad families. This includes 22 World Bank WDI objects, 12 HMDA files, 9 FHFA PUDB/NMDB/NSMO objects, 5 LendingClub/Bondora objects, 22 Treasury HAMP objects, 12 BoC–BoE Sovereign Archive objects, 7 receipt-bound SEC auto-ABS filing sets, three issuer-hosted artifacts for one Apple FY2025 SEC accession, one private Freddie 2012 cohort bound to a local receipt but not publisher-authenticated, and separate HUD/Fed/FHFA/Fannie records. Publication, observation, received and retrieval dates remain distinct; raw private payloads and full hashes are not published. The direct FHFA U.S./Census-divisions HPI is the added 18th-Oct source object within the existing FHFA HPI family; its USA series exactly matches 206/206 quarters of the local FRED snapshot.",
-    "supplemental_source_records": 104,
+    "note": "20 public-suite objects plus 105 supplemental source objects across 17 broad families. This includes 22 World Bank WDI objects, 12 HMDA files, 9 FHFA PUDB/NMDB/NSMO objects, 5 LendingClub/Bondora objects, 22 Treasury HAMP objects, 12 BoC–BoE Sovereign Archive objects, 7 receipt-bound SEC auto-ABS filing sets, three issuer-hosted artifacts for one Apple FY2025 SEC accession, one private Freddie 2012 cohort bound to a local receipt but not publisher-authenticated, and separate HUD/Fed/FHFA/Fannie records. Publication, observation, received and retrieval dates remain distinct; raw private payloads and full hashes are not published. The direct FHFA U.S./Census-divisions HPI is the added 18th-Oct source object within the existing FHFA HPI family; its USA series exactly matches 206/206 quarters of the local FRED snapshot. The direct BLS LNS14000000 snapshot is the added 18-Oct object within the existing macro-context family; its exact 945/945 comparison and private D01 integration do not create historical vintages or model qualification.",
+    "supplemental_source_records": 105,
     "macro_market_group_added": "fred-alfred-macro-market-context",
     "fhfa_hpi_group_added": "fhfa-hpi-geographic-context"
   },
@@ -1726,6 +1727,14 @@
       "source_family": "FHFA All-Transactions HPI",
       "current_use_status": "Direct FHFA source normalized for D01 latest-release context; no historical PIT or model qualification.",
       "note": "Official current CSV, 2,060 rows across 10 geographies. USA-only comparison to local FRED USSTHPI snapshot: 206/206 overlapping quarters, zero missing/value mismatches. Preserve attribution and current-vintage limitation."
+    },
+    {
+      "source_release_record_id": "bls-unrate-direct-2026-09",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "source_id": "LNS14000000",
+      "source_family": "Direct BLS CPS unemployment rate",
+      "current_use_status": "Direct public-domain BLS snapshot integrated into private D01 descriptive macro context; cite BLS; not historical PIT or model-qualified.",
+      "note": "945 monthly rows, 1948-01 through 2026-09; exact Decimal parity with local FRED snapshot on 945/945 months. One source-reported null at 2025-10 (shutdown; BLS footnote 9), kept missing. Annual seasonal revisions apply; candidate receipt/data remain private under local receipt ID."
     }
   ],
   "source_group_dispositions": [

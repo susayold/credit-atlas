@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "as_of": "2026-10-18",
-  "scope_note": "124 source records: 20 public-suite objects and 104 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved. Direct FHFA U.S./Census-divisions All-Transactions HPI was added on 2026-10-18 after 206/206 exact quarterly parity against the private FRED USSTHPI snapshot; no historical vintage was established.",
-  "record_count": 124,
+  "scope_note": "125 source records: 20 public-suite objects and 105 supplemental objects across 17 broad source families, including receipt-bound SEC EDGAR auto-ABS filing sets and one Apple FY2025 10-K with three issuer-hosted artifacts. Concrete records stay edition/grain-specific. This register binds source provenance and does not by itself complete rights, route, or capability acceptance. HMDA 2018–2025 Browser-selected action counts have now been checked against official nationwide API aggregates. Four same-vintage local sources match exactly; 2019–2022 local One-Year archives remain distinct from the Browser-selected Three-Year releases. Raw redistribution/rehosting terms were not identified on reviewed product pages, so raw remains private. On 2026-10-18, seven FRED and three ALFRED records were assigned to the explicit fred-alfred-macro-market-context group; endpoint/owner rights remain unresolved. Direct FHFA U.S./Census-divisions All-Transactions HPI was added on 2026-10-18 after 206/206 exact quarterly parity against the private FRED USSTHPI snapshot; no historical vintage was established. Direct BLS CPS unemployment series LNS14000000 was added on 2026-10-18 after exact 945/945 monthly parity with the legacy FRED UNRATE snapshot; BLS now supplies the D01 descriptive macro route, while the FRED object remains private comparator provenance. October 2025 is a source-reported missing month, not imputed; BLS latest-revised data are not historical point-in-time vintages.",
+  "record_count": 125,
   "source_records": [
     {
       "source_id": "bondora-public-loan-dataset-investor-xlsx",
@@ -1300,12 +1300,12 @@
         "P4"
       ],
       "consumer_trace": [
-        "src/credit_atlas/mortgage_macro_context.py → /api/mortgage-macro-context"
+        "Historical public-suite receipt and source-parity comparator only; replaced for current D01 macro-context consumption by bls-unrate-direct-2026-09. No current D01 macro route consumes the FRED UNRATE snapshot."
       ],
       "kpi_or_output": "Native-frequency macro/market context; not a borrower-level target or loan-level performance label.",
       "method_card_ids": [],
       "rights_use_gate": "Underlying publisher identifies the source series; current snapshot was distributed through FRED. FRED service/content retention terms and publisher-specific conditions must be confirmed for this endpoint and use before software/model/public use.",
-      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; DIRECT_PUBLISHER_ROUTE_REVIEW_REQUIRED; NO_PUBLIC_USE_APPROVAL",
+      "rights_review_status": "FRED_DISTRIBUTOR_RIGHTS_REVIEW_OPEN; HISTORICAL_COMPARATOR_ONLY; NO_CURRENT_D01_ROUTE; NO_PUBLIC_USE_APPROVAL",
       "receipt_status": "DOWNLOADED_AND_PROFILED",
       "retrieved_at_utc": "2026-10-08T18:26:18.382186+00:00",
       "receipt_completed_at_utc": "2026-10-08T18:26:19.217563+00:00",
@@ -1325,7 +1325,7 @@
         "https://www.bls.gov/developers/",
         "https://fred.stlouisfed.org/series/UNRATE"
       ],
-      "current_use_status": "Local FRED snapshot is historical provenance only; acquisition, retention, app display, derived-output and redistribution permissions remain unconfirmed."
+      "current_use_status": "Historical provenance/comparator only. Direct BLS UNRATE now supplies D01 latest-release unemployment context; the FRED snapshot is not read by that route. FRED acquisition, retention and other software/model use remain unresolved."
     },
     {
       "source_id": "fred-ussthpi",
@@ -6117,7 +6117,56 @@
         }
       ],
       "scope_note": "This record describes a receipt-backed SEC filing set, not a redistributed dataset. Individual accessions, URLs, attachment hashes and downloaded payloads remain in local private evidence ID woart-absee-history-948a4d8e4f18. EX-102/EX-103 asset data and 10-D certificate comparators remain separate. No cross-deal summation, forecast or imputation is implied."
+    },
+    {
+      "source_id": "bls-unrate-direct-2026-09",
+      "registry_group_id": "fred-alfred-macro-market-context",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "publisher_page_url": "https://data.bls.gov/timeseries/LNS14000000",
+      "source_object_url": "https://api.bls.gov/publicAPI/v1/timeseries/data/",
+      "format": "BLS Public Data API v1 JSON; normalized CSV retained in private receipt",
+      "release_label": "Civilian unemployment rate, seasonally adjusted (LNS14000000), snapshot through 2026-09",
+      "publisher_publication_date": null,
+      "publication_date_status": "Rolling revised series snapshot; monthly publication and seasonal revisions are distinct; this acquisition does not retain release-time vintages.",
+      "snapshot_as_of": "2026-09-01",
+      "observed_period_start": "1948-01-01",
+      "observed_period_end": "2026-09-01",
+      "native_row_count": 945,
+      "grain": "Civilian unemployment rate observation month; persons age 16+; percent of civilian labor force; seasonally adjusted.",
+      "modules": [
+        "P2",
+        "P4"
+      ],
+      "consumer_trace": [
+        "scripts/acquire_bls_unrate.py -> receipt-verified UNRATE.csv -> scripts/acquire_public_mortgage_context.py:run_bls_unrate_refresh -> src/credit_atlas/mortgage_macro_context.py -> /api/mortgage-macro-context and byte-identical /api/mortgage-macro-context-report -> D01 macro panel and JSON attachment."
+      ],
+      "kpi_or_output": "Monthly civilian unemployment rate as descriptive macro context; not borrower income, unemployment status, loan-level default outcome, PD target or qualified risk predictor.",
+      "method_card_ids": [],
+      "rights_use_gate": "BLS states its published material is public domain except copyrighted images/illustrations and requests citation. Cite BLS and series. The acquired series is latest revised, not historical point-in-time data; this receipt remains private and predictor qualification is false.",
+      "rights_review_status": "BLS_PUBLIC_DOMAIN_CITATION_REQUESTED; DIRECT_PUBLISHER; LATEST_REVISED_NO_PIT; NOT_MODEL_QUALIFIED",
+      "receipt_status": "DOWNLOADED_AND_VALIDATED; EXACT_945_OF_945_FRED_SNAPSHOT_PARITY; INTEGRATED_IN_PRIVATE_D01_MACRO_CONTEXT",
+      "retrieved_at_utc": "2026-10-17T20:50:48.342374+00:00",
+      "receipt_completed_at_utc": "2026-10-17T20:50:48.342374+00:00",
+      "receipt_reference": "local-private-id:bls-unrate-direct-2026-09",
+      "sha256_prefix": "621ff6fadf50",
+      "component_sha256_prefixes": {},
+      "missing_cell_count": 1,
+      "model_qualified_in_receipt": false,
+      "public_release_approved_in_receipt": false,
+      "scope_note": "945 monthly observations from 1948-01 through 2026-09. Exact Decimal parity with existing FRED UNRATE snapshot: 945/945 overlapping dates, no missing/extra dates, no value mismatch. October 2025 remains missing with BLS footnote code 9 because data were not collected during the federal shutdown. Latest-revised series only; no historical release-time vintage or model qualification.",
+      "missing_cell_count_basis": "One BLS-reported missing month (2025-10) with official footnote; preserved as null, not imputed.",
+      "distributor": null,
+      "distributor_url": null,
+      "rights_research_as_of": "2026-10-18",
+      "rights_evidence_urls": [
+        "https://www.bls.gov/opub/copyright-information.htm",
+        "https://www.bls.gov/developers/api_FAQs.htm",
+        "https://www.bls.gov/cps/seasonal-adjustment-methodology.htm",
+        "https://www.bls.gov/web/empsit/cps-seas-adjustment-methodology.pdf"
+      ],
+      "current_use_status": "Direct BLS series is integrated into the private D01 latest-release context with attribution. It may be used as descriptive macro context; it is not PIT evidence or a model-qualified predictor. Keep 2025-10 null and record annual revisions.",
+      "source_series_id": "LNS14000000"
     }
   ],
-  "supplemental_source_records": 104
+  "supplemental_source_records": 105
 }

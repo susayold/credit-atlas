@@ -16,7 +16,7 @@ from .workspace import read_json, sha256
 SERIES = {
     "UNRATE": {
         "label": "Unemployment rate",
-        "source": "U.S. Bureau of Labor Statistics via FRED",
+        "source": "U.S. Bureau of Labor Statistics (direct)",
         "unit": "Percent",
         "frequency": "Monthly, seasonally adjusted",
     },
@@ -91,6 +91,7 @@ def _read_series(folder: Path, metadata: dict) -> dict:
     return {
         **SERIES[series_id],
         "series_id": series_id,
+        "source_series_id": metadata.get("source_series_id"),
         "source": metadata.get("source", SERIES[series_id]["source"]),
         "source_url": metadata.get("source_url"),
         "metadata_url": metadata.get("metadata_url"),

@@ -179,13 +179,13 @@ function mortgageExcelLibraryPane(container){
  const list=el('div','excel-download-library');for(const [href,label,description,filename] of items){const row=el('div','excel-download-item'),a=el('a','button secondary',label);a.href=href;a.download=filename;row.append(a,para(description));list.append(row);}box.append(list,callout('Workbook có sample, codebook và lịch sử aggregate. Sample Release 47 không thay annual vintage; Fannie, Ginnie, NSMO, HMDA, NMDB và bank rates giữ population riêng. Aggregate context không phải loan-level target hay predictor đã qualified.',true));container.append(box);
 }
 async function mortgageMacroContextPane(container,generation){
- const box=card('Mortgage macro context · US national','FHFA direct current HPI + FRED UNRATE/PMMS snapshots · ALFRED vintages are separate · descriptive only, no qualified model features');box.id='mortgage-macro-context';container.append(box);
+ const box=card('Mortgage macro context · US national','FHFA HPI + BLS unemployment are direct-source snapshots; Freddie Mac PMMS remains via FRED · ALFRED vintages are separate · descriptive only, no qualified model features');box.id='mortgage-macro-context';container.append(box);
  try{
   const d=await api('/api/mortgage-macro-context');if(generation!==renderGeneration)return;
   if(d.status!=='AVAILABLE'){box.append(empty(d.reason||'Mortgage macro context unavailable.'));return;}
   const byId=Object.fromEntries(d.series.map(s=>[s.series_id,s])),u=byId.UNRATE,m=byId.MORTGAGE30US,h=byId.USSTHPI;
   const metrics=grid('three');append(metrics,
-   metric('Unemployment · '+u.last_known_reference_date,decimal(u.last_known_value,2)+'%','FRED distributor · BLS monthly, seasonally adjusted'),
+   metric('Unemployment · '+u.last_known_reference_date,decimal(u.last_known_value,2)+'%','BLS direct · civilian rate, seasonally adjusted'),
    metric('30-year mortgage · '+m.last_known_reference_date,decimal(m.last_known_value,2)+'%','FRED distributor · Freddie Mac PMMS weekly'),
    metric('U.S. house price index · '+h.last_known_reference_date,decimal(h.last_known_value,1),'FHFA direct · All-Transactions NSA · 1980 Q1 = 100'));
   const history=d.monthly_history,chart=card('Case-aligned monthly context',d.case_alignment.first_month+' → '+d.case_alignment.last_month+' · '+number(d.case_alignment.monthly_rows)+' months');
@@ -197,10 +197,10 @@ async function mortgageMacroContextPane(container,generation){
    const sourceLink=el('a','source-link','Official source ↗');sourceLink.href=s.source_url||s.metadata_url||'#';sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';
    const rightsLink=el('a','source-link',(s.rights_review_status||'Rights review unavailable').replaceAll('_',' ').toLowerCase());
    rightsLink.href=s.rights_evidence_url||s.metadata_url||'#';rightsLink.target='_blank';rightsLink.rel='noopener noreferrer';
-   return[s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count),sourceLink,rightsLink,s.attribution||'—'];
+   return[s.series_id,s.source_series_id||s.series_id,s.source,s.frequency,s.last_reference_date,number(s.observation_count),sourceLink,rightsLink,s.attribution||'—'];
   });
   const exportLink=el('a','button secondary','Tải macro context JSON');exportLink.href='/api/mortgage-macro-context-report';exportLink.download='CreditAtlas-mortgage-macro-context.json';
-  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,exportLink,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Publisher / distributor','Frequency','Latest reference date',{label:'Observations',number:true},'Source URL','Rights / vintage status','Attribution'],sourceRows));
+  const pair=grid('two');append(pair,chart,hpiTable);box.append(metrics,pair,exportLink,note('Nguồn được tải lúc '+d.completed_at+' · case '+d.case_id+' · run '+d.pipeline_run+'. '+d.limitations.join(' ')),table(['Series','Source series ID','Publisher / distributor','Frequency','Latest reference date',{label:'Observations',number:true},'Source URL','Rights / vintage status','Attribution'],sourceRows));
   const pit=d.point_in_time_context;
   if(pit?.status==='AVAILABLE'){
    const rows=pit.monthly_history,pitBox=card('ALFRED · Lịch sử theo thông tin đã công bố tại thời điểm đó',pit.coverage.first_month+' → '+pit.coverage.last_month+' · '+number(pit.coverage.monthly_rows)+' tháng · chốt cuối tháng');

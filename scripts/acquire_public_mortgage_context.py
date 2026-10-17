@@ -12,6 +12,7 @@ import subprocess
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
+from pathlib import Path
 from urllib.request import Request, urlopen
 
 import pyarrow as pa
@@ -175,27 +176,86 @@ def fetch_fhfa_us_hpi(folder):
     return records, metadata
 
 
-def reuse_existing_fred_series(source_folder, destination_folder, receipt):
-    """Copy only the prior FRED snapshots; never make new FRED requests."""
+def reuse_existing_macro_series(source_folder, destination_folder, receipt):
+    """Copy verified current UNRATE and PMMS inputs without making network calls."""
     metadata_by_id = {row.get("series_id"): row for row in receipt.get("series", [])
                       if isinstance(row, dict)}
     if not {"UNRATE", "MORTGAGE30US"}.issubset(metadata_by_id):
-        raise ValueError("Latest macro receipt is missing reusable FRED series metadata")
+        raise ValueError("Latest macro receipt is missing unemployment or PMMS inputs")
+    allowed_unrate_urls = {
+        "https://fred.stlouisfed.org/graph/fredgraph.csv?id=UNRATE",
+        "https://data.bls.gov/timeseries/LNS14000000",
+    }
+    if metadata_by_id["UNRATE"].get("source_url") not in allowed_unrate_urls:
+        raise ValueError("Existing unemployment input has an unexpected source URL")
+    if metadata_by_id["MORTGAGE30US"].get("source_url") != (
+            "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US"):
+        raise ValueError("Existing PMMS snapshot has an unexpected source URL")
+    return copy_verified_series(source_folder, destination_folder, metadata_by_id,
+                                ("UNRATE", "MORTGAGE30US"))
+
+
+def copy_verified_series(source_folder, destination_folder, metadata_by_id, series_ids):
+    """Copy specified normalized series only when their receipt hashes match."""
     downloads = []
-    for series_id in ("UNRATE", "MORTGAGE30US"):
-        metadata = metadata_by_id[series_id]
-        expected_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=" + series_id
-        if metadata.get("source_url") != expected_url:
-            raise ValueError("Existing FRED snapshot has an unexpected source URL")
+    for series_id in series_ids:
+        metadata = metadata_by_id.get(series_id)
+        if not isinstance(metadata, dict):
+            raise ValueError("Source receipt is missing metadata for a reused series")
         source_path = source_folder / (series_id + ".csv")
         if not source_path.is_file() or sha256(source_path) != metadata.get("sha256"):
-            raise ValueError("Existing FRED snapshot failed its receipt digest check")
+            raise ValueError("Reused source series failed its receipt digest check")
         destination_path = destination_folder / source_path.name
         shutil.copyfile(source_path, destination_path)
         if sha256(destination_path) != metadata["sha256"]:
-            raise ValueError("Copied FRED snapshot failed its receipt digest check")
+            raise ValueError("Copied source series failed its receipt digest check")
         downloads.append((parse_csv(destination_path.read_bytes(), series_id), metadata))
     return downloads
+
+
+def latest_macro_run(root):
+    candidates = []
+    for source_folder in (root / "data/private/public-context").glob("fred-*"):
+        receipt_path = source_folder / "run-complete.json"
+        if not receipt_path.is_file():
+            continue
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if receipt.get("status") == "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE":
+            candidates.append((str(receipt.get("completed_at", "")), source_folder, receipt))
+    if not candidates:
+        raise ValueError("No previous completed macro context run exists")
+    _, folder, receipt = max(candidates, key=lambda item: item[0])
+    return folder, receipt
+
+
+def latest_validated_bls_candidate(root):
+    candidates = []
+    for source_folder in (root / "data/private/public-context").glob("bls-unrate-*"):
+        receipt_path = source_folder / "run-complete.json"
+        if not receipt_path.is_file():
+            continue
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if (receipt.get("status") == "DOWNLOADED_AND_VALIDATED"
+                and receipt.get("source_series_id") == "LNS14000000"):
+            candidates.append((str(receipt.get("completed_at", "")), source_folder, receipt))
+    if not candidates:
+        raise ValueError("No validated direct BLS UNRATE candidate exists")
+    _, folder, receipt = max(candidates, key=lambda item: item[0])
+    if (receipt.get("macro_context_integrated") is not False
+            or receipt.get("public_release_approved") is not False
+            or receipt.get("model_training_performed") is not False):
+        raise ValueError("BLS source candidate has an invalid integration or release status")
+    for name, digest in receipt.get("outputs_sha256", {}).items():
+        path = folder / name
+        if Path(name).is_absolute() or ".." in Path(name).parts or not path.is_file() or sha256(path) != digest:
+            raise ValueError("BLS source candidate failed its receipt digest check")
+    comparison = receipt.get("comparison", {})
+    if (comparison.get("overlap_count", 0) <= 0
+            or comparison.get("value_mismatch_count") != 0
+            or comparison.get("only_in_bls_count") != 0
+            or comparison.get("only_in_fred_count") != 0):
+        raise ValueError("BLS source candidate has not passed exact FRED snapshot parity")
+    return folder, receipt
 
 
 def _complete_run(service, case_id, snapshot, folder, records, metadata):
@@ -273,22 +333,12 @@ def run(root, case_id="d01-a24484b21a21"):
 
 
 def run_fhfa_hpi_refresh(root, case_id="d01-a24484b21a21"):
-    """Refresh only direct FHFA HPI and reuse immutable prior FRED inputs."""
+    """Refresh FHFA HPI and reuse receipt-verified current unemployment/PMMS inputs."""
     if root.resolve().drive.upper() != "D:":
         raise ValueError("Downloaded data must remain on D:")
     service = ResearchService(root)
     snapshot = service.snapshot(case_id)
-    candidates = []
-    for source_folder in (root / "data/private/public-context").glob("fred-*"):
-        receipt_path = source_folder / "run-complete.json"
-        if not receipt_path.is_file():
-            continue
-        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-        if receipt.get("status") == "DOWNLOADED_AND_CONTEXT_RUN_COMPLETE":
-            candidates.append((str(receipt.get("completed_at", "")), source_folder, receipt))
-    if not candidates:
-        raise ValueError("No previous completed macro run exists to reuse FRED snapshots")
-    _, source_folder, prior_receipt = max(candidates, key=lambda item: item[0])
+    source_folder, prior_receipt = latest_macro_run(root)
     folder = root / "data/private/public-context" / ("fred-fhfa-" + uuid.uuid4().hex[:12])
     folder.mkdir(parents=True)
     write_new(folder / "run-start.json", {
@@ -299,7 +349,7 @@ def run_fhfa_hpi_refresh(root, case_id="d01-a24484b21a21"):
         "reused_from_private_run": source_folder.name,
     })
     try:
-        reused = reuse_existing_fred_series(source_folder, folder, prior_receipt)
+        reused = reuse_existing_macro_series(source_folder, folder, prior_receipt)
         fhfa_records, fhfa_metadata = fetch_fhfa_us_hpi(folder)
         records = reused[0][0] + fhfa_records + reused[1][0]
         metadata_by_id = {item[1]["series_id"]: item[1] for item in reused}
@@ -311,12 +361,105 @@ def run_fhfa_hpi_refresh(root, case_id="d01-a24484b21a21"):
         raise
 
 
+def run_bls_unrate_refresh(root, case_id="d01-a24484b21a21"):
+    """Integrate parity-checked direct BLS UNRATE; reuse FHFA HPI and PMMS snapshots."""
+    if root.resolve().drive.upper() != "D:":
+        raise ValueError("Downloaded data must remain on D:")
+    service = ResearchService(root)
+    snapshot = service.snapshot(case_id)
+    source_folder, prior_receipt = latest_macro_run(root)
+    candidate_folder, candidate_receipt = latest_validated_bls_candidate(root)
+    if prior_receipt.get("case_id") != case_id:
+        raise ValueError("Existing macro context belongs to a different D01 case")
+
+    prior_metadata = {row.get("series_id"): row for row in prior_receipt.get("series", [])
+                      if isinstance(row, dict)}
+    if not {"USSTHPI", "MORTGAGE30US"}.issubset(prior_metadata):
+        raise ValueError("Existing macro context is missing HPI or PMMS inputs")
+    if prior_metadata["USSTHPI"].get("source_url") != FHFA_US_CENSUS_HPI_URL:
+        raise ValueError("Existing macro context does not contain verified direct FHFA HPI")
+    if prior_metadata["MORTGAGE30US"].get("source_url") != (
+            "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US"):
+        raise ValueError("Existing mortgage-rate snapshot has an unexpected source URL")
+
+    candidate_csv = candidate_folder / "UNRATE.csv"
+    candidate_hash = candidate_receipt.get("outputs_sha256", {}).get("UNRATE.csv")
+    if not candidate_csv.is_file() or sha256(candidate_csv) != candidate_hash:
+        raise ValueError("Direct BLS UNRATE file failed its source receipt digest")
+    candidate_records = parse_csv(candidate_csv.read_bytes(), "UNRATE")
+    if (len(candidate_records) != candidate_receipt.get("observations")
+            or candidate_records[0]["observation_date"].isoformat()
+            != candidate_receipt.get("first_reference_date")
+            or candidate_records[-1]["observation_date"].isoformat()
+            != candidate_receipt.get("last_reference_date")):
+        raise ValueError("Direct BLS UNRATE coverage does not match its source receipt")
+
+    folder = root / "data/private/public-context" / ("fred-bls-fhfa-" + uuid.uuid4().hex[:12])
+    folder.mkdir(parents=True)
+    write_new(folder / "run-start.json", {
+        "started_at": timestamp(), "case_id": case_id,
+        "intent": "integrate_direct_bls_unrate_after_exact_fred_snapshot_parity",
+        "newly_integrated_series": ["UNRATE"],
+        "reused_series": ["USSTHPI", "MORTGAGE30US"],
+        "bls_source_candidate": candidate_folder.name,
+        "reused_macro_context_run": source_folder.name,
+        "fred_network_requests": 0,
+    })
+    try:
+        destination_unrate = folder / "UNRATE.csv"
+        shutil.copyfile(candidate_csv, destination_unrate)
+        if sha256(destination_unrate) != candidate_hash:
+            raise ValueError("Copied direct BLS UNRATE file failed its source receipt digest")
+        unrate_metadata = {
+            "series_id": "UNRATE",
+            "source_series_id": candidate_receipt["source_series_id"],
+            "source": candidate_receipt["source"],
+            "units": "Percent",
+            "frequency": candidate_receipt["frequency"],
+            "seasonal_adjustment": candidate_receipt["seasonal_adjustment"],
+            "source_url": candidate_receipt["metadata_url"],
+            "api_endpoint": candidate_receipt["source_url"],
+            "metadata_url": candidate_receipt["metadata_url"],
+            "rights_evidence_url": candidate_receipt["rights_evidence_url"],
+            "rights_review_status": candidate_receipt["rights_review_status"],
+            "attribution": candidate_receipt["attribution"],
+            "information_availability": candidate_receipt["information_availability"],
+            "snapshot_as_of": candidate_receipt["last_reference_date"],
+            "retrieved_at": candidate_receipt["completed_at"],
+            "bytes": destination_unrate.stat().st_size,
+            "sha256": candidate_hash,
+            "observations": candidate_receipt["observations"],
+            "missing_values": candidate_receipt["missing_values"],
+            "first_reference_date": candidate_receipt["first_reference_date"],
+            "last_reference_date": candidate_receipt["last_reference_date"],
+            "model_predictor_qualified": False,
+            "source_candidate": candidate_folder.name,
+        }
+        reused = copy_verified_series(source_folder, folder, prior_metadata,
+                                      ("USSTHPI", "MORTGAGE30US"))
+        hpi_metadata, mortgage_metadata = reused[0][1], reused[1][1]
+        hpi_records, mortgage_records = reused[0][0], reused[1][0]
+        records = candidate_records + hpi_records + mortgage_records
+        metadata = [unrate_metadata, hpi_metadata, mortgage_metadata]
+        return _complete_run(service, case_id, snapshot, folder, records, metadata)
+    except Exception as error:
+        write_new(folder / "run-failed.json", {"status": "FAIL", "failed_at": timestamp(),
+                   "exception_type": type(error).__name__, "model_training_performed": False})
+        raise
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=app_root())
     parser.add_argument("--case-id", default="d01-a24484b21a21")
-    parser.add_argument("--fhfa-only", action="store_true",
-                        help="download direct FHFA HPI only; reuse existing FRED files without network calls")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--fhfa-only", action="store_true",
+                      help="download direct FHFA HPI only; reuse verified unemployment and PMMS files without network calls")
+    mode.add_argument("--bls-only", action="store_true",
+                      help="integrate a parity-checked BLS UNRATE candidate; reuse HPI and PMMS without network calls")
+    mode.add_argument("--legacy-fred", action="store_true",
+                      help="explicitly run legacy FRED UNRATE/PMMS acquisition; use only after its terms/use gate is cleared")
     args = parser.parse_args()
-    action = run_fhfa_hpi_refresh if args.fhfa_only else run
+    action = (run if args.legacy_fred else run_fhfa_hpi_refresh if args.fhfa_only
+              else run_bls_unrate_refresh)
     print(json.dumps(action(args.root, args.case_id), indent=2))

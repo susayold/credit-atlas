@@ -10,7 +10,7 @@ from credit_atlas import project_register as module
 def test_project_register_exposes_the_source_and_plan_inventory():
     result = module.project_register()
 
-    assert len(result["source_records"]) == 124
+    assert len(result["source_records"]) == 125
     assert len(result["datasets"]) == 29
     assert len(result["method_cards"]) == 15
     assert len(result["capabilities"]) == 50
@@ -25,17 +25,28 @@ def test_project_register_exposes_the_source_and_plan_inventory():
     macro_group = next(row for row in result["datasets"]
                        if row["id"] == "fred-alfred-macro-market-context")
     macro_sources = {row["source_id"]: row for row in result["source_records"]
-                     if row["source_id"].startswith(("fred-", "fred-alfred-"))}
+                     if row["source_id"].startswith(("fred-", "fred-alfred-"))
+                     or row["source_id"] == "bls-unrate-direct-2026-09"}
     expected_macro_sources = {
         "fred-unrate", "fred-ussthpi", "fred-mortgage30us", "fred-dgs2", "fred-dgs10",
         "fred-dgs30", "fred-bamlc0a0cm", "fred-alfred-unrate-pit",
         "fred-alfred-ussthpi-pit", "fred-alfred-mortgage30us-pit",
+        "bls-unrate-direct-2026-09",
     }
     assert set(macro_group["source_release_record_ids"]) == expected_macro_sources
     assert set(macro_sources) == expected_macro_sources
     assert all(row["registry_group_id"] == macro_group["id"] for row in macro_sources.values())
-    assert all("NO_PUBLIC" in row["rights_review_status"] or "WRITTEN_THIRD_PARTY" in row["rights_review_status"]
+    assert all("NO_PUBLIC" in row["rights_review_status"]
+               or "WRITTEN_THIRD_PARTY" in row["rights_review_status"]
+               or "BLS_PUBLIC_DOMAIN" in row["rights_review_status"]
                for row in macro_sources.values())
+    direct_unrate = macro_sources["bls-unrate-direct-2026-09"]
+    assert direct_unrate["publisher"] == "U.S. Bureau of Labor Statistics"
+    assert direct_unrate["native_row_count"] == 945
+    assert direct_unrate["missing_cell_count"] == 1
+    assert direct_unrate["rights_review_status"].startswith("BLS_PUBLIC_DOMAIN")
+    assert direct_unrate["model_qualified_in_receipt"] is False
+    assert direct_unrate["public_release_approved_in_receipt"] is False
     fhfa_group = next(row for row in result["datasets"] if row["id"] == "fhfa-hpi-geographic-context")
     fhfa_sources = {row["source_id"]: row for row in result["source_records"]
                     if row["source_id"].startswith("fhfa-") and row["registry_group_id"] == fhfa_group["id"]}
@@ -130,11 +141,11 @@ def test_project_register_exposes_the_source_and_plan_inventory():
                        if row["output_id"] == "d01_macro.fhfa_quarterly_hpi_context")
     assert "Do not interpolate to months" in hpi_lineage["transform"]
     assert "does not qualify a model feature" in hpi_lineage["limitations"]
-    assert source_register["record_count"] == len(source_register["source_records"]) == 124
-    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 104
-    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 104
+    assert source_register["record_count"] == len(source_register["source_records"]) == 125
+    assert source_register["supplemental_source_records"] == len(source_register["source_records"]) - 20 == 105
+    assert trace_map["source_release_register"]["supplemental_source_records"] == len(crosswalk) == 105
     assert trace_map["source_release_register"]["supplemental_source_families"] == 17
-    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 104
+    assert trace_map["counts"]["source_level_records"] == trace_map["counts"]["supplemental_source_records"] == 105
     assert trace_map["counts"]["registered_dataset_domain_records"] == 29
     assert trace_map["counts"]["registry_groups_with_source_objects"] == 24
     assert trace_map["counts"]["source_catalog_ids_with_parent_record"] == 20

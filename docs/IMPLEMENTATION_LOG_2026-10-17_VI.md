@@ -34,6 +34,15 @@ Ngày cập nhật: **17/10/2026**. Plan tổng và thứ tự N01–N24: [PROJE
 - N03 vẫn đang làm: mọi KPI/output số trên toàn app chưa được liên kết tới method ID và input lineage ngay trong view.
 - Trace công thức PUDB, HMDA denominator và NMDB New/Outstanding đã được ghi riêng. Khi rà Appendix B/C cho NMDB, thêm các series New `AVE_LOANAMT`, `AVE_PAYMENT`, `AVE_PROPVAL` vào contract VALUE1-only; kiểm thử synthetic mart bảo đảm VALUE2 numeric thô không mở sai weighting.
 
+### N03 — FHFA NMDB performance KPI trace — 17/10/2026
+
+- Đối chiếu FHFA Data Dictionary/Technical Notes với national extract, state extract, receipt/hash, parser/API, app selectors/tables/charts, workbook builders và hai Excel outputs. Ghi chi tiết tại [N03 NMDB performance trace](N03_NMDB_PERFORMANCE_TRACE_2026-10-17_VI.md).
+- Chuẩn hóa `P3089DL` trên API/UI/Excel thành **30–89 DPD**; FHFA gộp bucket 30–59 và 60–89 ngày. Đã sửa cả national NMDB performance workbook lẫn D02 data-reference workbook. Giữ mẫu số active loans cuối quý, native percentage points và 4 market source series riêng.
+- Audit actual CSV state: 79.968 rows; 68 cờ suppression, 17 mỗi series, đều ở Vermont × Government / Non-Conventional trong 2004Q1–2008Q3. `PFORB` có 14.484 blank trước 2019Q4; 17 cùng mang suppression flag và 14.467 không mang cờ. Code, app và Excel giữ blank/flag riêng; không điền zero.
+- Sửa trend SVG để flush segment tại từng null, thay vì nối đường qua suppression/pre-series gap. Mở rộng Edge QA: P3089 label, Vermont suppressed row, đoạn chart bị ngắt, Excel download, selectors và mobile; **6 checks pass, không page error**.
+- Focused tests: `test_nmdb_performance.py`, `test_nmdb_state_performance.py`, `test_nmdb_performance_workbook.py`, `test_d02_data_reference_workbook.py` — **6 passed**. Workbook D02 có 23 sheet và 79.968 state rows; artifact-tool render QA xác nhận định nghĩa; native Excel desktop chưa mở/recalculate.
+- Đây là trace/presentation fix, không thêm row hay forecast. N03 còn KPI khác; N05/N06 tổng vẫn mở; capability acceptance giữ **26/50 = 52%**.
+
 ### N05 — canonical FHFA NMDB aggregate mart
 
 - Dựng `data/derived/fhfa-nmdb-market-statistics/market-statistics.parquet` trong private workspace từ hai ZIP có receipt PASS; dữ liệu public raw không được chép vào public checkout.

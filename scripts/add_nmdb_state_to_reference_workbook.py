@@ -55,11 +55,11 @@ def add_definitions(book) -> None:
     rows = [
         ["Topic", "Definition / use", "Interpretation boundary"],
         ["Geography", "50 states plus District of Columbia; quarterly 2002Q1–2026Q2.", "State aggregates are not borrower residence rows or a property-level lookup."],
-        ["P3089DL", "Active mortgage share reported 30 or 60 days past due at quarter end.", "An active-loan performance-state share, not fixed-horizon default probability."],
+        ["P3089DL", "Active mortgage share in the combined 30–59 and 60–89 days-past-due categories at quarter end.", "FHFA combines these categories in P3089DL; label as 30–89 DPD, not fixed-horizon default probability."],
         ["P90DL", "Active mortgage share reported 90, 120, 150 or 180 days past due at quarter end.", "Keep the publisher's denominator and status definition."],
         ["PFORECL", "Active mortgage share in foreclosure, bankruptcy or deed-in-lieu status.", "A distinct performance category."],
         ["PFORB", "Active mortgage share reported in forbearance.", "Published from 2019Q4; prior blank cells mean unavailable, not zero."],
-        ["Suppression", "FHFA suppresses small state cells with fewer than three loan records.", "68 values are suppressed in this snapshot; blank is not zero."],
+        ["Suppression", "FHFA suppresses small state cells with fewer than three loan records.", "68 source flags remain separate from blank values; 17 PFORB flags overlap its pre-2019Q4 unavailable period."],
         ["Preliminary periods", "The latest two quarters are preliminary due to credit-bureau reporting lag.", "2026Q1 and 2026Q2 may be revised."],
         ["History limitation", "Seriously past-due status may be undercounted from 2006 to 2012 due to credit-history purging.", "Do not attribute all period movement to borrower behavior."],
         ["Use boundary", "Aggregate 5% NMDB sample; use as state-level portfolio context and trend comparison.", "Do not train D01, infer individual borrower PD, or join to Freddie/NSMO loans."],
@@ -86,9 +86,23 @@ def main() -> None:
     book = load_workbook(WORKBOOK)
     add_data_sheet(book)
     add_definitions(book)
+    if "NMDB definitions" in book.sheetnames:
+        national_definitions = book["NMDB definitions"]
+        for row in range(2, national_definitions.max_row + 1):
+            if national_definitions.cell(row, 1).value == "P3089DL":
+                national_definitions.cell(row, 2).value = "Active loans in the combined 30–59 and 60–89 days-past-due categories divided by active loans at quarter end."
+                national_definitions.cell(row, 3).value = "FHFA combines these categories in P3089DL; label as 30–89 DPD."
+                break
     guide = book["Start here"]
-    guide.append(["NMDB states", "State/DC quarterly aggregate panel through 2026Q2; filter by state, market, series and quarter. Suppressed or unavailable values remain blank."])
-    last = guide.max_row
+    guide_rows = [row for row in range(1, guide.max_row + 1) if guide.cell(row, 1).value == "NMDB states"]
+    if guide_rows:
+        last = guide_rows[0]
+        for duplicate in reversed(guide_rows[1:]):
+            guide.delete_rows(duplicate, 1)
+        guide.cell(last, 2).value = "State/DC quarterly aggregate panel through 2026Q2; filter by state, market, series and quarter. P3089DL means 30–89 DPD; suppressed or unavailable values remain blank."
+    else:
+        guide.append(["NMDB states", "State/DC quarterly aggregate panel through 2026Q2; filter by state, market, series and quarter. P3089DL means 30–89 DPD; suppressed or unavailable values remain blank."])
+        last = guide.max_row
     for cell in guide[last]:
         cell.alignment = Alignment(vertical="top", wrap_text=True)
     guide.cell(last, 1).font = Font(bold=True, color="243B53")

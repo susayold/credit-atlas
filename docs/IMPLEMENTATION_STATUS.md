@@ -346,7 +346,7 @@ cells and source suppression flags. The data receipt checksums the downloaded
 archive, source CSV member and curated file. Added a validating aggregate API,
 a separate quarterly trend/market context panel, and a four-sheet Excel workbook
 with full filterable history and latest-quarter KPIs. Unit checks confirm the
-2026Q2 all-mortgage values (30–60 DPD 1.7%, 90+ DPD 1.0%, foreclosure/etc. 0.2%,
+2026Q2 all-mortgage values (30–89 DPD 1.7%, 90+ DPD 1.0%, foreclosure/etc. 0.2%,
 forbearance 0.5%). Focused source/workbook and NSMO integration tests pass
 15/15. Isolated Edge browser acceptance passes 5/5 with no page errors, including
 the selector, 98-quarter table, 4-market chart, workbook download and mobile

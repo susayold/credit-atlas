@@ -13,6 +13,7 @@ def test_nmdb_workbook_has_latest_summary_and_filterable_full_series():
     latest = workbook["Latest KPIs"]
     assert latest.max_row == 5
     assert latest["A2"].value == "2026Q2"
+    assert latest["D1"].value == "30–89 DPD (%)"
     assert latest["D2"].value == 1.7
     assert latest["E2"].value == 1.0
     assert latest["G2"].value == 0.5
@@ -27,3 +28,5 @@ def test_nmdb_workbook_has_latest_summary_and_filterable_full_series():
     assert len(quarterly.tables) == 1
     assert next(iter(quarterly.tables.values())).autoFilter is not None
     assert "2019Q4" in workbook["Definitions"]["D5"].value
+    assert workbook["Definitions"]["B2"].value == "30–89 days delinquent"
+    assert "30–59 or 60–89" in workbook["Definitions"]["C2"].value

@@ -224,7 +224,7 @@ const definitions = wb.worksheets.add("NMDB definitions");
 definitions.showGridLines = false;
 const definitionRows = [
   ["Topic", "Definition / use", "Source note"],
-  ["P3089DL", "Active loans 30–60 days past due divided by active loans at quarter end.", "Quarter-end performance category."],
+  ["P3089DL", "Active loans in the combined 30–59 and 60–89 days-past-due categories divided by active loans at quarter end.", "FHFA combines these categories in P3089DL; label as 30–89 DPD."],
   ["P90DL", "Active loans at least 90 days past due divided by active loans at quarter end.", "Serious delinquency category, excluding foreclosure/bankruptcy series."],
   ["PFORECL", "Active loans in foreclosure, bankruptcy or deed-in-lieu divided by active loans at quarter end.", "Separate published category."],
   ["PFORB", "Active loans reported in forbearance divided by active loans at quarter end.", "Published from 2019Q4; earlier source cells are blank."],

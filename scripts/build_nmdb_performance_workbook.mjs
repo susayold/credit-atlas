@@ -25,7 +25,7 @@ const guideRows = [
   ["Sử dụng", "Lọc ở hàng tiêu đề trong sheet Quarterly data; Latest KPIs cho quý mới nhất; Definitions ghi định nghĩa và giới hạn."],
   ["Giá trị", "Rate được giữ theo đơn vị điểm phần trăm của FHFA (ví dụ 1.7 nghĩa là 1.7%), không phải tỷ lệ 0.017."],
   ["Ô trống", "PFORB chỉ được công bố từ 2019Q4; các quý trước để trống theo nguồn, không thay bằng 0."],
-  ["Thận trọng", "Hai quý mới nhất là sơ bộ; xem Definitions về active-loan mẫu số, stale-account rule, reporting lag và giới hạn 2006–2012."],
+  ["Thận trọng", "Hai quý mới nhất là sơ bộ; P3089DL gộp nhóm 30–59 và 60–89 ngày quá hạn; xem Definitions về mẫu số, stale-account rule, reporting lag và giới hạn 2006–2012."],
   ["D02", "Benchmark bối cảnh thị trường riêng. Không ghép vào NSMO PUF, không tạo nhãn khoản vay/PD và không dùng làm tập train."],
 ];
 guide.getRange(`A1:B${guideRows.length}`).values = guideRows;
@@ -45,12 +45,12 @@ const marketDefinitions = {
   "Government / Non-Conventional": "Government insured, guaranteed or direct mortgages.",
   "Other Conventional Market": "Non-government, non-enterprise conventional loans; includes jumbo, FHLB AMA, credit-union, private-label and other portfolio loans.",
 };
-const seriesLabels = { P3089DL: "30–60 days past due", P90DL: "90+ days past due", PFORECL: "Foreclosure / bankruptcy / deed-in-lieu", PFORB: "In forbearance" };
+const seriesLabels = { P3089DL: "30–89 days delinquent", P90DL: "90+ days past due", PFORECL: "Foreclosure / bankruptcy / deed-in-lieu", PFORB: "In forbearance" };
 const latestPeriod = "2026Q2";
 const val = (row, field) => row[index[field]];
 const latestSheet = wb.worksheets.add("Latest KPIs");
 latestSheet.showGridLines = false;
-const latestHeaders = ["Quarter", "Mortgage market", "Publisher market definition", "30–60 DPD (%)", "90+ DPD (%)", "Foreclosure / bankruptcy / DIL (%)", "Forbearance (%)"];
+const latestHeaders = ["Quarter", "Mortgage market", "Publisher market definition", "30–89 DPD (%)", "90+ DPD (%)", "Foreclosure / bankruptcy / DIL (%)", "Forbearance (%)"];
 const latestRows = markets.map((market) => {
   const findValue = (series) => {
     const row = dataRows.find((item) => val(item, "period") === latestPeriod && val(item, "market") === market && val(item, "series_id") === series);
@@ -92,7 +92,7 @@ const definitions = wb.worksheets.add("Definitions");
 definitions.showGridLines = false;
 const definitionsRows = [
   ["Series ID", "Label", "Definition / use", "Source note"],
-  ["P3089DL", seriesLabels.P3089DL, "Active loans at least 30 or 60 days past due divided by all active loans at quarter end.", "Quarter-end performance category."],
+  ["P3089DL", seriesLabels.P3089DL, "Active loans in either FHFA 30–59 or 60–89 days-past-due category divided by all active loans at quarter end. FHFA combines the source categories in P3089DL.", "Quarter-end performance category; use the readable label 30–89 DPD."],
   ["P90DL", seriesLabels.P90DL, "Active loans at least 90, 120, 150 or 180 days past due divided by all active loans at quarter end.", "Serious delinquency category, excluding foreclosure/bankruptcy series."],
   ["PFORECL", seriesLabels.PFORECL, "Active loans in foreclosure, bankruptcy or deed-in-lieu divided by all active loans at quarter end.", "Separate mutually exclusive publisher category."],
   ["PFORB", seriesLabels.PFORB, "Active loans reported in forbearance divided by all active loans at quarter end.", "Published from 2019Q4; earlier source cells are blank."],

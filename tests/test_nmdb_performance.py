@@ -16,6 +16,7 @@ def test_nmdb_national_performance_aggregates_reconcile_and_keep_series_scope():
     assert len(report["observations"]) == 1_568
     assert len(report["latest"]) == 16
     assert len(report["markets"]) == 4
+    assert report["series"]["P3089DL"]["label"] == "30–89 days delinquent"
     assert report["source"]["source_archive_sha256"] == "2083c4e1b5273fd2f471d2e58057b17b82b86ef3ac7ed13c58925b4453ec4e89"
     latest = {(row["market"], row["series_id"]): row["value_pct"] for row in report["latest"]}
     assert latest[("All Mortgages", "P3089DL")] == 1.7

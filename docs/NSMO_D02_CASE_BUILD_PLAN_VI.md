@@ -93,7 +93,8 @@ D01 panel.
 ### Additional aggregate market context — 16/10/2026
 
 FHFA NMDB's quarterly national performance extract has been downloaded and
-curated separately from the NSMO PUF. The workbook and page show 30–60 DPD,
+curated separately from the NSMO PUF. The workbook and page show 30–89 DPD
+(the FHFA P3089DL combination of 30–59 and 60–89 day categories),
 90+ DPD, foreclosure/bankruptcy/deed-in-lieu, and forbearance across four
 publisher-defined mortgage markets. It strengthens the descriptive and
 cross-source context only. It does not resolve the D02 target gate, competing

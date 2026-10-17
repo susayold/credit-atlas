@@ -18,9 +18,11 @@ from credit_atlas.server import handler_for
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--web-root", type=Path, help="Optional UI directory when verified data and source checkout are in separate roots.")
     parser.add_argument("--receipt", required=True, type=Path)
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=args.root.resolve())))
+    web_root = args.web_root.resolve() if args.web_root else None
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler_for(SimpleNamespace(root=args.root.resolve()), web_root=web_root))
     server.daemon_threads = True
     worker = threading.Thread(target=server.serve_forever, daemon=True)
     worker.start()
@@ -44,7 +46,9 @@ def main() -> None:
                 raise AssertionError("All 98 quarterly observations are not shown for the selected market")
             if page.locator("#nmdb-trend .nmdb-line").count() != 4:
                 raise AssertionError("Quarterly chart does not show all four market series")
-            checks.append("NMDB hash-checked API loads 98-quarter trend and four latest market KPIs")
+            if page.locator('#nmdb-series option[value="P3089DL"]').inner_text() != "30–89 days delinquent":
+                raise AssertionError("P3089DL selector does not show the 30–89 day category label")
+            checks.append("NMDB hash-checked API loads 98-quarter trend, four latest KPIs and the FHFA P3089DL label")
 
             series = page.locator("#nmdb-series")
             series.select_option("P90DL")
@@ -62,6 +66,17 @@ def main() -> None:
             if "1.4%" not in page.locator("#nmdb-latest").inner_text():
                 raise AssertionError("Government forbearance latest rate does not match FHFA")
             checks.append("forbearance blanks remain blank before first publication; market filter works")
+
+            state = page.locator("#nmdb-state-choice")
+            state.select_option("VT")
+            page.locator("#nmdb-state-panel-status").get_by_text("Vermont", exact=False).wait_for(timeout=20_000)
+            page.locator("#nmdb-state-series").select_option("P90DL")
+            page.locator("#nmdb-state-market").select_option("Government / Non-Conventional")
+            page.wait_for_function("document.querySelectorAll('#nmdb-state-trend .nmdb-line').length > 4")
+            suppressed_row = page.locator("#nmdb-state-quarterly tbody tr").filter(has_text="2004Q1").first
+            if suppressed_row.locator("td").nth(2).inner_text() != "—" or suppressed_row.locator("td").nth(6).inner_text() != "Yes":
+                raise AssertionError("Vermont P90DL suppressed cell is not preserved in the quarterly table")
+            checks.append("state chart breaks around source-suppressed Vermont values and the table retains the suppression flag")
 
             link = page.get_by_role("link", name="Tải workbook Excel · 1.568 dòng")
             with page.expect_download() as download_info:

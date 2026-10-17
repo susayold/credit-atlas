@@ -171,7 +171,7 @@ async function loadNmdbContext(){
         const values=new Map(data.observations.filter(row=>row.market===selectedMarket&&row.period===period).map(row=>[row.series_id,row]));
         return [period,...Object.keys(data.series).map(key=>fmtRate(values.get(key)?.value_pct)),...Object.keys(data.series).map(key=>values.get(key)?.suppressed?'Yes':'No')];
       });
-      $('nmdb-quarterly').replaceChildren(table(['Quarter','30–60 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–60 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
+      $('nmdb-quarterly').replaceChildren(table(['Quarter','30–89 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–89 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
     };
     seriesChoice.addEventListener('change',render);marketChoice.addEventListener('change',render);render();
     state.className='domain-state ok';state.textContent=`FHFA NMDB aggregate verified · ${data.observations.length.toLocaleString('en-US')} national market-series-quarter rows · ${data.periods[0]}–${data.periods.at(-1)} · source ${data.source.release_date}.`;
@@ -190,8 +190,20 @@ function drawNmdbTrend(svg,observations,seriesId,markets){
   const periods=[...new Set(observations.map(row=>row.period))].sort((a,b)=>Number(a.slice(0,4))-Number(b.slice(0,4))||Number(a.slice(5))-Number(b.slice(5)));
   markets.forEach((market,marketIndex)=>{
     const byPeriod=new Map(observations.filter(row=>row.market===market.name&&row.series_id===seriesId).map(row=>[row.period,row.value_pct]));
-    let points=[];for(const period of periods){const value=byPeriod.get(period);if(value==null)continue;const i=periods.indexOf(period);points.push(`${left+i*plotW/(periods.length-1)},${top+plotH-(value/limit)*plotH}`);}
-    const path=document.createElementNS('http://www.w3.org/2000/svg','polyline');path.setAttribute('points',points.join(' '));path.setAttribute('class','nmdb-line');path.setAttribute('stroke',nmdbColors[marketIndex]);svg.append(path);
+    let points=[];
+    const flush=()=>{
+      if(!points.length)return;
+      const path=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+      path.setAttribute('points',points.join(' '));path.setAttribute('class','nmdb-line');
+      path.setAttribute('data-market',market.name);path.setAttribute('stroke',nmdbColors[marketIndex]);svg.append(path);
+      points=[];
+    };
+    periods.forEach((period,index)=>{
+      const value=byPeriod.get(period);
+      if(value==null){flush();return;}
+      points.push(`${left+index*plotW/(periods.length-1)},${top+plotH-(value/limit)*plotH}`);
+    });
+    flush();
   });
   const every=Math.ceil(periods.length/10);periods.forEach((period,index)=>{if(index%every!==0&&index!==periods.length-1)return;const x=left+index*plotW/(periods.length-1),label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('x',x);label.setAttribute('y',h-14);label.setAttribute('text-anchor','middle');label.setAttribute('class','axis-label');label.textContent=period;svg.append(label);});
   svg.setAttribute('aria-label',`${seriesId} rates by mortgage market from ${periods[0]} to ${periods.at(-1)}.`);
@@ -215,7 +227,7 @@ async function loadNmdbStateContext(){
       $('nmdb-state-caption').textContent=`${stateName} · ${data.series[seriesId].label} · ${data.periods[0]} to ${data.periods.at(-1)}. ${data.series[seriesId].description}`;
       const legend=$('nmdb-state-legend');legend.replaceChildren(...data.markets.map((item,index)=>{const mark=node('span','nmdb-legend-item');const swatch=node('i','nmdb-swatch');swatch.style.backgroundColor=nmdbColors[index];mark.append(swatch,node('strong','',item.name));return mark;}));
       const rows=data.periods.map(period=>{const values=new Map(data.observations.filter(row=>row.market===market&&row.period===period).map(row=>[row.series_id,row]));return [period,...Object.keys(data.series).map(key=>values.get(key)?.value_pct==null?'—':dec(values.get(key).value_pct)+'%'),...Object.keys(data.series).map(key=>values.get(key)?.suppressed?'Yes':'No')];});
-      $('nmdb-state-quarterly').replaceChildren(table(['Quarter','30–60 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–60 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
+      $('nmdb-state-quarterly').replaceChildren(table(['Quarter','30–89 DPD','90+ DPD','Foreclosure / bankruptcy / DIL','Forbearance','30–89 suppressed','90+ suppressed','Foreclosure suppressed','Forbearance suppressed'],rows));
       status.className='domain-state ok';status.textContent=`FHFA state aggregate verified · ${stateName} · ${data.observations.length.toLocaleString('en-US')} market-series-quarter rows · ${data.periods[0]}–${data.periods.at(-1)} · release ${data.source.release_date}.`;
     };
     stateChoice.addEventListener('change',async()=>{try{await load(stateChoice.value);render();}catch(error){status.className='domain-state error';status.textContent=`NMDB state data unavailable: ${error.message}`;}});

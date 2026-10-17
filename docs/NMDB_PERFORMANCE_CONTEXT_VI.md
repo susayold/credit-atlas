@@ -26,7 +26,7 @@ benchmark độc lập, không phải phần mở rộng của NSMO Public Use F
 
 | SERIESID | Ý nghĩa của FHFA | Mẫu số |
 |---|---|---|
-| `P3089DL` | Mortgage trễ ít nhất 30 hoặc 60 ngày | Active loans cuối quý |
+| `P3089DL` | Nhóm quá hạn 30–89 ngày (FHFA gộp hai bucket 30–59 và 60–89 ngày) | Active loans cuối quý |
 | `P90DL` | Mortgage trễ ít nhất 90, 120, 150 hoặc 180 ngày | Active loans cuối quý |
 | `PFORECL` | Đang foreclosure, bankruptcy hoặc deed-in-lieu | Active loans cuối quý |
 | `PFORB` | Đang được ghi nhận trong forbearance | Active loans cuối quý; chuỗi bắt đầu 2019Q4 |

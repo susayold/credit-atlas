@@ -8,7 +8,7 @@ FHFA publishes a state-level quarterly extract from the National Mortgage Databa
 
 | Series | Meaning | Main use |
 |---|---|---|
-| `P3089DL` | Active-mortgage share 30 or 60 days past due at quarter end | State-level early delinquency trend/context |
+| `P3089DL` | Active-mortgage share in the combined 30–59 and 60–89 days-past-due categories at quarter end; displayed as 30–89 DPD | State-level early delinquency trend/context |
 | `P90DL` | Active-mortgage share 90, 120, 150 or 180 days past due | Serious delinquency context |
 | `PFORECL` | Active-mortgage share in foreclosure, bankruptcy or deed-in-lieu | Distressed-process context |
 | `PFORB` | Active mortgages reported in forbearance | Relief/forbearance context; available from 2019Q4 |
@@ -17,7 +17,7 @@ Each series is a quarter-end share among active loans, not a fixed-horizon cohor
 
 ## Data quality and limits
 
-The source has 68 suppressed cells (17 in each series), blanked by the publisher for cells with fewer than three loan records. The `PFORB` series is blank before 2019Q4 (14,484 state-market-quarter cells); those blanks mean unavailable, not zero. The additional 51 blank cells are suppressed forbearance cells. All 816 state-market-series cells for 2026Q2 are present and unsuppressed.
+The curated CSV contains 68 source rows flagged as suppressed (17 in each series); every flagged row is in Vermont's Government / Non-Conventional market between 2004Q1 and 2008Q3, and every suppressed value is blank. The `PFORB` series is blank before 2019Q4 in 14,484 state-market-quarter rows. Of those pre-series blanks, 17 also carry the publisher's suppression flag and 14,467 do not; these categories overlap and must not be added as separate missing-cell totals. Preserve both `suppressed` and `value_pct` as published, and do not interpret either blank type as zero. All 816 state-market-series cells for 2026Q2 are present and unsuppressed.
 
 FHFA notes that the latest two quarters are preliminary because credit-bureau data arrive with lag. It also warns that seriously past-due mortgages may be undercounted from 2006 through 2012 because some credit histories were purged. State-to-state levels reflect sample coverage and mortgage-market mix as well as borrower risk. The sample represents owner-occupied, site-built mortgages better than investor or manufactured-home loans.
 

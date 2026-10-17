@@ -26,8 +26,8 @@ MARKETS = (
 )
 SERIES = {
     "P3089DL": {
-        "label": "30–60 days past due",
-        "description": "Active mortgages at least 30 or 60 days past due divided by active mortgages at quarter end.",
+        "label": "30–89 days delinquent",
+        "description": "FHFA combines the 30- and 60-day-past-due categories (30–59 and 60–89 days in the technical notes); divided by active mortgages at quarter end.",
     },
     "P90DL": {
         "label": "90+ days past due",

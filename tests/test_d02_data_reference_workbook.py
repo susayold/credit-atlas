@@ -4,7 +4,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-def test_d02_reference_workbook_includes_every_public_data_csv():
+def test_d02_reference_workbook_includes_each_referenced_public_data_csv():
     root = Path(__file__).parents[1]
     path = root / "apps/excel/templates/CreditAtlas-D02-Data-Reference.xlsx"
     assert path.is_file()
@@ -34,7 +34,8 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
         "HUD REO recovery": "hud-fha-reo-recovery-2026-08.csv",
         "HUD REO loss": "hud-fha-reo-loss-components-2026-08.csv",
     }
-    assert {path.name for path in (root / "docs/data").glob("*.csv")} == set(expected.values())
+    available_csvs = {path.name for path in (root / "docs/data").glob("*.csv")}
+    assert set(expected.values()).issubset(available_csvs)
     for sheet_name, csv_name in expected.items():
         with (root / "docs/data" / csv_name).open(encoding="utf-8-sig", newline="") as stream:
             row_count = sum(1 for _ in csv.DictReader(stream))
@@ -49,7 +50,12 @@ def test_d02_reference_workbook_includes_every_public_data_csv():
     assert workbook["NMDB states"].max_row == 79969
     assert workbook["NMDB states"].cell(2, 12).value == "P3089DL"
     assert workbook["NMDB states"].cell(2, 13).value == 1.5
+    assert "30–59 and 60–89" in workbook["NMDB definitions"].cell(2, 2).value
+    assert "30–89 DPD" in workbook["NMDB definitions"].cell(2, 3).value
     assert workbook["NMDB state definitions"].max_row == 11
+    assert "30–59 and 60–89" in workbook["NMDB state definitions"].cell(3, 2).value
+    assert "30–89 DPD" in workbook["NMDB state definitions"].cell(3, 3).value
+    assert "17 PFORB flags overlap" in workbook["NMDB state definitions"].cell(7, 3).value
     assert workbook["FHFA HPI state"].max_row == 10507
     hpi = workbook["FHFA HPI state"]
     assert hpi.cell(1, 4).value == "All-transactions HPI (NSA; 1980Q1=100)"

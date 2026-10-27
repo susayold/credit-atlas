@@ -25,6 +25,32 @@ STATIC = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js",
           **{f"/assets/credit-{name}-banner-v2.png": f"assets/credit-{name}-banner-v2.png"
              for name in ("retail", "mortgage", "business", "portfolio", "structured")}}
 
+DRIVE_READ_ONLY_API_ROUTES = frozenset({
+    "/api/health",
+    "/api/nsmo-profile",
+    "/api/nsmo-dictionary",
+    "/api/nsmo-survey-returns",
+    "/api/nsmo-domains",
+    "/api/nsmo-target-feasibility",
+    "/api/nsmo-origination-feasibility",
+    "/api/nsmo-first-observed-transition-support",
+    "/api/nsmo-first-entry-risk-set-feasibility",
+    "/api/nsmo-horizon-sensitivity",
+    "/api/hud-fha-performance",
+    "/api/hud-fha-production-transitions",
+    "/api/nmdb-performance",
+    "/api/nmdb-state-performance",
+    "/api/fhfa-nmdb-performance-geographies",
+    "/api/fhfa-nmdb-performance-geographies-excel",
+})
+DRIVE_READ_ONLY_DOWNLOADS = frozenset({
+    "/downloads/nsmo-reference.xlsx",
+    "/downloads/d02-data-reference.xlsx",
+    "/downloads/hud-fha-performance.xlsx",
+    "/downloads/nmdb-performance.xlsx",
+})
+MAX_DRIVE_WORKBOOK_BYTES = 100 * 1024 * 1024
+
 
 def private_p4_export(service, report):
     """Attach source-complete provenance to downloadable P4 JSON snapshots."""
@@ -154,8 +180,12 @@ def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_
                     raise ValueError("Duplicate query parameter")
                 query = {k: v[0] for k, v in values.items()}
                 if (read_only and url.path.startswith("/api/")
-                        and not url.path.startswith("/api/nsmo-") and url.path != "/api/health"):
+                        and url.path not in DRIVE_READ_ONLY_API_ROUTES):
                     self.send(404, {"error": "Only the Drive-backed NSMO read-only routes are enabled"}, head=head)
+                    return
+                if (read_only and url.path.startswith("/downloads/")
+                        and url.path not in DRIVE_READ_ONLY_DOWNLOADS):
+                    self.send(404, {"error": "Only NSMO/D02 workbooks stored in the Drive project root are enabled"}, head=head)
                     return
                 if url.path == "/downloads/abs-surveillance-exceptions.xlsx":
                     if query:
@@ -193,6 +223,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_
                     if not workbook.is_file():
                         self.send(404, {"error": "NSMO Excel reference is not built"}, head=head)
                         return
+                    if workbook.stat().st_size > MAX_DRIVE_WORKBOOK_BYTES:
+                        self.send(413, {"error": "NSMO Excel reference exceeds the Drive runtime download bound"}, head=head)
+                        return
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-NSMO-Reference.xlsx", head=head)
@@ -203,6 +236,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_
                     workbook = service.root / "apps/excel/templates/CreditAtlas-D02-Data-Reference.xlsx"
                     if not workbook.is_file():
                         self.send(404, {"error": "D02 Excel reference is not built"}, head=head)
+                        return
+                    if workbook.stat().st_size > MAX_DRIVE_WORKBOOK_BYTES:
+                        self.send(413, {"error": "D02 Excel reference exceeds the Drive runtime download bound"}, head=head)
                         return
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -215,6 +251,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_
                     if not workbook.is_file():
                         self.send(404, {"error": "HUD FHA Excel reference is not built"}, head=head)
                         return
+                    if workbook.stat().st_size > MAX_DRIVE_WORKBOOK_BYTES:
+                        self.send(413, {"error": "HUD FHA Excel reference exceeds the Drive runtime download bound"}, head=head)
+                        return
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                               filename="CreditAtlas-HUD-FHA-Performance.xlsx", head=head)
@@ -225,6 +264,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_
                     workbook = service.root / "apps/excel/templates/CreditAtlas-NMDB-Performance.xlsx"
                     if not workbook.is_file():
                         self.send(404, {"error": "NMDB performance Excel reference is not built"}, head=head)
+                        return
+                    if workbook.stat().st_size > MAX_DRIVE_WORKBOOK_BYTES:
+                        self.send(413, {"error": "NMDB performance Excel reference exceeds the Drive runtime download bound"}, head=head)
                         return
                     self.send(200, workbook.read_bytes(),
                               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1310,9 +1352,12 @@ def serve(root: Path, port: int = 8770, *, nsmo_drive_remote: str | None = None)
     if nsmo_drive_remote:
         from .drive_storage import RcloneDriveRoot
         drive_root = RcloneDriveRoot(nsmo_drive_remote)
-    service = ResearchService(root, ephemeral_state=drive_root is not None)
-    # Warm verification before opening the listener. No raw data in browser bundles.
-    service.runs()
+    data_root = drive_root or root
+    service = ResearchService(data_root, ephemeral_state=drive_root is not None)
+    # Local mode warms the local inventory. Drive mode stays inside the D02
+    # allowlist and must not enumerate local D01 data before opening the listener.
+    if drive_root is None:
+        service.runs()
     bundled_web = Path(__file__).resolve().parents[2] / "apps/web"
     ui_root = bundled_web if bundled_web.is_dir() else root / "apps/web"
     with LocalResearchServer(("127.0.0.1", port), handler_for(

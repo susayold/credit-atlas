@@ -1,11 +1,14 @@
 # Drive-backed D02 runtime
 
-This first Drive-backed runtime serves the NSMO/D02 pages in read-only mode. It
-streams the source-bound aggregate receipts and public dictionaries from the
-Credit Atlas Drive folder. It does not download them to the checkout, create a
-disk cache, or persist review databases locally. POST endpoints are disabled;
-the SQLite schemas needed by the existing server live only in process memory.
-Other Atlas workspaces are not yet converted to Drive-backed storage.
+This first Drive-backed runtime is designed to serve the complete NSMO/D02 page in read-only
+mode, including the separately scoped HUD FHA and FHFA NMDB context panels. It
+reads source-bound aggregate receipts, dictionaries, curated benchmark files,
+and D02 workbooks from the Credit Atlas Drive folder. It does not download them
+to the checkout, create a disk cache, or persist review databases locally.
+POST endpoints are disabled; the SQLite schemas needed by the existing server
+live only in process memory. Only the page's explicit GET routes and four D02
+workbook downloads are enabled. Other Atlas workspaces are not yet converted
+to Drive-backed storage.
 
 ## One-time rclone setup
 
@@ -50,8 +53,14 @@ file under `D:\data\CodexState`.
 
 ## Acceptance boundary
 
-The code supports receipt-bound NSMO/D02 reads from Drive and no local
-persistent app state. Live Drive startup still requires the one-time OAuth
-configuration above. This does not yet move D01, HAMP, Bondora, Excel exports,
-or other workspaces to Drive-backed storage, and does not count as completion
-of the project-wide storage requirement.
+The FHFA geography ZIP uses offset/count range reads with a four-block
+in-memory LRU (up to 4 MiB); it creates no local file or persistent cache.
+D02 workbook responses are bounded to 100 MiB and assembled in memory.
+
+The code path supports receipt-bound NSMO/D02 and its HUD/NMDB context reads
+from Drive, with no local persistent app state. Live Drive startup and the
+complete page still require the one-time OAuth configuration above and an
+end-to-end acceptance run; source inspection alone is not acceptance evidence.
+This does not yet move D01, HAMP, Bondora, Excel exports, or other workspaces to
+Drive-backed storage, and does not count as completion of the project-wide
+storage requirement.

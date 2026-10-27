@@ -48,7 +48,9 @@ class ResearchService:
     def __init__(self, root: Path, *, review_path: Path | None = None, ephemeral_state: bool = False):
         self.root = root.resolve()
         self.ephemeral_state = bool(ephemeral_state)
-        self.upstream = load_engine(self.root)
+        # The Drive-backed D02 server exposes no D01 study routes and must not
+        # require vendored engine files from the data workspace at startup.
+        self.upstream = None if self.ephemeral_state else load_engine(self.root)
         if self.ephemeral_state:
             selected_review_path = None
         else:
@@ -62,6 +64,11 @@ class ResearchService:
             "period_transitions": threading.RLock(),
         }
         self.method_sources = copy.deepcopy(_SERVING_SOURCES)
+        if self.ephemeral_state:
+            # The Drive mode serves only D02 and its read-only aggregate
+            # benchmarks. Do not initialize other Atlas modules against the
+            # remote data root or inspect any local project's private folders.
+            return
         from .suite_snapshot import SuiteViews
         self.suite_views = SuiteViews(self.root)
         from .bank_views import BankViews

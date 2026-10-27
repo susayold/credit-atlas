@@ -11,6 +11,7 @@ import json
 import re
 import shutil
 import subprocess
+from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import PurePosixPath
@@ -27,6 +28,10 @@ class DriveStorageError(OSError):
 class RemoteStat:
     st_size: int
     st_mtime_ns: int
+
+    @property
+    def st_mtime(self) -> float:
+        return self.st_mtime_ns / 1_000_000_000
 
 
 class RcloneDriveRoot:
@@ -89,6 +94,10 @@ class RcloneDrivePath:
     def resolve(self) -> "RcloneDrivePath":
         return self
 
+    @property
+    def name(self) -> str:
+        return PurePosixPath(self.relative).name
+
     def is_relative_to(self, other: object) -> bool:
         if isinstance(other, RcloneDriveRoot):
             return self.root is other
@@ -120,13 +129,15 @@ class RcloneDrivePath:
             value = json.loads(result.stdout.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
             raise DriveStorageError("Drive returned invalid file metadata") from error
-        if not isinstance(value, dict) or value.get("IsDir"):
-            raise DriveStorageError("Expected a file in the Drive-backed workspace")
+        if not isinstance(value, dict):
+            raise DriveStorageError("Drive returned invalid file metadata")
         return value
 
     def is_file(self) -> bool:
-        self._run_json_stat()
-        return True
+        return not bool(self._run_json_stat().get("IsDir"))
+
+    def is_dir(self) -> bool:
+        return bool(self._run_json_stat().get("IsDir"))
 
     def stat(self) -> RemoteStat:
         value = self._run_json_stat()
@@ -139,10 +150,42 @@ class RcloneDrivePath:
             except ValueError:
                 mtime_ns = 0
         try:
-            size = int(value["Size"])
+            size = 0 if value.get("IsDir") else int(value["Size"])
         except (KeyError, TypeError, ValueError) as error:
             raise DriveStorageError("Drive file metadata omitted its byte size") from error
         return RemoteStat(st_size=size, st_mtime_ns=mtime_ns)
+
+    def glob(self, pattern: str) -> list["RcloneDrivePath"]:
+        """List matching direct children without recursively scanning the project."""
+        if (not isinstance(pattern, str) or not pattern or "/" in pattern or "\\" in pattern
+                or pattern in {".", ".."}):
+            raise ValueError("Drive glob patterns must match direct child names only")
+        result = subprocess.run(
+            [self.root.executable, "lsjson", self._remote_path()],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if result.returncode != 0:
+            raise DriveStorageError("Drive directory listing failed; check the configured read-only remote")
+        try:
+            entries = json.loads(result.stdout.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise DriveStorageError("Drive returned an invalid directory listing") from error
+        if not isinstance(entries, list):
+            raise DriveStorageError("Drive returned an unexpected directory listing")
+        import fnmatch
+
+        paths = []
+        for entry in entries:
+            name = entry.get("Name") if isinstance(entry, dict) else None
+            if (not isinstance(name, str) or not name or name in {".", ".."}
+                    or "/" in name or "\\" in name):
+                continue
+            if fnmatch.fnmatchcase(name, pattern):
+                paths.append(self / name)
+        return paths
 
     def open(self, mode: str = "r", *, encoding: str | None = None, errors: str | None = None,
              newline: str | None = None):
@@ -171,6 +214,98 @@ class RcloneDrivePath:
     def read_text(self, encoding: str = "utf-8", errors: str | None = None) -> str:
         with self.open("r", encoding=encoding, errors=errors) as stream:
             return stream.read()
+
+    def open_seekable(self) -> "_RcloneRangeReader":
+        """Open a bounded, in-memory-block-cached range reader for ZIP metadata access."""
+        return _RcloneRangeReader(self)
+
+
+class _RcloneRangeReader(io.RawIOBase):
+    """Seekable remote reader using bounded rclone range requests, never local files."""
+
+    _BLOCK_SIZE = 1024 * 1024
+    _MAX_CACHED_BLOCKS = 4
+
+    def __init__(self, path: RcloneDrivePath):
+        super().__init__()
+        self.path = path
+        self.size = path.stat().st_size
+        self.position = 0
+        self.blocks: OrderedDict[int, bytes] = OrderedDict()
+
+    def readable(self) -> bool:
+        return True
+
+    def seekable(self) -> bool:
+        return True
+
+    def writable(self) -> bool:
+        return False
+
+    def tell(self) -> int:
+        self._checkClosed()
+        return self.position
+
+    def seek(self, offset: int, whence: int = io.SEEK_SET) -> int:
+        self._checkClosed()
+        if whence == io.SEEK_SET:
+            target = offset
+        elif whence == io.SEEK_CUR:
+            target = self.position + offset
+        elif whence == io.SEEK_END:
+            target = self.size + offset
+        else:
+            raise ValueError("Invalid seek mode")
+        if target < 0:
+            raise ValueError("Negative seek position")
+        self.position = target
+        return target
+
+    def readinto(self, buffer) -> int:
+        self._checkClosed()
+        view = memoryview(buffer).cast("B")
+        if not view:
+            return 0
+        remaining = min(len(view), max(0, self.size - self.position))
+        copied = 0
+        while copied < remaining:
+            block_number = self.position // self._BLOCK_SIZE
+            block_offset = self.position % self._BLOCK_SIZE
+            block = self._read_block(block_number)
+            count = min(remaining - copied, len(block) - block_offset)
+            if count <= 0:
+                raise DriveStorageError("Drive range response ended before the declared file size")
+            view[copied:copied + count] = block[block_offset:block_offset + count]
+            copied += count
+            self.position += count
+        return copied
+
+    def _read_block(self, block_number: int) -> bytes:
+        cached = self.blocks.get(block_number)
+        if cached is not None:
+            self.blocks.move_to_end(block_number)
+            return cached
+        offset = block_number * self._BLOCK_SIZE
+        count = min(self._BLOCK_SIZE, self.size - offset)
+        result = subprocess.run(
+            [self.path.root.executable, "cat", "--offset", str(offset), "--count", str(count),
+             self.path._remote_path()],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if result.returncode != 0 or len(result.stdout) != count:
+            raise DriveStorageError("Drive range read failed or returned incomplete bytes")
+        self.blocks[block_number] = result.stdout
+        self.blocks.move_to_end(block_number)
+        while len(self.blocks) > self._MAX_CACHED_BLOCKS:
+            self.blocks.popitem(last=False)
+        return result.stdout
+
+    def close(self) -> None:
+        self.blocks.clear()
+        super().close()
 
 
 class _CheckedRcloneStream:

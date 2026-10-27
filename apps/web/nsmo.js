@@ -29,14 +29,21 @@ function render(profile){
   const quarterChoice=$('quarter-choice');quarterChoice.replaceChildren();perf.quarterly_counts.forEach((q,i)=>{const o=node('option','',q.quarter_end);o.value=String(i);quarterChoice.append(o);});quarterChoice.value=String(perf.quarterly_counts.length-1);
   const getCounts=(q)=>q.status_counts||{};
   const codeLabel=(code)=>perf.status_codes.find(x=>x.code===code)?.label||code;
+  const isObservedState=(code)=>code==='C'||/^[1-9]$/.test(code);
   const draw=()=>{
     const code=statusChoice.value,selected=perf.quarterly_counts[Number(quarterChoice.value)];
     const values=perf.quarterly_counts.map(q=>({quarter:q.quarter_end,value:getCounts(q)[code]||0}));
     drawChart($('trend'),values,`${code} ${codeLabel(code)}`);
     $('trend-caption').textContent=`${code} · ${codeLabel(code)} · unweighted sample mortgages at quarter end`;
     const weighted=selected.status_weight_sums_descriptive_only||{};
-    const rows=perf.status_codes.map(s=>{const count=getCounts(selected)[s.code]||0;return [s.code,s.label,n(count),pct(count/sampleTotal),dec(weighted[s.code]||0)];});
-    const container=$('quarter-table');container.replaceChildren(table(['Code','Codebook category',{label:'Rows',number:true},{label:'Share of full PUF sample',number:true},{label:'Analysis-weight total · descriptive',number:true}],rows,[2,3,4]));
+    const knownRows=perf.status_codes.reduce((sum,s)=>sum+(isObservedState(s.code)?Number(getCounts(selected)[s.code]||0):0),0);
+    const knownWeight=perf.status_codes.reduce((sum,s)=>sum+(isObservedState(s.code)?Number(weighted[s.code]||0):0),0);
+    const rows=perf.status_codes.map(s=>{
+      const count=Number(getCounts(selected)[s.code]||0),weight=Number(weighted[s.code]||0),observed=isObservedState(s.code);
+      return [s.code,s.label,n(count),pct(count/sampleTotal),observed&&knownRows>0?pct(count/knownRows):'—',dec(weight),observed&&knownWeight>0?pct(weight/knownWeight):'—'];
+    });
+    $('quarter-state-meta').textContent=`${selected.quarter_end} · Observed-state denominator C–9: ${n(knownRows)} of ${n(sampleTotal)} PUF rows. Available Analysis_Weight denominator on those states: ${dec(knownWeight)}. Weighted shares are descriptive only; non-observation codes remain outside both state-share denominators.`;
+    const container=$('quarter-table');container.replaceChildren(table(['Code','Codebook category',{label:'Rows',number:true},{label:'Share of full PUF sample',number:true},{label:'Share of observed C–9 rows',number:true},{label:'Analysis-weight total · descriptive',number:true},{label:'Share of available weight in C–9 · descriptive',number:true}],rows,[2,3,4,5,6]));
   };
   statusChoice.addEventListener('change',draw);quarterChoice.addEventListener('change',draw);draw();
   const yearRows=Object.entries(sample.origination_year_counts).sort((a,b)=>Number(a[0])-Number(b[0])).map(([year,count])=>[year,n(count),pct(count/sampleTotal)]);

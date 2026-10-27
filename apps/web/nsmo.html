@@ -127,12 +127,13 @@
           <label>Quý chi tiết<select id="quarter-choice" aria-label="Chọn quý để xem chi tiết"></select></label>
         </div>
         <figure class="chart-frame"><svg id="trend" viewBox="0 0 980 340" role="img" aria-label="Số mortgage theo trạng thái qua các quý"></svg><figcaption id="trend-caption"></figcaption></figure>
+        <div id="quarter-state-meta" class="transition-meta" role="status"></div>
         <div id="quarter-table" class="table-wrap"></div>
-        <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định; đây không phải share trong risk set, incidence hay PD. Analysis-weight total là tổng trọng số của các dòng theo trạng thái, không phải loan count hoặc event rate.</p>
+        <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định. Cột “Share of observed C–9 rows” dùng mẫu số các dòng có trạng thái quan sát C–9 trong quý được chọn; các mã A/B/K/M/P/Q/S/blank nằm ngoài mẫu số nhưng vẫn hiển thị riêng. Weighted share dùng tổng Analysis_Weight khả dụng trên đúng tập C–9 và chỉ là composition mô tả. FHFA khuyến nghị survey procedures vì sai số chuẩn giả định simple random sample bị đánh giá thấp và cần tính đến differential sampling/non-response weights; tài liệu công khai hiện chưa cung cấp đầy đủ variance design/recipe để tái lập CI chính thức, nên dashboard không hiển thị CI. Không chỉ số nào ở đây là incidence hay PD.</p>
       </section>
       <section class="panel two-col">
         <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination year & survey wave</h2><div id="vintages" class="table-wrap"></div><div id="survey-waves" class="table-wrap"></div></div>
-        <div><div class="eyebrow">FIELD QUALITY</div><h2>Analysis weight</h2><div id="weight-summary"></div><p class="footnote">FHFA mô tả Analysis_Weight là sampling weight × non-response adjustment. Việc phân tích dưới đây chưa chọn estimator hay variance treatment.</p></div>
+        <div><div class="eyebrow">FIELD QUALITY</div><h2>Analysis weight</h2><div id="weight-summary"></div><p class="footnote">FHFA mô tả Analysis_Weight là sampling weight × non-response adjustment. §9 khuyến nghị survey procedures cho phân tích suy luận; dashboard chỉ báo weighted descriptive points và chưa có variance design/recipe đầy đủ để tái lập CI chính thức.</p></div>
       </section>
       <section class="panel response-mode-panel">
         <div class="section-head"><div><div class="eyebrow">SURVEY DESIGN · AGGREGATE RESPONSE COUNTS</div><h2>Kênh phản hồi thay đổi theo wave</h2><p>Đếm khảo sát hoàn tất theo thư, online tiếng Anh và online tiếng Tây Ban Nha trong FHFA Technical Report Table 3.</p></div></div>
@@ -194,7 +195,7 @@
           <p class="footnote">Đây là support đếm từ snapshot quý, không phải event incidence hay target đã freeze. Một mortgage có thể tạo nhiều chuyển tiếp; first observed 90+ không đảm bảo là lần đầu quá hạn thật vì PUF không ghi nhận diễn biến giữa các quý.</p>
         </div>
         <div class="origination-feasibility">
-          <div class="section-head"><div><div class="eyebrow">DYNAMIC FIRST ENTRY · FEASIBILITY ONLY</div><h3>Risk-set một lần vào đầu tiên C/1/2</h3><p>Mỗi mortgage chỉ vào một lần tại snapshot C/1/2 đầu tiên sau quý mở khoản vay; tiếp tục theo các quý liền kề cho đến event snapshot, competing state, censor hoặc kết thúc dữ liệu.</p></div></div>
+          <div class="section-head"><div><div class="eyebrow">DYNAMIC FIRST ENTRY · FEASIBILITY ONLY</div><h3>Risk-set một lần vào đầu tiên C/1/2</h3><p>Mỗi mortgage chỉ vào một lần tại snapshot C/1/2 đầu tiên sau quý mở khoản vay; tiếp tục theo các quý liền kề để ghi nhận snapshot 90+ DPD, trạng thái adverse 7–9, censoring/termination hoặc kết thúc dữ liệu. Đây là bảng mô tả exits, không phải competing-risks model.</p></div></div>
           <div id="first-entry-risk-set-state" class="domain-state" role="status">Đang xác minh first-entry risk-set receipt…</div>
           <div class="controls"><label>Trạng thái tại entry<select id="risk-entry-state"><option value="all">C/1/2 — tất cả</option><option value="C">C — current</option><option value="1">1 — 30–59 ngày</option><option value="2">2 — 60–89 ngày</option></select></label></div>
           <div id="first-entry-risk-set-metrics" class="metric-grid" aria-label="First-entry risk set feasibility"></div>
@@ -231,7 +232,7 @@
         <div id="transition-meta" class="transition-meta"></div><div id="transition-matrix" class="table-wrap matrix-wrap"></div>
         <p class="footnote">Phần trăm theo hàng chia cho các observed→observed transitions cùng trạng thái nguồn, theo measure đã chọn. Weighted sums chỉ mô tả, không phải incidence hay PD. Ma trận không bao gồm chuyển sang mã hành chính/gap.</p>
       </section>
-      <section class="warning"><strong>Không đọc các phần này thành forecast hoặc PD.</strong><p>VantageScore theo quý, forbearance và tình trạng mortgage là biến sau origination; chỉ được xem tại hoặc trước index quarter trong một thiết kế động. Weighted shares ở đây chỉ mô tả composition và chưa có variance estimator. Quarterly snapshots không cung cấp ngày chính xác của delinquency/termination.</p></section>
+      <section class="warning"><strong>Không đọc các phần này thành forecast hoặc PD.</strong><p>VantageScore theo quý, forbearance và tình trạng mortgage là biến sau origination; chỉ được xem tại hoặc trước index quarter trong một thiết kế động. Weighted shares ở đây chỉ mô tả composition. FHFA khuyến nghị survey procedures cho sai số; PUF/tài liệu công khai chưa đủ variance design/recipe để tái lập CI chính thức. Quarterly snapshots không cung cấp ngày chính xác của delinquency/termination.</p></section>
       <section class="warning"><strong>Không đọc đây là tỷ lệ vỡ nợ.</strong><p>Quý quan sát chứa các khoản chưa mở, mới mở, history-ended, gap và suppressed. Dashboard giữ các mã này riêng, dùng số đếm theo toàn bộ sample và không dựng mẫu số at-risk. Quan sát theo quý không cho biết chính xác ngày bắt đầu sự kiện, có thể bỏ sót diễn biến giữa hai mốc, và không tự tạo target 12 tháng.</p></section>
       <section class="panel limitations"><div class="eyebrow">SCOPE & LIMITATIONS</div><ul id="limits"></ul><p class="disclaimer" id="disclaimer"></p></section>
     </div>

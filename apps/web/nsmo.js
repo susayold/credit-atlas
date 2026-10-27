@@ -29,14 +29,21 @@ function render(profile){
   const quarterChoice=$('quarter-choice');quarterChoice.replaceChildren();perf.quarterly_counts.forEach((q,i)=>{const o=node('option','',q.quarter_end);o.value=String(i);quarterChoice.append(o);});quarterChoice.value=String(perf.quarterly_counts.length-1);
   const getCounts=(q)=>q.status_counts||{};
   const codeLabel=(code)=>perf.status_codes.find(x=>x.code===code)?.label||code;
+  const isObservedState=(code)=>code==='C'||/^[1-9]$/.test(code);
   const draw=()=>{
     const code=statusChoice.value,selected=perf.quarterly_counts[Number(quarterChoice.value)];
     const values=perf.quarterly_counts.map(q=>({quarter:q.quarter_end,value:getCounts(q)[code]||0}));
     drawChart($('trend'),values,`${code} ${codeLabel(code)}`);
     $('trend-caption').textContent=`${code} · ${codeLabel(code)} · unweighted sample mortgages at quarter end`;
     const weighted=selected.status_weight_sums_descriptive_only||{};
-    const rows=perf.status_codes.map(s=>{const count=getCounts(selected)[s.code]||0;return [s.code,s.label,n(count),pct(count/sampleTotal),dec(weighted[s.code]||0)];});
-    const container=$('quarter-table');container.replaceChildren(table(['Code','Codebook category',{label:'Rows',number:true},{label:'Share of full PUF sample',number:true},{label:'Analysis-weight total · descriptive',number:true}],rows,[2,3,4]));
+    const knownRows=perf.status_codes.reduce((sum,s)=>sum+(isObservedState(s.code)?Number(getCounts(selected)[s.code]||0):0),0);
+    const knownWeight=perf.status_codes.reduce((sum,s)=>sum+(isObservedState(s.code)?Number(weighted[s.code]||0):0),0);
+    const rows=perf.status_codes.map(s=>{
+      const count=Number(getCounts(selected)[s.code]||0),weight=Number(weighted[s.code]||0),observed=isObservedState(s.code);
+      return [s.code,s.label,n(count),pct(count/sampleTotal),observed&&knownRows>0?pct(count/knownRows):'—',dec(weight),observed&&knownWeight>0?pct(weight/knownWeight):'—'];
+    });
+    $('quarter-state-meta').textContent=`${selected.quarter_end} · Observed-state denominator C–9: ${n(knownRows)} of ${n(sampleTotal)} PUF rows. Available Analysis_Weight denominator on those states: ${dec(knownWeight)}. Weighted shares are descriptive only; non-observation codes remain outside both state-share denominators.`;
+    const container=$('quarter-table');container.replaceChildren(table(['Code','Codebook category',{label:'Rows',number:true},{label:'Share of full PUF sample',number:true},{label:'Share of observed C–9 rows',number:true},{label:'Analysis-weight total · descriptive',number:true},{label:'Share of available weight in C–9 · descriptive',number:true}],rows,[2,3,4,5,6]));
   };
   statusChoice.addEventListener('change',draw);quarterChoice.addEventListener('change',draw);draw();
   const yearRows=Object.entries(sample.origination_year_counts).sort((a,b)=>Number(a[0])-Number(b[0])).map(([year,count])=>[year,n(count),pct(count/sampleTotal)]);
@@ -340,17 +347,17 @@ async function loadSurveyReturns(){
     view.classList.add('survey-returns-table');$('survey-returns-table').replaceChildren(view);
     const usable=data.usability,excluded=Object.values(usable.exclusions_by_disposition).reduce((a,b)=>a+b,0);
     $('usable-responses-metrics').replaceChildren(
-      metric('Usable returns · Table 4',n(usable.usable_responses_table4),`${dec(usable.usable_share_of_returned_pct)}% of completed returns`),
+      metric('Usable returns · Table 4',n(usable.usable_responses_table4),`${dec(usable.usable_share_of_returned_pct)}% of ${n(usable.completed_returns)} returns · ${dec(100*usable.usable_responses_table4/p.surveys_mailed)}% of ${n(p.surveys_mailed)} mailed`),
       metric('Rows in PUF v7.0',n(usable.puf_v70_rows_and_tables5_6_2013_2024),'Tables 5–6 · origination 2013–2024'),
       metric('Returned but unusable',n(excluded),'Duplicate/ineligible, Q1 no, breakoff, wrong loan'),
-      metric('Usable outside PUF scope',n(usable.usable_table4_minus_puf_scope),`${n(usable.wave_7_remote_rural_scope_gap)} wave 7 · ${n(usable.wave_45_46_origination_scope_gap)} waves 45–46`)
+      metric('PUF − Table 4 gap',n(usable.puf_v70_rows_and_tables5_6_2013_2024-usable.usable_responses_table4),`${n(usable.usable_table4_minus_puf_scope)} Table 4 usable rows outside PUF · wave 7 ${n(usable.wave_7_remote_rural_scope_gap)} · waves 45–46 ${n(usable.wave_45_46_origination_scope_gap)}`)
     );
     const usabilityRows=usable.waves.map(row=>[
       row.survey_wave,n(row.surveys_completed_total),n(row.duplicate_or_ineligible),n(row.answered_no_to_q1),
       n(row.did_not_finish_survey),n(row.wrong_loan),n(row.usable_responses_table4),
       n(row.usable_responses_origination_2013_2024_tables5_6),n(row.gap_to_usable_table4)
     ]);
-    const usabilityTable=table(['Wave','Returned','Duplicate / ineligible','No to Q1','Did not finish','Wrong loan','Usable · Table 4','Usable · Tables 5/6','Scope gap'],usabilityRows,[1,2,3,4,5,6,7,8]);
+    const usabilityTable=table(['Wave','Returned','Duplicate / ineligible','No to Q1','Did not finish','Wrong loan','Usable · Table 4','Usable · Tables 5/6','Table 4 − PUF'],usabilityRows,[1,2,3,4,5,6,7,8]);
     usabilityTable.classList.add('usable-responses-table');$('usable-responses-table').replaceChildren(usabilityTable);
     state.className='domain-state ok';state.textContent='48 waves reconciled to FHFA Table 3 totals · aggregate-only · no respondent or mortgage linkage.';
   }catch(error){state.className='domain-state error';state.textContent=`Survey response-mode table unavailable: ${error.message}`;}
@@ -380,7 +387,7 @@ async function loadTargetFeasibility(){
 function renderTargetFeasibility(data){
   const mode=$('target-anchor-choice'),band=$('target-vintage-band');
   const results=['observed_90plus_event','four_quarters_observed_no_event','observed_other_adverse_state_7','observed_other_adverse_state_8','observed_other_adverse_state_9','termination_competing_censor','termination_same_month_ambiguous','observation_censor_M','observation_censor_S','administratively_short_followup','not_open_at_baseline'];
-  const labels={'observed_90plus_event':'Observed 90+','four_quarters_observed_no_event':'No 90+ · four observed quarters','observed_other_adverse_state_7':'Bankruptcy 13','observed_other_adverse_state_8':'Foreclosure / surrender','observed_other_adverse_state_9':'Other adverse disposition','termination_competing_censor':'Termination before next snapshot','termination_same_month_ambiguous':'Termination same-month ambiguity','observation_censor_M':'Archive gap (M)','observation_censor_S':'Suppressed (S)','administratively_short_followup':'Short administrative horizon','not_open_at_baseline':'Closed by baseline'};
+  const labels={'observed_90plus_event':'Observed 90+ DPD','four_quarters_observed_no_event':'No observed 90+ DPD · four snapshots','observed_other_adverse_state_7':'Code 7 · Chapter 13 bankruptcy','observed_other_adverse_state_8':'Code 8 · foreclosure started/completed, deed-in-lieu, voluntary surrender, repossession','observed_other_adverse_state_9':'Code 9 · Ch. 7/11/12 bankruptcy; settlement, insurance/term/government claim, dealer-paid, collection, charge-off','termination_competing_censor':'Terminated before next snapshot','termination_same_month_ambiguous':'Termination same-month ambiguity','observation_censor_M':'Archive gap (M)','observation_censor_S':'Suppressed (S)','administratively_short_followup':'Short administrative horizon','not_open_at_baseline':'Closed by baseline'};
   const zero=()=>Object.fromEntries(results.map(k=>[k,0]));
   const merge=(target,source)=>{for(const [key,value] of Object.entries(source||{}))target[key]=(target[key]||0)+Number(value||0);return target;};
   const bandYears=value=>{if(value==='all')return null;const [a,b]=value.split('-').map(Number);return year=>Number(year)>=a&&Number(year)<=b;};
@@ -525,9 +532,9 @@ function renderFirstEntryRiskSetFeasibility(data){
       metric('At-risk quarter intervals',n(intervals),'Unweighted exposure intervals; not independent loans'),
       metric('Termination exits',n(close),'Earlier close plus same-month ambiguous ordering')
     );
-    $('first-entry-risk-set-note').textContent=`Competing 7–9 exits: ${n(Number(exits.competing_adverse_7||0)+Number(exits.competing_adverse_8||0)+Number(exits.competing_adverse_9||0))}; administrative end: ${n(exits.administrative_end||0)}. Filtering does not change the definition; the aggregate population entry partition is ${n(data.population_partition_unweighted.entered_risk_set)}.`;
-    const tableRows=rows.map(row=>{const x=row.first_exit_by_class||{},other=Number(x.observation_censor_A||0)+Number(x.observation_censor_B||0)+Number(x.observation_censor_K||0)+Number(x.observation_censor_M||0)+Number(x.observation_censor_P||0)+Number(x.observation_censor_Q||0)+Number(x.observation_censor_S||0)+Number(x.observation_censor_blank||0)+Number(x.observation_censor_unknown||0);return [row.origination_year,row.entry_state,n(row.mortgages_entered),n(row.at_risk_quarter_intervals),n(x.observed_90plus||0),n(Number(x.competing_adverse_7||0)+Number(x.competing_adverse_8||0)+Number(x.competing_adverse_9||0)),n(x.termination_competing||0),n(x.termination_same_month_ambiguous||0),n(other),n(x.administrative_end||0)];});
-    $('first-entry-risk-set-table').replaceChildren(table(['Origination year','Entry state','Mortgages','Risk intervals','First 90+','Competing 7–9','Closed before next','Same-month ambiguous','Other censor','Admin end'],tableRows,[2,3,4,5,6,7,8,9]));
+    $('first-entry-risk-set-note').textContent=`First-exit adverse-status counts: code 7 = ${n(exits.competing_adverse_7||0)}; code 8 = ${n(exits.competing_adverse_8||0)}; code 9 = ${n(exits.competing_adverse_9||0)} (combined ${n(Number(exits.competing_adverse_7||0)+Number(exits.competing_adverse_8||0)+Number(exits.competing_adverse_9||0))}); administrative end: ${n(exits.administrative_end||0)}. Descriptive exit composition only; not a competing-risks model. Filtering does not change the definition; the aggregate population entry partition is ${n(data.population_partition_unweighted.entered_risk_set)}.`;
+    const tableRows=rows.map(row=>{const x=row.first_exit_by_class||{},other=Number(x.observation_censor_A||0)+Number(x.observation_censor_B||0)+Number(x.observation_censor_K||0)+Number(x.observation_censor_M||0)+Number(x.observation_censor_P||0)+Number(x.observation_censor_Q||0)+Number(x.observation_censor_S||0)+Number(x.observation_censor_blank||0)+Number(x.observation_censor_unknown||0);return [row.origination_year,row.entry_state,n(row.mortgages_entered),n(row.at_risk_quarter_intervals),n(x.observed_90plus||0),n(x.competing_adverse_7||0),n(x.competing_adverse_8||0),n(x.competing_adverse_9||0),n(x.termination_competing||0),n(x.termination_same_month_ambiguous||0),n(other),n(x.administrative_end||0)];});
+    $('first-entry-risk-set-table').replaceChildren(table(['Origination year','Entry state','Mortgages','Risk intervals','First 90+','First adverse 7','First adverse 8','First adverse 9','Terminated before next','Same-month ambiguous','Other censor','Admin end'],tableRows,[2,3,4,5,6,7,8,9,10,11]));
   }
   band.addEventListener('change',draw);entryChoice.addEventListener('change',draw);draw();
 }

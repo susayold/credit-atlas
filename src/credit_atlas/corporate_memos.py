@@ -5,6 +5,7 @@ import re
 import sqlite3
 import uuid
 from .reviews import ReviewConflict
+from .runtime_state import SQLiteRuntimeState
 from .sec_trends import report as trend_report
 from .sec_coverage import report as coverage_report,INTEREST_CONCEPTS
 from .sec_debt import report as debt_report,CONCEPTS as DEBT_CONCEPTS
@@ -24,14 +25,15 @@ def identifier(value):
 class CorporateMemos:
     def __init__(self,service):
         self.service=service
-        self.path=service.root/'artifacts/private/corporate-memos.sqlite3'
-        self.path.parent.mkdir(parents=True,exist_ok=True)
+        path=None if service.ephemeral_state else service.root/'artifacts/private/corporate-memos.sqlite3'
+        self._db=SQLiteRuntimeState(path,"corporate-memos")
+        self.path=self._db.path
         with self.connect() as db:
             db.executescript('''PRAGMA journal_mode=WAL;
                 CREATE TABLE IF NOT EXISTS memos(id TEXT PRIMARY KEY,view_id TEXT NOT NULL,cik TEXT NOT NULL,revision INTEGER NOT NULL,record TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS history(id TEXT NOT NULL,revision INTEGER NOT NULL,record TEXT NOT NULL,PRIMARY KEY(id,revision));''')
 
-    def connect(self):return sqlite3.connect(self.path,timeout=10)
+    def connect(self):return self._db.connect(timeout=10)
 
     def list(self,query):
         if set(query)!={'view_id','cik'} or not isinstance(query['view_id'],str) or not re.fullmatch(r'sec-view-[0-9a-f]{12}',query['view_id']) or not isinstance(query['cik'],str) or not re.fullmatch(r'\d{10}',query['cik']):

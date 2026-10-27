@@ -7,6 +7,7 @@ import json
 import re
 import zipfile
 from collections import Counter
+from contextlib import contextmanager
 from pathlib import Path
 
 from .nmdb_aggregate import SERIES, SOURCE_URL, read as aggregate_read
@@ -33,6 +34,19 @@ PERIODS = tuple(
     if (year, quarter) <= (2026, 2)
 )
 MAX_SELECTED_ROWS = 5_000
+
+
+@contextmanager
+def _open_zip(archive_path):
+    """Open local archives normally and Drive archives through bounded range reads."""
+    open_seekable = getattr(archive_path, "open_seekable", None)
+    if callable(open_seekable):
+        with open_seekable() as stream:
+            with zipfile.ZipFile(stream) as archive:
+                yield archive
+    else:
+        with zipfile.ZipFile(archive_path) as archive:
+            yield archive
 
 
 def _filters(query: dict | None) -> dict[str, str]:
@@ -111,7 +125,7 @@ def report(root: Path, query: dict | None = None) -> dict:
     row_count = 0
     quarter_rank = {period: index for index, period in enumerate(PERIODS)}
 
-    with zipfile.ZipFile(archive_path) as archive:
+    with _open_zip(archive_path) as archive:
         members = [member for member in archive.infolist() if not member.is_dir()]
         csv_members = [member for member in members if member.filename.lower().endswith(".csv")]
         if len(members) != 1 or len(csv_members) != 1 or csv_members[0].filename != profile.get("member"):

@@ -6,6 +6,7 @@ import re
 import sqlite3
 import uuid
 from .reviews import ReviewConflict
+from .runtime_state import SQLiteRuntimeState
 from .workspace import timestamp
 
 
@@ -16,15 +17,16 @@ def encoded(value):
 class MonitorReviews:
     def __init__(self, service):
         self.service = service
-        self.path = service.root / 'artifacts/private/monitor-reviews.sqlite3'
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        path = None if service.ephemeral_state else service.root / 'artifacts/private/monitor-reviews.sqlite3'
+        self._db = SQLiteRuntimeState(path, "monitor-reviews")
+        self.path = self._db.path
         with self.connect() as db:
             db.executescript('''PRAGMA journal_mode=WAL;
                 CREATE TABLE IF NOT EXISTS reviews(id TEXT PRIMARY KEY,domain TEXT NOT NULL,revision INTEGER NOT NULL,record TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS history(id TEXT NOT NULL,revision INTEGER NOT NULL,record TEXT NOT NULL,PRIMARY KEY(id,revision));''')
 
     def connect(self):
-        return sqlite3.connect(self.path, timeout=10)
+        return self._db.connect(timeout=10)
 
     def list(self, domain):
         if domain not in {'P1','P2','P3','P4','P5'}:

@@ -45,12 +45,18 @@ class EvidenceChanged(ValueError):
 
 
 class ResearchService:
-    def __init__(self, root: Path, *, review_path: Path | None = None):
+    def __init__(self, root: Path, *, review_path: Path | None = None, ephemeral_state: bool = False):
         self.root = root.resolve()
-        self.upstream = load_engine(self.root)
-        selected_review_path = review_path or self.root / "artifacts/private/reviews.sqlite3"
-        if not selected_review_path.resolve().is_relative_to(self.root / "artifacts/private"):
-            raise ValueError("Review storage must remain in the private workspace")
+        self.ephemeral_state = bool(ephemeral_state)
+        # The Drive-backed D02 server exposes no D01 study routes and must not
+        # require vendored engine files from the data workspace at startup.
+        self.upstream = None if self.ephemeral_state else load_engine(self.root)
+        if self.ephemeral_state:
+            selected_review_path = None
+        else:
+            selected_review_path = review_path or self.root / "artifacts/private/reviews.sqlite3"
+            if not selected_review_path.resolve().is_relative_to(self.root / "artifacts/private"):
+                raise ValueError("Review storage must remain in the private workspace")
         self.reviews = Reviews(selected_review_path)
         self.cache = {}
         self._supplement_locks = {
@@ -58,6 +64,11 @@ class ResearchService:
             "period_transitions": threading.RLock(),
         }
         self.method_sources = copy.deepcopy(_SERVING_SOURCES)
+        if self.ephemeral_state:
+            # The Drive mode serves only D02 and its read-only aggregate
+            # benchmarks. Do not initialize other Atlas modules against the
+            # remote data root or inspect any local project's private folders.
+            return
         from .suite_snapshot import SuiteViews
         self.suite_views = SuiteViews(self.root)
         from .bank_views import BankViews
@@ -109,7 +120,9 @@ class ResearchService:
         from .exposure_convergence_views import ExposureConvergenceViews
         self.exposure_convergence_views = ExposureConvergenceViews(self.root)
         from .portfolio_reviews import PortfolioReviews
-        self.portfolio_reviews = PortfolioReviews(self, selected_review_path.with_name(selected_review_path.stem+'-portfolio.sqlite3'))
+        portfolio_review_path = (None if self.ephemeral_state else
+            selected_review_path.with_name(selected_review_path.stem+'-portfolio.sqlite3'))
+        self.portfolio_reviews = PortfolioReviews(self, portfolio_review_path)
         from .excel_workbench import ExcelWorkbench
         self.excel_workbench = ExcelWorkbench(self)
         from .retail_policy_views import RetailPolicyViews
@@ -178,6 +191,9 @@ class ResearchService:
         return cached
 
     def runs(self):
+        if self.ephemeral_state:
+            return {"module_id": "P2", "workspaces": [{"id": "P2", "state": "implemented_descriptive"},
+                    *[{"id": name, "state": "planned"} for name in ["P1", "P3", "P4", "P5"]]], "runs": []}
         result = []
         for path, manifest in completed_cases(self.root):
             try:

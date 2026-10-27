@@ -195,7 +195,7 @@
           <p class="footnote">Đây là support đếm từ snapshot quý, không phải event incidence hay target đã freeze. Một mortgage có thể tạo nhiều chuyển tiếp; first observed 90+ không đảm bảo là lần đầu quá hạn thật vì PUF không ghi nhận diễn biến giữa các quý.</p>
         </div>
         <div class="origination-feasibility">
-          <div class="section-head"><div><div class="eyebrow">DYNAMIC FIRST ENTRY · FEASIBILITY ONLY</div><h3>Risk-set một lần vào đầu tiên C/1/2</h3><p>Mỗi mortgage chỉ vào một lần tại snapshot C/1/2 đầu tiên sau quý mở khoản vay; tiếp tục theo các quý liền kề cho đến event snapshot, competing state, censor hoặc kết thúc dữ liệu.</p></div></div>
+          <div class="section-head"><div><div class="eyebrow">DYNAMIC FIRST ENTRY · FEASIBILITY ONLY</div><h3>Risk-set một lần vào đầu tiên C/1/2</h3><p>Mỗi mortgage chỉ vào một lần tại snapshot C/1/2 đầu tiên sau quý mở khoản vay; tiếp tục theo các quý liền kề để ghi nhận snapshot 90+ DPD, trạng thái adverse 7–9, censoring/termination hoặc kết thúc dữ liệu. Đây là bảng mô tả exits, không phải competing-risks model.</p></div></div>
           <div id="first-entry-risk-set-state" class="domain-state" role="status">Đang xác minh first-entry risk-set receipt…</div>
           <div class="controls"><label>Trạng thái tại entry<select id="risk-entry-state"><option value="all">C/1/2 — tất cả</option><option value="C">C — current</option><option value="1">1 — 30–59 ngày</option><option value="2">2 — 60–89 ngày</option></select></label></div>
           <div id="first-entry-risk-set-metrics" class="metric-grid" aria-label="First-entry risk set feasibility"></div>

@@ -127,8 +127,9 @@
           <label>Quý chi tiết<select id="quarter-choice" aria-label="Chọn quý để xem chi tiết"></select></label>
         </div>
         <figure class="chart-frame"><svg id="trend" viewBox="0 0 980 340" role="img" aria-label="Số mortgage theo trạng thái qua các quý"></svg><figcaption id="trend-caption"></figcaption></figure>
+        <div id="quarter-state-meta" class="transition-meta" role="status"></div>
         <div id="quarter-table" class="table-wrap"></div>
-        <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định; đây không phải share trong risk set, incidence hay PD. Analysis-weight total là tổng trọng số của các dòng theo trạng thái, không phải loan count hoặc event rate.</p>
+        <p class="footnote">“Share of full PUF sample” chia cho toàn bộ 62.359 dòng cố định. Cột “Share of observed C–9 rows” dùng mẫu số các dòng có trạng thái quan sát C–9 trong quý được chọn; các mã A/B/K/M/P/Q/S/blank nằm ngoài mẫu số nhưng vẫn hiển thị riêng. Weighted share dùng tổng Analysis_Weight khả dụng trên đúng tập C–9 và chỉ là composition mô tả; không có variance estimator/CI. Không chỉ số nào ở đây là incidence hay PD.</p>
       </section>
       <section class="panel two-col">
         <div><div class="eyebrow">SAMPLE DESIGN</div><h2>Origination year & survey wave</h2><div id="vintages" class="table-wrap"></div><div id="survey-waves" class="table-wrap"></div></div>

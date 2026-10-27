@@ -117,7 +117,22 @@ def _write_public_dictionary(root: Path) -> None:
     (data / "nsmo-v70-predictor-gates.csv").write_text("\n".join(gate_rows) + "\n", encoding="utf-8")
 
 
+def _copy_public_dictionary(root: Path) -> None:
+    source_data = Path(__file__).parents[1] / "docs" / "data"
+    target_data = root / "docs" / "data"
+    target_data.mkdir(parents=True, exist_ok=True)
+    for name in (
+        "nsmo-v70-field-dictionary.csv",
+        "nsmo-v70-value-labels.csv",
+        "nsmo-v70-wave-coverage.csv",
+        "nsmo-v70-wave-item-comparability.csv",
+        "nsmo-v70-predictor-gates.csv",
+    ):
+        shutil.copyfile(source_data / name, target_data / name)
+
+
 def _write_domain_receipts(root: Path, source_sha: str) -> None:
+    from credit_atlas.nsmo_views import _FIELD_DICTIONARY_RECEIPT_SHA256
     from credit_atlas.workspace import sha256
 
     dictionary = root / "docs/data/nsmo-v70-field-dictionary.csv"
@@ -154,7 +169,7 @@ def _write_domain_receipts(root: Path, source_sha: str) -> None:
     }
     domain = {
         "status": "PASS", "sources": {"puf_csv": {"sha256": source_sha},
-                                             "field_dictionary_sha256": sha256(dictionary),
+                                             "field_dictionary_sha256": _FIELD_DICTIONARY_RECEIPT_SHA256,
                                              "sas_labels_sha256": sha256(labels_path),
                                              "sas_formats_sha256": sha256(formats_path)},
         "schema": {"row_count": 2},
@@ -379,7 +394,7 @@ def test_nsmo_dictionary_rejects_incomplete_crosswalk(tmp_path):
 
 def test_nsmo_domain_profile_is_hash_bound_and_aggregates_only(tmp_path):
     csv = _workspace(tmp_path)
-    _write_public_dictionary(tmp_path)
+    _copy_public_dictionary(tmp_path)
     _write_domain_receipts(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
 
     result = NsmoViews(tmp_path).domains()
@@ -577,7 +592,7 @@ def test_nsmo_horizon_sensitivity_rejects_nonreconciling_vintage_totals(tmp_path
 
 def test_nsmo_profile_http_and_standalone_page(tmp_path):
     csv = _workspace(tmp_path)
-    _write_public_dictionary(tmp_path)
+    _copy_public_dictionary(tmp_path)
     _write_first_observed_transition_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_first_entry_risk_set_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
     _write_horizon_sensitivity_receipt(tmp_path, hashlib.sha256(csv.read_bytes()).hexdigest())
@@ -709,7 +724,7 @@ def test_nsmo_profile_http_and_standalone_page(tmp_path):
             dictionary = json.loads(response.read())
             assert response.status == 200
             assert dictionary["field_count"] == 587
-            assert dictionary["value_label_count"] == 1
+            assert dictionary["value_label_count"] == 377
         with urlopen(base + "/api/nsmo-survey-returns", timeout=5) as response:
             returns = json.loads(response.read())
             assert response.status == 200

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 from collections import Counter
 from pathlib import Path
 
@@ -20,9 +21,19 @@ _FIRST_OBSERVED_TRANSITION_AUDIT = "artifacts/private/nsmo-first-observed-transi
 _FIRST_ENTRY_RISK_SET_AUDIT = "artifacts/private/nsmo-first-entry-risk-set-20261016/receipt.json"
 _HORIZON_SENSITIVITY_AUDIT = "artifacts/private/nsmo-horizon-sensitivity-20261016/receipt.json"
 _SURVEY_RETURNS_CSV = "docs/data/nsmo-v70-survey-returns.csv"
-_SURVEY_RETURNS_SHA256 = "d34d6c14ec0febb0a5c1d60c46c9dadc49e58e2121e0ed3b65140bb7c0da0811"
+_SURVEY_RETURNS_SHA256 = "71ff9ec9206e88db8a0fc677f749047bacbff458ac21d3d409d21f0d96e59423"
 _USABLE_RESPONSES_CSV = "docs/data/nsmo-v70-usable-responses.csv"
-_USABLE_RESPONSES_SHA256 = "a3c96a3db82e8ff24d90a6fea365d6c2933012b2ff23bc23c0c5c19cdb17ef23"
+_USABLE_RESPONSES_SHA256 = "2c1d1a20249cbd9f2833c79a058754ceb45d1d0658bcceb3a29c7f1138246e67"
+_FIELD_DICTIONARY_SHA256 = "b1e2aac1a04e12ce2b027af4fc3851df6196502a9f886c0d1f0cc9c253e64cf5"
+_FIELD_DICTIONARY_RECEIPT_SHA256 = "64270fb12719b16ee9a5ab140656be4d92545eaad0753edcc237c0f54cd49f37"
+
+
+def _canonical_text_sha256(path: Path) -> str:
+    """Hash reviewed text independent of CRLF/LF checkout normalization."""
+    content = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
 _FHFA_DISCLAIMER = (
     "The opinions and analyses contained herein are solely of the users/authors "
     "of any data analyses or papers, and the FHFA cannot and does not attest to "
@@ -122,7 +133,7 @@ class NsmoViews:
     def survey_returns(self) -> dict:
         """Return FHFA's public, wave-level survey return counts, never loan rows."""
         path = contained(self.root, _SURVEY_RETURNS_CSV)
-        if not path.is_file() or sha256(path) != _SURVEY_RETURNS_SHA256:
+        if not path.is_file() or _canonical_text_sha256(path) != _SURVEY_RETURNS_SHA256:
             raise ValueError("NSMO survey-return table does not match the reviewed FHFA v7.0 extraction")
         with path.open(encoding="utf-8-sig", newline="") as stream:
             source_rows = list(csv.DictReader(stream))
@@ -189,7 +200,7 @@ class NsmoViews:
             raise ValueError("NSMO survey-return counts do not match FHFA Table 3 totals")
         puf_returns = aggregate(rows[:46])
         usability_path = contained(self.root, _USABLE_RESPONSES_CSV)
-        if not usability_path.is_file() or sha256(usability_path) != _USABLE_RESPONSES_SHA256:
+        if not usability_path.is_file() or _canonical_text_sha256(usability_path) != _USABLE_RESPONSES_SHA256:
             raise ValueError("NSMO usable-response table does not match the reviewed FHFA v7.0 extraction")
         with usability_path.open(encoding="utf-8-sig", newline="") as stream:
             usability_source = list(csv.DictReader(stream))
@@ -397,8 +408,10 @@ class NsmoViews:
                     or receipt.get("sources", {}).get("puf_csv", {}).get("sha256") != source_sha
                     or int(receipt.get(schema_name, {}).get("rows", receipt.get(schema_name, {}).get("row_count", -1))) != rows):
                 raise ValueError("NSMO domain audit is stale or does not match the verified PUF")
-        if domains.get("sources", {}).get("field_dictionary_sha256") != sha256(
-                contained(self.root, "docs/data/nsmo-v70-field-dictionary.csv")):
+        field_dictionary = contained(self.root, "docs/data/nsmo-v70-field-dictionary.csv")
+        if (domains.get("sources", {}).get("field_dictionary_sha256") != _FIELD_DICTIONARY_RECEIPT_SHA256
+                or not field_dictionary.is_file()
+                or _canonical_text_sha256(field_dictionary) != _FIELD_DICTIONARY_SHA256):
             raise ValueError("NSMO domain audit does not match the public field dictionary")
         source_docs = "data/private/mortgage/nsmo-2026-05-27/source_docs"
         if (domains.get("sources", {}).get("sas_labels_sha256") != sha256(

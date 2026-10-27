@@ -68,7 +68,7 @@ MORTGAGE_SAMPLE_WORKBOOKS = {
 }
 
 
-def handler_for(service: ResearchService, web_root: Path | None = None):
+def handler_for(service: ResearchService, web_root: Path | None = None, *, nsmo_root=None, read_only: bool = False):
     from .sec_read_cache import VerifiedSecReadCache
     from .sec_views import SecViews
     if isinstance(getattr(service, 'sec_views', None), SecViews) and not isinstance(service.sec_views, VerifiedSecReadCache):
@@ -79,7 +79,7 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
     bundled_web = Path(__file__).resolve().parents[2] / "apps/web"
     web = (web_root or (service.root / "apps/web" if (service.root / "apps/web").is_dir() else bundled_web)).resolve()
     from .nsmo_views import NsmoViews
-    nsmo_views = NsmoViews(service.root)
+    nsmo_views = NsmoViews(nsmo_root or service.root)
     monitor_reviews = MonitorReviews(service)
     corporate_memos = CorporateMemos(service)
 
@@ -145,12 +145,18 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 return
             try:
                 url = urlsplit(self.path)
+                if read_only and url.path in {"/", "/index.html"}:
+                    url = url._replace(path="/nsmo")
                 # Page URLs carry independent workspace/comparison state;
                 # data API requests retain their smaller bounded contract.
                 values = parse_qs(url.query, keep_blank_values=True, max_num_fields=32 if url.path in STATIC else 16)
                 if any(len(v) != 1 for v in values.values()):
                     raise ValueError("Duplicate query parameter")
                 query = {k: v[0] for k, v in values.items()}
+                if (read_only and url.path.startswith("/api/")
+                        and not url.path.startswith("/api/nsmo-") and url.path != "/api/health"):
+                    self.send(404, {"error": "Only the Drive-backed NSMO read-only routes are enabled"}, head=head)
+                    return
                 if url.path == "/downloads/abs-surveillance-exceptions.xlsx":
                     if query:
                         raise ValueError("ABS surveillance workbook accepts no filters")
@@ -578,7 +584,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                         self.send(200,result,filename='CreditAtlas-private-corporate-memo.json',head=head)
                         return
                 elif url.path == "/api/health":
-                    result = {"status": "running", "mode": "local_private_research", "module": "P2/D01"}
+                    result = {"status": "running",
+                              "mode": "drive_read_only_nsmo" if read_only else "local_private_research",
+                              "module": "D02/NSMO" if read_only else "P2/D01"}
                 elif url.path == "/api/suite-views":
                     result = service.suite_views.catalog()
                 elif url.path == "/api/project-register":
@@ -1176,6 +1184,9 @@ def handler_for(service: ResearchService, web_root: Path | None = None):
                 self.send(503, {"error": "Research evidence is unavailable; inspect the local run receipt"}, head=head)
 
         def do_POST(self):
+            if read_only:
+                self.send(405, {"error": "This Drive-backed runtime is read-only; edits and uploads are disabled"})
+                return
             if not self.allowed(mutation=True):
                 self.send(403, {"error": "Same-origin local research client required"})
                 return
@@ -1292,15 +1303,21 @@ class LocalResearchServer(ThreadingHTTPServer):
     request_queue_size = 64
 
 
-def serve(root: Path, port: int = 8770):
+def serve(root: Path, port: int = 8770, *, nsmo_drive_remote: str | None = None):
     if root.resolve().drive.upper() != "D:":
         raise ValueError("CreditAtlas private storage must remain on D:")
-    service = ResearchService(root)
+    drive_root = None
+    if nsmo_drive_remote:
+        from .drive_storage import RcloneDriveRoot
+        drive_root = RcloneDriveRoot(nsmo_drive_remote)
+    service = ResearchService(root, ephemeral_state=drive_root is not None)
     # Warm verification before opening the listener. No raw data in browser bundles.
     service.runs()
     bundled_web = Path(__file__).resolve().parents[2] / "apps/web"
     ui_root = bundled_web if bundled_web.is_dir() else root / "apps/web"
-    with LocalResearchServer(("127.0.0.1", port), handler_for(service, web_root=ui_root)) as server:
+    with LocalResearchServer(("127.0.0.1", port), handler_for(
+            service, web_root=ui_root, nsmo_root=drive_root, read_only=drive_root is not None)) as server:
         server.daemon_threads = True
-        print(f"CreditAtlas P2/D01 · local private research · http://127.0.0.1:{server.server_port}/", flush=True)
+        mode = "D02/NSMO · Drive-backed read-only" if drive_root else "P2/D01 · local private research"
+        print(f"CreditAtlas {mode} · http://127.0.0.1:{server.server_port}/", flush=True)
         server.serve_forever()

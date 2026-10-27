@@ -6,6 +6,7 @@ import sqlite3
 import uuid
 from pathlib import Path
 
+from .runtime_state import SQLiteRuntimeState
 from .workspace import timestamp
 
 VIEWS = {"overview", "sources", "portfolio", "vintage", "transitions", "lifecycle", "models", "loss", "evidence"}
@@ -20,9 +21,9 @@ class ReviewConflict(ValueError):
 
 
 class Reviews:
-    def __init__(self, path: Path):
-        self.path = path
-        path.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, path: Path | None):
+        self._db = SQLiteRuntimeState(path, "reviews")
+        self.path = self._db.path
         with self.connect() as db:
             db.executescript("""
                 PRAGMA journal_mode=WAL;
@@ -38,7 +39,7 @@ class Reviews:
             """)
 
     def connect(self):
-        db = sqlite3.connect(self.path, timeout=10)
+        db = self._db.connect(timeout=10)
         db.row_factory = sqlite3.Row
         return db
 

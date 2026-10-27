@@ -7,6 +7,7 @@ import hashlib
 from collections import Counter
 from pathlib import Path
 
+from .drive_storage import RcloneDriveRoot
 from .nsmo import _PERFORMANCE_CODES
 from .workspace import contained, read_json, sha256
 
@@ -64,7 +65,7 @@ _STATUS_LABELS = {
 class NsmoViews:
     """Read the private, hash-bound aggregate receipt and expose no row data."""
 
-    def __init__(self, root: Path):
+    def __init__(self, root: Path | RcloneDriveRoot):
         self.root = root.resolve()
         self._cached: tuple[tuple[int, int, int, int], dict] | None = None
         self._dictionary_cache: tuple[tuple[int, ...], dict] | None = None

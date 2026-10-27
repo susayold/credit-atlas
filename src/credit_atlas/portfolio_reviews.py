@@ -5,18 +5,19 @@ import sqlite3
 import uuid
 from datetime import date,datetime,timezone
 from .reviews import ReviewConflict
+from .runtime_state import SQLiteRuntimeState
 from .workspace import timestamp
 
 
 class PortfolioReviews:
     def __init__(self,service,path):
-        self.service=service; self.path=path; path.parent.mkdir(parents=True,exist_ok=True)
+        self.service=service; self._db=SQLiteRuntimeState(path,"portfolio-reviews"); self.path=self._db.path
         with self.connect() as db:
             db.executescript('''PRAGMA journal_mode=WAL;
                 CREATE TABLE IF NOT EXISTS packages(id TEXT PRIMARY KEY,source_id TEXT NOT NULL,revision INTEGER NOT NULL,record_json TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS history(id TEXT NOT NULL,revision INTEGER NOT NULL,record_json TEXT NOT NULL,PRIMARY KEY(id,revision));''')
 
-    def connect(self): return sqlite3.connect(self.path,timeout=10)
+    def connect(self): return self._db.connect(timeout=10)
 
     def evidence(self,source,currency,refs):
         source_report=self.service.exposure_views.report({'import_id':source,'currency':currency,'dimension':'region'})

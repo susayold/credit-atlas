@@ -38,6 +38,7 @@ def main(argv=None) -> int:
     reproduce.add_argument("--case", type=Path, required=True)
     serve = sub.add_parser("serve")
     serve.add_argument("--port", type=int, default=8770)
+    serve.add_argument("--nsmo-drive-remote", help="Read D02 data from a read-only rclone remote, e.g. creditatlas:")
     args = parser.parse_args(argv)
     root = args.root.resolve()
     if root.drive.upper() != "D:":
@@ -74,7 +75,7 @@ def main(argv=None) -> int:
         result = build_case(root, args.case.resolve())
     else:
         from .server import serve
-        serve(root, args.port)
+        serve(root, args.port, nsmo_drive_remote=args.nsmo_drive_remote)
         return 0
     print(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False))
     return 0

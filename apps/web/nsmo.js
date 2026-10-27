@@ -347,17 +347,17 @@ async function loadSurveyReturns(){
     view.classList.add('survey-returns-table');$('survey-returns-table').replaceChildren(view);
     const usable=data.usability,excluded=Object.values(usable.exclusions_by_disposition).reduce((a,b)=>a+b,0);
     $('usable-responses-metrics').replaceChildren(
-      metric('Usable returns · Table 4',n(usable.usable_responses_table4),`${dec(usable.usable_share_of_returned_pct)}% of completed returns`),
+      metric('Usable returns · Table 4',n(usable.usable_responses_table4),`${dec(usable.usable_share_of_returned_pct)}% of ${n(usable.completed_returns)} returns · ${dec(100*usable.usable_responses_table4/p.surveys_mailed)}% of ${n(p.surveys_mailed)} mailed`),
       metric('Rows in PUF v7.0',n(usable.puf_v70_rows_and_tables5_6_2013_2024),'Tables 5–6 · origination 2013–2024'),
       metric('Returned but unusable',n(excluded),'Duplicate/ineligible, Q1 no, breakoff, wrong loan'),
-      metric('Usable outside PUF scope',n(usable.usable_table4_minus_puf_scope),`${n(usable.wave_7_remote_rural_scope_gap)} wave 7 · ${n(usable.wave_45_46_origination_scope_gap)} waves 45–46`)
+      metric('PUF − Table 4 gap',n(usable.puf_v70_rows_and_tables5_6_2013_2024-usable.usable_responses_table4),`${n(usable.usable_table4_minus_puf_scope)} Table 4 usable rows outside PUF · wave 7 ${n(usable.wave_7_remote_rural_scope_gap)} · waves 45–46 ${n(usable.wave_45_46_origination_scope_gap)}`)
     );
     const usabilityRows=usable.waves.map(row=>[
       row.survey_wave,n(row.surveys_completed_total),n(row.duplicate_or_ineligible),n(row.answered_no_to_q1),
       n(row.did_not_finish_survey),n(row.wrong_loan),n(row.usable_responses_table4),
       n(row.usable_responses_origination_2013_2024_tables5_6),n(row.gap_to_usable_table4)
     ]);
-    const usabilityTable=table(['Wave','Returned','Duplicate / ineligible','No to Q1','Did not finish','Wrong loan','Usable · Table 4','Usable · Tables 5/6','Scope gap'],usabilityRows,[1,2,3,4,5,6,7,8]);
+    const usabilityTable=table(['Wave','Returned','Duplicate / ineligible','No to Q1','Did not finish','Wrong loan','Usable · Table 4','Usable · Tables 5/6','Table 4 − PUF'],usabilityRows,[1,2,3,4,5,6,7,8]);
     usabilityTable.classList.add('usable-responses-table');$('usable-responses-table').replaceChildren(usabilityTable);
     state.className='domain-state ok';state.textContent='48 waves reconciled to FHFA Table 3 totals · aggregate-only · no respondent or mortgage linkage.';
   }catch(error){state.className='domain-state error';state.textContent=`Survey response-mode table unavailable: ${error.message}`;}
